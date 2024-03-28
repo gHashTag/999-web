@@ -398,7 +398,10 @@ export default function WorldPage() {
 
   return (
     <div className="flex flex-row items-center justify-center  h-screen md:h-auto dark:bg-transparent bg-transparent relative w-full">
-      <div className="max-w-7xl mx-auto w-full relative overflow-hidden h-full md:h-[40rem] px-4">
+      <div
+        className="max-w-7xl mx-auto w-full relative overflow-hidden h-full md:h-[40rem] px-4"
+        style={{ width: "700px", height: "600px" }}
+      >
         <motion.div
           initial={{
             opacity: 0,
@@ -414,18 +417,12 @@ export default function WorldPage() {
           className="div"
         ></motion.div>
 
-        <div className="absolute w-full -bottom-20 h-72 md:h-full z-10">
+        <div
+          className="absolute w-full h-72 md:h-full z-10"
+          style={{ top: 50 }}
+        >
           <Globe data={sampleArcs} globeConfig={globeConfig} />
         </div>
-        <h2 className="text-center text-4xl md:text-4xl font-bold text-black dark:text-white">
-          Welcome to the Far Far Away Kingdom!!!
-        </h2>
-        <p className="text-center text-base md:text-lg font-normal text-neutral-700 dark:text-neutral-200 max-w-md mt-2 mx-auto">
-          <span className="text-yellow-500">
-            {" "}
-            Lets make this world bright and exciting together
-          </span>
-        </p>
       </div>
     </div>
   );
