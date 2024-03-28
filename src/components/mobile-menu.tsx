@@ -16,7 +16,7 @@ import { useButton } from "@react-aria/button";
 import styles from "./mobile-menu.module.css";
 import { useReactiveVar } from "@apollo/client";
 import { setUserId } from "@/apollo/reactive-store";
-// test
+
 function ModalDialog(
   props: Parameters<typeof useOverlay>[0] & Parameters<typeof useDialog>[0]
 ) {
