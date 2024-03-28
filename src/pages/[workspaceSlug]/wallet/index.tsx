@@ -81,6 +81,7 @@ export type updateUserDataType = {
 export default function Wallet() {
   const { address, balance, login, logout, getAccounts, getBalance } =
     useWeb3Auth();
+  const router = useRouter();
   const email = useReactiveVar(setUserEmail);
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
@@ -100,6 +101,13 @@ export default function Wallet() {
     getAccounts();
     getBalance();
   }, []);
+
+  useEffect(() => {
+    const user_id = localStorage.getItem("user_id");
+    if (!user_id) {
+      router.push("/");
+    }
+  }, [router]);
 
   if (error) return <p>Error : {error.message}</p>;
 

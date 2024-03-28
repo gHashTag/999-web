@@ -22,6 +22,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { SelectRoom } from "@/components/ui/select-room";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { EvervaultCard } from "@/components/ui/evervault-card";
+import { useRouter } from "next/router";
 
 const ROOMS_COLLECTION_QUERY = gql`
   query RoomsCollection {
@@ -107,8 +108,15 @@ const CreateMeet = () => {
   const [openModalId, setOpenModalId] = useState<string>("");
   const assetInfo = useReactiveVar(setAssetInfo);
   const selectedRoomName = useReactiveVar(setSelectedRoomName);
-
+  const router = useRouter();
   const roomId = useReactiveVar(setRoomId);
+
+  useEffect(() => {
+    const user_id = localStorage.getItem("user_id");
+    if (!user_id) {
+      router.push("/");
+    }
+  }, [router]);
 
   const {
     data: roomsData,
@@ -120,10 +128,6 @@ const CreateMeet = () => {
     },
   });
 
-  // const room_name = localStorage.getItem("name");
-  // console.log(room_name, "room_name");
-  // const room_id = localStorage.getItem("room_id");
-  // console.log(room_id, "room_id");
   const {
     data,
     loading: assetsLoading,

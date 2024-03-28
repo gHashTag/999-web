@@ -23,7 +23,7 @@ import styles from "./layout.module.css";
 import Logo from "./icons/icon-logo";
 import MobileMenu from "./mobile-menu";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import DemoButton from "@/components/ui/demo-cta";
 import {
