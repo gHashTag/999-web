@@ -164,15 +164,6 @@ const CreateMeet = () => {
       setIsRoomCreated(true);
     }
   }, [roomNameData]);
-  // useEffect(() => {
-  //   const firstRoom = roomsData?.roomsCollection?.edges[0]?.node;
-  //   if (firstRoom) {
-  //     setAssetInfo({
-  //       value: firstRoom?.room_id,
-  //       label: firstRoom?.name,
-  //     });
-  //   }
-  // }, [roomsData]);
 
   const setOpenModalType = async (type: string) => {
     onOpen();
@@ -191,22 +182,18 @@ const CreateMeet = () => {
     setLoading(true);
     const formData = getValues();
     try {
-      const response = await createRoom(
-        formData.name,
-        openModalId,
-        room_id || ""
-      );
+      const response = await createRoom(formData.name, openModalId);
       console.log("🚀 ~ onCreateMeet ~ response:", response);
       if (response) {
         localStorage.setItem("name", response.name);
         localStorage.setItem("room_id", response.room_id);
+        setLoading(false);
+        setIsRoomCreated(false);
         refetch();
         toast({
           title: "Success",
           description: `${response.name} created`,
         });
-        setLoading(false);
-        setIsRoomCreated(false);
       }
     } catch (error) {
       if (error) {

@@ -1,11 +1,10 @@
 // hooks/useSupabase.ts
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Board,
   BoardData,
   ExtendedOpenloginUserInfo,
   RecordingAsset,
-  Task,
   TasksArray,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
@@ -21,11 +20,9 @@ import { useReactiveVar } from "@apollo/client";
 export function useSupabase() {
   const inviter = useReactiveVar(setInviterUserId);
   const userSupabase = useReactiveVar(setUserSupabase);
-  const user_id = useReactiveVar(setUserId);
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<RecordingAsset[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const userInfo = useReactiveVar(setUserInfo);
 
   const checkUsername = async (username: string) => {
@@ -62,7 +59,7 @@ export function useSupabase() {
       if (response.error) {
         console.error(
           "Ошибка при получении информации о пользователе:",
-          response.error,
+          response.error
         );
         return null;
       }

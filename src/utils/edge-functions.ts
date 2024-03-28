@@ -22,15 +22,13 @@ import { supabase } from "./supabase";
 //   }
 // };
 
-async function createRoom(name: string, type: string, room_id: string) {
-  const url =
-    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/create-room?secret=${process.env.NEXT_PUBLIC_SUPABASE_FUNCTION_SECRET}`;
+async function createRoom(name: string, type: string) {
+  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/create-room?secret=${process.env.NEXT_PUBLIC_SUPABASE_FUNCTION_SECRET}`;
   const email = localStorage.getItem("email");
   const newData = {
     name,
     type,
     email,
-    room_id,
   };
 
   try {
