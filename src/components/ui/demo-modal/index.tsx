@@ -1,8 +1,8 @@
 import { ArrowRightIcon } from "@100mslive/react-icons";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import Button from "../Button";
-import LinkButton from "../LinkButton";
+import { Button } from "@/components/ui/button";
+import LinkButton from "@/components/ui/LinkButton";
 
 import IconLogo from "@/components/icons/icon-logo";
 import { useSupabase } from "@/hooks/useSupabase";

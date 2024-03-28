@@ -22,7 +22,7 @@ import { useToast } from "@/components/ui/use-toast";
 import LoadingDots from "./loading-dots";
 import styleUtils from "./utils.module.css";
 import styles from "./form.module.css";
-import useEmailQueryParam from "@lib/hooks/use-email-query-param";
+
 import { useReactiveVar } from "@apollo/client";
 import {
   openWeb3ModalVar,
@@ -127,8 +127,6 @@ export default function Form({ sharePage }: Props) {
     },
     [resetCaptcha]
   );
-
-  useEmailQueryParam("inviteCode", setInviteCode);
 
   return formState === "error" ? (
     <div

@@ -7,7 +7,9 @@ import {
   useSensors,
   DragEndEvent,
   DragOverEvent,
+  // @ts-ignore
 } from "@dnd-kit/core";
+
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Column from "./Column";
 import { Board, BoardData, StatusMap, Task, TasksArray } from "@/types";

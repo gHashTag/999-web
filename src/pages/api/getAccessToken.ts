@@ -1,10 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { AccessToken, Role } from '@huddle01/server-sdk/auth';
-import Cors from 'cors';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { AccessToken, Role } from "@huddle01/server-sdk/auth";
+//@ts-expect-error
+import Cors from "cors";
 
 const cors = Cors({
-  methods: ['POST', 'GET', 'HEAD'],
+  methods: ["POST", "GET", "HEAD"],
 });
 
 function runMiddleware(
@@ -32,7 +33,7 @@ export default async function handler(
   const { roomId } = req.query;
 
   if (!roomId) {
-    return res.status(400).json({ error: 'roomId is required' });
+    return res.status(400).json({ error: "roomId is required" });
   }
 
   const accessToken = new AccessToken({

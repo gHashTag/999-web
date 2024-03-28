@@ -1,5 +1,6 @@
 import React from "react";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+//@ts-expect-error
 import { useDroppable } from "@dnd-kit/core";
 import Card from "./Card";
 import { Task } from "@/types";

@@ -5,7 +5,7 @@ import useClickOutside from "@lib/hooks/use-click-outside";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CrossIcon } from "@100mslive/react-icons";
 import InfoIcon from "@components/icons/icon-info";
-import DemoModal from "@/components/ui/demo-modal";
+import DemoModal from "../demo-modal";
 import { useToast } from "@/components/ui/use-toast";
 import { useReactiveVar } from "@apollo/client";
 import { visibleSignInVar, openIntroModalVar } from "@/apollo/reactive-store";

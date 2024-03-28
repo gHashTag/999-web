@@ -19,17 +19,8 @@ const HMSPrebuilt = dynamic(
     ssr: false,
   }
 );
-import {
-  setAddress,
-  setBalance,
-  setInviteCode,
-  setLoggedIn,
-  setUserEmail,
-  setUserInfo,
-  visibleHeaderVar,
-  visibleSignInVar,
-} from "@/apollo/reactive-store";
-import { useSupabase } from "@/hooks/useSupabase";
+import { setUserInfo } from "@/apollo/reactive-store";
+
 import { useReactiveVar } from "@apollo/client";
 
 const Rooms = () => {
@@ -77,7 +68,9 @@ const Rooms = () => {
       window.removeEventListener("beforeunload", handleUnload);
     };
   }, [hmsActions, isConnected]);
-  console.log(userInfo, "userInfo");
+
+  // @ts-ignore
+  const userName = `${userInfo?.first_name} ${userInfo?.last_name || ""}` || "";
   return (
     <Layout>
       {token && (
@@ -85,8 +78,7 @@ const Rooms = () => {
           authToken={token}
           roomCode={roomId}
           options={{
-            userName:
-              `${userInfo?.first_name} ${userInfo?.last_name || ""}` || "",
+            userName,
           }}
         />
       )}
