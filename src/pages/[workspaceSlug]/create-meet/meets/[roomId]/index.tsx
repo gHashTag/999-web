@@ -10,10 +10,6 @@ import {
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 
-import { setUserInfo } from "@/apollo/reactive-store";
-
-import { useReactiveVar } from "@apollo/client";
-
 const HMSPrebuilt = dynamic(
   () =>
     import("@100mslive/roomkit-react").then((mod) => ({
@@ -27,7 +23,6 @@ const HMSPrebuilt = dynamic(
 const Rooms = () => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
-  const userInfo = useReactiveVar(setUserInfo);
   const [token, setToken] = useState<string | undefined>(undefined);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
 
@@ -70,8 +65,10 @@ const Rooms = () => {
     };
   }, [hmsActions, isConnected]);
 
-  // @ts-ignore
-  const userName = `${userInfo?.first_name} ${userInfo?.last_name || ""}` || "";
+  const first_name = localStorage.getItem("first_name");
+  const last_name = localStorage.getItem("last_name");
+  const userName = `${first_name} ${last_name || ""}` || "";
+
   return (
     <Layout>
       {token && (

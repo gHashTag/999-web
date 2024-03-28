@@ -8,8 +8,6 @@ import {
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
-import { useSupabase } from "@/hooks/useSupabase";
-
 const HMSPrebuilt = dynamic(
   () =>
     import("@100mslive/roomkit-react").then((mod) => ({
@@ -67,16 +65,14 @@ const Rooms = () => {
 
   const first_name = localStorage.getItem("first_name");
   const last_name = localStorage.getItem("last_name");
-
+  const userName = `${first_name} ${last_name || ""}` || "";
   return (
     <Layout>
       {token && (
         <HMSPrebuilt
           authToken={token}
           roomCode={roomId}
-          options={{
-            userName: `${first_name} ${last_name || ""}` || "",
-          }}
+          options={{ userName }}
         />
       )}
     </Layout>
