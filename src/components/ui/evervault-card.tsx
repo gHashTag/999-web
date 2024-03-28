@@ -13,13 +13,20 @@ export const EvervaultCard = ({
   className,
   inviteToMeet,
   inviteCode,
+  inviteHostCode,
+  inviteMemberCode,
 }: {
   text: string;
   type: string;
   className?: string;
   inviteToMeet: (type: string) => void;
   inviteCode: string;
+  inviteHostCode: string;
+  inviteMemberCode: string;
 }) => {
+  console.log(inviteHostCode, "inviteHostCode");
+  console.log(inviteMemberCode, "inviteMemberCode");
+  console.log(inviteCode, "inviteCode");
   const router = useRouter();
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
@@ -62,10 +69,24 @@ export const EvervaultCard = ({
   };
 
   const handleClick = async () => {
-    const targetPath = `/workspaceSlug/create-meet/meets/${inviteCode}`;
+    // Определение targetPath в зависимости от типа
+    let targetPath;
+    switch (type) {
+      case "host":
+        targetPath = `/workspaceSlug/create-meet/meets/${inviteHostCode}`;
+        break;
+      case "member":
+        targetPath = `/workspaceSlug/create-meet/meets/${inviteMemberCode}`;
+        break;
+      default:
+        targetPath = `/workspaceSlug/create-meet/meets/${inviteCode}`;
+    }
+
     if (router.pathname !== "/workspaceSlug/create-meet/meets/[code]") {
       if (type !== "host") {
         handleCopy(`${window.location.origin}${targetPath}`);
+        inviteToMeet(type);
+      } else {
         inviteToMeet(type);
       }
     }

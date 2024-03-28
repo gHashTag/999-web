@@ -130,10 +130,6 @@ export default function Wallet() {
               refetch();
             },
           });
-          toast({
-            title: "Success",
-            description: "User data updated successfully",
-          });
         }
       }
     } catch (error) {

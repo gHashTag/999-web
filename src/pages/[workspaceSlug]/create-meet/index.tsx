@@ -45,9 +45,17 @@ const ROOMS_COLLECTION_QUERY = gql`
   }
 `;
 const ROOM_NAME_COLLECTION_QUERY = gql`
-  query RoomsCollectionByName($room_id: String!, $name: String) {
+  query RoomsCollectionByName(
+    $room_id: String!
+    $name: String!
+    $user_id: String!
+  ) {
     roomsCollection(
-      filter: { room_id: { eq: $room_id }, name: { eq: $name } }
+      filter: {
+        room_id: { eq: $room_id }
+        name: { eq: $name }
+        user_id: { eq: $user_id }
+      }
     ) {
       edges {
         node {
@@ -93,7 +101,8 @@ const CreateMeet = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isRoomCreated, setIsRoomCreated] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
-
+  const [inviteHostCode, setInviteHostCode] = useState("");
+  const [inviteMemberCode, setInviteMemberCode] = useState("");
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string>("");
   const assetInfo = useReactiveVar(setAssetInfo);
@@ -105,8 +114,12 @@ const CreateMeet = () => {
     data: roomsData,
     loading: roomsLoading,
     refetch,
-  } = useQuery(ROOMS_COLLECTION_QUERY);
-
+  } = useQuery(ROOMS_COLLECTION_QUERY, {
+    variables: {
+      user_id: localStorage.getItem("user_id"),
+    },
+  });
+  console.log(roomsData, "roomsData");
   // const room_name = localStorage.getItem("name");
   // console.log(room_name, "room_name");
   // const room_id = localStorage.getItem("room_id");
@@ -134,6 +147,7 @@ const CreateMeet = () => {
     variables: {
       room_id: roomId || "660135aee4bed726368e1d44",
       name: selectedRoomName || "Common",
+      user_id: localStorage.getItem("user_id"),
     },
   });
 
@@ -213,10 +227,10 @@ const CreateMeet = () => {
 
   const inviteToMeet = async (type: string) => {
     // Убедитесь, что codesData действительно указывает на массив
-    console.log(roomNameData, "roomNameData");
+    // console.log(roomNameData, "roomNameData");
     const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
       ?.codes;
-    console.log(codesData, "codesData");
+    // console.log(codesData, "codesData");
     if (typeof codesData === "string") {
       const parsedCodesData = JSON.parse(codesData);
       if (parsedCodesData) {
@@ -224,10 +238,17 @@ const CreateMeet = () => {
         const codeObj = parsedCodesData.data.find(
           (codeObj: { role: string; code: string }) => codeObj.role === type
         );
-        console.log(codeObj, "codeObj");
+        // console.log(codeObj, "codeObj");
         if (codeObj) {
-          console.log("code", codeObj.code);
-          setInviteCode(codeObj.code);
+          // console.log("code", codeObj.code);
+
+          if (type === "host") {
+            setInviteHostCode(codeObj.code);
+          } else if (type === "member") {
+            setInviteMemberCode(codeObj.code);
+          } else {
+            setInviteCode(codeObj.code);
+          }
         } else {
           console.log("No code found for type:", type);
         }
@@ -240,11 +261,10 @@ const CreateMeet = () => {
   };
 
   useEffect(() => {
-    console.log(inviteCode, "inviteCode");
-    if (!roomsLoading) {
-      inviteToMeet("host");
-    }
-  }, [inviteCode]);
+    inviteToMeet("host");
+    inviteToMeet("member");
+    inviteToMeet("guest");
+  }, [roomNameData]);
 
   const arrayInvite = [
     {
@@ -253,7 +273,7 @@ const CreateMeet = () => {
     },
     {
       text: "Invite Member",
-      type: "viewer-near-realtime",
+      type: "member",
     },
     {
       text: "Invite Guest",
@@ -312,6 +332,8 @@ const CreateMeet = () => {
                       type={item.type}
                       inviteCode={inviteCode}
                       inviteToMeet={inviteToMeet}
+                      inviteHostCode={inviteHostCode}
+                      inviteMemberCode={inviteMemberCode}
                     />
                   ))}
                 </div>
