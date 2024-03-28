@@ -4,21 +4,22 @@ import { useRouter } from "next/router";
 
 const Meets = () => {
   const router = useRouter();
-  const pathname = router.pathname;
 
   useEffect(() => {
     const setRoute = async () => {
       try {
-        router.push(
-          {
-            pathname: `/[workspaceSlug]/create-meet/meets/[roomId]`,
-            query: {
-              workspaceSlug: router.query.workspaceSlug,
-              roomId: router.query.slug,
+        if (router.query.slug) {
+          router.push(
+            {
+              pathname: `/[workspaceSlug]/create-meet/meets/[roomId]`,
+              query: {
+                workspaceSlug: router.query.workspaceSlug,
+                roomId: router.query.slug,
+              },
             },
-          },
-          `/[workspaceSlug]/create-meet/meets/${router.query.slug}`
-        );
+            `/${router.query.workspaceSlug}/create-meet/meets/${router.query.slug}`
+          );
+        }
       } catch (error) {
         console.error("Error", error);
       }

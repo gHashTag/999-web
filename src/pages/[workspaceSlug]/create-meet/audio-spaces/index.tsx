@@ -1,41 +1,28 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { useSupabase } from "@/hooks/useSupabase";
-import { useReactiveVar } from "@apollo/client";
-import { setUserId } from "@/apollo/reactive-store";
-
-const Meets = ({ roomId = "gcy-elue-bot" }) => {
+const Meets = () => {
   const router = useRouter();
-  const workspaceSlug = useReactiveVar(setUserId);
 
   useEffect(() => {
     const setRoute = async () => {
       try {
-        if (workspaceSlug && roomId) {
+        if (router.query.slug) {
           router.push(
             {
               pathname: `/[workspaceSlug]/create-meet/audio-spaces/[roomId]`,
-              query: { workspaceSlug, roomId },
+              query: {
+                workspaceSlug: router.query.workspaceSlug,
+                roomId: router.query.slug,
+              },
             },
-            `/${workspaceSlug}/create-meet/audio-spaces/${roomId}`
+            `/${router.query.workspaceSlug}/create-meet/meets/${router.query.slug}`
           );
         }
       } catch (error) {
         console.error("Error", error);
       }
     };
-    // const setRoute = async () => {
-    //   try {
-    //     router.push({
-    //       pathname: `/[workspaceSlug]/create-meet/audio-spaces/[roomId]`,
-
-    //       query: { workspaceSlug: "workspaceSlug", roomId },
-    //     });
-    //   } catch (error) {
-    //     // console.error("Error", error);
-    //   }
-    // };
 
     setRoute();
   }, []);

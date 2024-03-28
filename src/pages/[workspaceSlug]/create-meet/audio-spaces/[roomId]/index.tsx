@@ -23,7 +23,7 @@ const HMSPrebuilt = dynamic(
 const Rooms = () => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
-  const { userSupabase } = useSupabase();
+
   const [token, setToken] = useState<string | undefined>(undefined);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
   const hmsActions = useHMSActions();
@@ -65,6 +65,9 @@ const Rooms = () => {
     };
   }, [hmsActions, isConnected]);
 
+  const first_name = localStorage.getItem("first_name");
+  const last_name = localStorage.getItem("last_name");
+
   return (
     <Layout>
       {token && (
@@ -72,9 +75,7 @@ const Rooms = () => {
           authToken={token}
           roomCode={roomId}
           options={{
-            userName:
-              `${userSupabase?.first_name} ${userSupabase?.last_name || ""}` ||
-              "",
+            userName: `${first_name} ${last_name || ""}` || "",
           }}
         />
       )}

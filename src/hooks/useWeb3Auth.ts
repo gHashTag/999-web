@@ -59,6 +59,8 @@ const useWeb3Auth = () => {
             localStorage.setItem("email", userInfo.email);
             const supabaseUser = await getSupabaseUser(userInfo.email);
             localStorage.setItem("user_id", supabaseUser.user_id);
+            localStorage.setItem("first_name", supabaseUser.first_name);
+            localStorage.setItem("last_name", supabaseUser.last_name);
           }
         }
         visibleHeaderVar(true);
@@ -130,7 +132,7 @@ const useWeb3Auth = () => {
     // Get user's balance in ether
     const bal = web3.utils.fromWei(
       await web3.eth.getBalance(address), // Balance is in wei
-      "ether",
+      "ether"
     );
 
     setBalance(bal);
@@ -152,7 +154,7 @@ const useWeb3Auth = () => {
     const signedMessage = await web3.eth.personal.sign(
       originalMessage,
       fromAddress,
-      "test password!", // configure your own password here.
+      "test password!" // configure your own password here.
     );
   };
 
