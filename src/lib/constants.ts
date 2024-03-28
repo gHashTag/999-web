@@ -44,11 +44,11 @@ export const SAMPLE_TICKET_NUMBER = 1234;
 export const NAVIGATION = [
   {
     name: "Meets",
-    route: "workspaceSlug/create-meet",
+    route: "/create-meet",
   },
   {
     name: "Tasks",
-    route: "workspaceSlug/tasks",
+    route: "/tasks",
   },
   // {
   //   name: "Schedule",
@@ -56,7 +56,7 @@ export const NAVIGATION = [
   // },
   {
     name: "Wallet",
-    route: "workspaceSlug/wallet",
+    route: "/wallet",
   },
   // {
   //   name: "Speakers",

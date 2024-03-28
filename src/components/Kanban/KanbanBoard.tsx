@@ -454,8 +454,8 @@ function KanbanBoard() {
                 order: index,
               }));
               setTimeout(() => {
-                updateTasksOrder(updatedTasks); // updatedData - это новые данные, которые вы хотите установить
-              }, 30000);
+                updateTasksOrder(updatedTasks);
+              }, 2000);
             }
             return column;
           } else {

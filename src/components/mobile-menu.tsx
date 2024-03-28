@@ -22,7 +22,7 @@ function ModalDialog(
 ) {
   const router = useRouter();
   const activeRoute = router.asPath;
-  const workspaceSlug = useReactiveVar(setUserId);
+
   const ref = useRef<HTMLElement | null>(null);
   const { modalProps } = useModal();
   const { overlayProps } = useOverlay(props, ref);
@@ -44,7 +44,7 @@ function ModalDialog(
             <Link
               key={name}
               href={{
-                pathname: `/${workspaceSlug}${route}`,
+                pathname: `/workspaceSlug${route}`,
               }}
               className={cn(styles["nav-item"], {
                 [styles["nav-active"]]: activeRoute.startsWith(route),

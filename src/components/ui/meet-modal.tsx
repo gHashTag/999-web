@@ -22,9 +22,15 @@ type Modal = {
   setValue: any;
 };
 
+const RightAlignedFooter = styled(ModalFooter)`
+  display: flex;
+  justify-content: flex-end;
+`;
+
 const CustomModalContent = styled(ModalContent)`
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+  border-radius: 15px;
 `;
 
 function MeetModal({
@@ -37,7 +43,11 @@ function MeetModal({
   onCreate,
 }: Modal) {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      style={{ marginBottom: 300 }}
+    >
       <Button onClick={onOpen}>Create</Button>
       <CustomModalContent>
         {(onClose) => (
@@ -66,7 +76,7 @@ function MeetModal({
                 <div style={{ padding: 10 }} />
               </form>
             </ModalBody>
-            <ModalFooter>
+            <RightAlignedFooter>
               <Button
                 color="warning"
                 variant="ghost"
@@ -77,7 +87,7 @@ function MeetModal({
               >
                 Create
               </Button>
-            </ModalFooter>
+            </RightAlignedFooter>
           </>
         )}
       </CustomModalContent>

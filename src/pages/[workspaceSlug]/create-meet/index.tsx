@@ -25,8 +25,8 @@ import { EvervaultCard } from "@/components/ui/evervault-card";
 import { useRouter } from "next/router";
 
 const ROOMS_COLLECTION_QUERY = gql`
-  query RoomsCollection {
-    roomsCollection {
+  query RoomsCollectionByName($user_id: String!) {
+    roomsCollection(filter: { user_id: { eq: $user_id } }) {
       edges {
         node {
           id
@@ -124,7 +124,7 @@ const CreateMeet = () => {
     refetch,
   } = useQuery(ROOMS_COLLECTION_QUERY, {
     variables: {
-      user_id: localStorage.getItem("user_id"),
+      user_id: "c2035c02-d6ac-4337-b08e-f899befe3b76",
     },
   });
 
@@ -149,8 +149,8 @@ const CreateMeet = () => {
     error: roomNameError,
   } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
     variables: {
-      room_id: roomId || "660135aee4bed726368e1d44",
-      name: selectedRoomName || "Common",
+      room_id: roomId,
+      name: selectedRoomName,
       user_id: localStorage.getItem("user_id"),
     },
   });
@@ -159,15 +159,25 @@ const CreateMeet = () => {
     // Обработка ошибки ApolloError
     console.log(roomNameError.message);
   }
+
   useEffect(() => {
-    const firstRoom = roomsData?.roomsCollection?.edges[0]?.node;
-    if (firstRoom) {
-      setAssetInfo({
-        value: firstRoom?.room_id,
-        label: firstRoom?.name,
-      });
+    const roomsNames = roomNameData?.roomsCollection?.edges[0]?.node;
+    if (!roomsNames) {
+      setIsRoomCreated(true);
     }
-  }, [roomsData]);
+    // if ( {
+
+    // }
+  }, [roomNameData]);
+  // useEffect(() => {
+  //   const firstRoom = roomsData?.roomsCollection?.edges[0]?.node;
+  //   if (firstRoom) {
+  //     setAssetInfo({
+  //       value: firstRoom?.room_id,
+  //       label: firstRoom?.name,
+  //     });
+  //   }
+  // }, [roomsData]);
 
   const setOpenModalType = async (type: string) => {
     onOpen();
