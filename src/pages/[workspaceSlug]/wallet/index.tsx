@@ -111,6 +111,7 @@ export default function Wallet() {
   const userNode = data?.usersCollection?.edges[0]?.node;
 
   const handleFormData = (data: FieldValues) => {
+    console.log(data, "data");
     try {
       if (data) {
         const variables = {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import Layout from "./layout";
 

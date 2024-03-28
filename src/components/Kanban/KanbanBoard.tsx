@@ -530,7 +530,7 @@ function KanbanBoard() {
 
   return (
     <div style={{ paddingLeft: 40, paddingTop: 40 }}>
-      <div style={{ position: "fixed", top: 100, right: 30 }}>
+      <div style={{ position: "absolute", top: 100, right: 30 }}>
         <Button onClick={onCreateNewTask}>Create task</Button>
       </div>
       {isOpen && (

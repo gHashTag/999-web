@@ -25,6 +25,7 @@ import MobileMenu from "./mobile-menu";
 import Footer from "./footer";
 import React from "react";
 import { useToast } from "@/components/ui/use-toast";
+import DemoButton from "@/components/ui/demo-cta";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -33,8 +34,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useReactiveVar } from "@apollo/client";
-import { visibleHeaderVar } from "@/apollo/reactive-store";
-import { usePathname } from "next/navigation";
+import { setActiveRoute, visibleHeaderVar } from "@/apollo/reactive-store";
 
 type Props = {
   children: React.ReactNode;
@@ -54,9 +54,10 @@ export default function Layout({
   const router = useRouter();
 
   const visibleHeader = useReactiveVar(visibleHeaderVar);
+  const activeMenuButton = useReactiveVar(setActiveRoute);
 
   const activeRoute = router.asPath;
-  const disableCta = ["/schedule", "/speakers", "/expo", "/jobs"];
+
   return (
     <>
       <div className={styles.background}>
@@ -74,19 +75,26 @@ export default function Layout({
                   {NAVIGATION.map(({ name, route }) => (
                     <NavigationMenuItem key={name}>
                       {visibleHeader && (
-                        <Link
-                          href={{
-                            pathname: `/workspaceSlug${route}`,
-                          }}
-                          legacyBehavior
-                          passHref
-                        >
-                          <NavigationMenuLink
-                            className={navigationMenuTriggerStyle()}
+                        <a onClick={() => setActiveRoute(route)}>
+                          <Link
+                            href={{
+                              pathname: `/workspaceSlug${route}`,
+                            }}
+                            legacyBehavior
+                            passHref
                           >
-                            {name.toUpperCase()}
-                          </NavigationMenuLink>
-                        </Link>
+                            <NavigationMenuLink
+                              className={navigationMenuTriggerStyle()}
+                              style={
+                                activeMenuButton === route
+                                  ? { color: "#f6ff00" }
+                                  : {}
+                              }
+                            >
+                              {name.toUpperCase()}
+                            </NavigationMenuLink>
+                          </Link>
+                        </a>
                       )}
                     </NavigationMenuItem>
                   ))}
@@ -94,16 +102,15 @@ export default function Layout({
               </NavigationMenu>
             </div>
 
-            {/* {(hmsConfig.hmsIntegration &&
-              isLive &&
-              !disableCta.includes(activeRoute)) ||
-            activeRoute === "/" ? (
-              <div className={cn(styles["header-right"])}>
-                {activeRoute === "/" ? <DemoButton /> : <RoomCta />}
-              </div>
-            ) : (
-              <div />
-            )} */}
+            <div
+              style={
+                activeRoute
+                  ? { position: "absolute", top: 20, right: 40 }
+                  : { marginRight: "80px" }
+              }
+            >
+              {activeRoute === "/" && <DemoButton />}
+            </div>
           </header>
         )}
         {/* <ViewSource /> */}

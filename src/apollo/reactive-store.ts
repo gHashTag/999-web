@@ -21,7 +21,7 @@ export const setUserInfo = makeVar<ExtendedOpenloginUserInfo | null>(null);
 
 export const setUserSupabase = makeVar<SupabaseUser | null>(null);
 
-export const setInviteCode = makeVar<string>("dao999nft");
+export const setInviteCode = makeVar<string>("");
 
 export const setInviterUserId = makeVar<string>("");
 
@@ -32,3 +32,5 @@ export const setRoomId = makeVar<string | null>(null);
 export const setSelectedRoomName = makeVar<string>("");
 
 export const setAssetInfo = makeVar<OptionType | null>(null);
+
+export const setActiveRoute = makeVar<string>("/");

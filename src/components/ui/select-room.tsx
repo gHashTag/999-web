@@ -1,5 +1,5 @@
 import * as React from "react";
-import SubCard from "@/components/revamp/LandingCards/SubCard";
+import SubCard from "@/components/ui/LandingCards/SubCard";
 
 const cardsCreateRoom = [
   {
