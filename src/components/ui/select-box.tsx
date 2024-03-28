@@ -1,14 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { OptionType, RoomNode, RoomsData } from "@/types";
 import AsyncSelect from "react-select/async";
 import { StylesConfig, ActionMeta, SingleValue } from "react-select";
-
-import {
-  setAssetInfo,
-  setRoomId,
-  setSelectedRoomName,
-} from "@/apollo/reactive-store";
+import { setAssetInfo } from "@/apollo/reactive-store";
 
 export interface ColourOption {
   readonly value: string;
@@ -86,9 +81,8 @@ const customStyles: StylesConfig<OptionType, false> = {
 
 interface ComboboxProps {
   roomsData: RoomsData;
-  assetInfo: OptionType | null;
 }
-export function SelectBox({ roomsData, assetInfo }: ComboboxProps) {
+export function SelectBox({ roomsData }: ComboboxProps) {
   const options: OptionType[] = roomsData.roomsCollection.edges.map(
     ({ node }: { node: RoomNode }) => ({
       value: node.room_id,
@@ -97,19 +91,21 @@ export function SelectBox({ roomsData, assetInfo }: ComboboxProps) {
     })
   );
 
+  const [option, setOption] = useState<OptionType>({
+    value: localStorage.getItem("value") ?? "",
+    label: localStorage.getItem("name") ?? "",
+  });
+
   const handleChange = (
     newValue: SingleValue<OptionType>,
     actionMeta: ActionMeta<OptionType>
   ) => {
+    console.log(newValue, "newValue");
     if (newValue) {
-      setSelectedRoomName(newValue.label);
-      // localStorage.setItem("name", newValue.label);
-      setRoomId(newValue.value);
-      // localStorage.setItem("room_id", newValue.value);
-      setAssetInfo({
-        value: newValue.value,
-        label: newValue.label,
-      });
+      localStorage.setItem("name", newValue.label);
+      localStorage.setItem("room_id", newValue.value);
+      setOption(newValue);
+      setAssetInfo(newValue);
     }
   };
 
@@ -117,7 +113,7 @@ export function SelectBox({ roomsData, assetInfo }: ComboboxProps) {
     <AsyncSelect
       defaultValue={options[0]}
       cacheOptions
-      value={assetInfo}
+      value={option}
       defaultOptions={options}
       options={options}
       styles={customStyles}

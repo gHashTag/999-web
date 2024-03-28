@@ -13,16 +13,12 @@ import { createRoom } from "@/utils/edge-functions";
 
 import { SelectBox } from "@/components/ui/select-box";
 
-import {
-  setAssetInfo,
-  setRoomId,
-  setSelectedRoomName,
-} from "@/apollo/reactive-store";
 import { Spinner } from "@/components/ui/spinner";
 import { SelectRoom } from "@/components/ui/select-room";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { EvervaultCard } from "@/components/ui/evervault-card";
 import { useRouter } from "next/router";
+import { setAssetInfo } from "@/apollo/reactive-store";
 
 const ROOMS_COLLECTION_QUERY = gql`
   query RoomsCollectionByName($user_id: String!) {
@@ -107,12 +103,14 @@ const CreateMeet = () => {
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string>("");
   const assetInfo = useReactiveVar(setAssetInfo);
-  const selectedRoomName = useReactiveVar(setSelectedRoomName);
+
   const router = useRouter();
-  const roomId = useReactiveVar(setRoomId);
+
+  const user_id = localStorage.getItem("user_id");
+  const room_id = localStorage.getItem("room_id");
+  const name = localStorage.getItem("name");
 
   useEffect(() => {
-    const user_id = localStorage.getItem("user_id");
     if (!user_id) {
       router.push("/");
     }
@@ -124,7 +122,7 @@ const CreateMeet = () => {
     refetch,
   } = useQuery(ROOMS_COLLECTION_QUERY, {
     variables: {
-      user_id: "c2035c02-d6ac-4337-b08e-f899befe3b76",
+      user_id,
     },
   });
 
@@ -134,8 +132,8 @@ const CreateMeet = () => {
     error: assetsError,
   } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
     variables: {
-      room_id: roomId || "660135aee4bed726368e1d44",
-      name: selectedRoomName || "Common",
+      room_id,
+      name,
     },
   });
   if (assetsError instanceof ApolloError) {
@@ -149,9 +147,9 @@ const CreateMeet = () => {
     error: roomNameError,
   } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
     variables: {
-      room_id: roomId,
-      name: selectedRoomName,
-      user_id: localStorage.getItem("user_id"),
+      room_id,
+      name,
+      user_id,
     },
   });
 
@@ -161,13 +159,10 @@ const CreateMeet = () => {
   }
 
   useEffect(() => {
-    const roomsNames = roomNameData?.roomsCollection?.edges[0]?.node;
-    if (!roomsNames) {
+    const roomsEdges = roomNameData?.roomsCollection?.edges;
+    if (roomsEdges?.length === 0) {
       setIsRoomCreated(true);
     }
-    // if ( {
-
-    // }
   }, [roomNameData]);
   // useEffect(() => {
   //   const firstRoom = roomsData?.roomsCollection?.edges[0]?.node;
@@ -199,12 +194,12 @@ const CreateMeet = () => {
       const response = await createRoom(
         formData.name,
         openModalId,
-        roomId || ""
+        room_id || ""
       );
       console.log("🚀 ~ onCreateMeet ~ response:", response);
       if (response) {
-        setSelectedRoomName(response.name);
-        setRoomId(response.room_id);
+        localStorage.setItem("name", response.name);
+        localStorage.setItem("room_id", response.room_id);
         refetch();
         toast({
           title: "Success",
@@ -316,9 +311,7 @@ const CreateMeet = () => {
           )}
         </div>
         <div className="flex justify-center items-center">
-          {roomsData && !isRoomCreated && (
-            <SelectBox roomsData={roomsData} assetInfo={assetInfo} />
-          )}
+          {roomsData && !isRoomCreated && <SelectBox roomsData={roomsData} />}
         </div>
         {loading || assetsLoading || roomsLoading || roomNameLoading ? (
           <Spinner />

@@ -27,10 +27,6 @@ export const setInviterUserId = makeVar<string>("");
 
 export const setBalance = makeVar<string | null>(null);
 
-export const setRoomId = makeVar<string | null>(null);
-
-export const setSelectedRoomName = makeVar<string>("");
-
 export const setAssetInfo = makeVar<OptionType | null>(null);
 
 export const setActiveRoute = makeVar<string>("/");
