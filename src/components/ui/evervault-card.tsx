@@ -24,9 +24,6 @@ export const EvervaultCard = ({
   inviteHostCode: string;
   inviteMemberCode: string;
 }) => {
-  console.log(inviteHostCode, "inviteHostCode");
-  console.log(inviteMemberCode, "inviteMemberCode");
-  console.log(inviteCode, "inviteCode");
   const router = useRouter();
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);

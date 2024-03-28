@@ -42,7 +42,7 @@ function ModalDialog(
         >
           {NAVIGATION.map(({ name, route }) => (
             <Link
-              key={name}
+              key={"djkjkfs"}
               href={{
                 pathname: `/${workspaceSlug}${route}`,
               }}

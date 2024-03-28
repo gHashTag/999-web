@@ -22,7 +22,7 @@ import { NAVIGATION } from "@lib/constants";
 import styles from "./layout.module.css";
 import Logo from "./icons/icon-logo";
 import MobileMenu from "./mobile-menu";
-import Footer from "./footer";
+
 import React from "react";
 import { useToast } from "@/components/ui/use-toast";
 import DemoButton from "@/components/ui/demo-cta";
@@ -119,7 +119,6 @@ export default function Layout({
             <SkipNavContent />
             <div className={cn(styles.full, className)}>{children}</div>
           </main>
-          {!activeRoute.startsWith("/stage") && <Footer />}
         </div>
       </div>
     </>

@@ -119,7 +119,7 @@ const CreateMeet = () => {
       user_id: localStorage.getItem("user_id"),
     },
   });
-  console.log(roomsData, "roomsData");
+
   // const room_name = localStorage.getItem("name");
   // console.log(room_name, "room_name");
   // const room_id = localStorage.getItem("room_id");
