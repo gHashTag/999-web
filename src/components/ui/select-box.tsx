@@ -43,11 +43,11 @@ const promiseOptions = (inputValue: string) =>
 const customStyles: StylesConfig<OptionType, false> = {
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isFocused ? "#f6ff00" : "rgba(12, 10, 9, 0.8)",
+    backgroundColor: state.isFocused ? "#ffb700" : "rgba(12, 10, 9, 0.8)",
     color: state.isFocused ? "black" : provided.color,
     ":hover": {
       ...provided[":hover"],
-      backgroundColor: "#f6ff00",
+      backgroundColor: "#ffb700",
       color: "black",
     },
   }),
@@ -69,13 +69,13 @@ const customStyles: StylesConfig<OptionType, false> = {
     marginTop: 11,
     minWidth: 300,
     borderColor: "gray",
-    boxShadow: "#f6ff00",
-    "&:hover": { borderColor: "#f6ff00" },
+    boxShadow: "#ffb700",
+    "&:hover": { borderColor: "#ffb700" },
     backgroundColor: "rgba(12, 10, 9, 0.8)",
   }),
   singleValue: (provided) => ({
     ...provided,
-    color: "#f6ff00", // Цвет текста главного элемента
+    color: "#ffb700",
   }),
 };
 
@@ -100,7 +100,6 @@ export function SelectBox({ roomsData }: ComboboxProps) {
     newValue: SingleValue<OptionType>,
     actionMeta: ActionMeta<OptionType>
   ) => {
-    console.log(newValue, "newValue");
     if (newValue) {
       localStorage.setItem("name", newValue.label);
       localStorage.setItem("room_id", newValue.value);
