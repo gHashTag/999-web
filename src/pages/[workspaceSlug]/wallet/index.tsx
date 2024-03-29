@@ -149,7 +149,7 @@ export default function Wallet() {
     }
   };
   return (
-    <Layout>
+    <Layout loading={loading}>
       <main className="flex flex-col items-center justify-between p-14">
         {balance && <p>Balance: {balance}</p>}
         <div style={{ padding: "10px" }} />

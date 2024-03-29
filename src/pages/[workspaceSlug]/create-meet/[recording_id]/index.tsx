@@ -44,7 +44,7 @@ const RecordingPage = () => {
   }
   return (
     <>
-      <Layout>
+      <Layout loading={loading}>
         {!loading && data && (
           <div
             className="flex-col mt-10"

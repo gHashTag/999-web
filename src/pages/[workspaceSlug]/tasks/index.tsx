@@ -20,15 +20,17 @@ const Kanban = dynamic(() => import("@/components/Kanban/KanbanBoard"), {
 });
 export default function Tasks() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const user_id = localStorage.getItem("user_id");
     if (!user_id) {
       router.push("/");
     }
+    setLoading(true);
   }, [router]);
 
   return (
-    <Layout>
+    <Layout loading={loading}>
       <Kanban />
     </Layout>
   );

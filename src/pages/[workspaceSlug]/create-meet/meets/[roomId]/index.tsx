@@ -25,7 +25,7 @@ const Rooms = () => {
   const { roomId } = router.query as { roomId: string };
   const [token, setToken] = useState<string | undefined>(undefined);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
-
+  const [loading, setLoading] = useState(false);
   const hmsActions = useHMSActions();
 
   useEffect(() => {
@@ -36,6 +36,7 @@ const Rooms = () => {
             roomCode: roomId,
           });
           setToken(authToken);
+          setLoading(false);
         } else {
           throw new Error("roomCode is not a string");
         }
@@ -70,7 +71,7 @@ const Rooms = () => {
   const userName = `${first_name} ${last_name || ""}` || "";
 
   return (
-    <Layout>
+    <Layout loading={loading}>
       {token && (
         <HMSPrebuilt
           authToken={token}

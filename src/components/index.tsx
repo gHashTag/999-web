@@ -35,7 +35,7 @@ export default function Conf() {
   }, []);
 
   return (
-    <Layout>
+    <Layout loading={false}>
       {loggedIn ? (
         <Globe />
       ) : (

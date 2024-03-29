@@ -37,6 +37,7 @@ const DemoModal = () => {
   const { toast } = useToast();
 
   const router = useRouter();
+
   React.useEffect(() => {
     if (router.query.slug) {
       setStage(router.query.slug as string);

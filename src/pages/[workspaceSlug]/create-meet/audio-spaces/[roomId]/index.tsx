@@ -21,7 +21,7 @@ const HMSPrebuilt = dynamic(
 const Rooms = () => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
-
+  const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
   const hmsActions = useHMSActions();
@@ -34,6 +34,7 @@ const Rooms = () => {
             roomCode: roomId,
           });
           setToken(authToken);
+          setLoading(false);
         } else {
           throw new Error("roomCode is not a string");
         }
@@ -67,7 +68,7 @@ const Rooms = () => {
   const last_name = localStorage.getItem("last_name");
   const userName = `${first_name} ${last_name || ""}` || "";
   return (
-    <Layout>
+    <Layout loading={loading}>
       {token && (
         <HMSPrebuilt
           authToken={token}

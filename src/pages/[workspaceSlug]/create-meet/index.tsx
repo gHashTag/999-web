@@ -2,23 +2,21 @@
 import React, { useEffect, useState } from "react";
 
 import Layout from "@/components/layout";
-import { useCopyToClipboard } from "usehooks-ts";
 import { ApolloError, gql, useQuery, useReactiveVar } from "@apollo/client";
 import { Button } from "@/components/ui/moving-border";
-import { useDisclosure } from "@nextui-org/react";
-import MeetModal from "@/components/ui/meet-modal";
-import { useForm } from "react-hook-form";
-import { useToast } from "@/components/ui/use-toast";
-import { createRoom } from "@/utils/edge-functions";
-
 import { SelectBox } from "@/components/ui/select-box";
-
 import { Spinner } from "@/components/ui/spinner";
 import { SelectRoom } from "@/components/ui/select-room";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { EvervaultCard } from "@/components/ui/evervault-card";
 import { useRouter } from "next/router";
 import { setAssetInfo } from "@/apollo/reactive-store";
+
+const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
+
+if (!managementToken) {
+  throw new Error("NEXT_PUBLIC_MANAGEMENT_TOKEN is not set");
+}
 
 const ROOMS_COLLECTION_QUERY = gql`
   query RoomsCollectionByName($user_id: String!) {
@@ -93,14 +91,11 @@ const ROOMS_ASSETS_COLLECTION_QUERY = gql`
 `;
 
 const CreateMeet = () => {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isRoomCreated, setIsRoomCreated] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
   const [inviteHostCode, setInviteHostCode] = useState("");
   const [inviteMemberCode, setInviteMemberCode] = useState("");
-  const { control, handleSubmit, getValues, setValue, reset } = useForm();
+
   const [openModalId, setOpenModalId] = useState<string>("");
   const assetInfo = useReactiveVar(setAssetInfo);
 
@@ -165,60 +160,12 @@ const CreateMeet = () => {
     }
   }, [roomNameData]);
 
-  const setOpenModalType = async (type: string) => {
-    onOpen();
-    setOpenModalId(type);
-  };
-
-  const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
-
-  if (!managementToken) {
-    throw new Error("NEXT_PUBLIC_MANAGEMENT_TOKEN is not set");
-  }
-
   const items = data?.room_assetsCollection?.edges;
 
-  const onCreateMeet = async () => {
-    setLoading(true);
-    const formData = getValues();
-    try {
-      const response = await createRoom(formData.name, openModalId);
-      console.log("🚀 ~ onCreateMeet ~ response:", response);
-      if (response) {
-        localStorage.setItem("name", response.name);
-        localStorage.setItem("room_id", response.room_id);
-        setLoading(false);
-        setIsRoomCreated(false);
-        refetch();
-        toast({
-          title: "Success",
-          description: `${response.name} created`,
-        });
-      }
-    } catch (error) {
-      if (error) {
-        toast({
-          title: "Error creating room",
-          variant: "destructive",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">
-                {JSON.stringify(error, null, 2)}
-              </code>
-            </pre>
-          ),
-        });
-      } else {
-        reset({
-          title: "",
-        });
-      }
-    }
-  };
-
   const onCreateRoom = () => {
-    setOpenModalId("meets");
     setIsRoomCreated(true);
+    const workspaceSlug = router.query.workspaceSlug;
+    router.push(`/${workspaceSlug}/create-meet/create-room`);
   };
 
   const inviteToMeet = async (type: string) => {
@@ -279,75 +226,47 @@ const CreateMeet = () => {
 
   return (
     <>
-      <Layout>
-        {isOpen && (
-          <MeetModal
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onOpenChange={onOpenChange}
-            onCreate={onCreateMeet}
-            control={control}
-            handleSubmit={handleSubmit}
-            getValues={getValues}
-            setValue={setValue}
-          />
-        )}
+      <Layout loading={roomsLoading || assetsLoading || roomNameLoading}>
         <div style={{ position: "absolute", top: 75, right: 20 }}>
-          {!isRoomCreated && (
-            <Button onClick={onCreateRoom}>Create room</Button>
-          )}
+          <Button onClick={onCreateRoom}>Create room</Button>
         </div>
         <div className="flex justify-center items-center">
-          {roomsData && !isRoomCreated && <SelectBox roomsData={roomsData} />}
+          {roomsData && <SelectBox roomsData={roomsData} />}
         </div>
-        {loading || assetsLoading || roomsLoading || roomNameLoading ? (
-          <Spinner />
-        ) : (
-          <>
-            {isRoomCreated ? (
-              <>
-                <SelectRoom setOpenModalType={setOpenModalType} />
-              </>
-            ) : (
-              <>
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    marginTop: 60,
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                  }}
-                >
-                  {arrayInvite.map((item) => (
-                    <EvervaultCard
-                      key={item.type}
-                      text={item.text}
-                      type={item.type}
-                      inviteCode={inviteCode}
-                      inviteToMeet={inviteToMeet}
-                      inviteHostCode={inviteHostCode}
-                      inviteMemberCode={inviteMemberCode}
-                    />
-                  ))}
-                </div>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            marginTop: 60,
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
+          {arrayInvite.map((item) => (
+            <EvervaultCard
+              key={item.type}
+              text={item.text}
+              type={item.type}
+              inviteCode={inviteCode}
+              inviteToMeet={inviteToMeet}
+              inviteHostCode={inviteHostCode}
+              inviteMemberCode={inviteMemberCode}
+            />
+          ))}
+        </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                  }}
-                >
-                  <HoverEffect items={items} />
-                </div>
-              </>
-            )}
-          </>
-        )}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingLeft: 10,
+            paddingRight: 10,
+          }}
+        >
+          <HoverEffect items={items} />
+        </div>
       </Layout>
     </>
   );

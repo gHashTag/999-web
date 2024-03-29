@@ -35,6 +35,7 @@ import {
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useReactiveVar } from "@apollo/client";
 import { setActiveRoute, visibleHeaderVar } from "@/apollo/reactive-store";
+import { Spinner } from "./ui/spinner";
 
 type Props = {
   children: React.ReactNode;
@@ -42,6 +43,7 @@ type Props = {
   hideNav?: boolean;
   layoutStyles?: any;
   isLive?: boolean;
+  loading: boolean;
 };
 
 export default function Layout({
@@ -49,6 +51,7 @@ export default function Layout({
   className,
   hideNav,
   layoutStyles,
+  loading,
   isLive = false,
 }: Props) {
   const router = useRouter();
@@ -117,7 +120,11 @@ export default function Layout({
         <div className={styles.page}>
           <main className={styles.main} style={layoutStyles}>
             <SkipNavContent />
-            <div className={cn(styles.full, className)}>{children}</div>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <div className={cn(styles.full, className)}>{children}</div>
+            )}
           </main>
         </div>
       </div>
