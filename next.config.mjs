@@ -5,23 +5,7 @@ const nextConfig = {
     return [
       {
         source: "/(.*)?",
-        headers: [
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          // Добавляем ваш сайт в разрешённые источники
-          {
-            key: "Access-Control-Allow-Origin",
-            value: "https://dao999nft.com/",
-          },
-          // Разрешаем определённые методы
-          { key: "Access-Control-Allow-Methods", value: "GET, POST, OPTIONS" },
-          // Разрешаем заголовки, необходимые для вашего API
-          {
-            key: "Access-Control-Allow-Headers",
-            value: "X-Requested-With, Content-Type, Authorization",
-          },
-          // Разрешаем cookies и другие учётные данные
-          { key: "Access-Control-Allow-Credentials", value: "true" },
-        ],
+        headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }],
       },
     ];
   },
