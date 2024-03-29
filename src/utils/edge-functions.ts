@@ -49,19 +49,4 @@ async function createRoom(name: string, type: string) {
   }
 }
 
-export async function getAllRecordings(room_id: string, slug: string) {
-  try {
-    const { data } = await supabase
-      .from("room_assets")
-      .select("*")
-      .eq("room_id", room_id)
-      .eq("room_name", slug);
-
-    return data;
-  } catch (error) {
-    console.error("Error get getAllRecordings", error);
-    throw error;
-  }
-}
-
 export { createRoom };

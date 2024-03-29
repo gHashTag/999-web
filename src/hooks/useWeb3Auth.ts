@@ -9,7 +9,7 @@ import Web3 from "web3";
 import { useRouter } from "next/router";
 import { ExtendedOpenloginUserInfo } from "@/types";
 import { useSupabase } from "./useSupabase";
-import { useReactiveVar } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import {
   setAddress,
   setBalance,

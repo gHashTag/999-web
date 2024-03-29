@@ -1,132 +1,22 @@
-"use client";
-import React, { useEffect, useState } from "react";
-
-import Layout from "@/components/layout";
-import {
-  ApolloError,
-  gql,
-  useMutation,
-  useQuery,
-  useReactiveVar,
-} from "@apollo/client";
-import { Button } from "@/components/ui/moving-border";
-import { SelectBox } from "@/components/ui/select-box";
-import { HoverEffect } from "@/components/ui/card-hover-effect";
-import { EvervaultCard } from "@/components/ui/evervault-card";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { setAssetInfo } from "@/apollo/reactive-store";
-import { ButtonAnimate } from "@/components/ui/button-animate";
+import { useForm } from "react-hook-form";
+import Layout from "@/components/layout";
+import MeetModal from "@/components/ui/meet-modal";
+import { useDisclosure } from "@nextui-org/react";
 import { useToast } from "@/components/ui/use-toast";
+import { createRoom } from "@/utils/edge-functions";
+import { SelectRoom } from "@/components/ui/select-room";
+import Card from "@/components/Kanban/Card";
+import { CURRENT_USER, ROOMS_COLLECTION_QUERY } from "@/graphql/query";
+import { useQuery } from "@apollo/client";
+import { CardRoomT } from "@/types";
+import CardRoom from "@/components/ui/card-room";
 
-const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
-
-if (!managementToken) {
-  throw new Error("NEXT_PUBLIC_MANAGEMENT_TOKEN is not set");
-}
-
-const ROOMS_COLLECTION_QUERY = gql`
-  query RoomsCollectionByName($user_id: String!) {
-    roomsCollection(filter: { user_id: { eq: $user_id } }) {
-      edges {
-        node {
-          id
-          user_id
-          name
-          description
-          updated_at
-          created_at
-          type
-          enabled
-          description
-          codes
-          room_id
-        }
-      }
-    }
-  }
-`;
-const ROOM_NAME_COLLECTION_QUERY = gql`
-  query RoomsCollectionByName(
-    $room_id: String!
-    $name: String!
-    $user_id: String!
-  ) {
-    roomsCollection(
-      filter: {
-        room_id: { eq: $room_id }
-        name: { eq: $name }
-        user_id: { eq: $user_id }
-      }
-    ) {
-      edges {
-        node {
-          id
-          user_id
-          name
-          description
-          updated_at
-          created_at
-          type
-          enabled
-          description
-          codes
-          room_id
-        }
-      }
-    }
-  }
-`;
-
-const ROOMS_ASSETS_COLLECTION_QUERY = gql`
-  query RoomAssetsCollection($room_id: String!, $name: String!) {
-    room_assetsCollection(
-      filter: { room_id: { eq: $room_id }, room_name: { eq: $name } }
-    ) {
-      edges {
-        node {
-          id
-          title
-          summary_short
-          recording_id
-          transcription
-          room_id
-        }
-      }
-    }
-  }
-`;
-
-const DELETE_ROOM_MUTATION = gql`
-  mutation DeleteFromroomsCollection($room_id: String!) {
-    deleteFromroomsCollection(filter: { room_id: { eq: $room_id } }) {
-      records {
-        id
-      }
-    }
-  }
-`;
-
-const CreateMeet = () => {
-  const [inviteCode, setInviteCode] = useState("");
-  const [inviteHostCode, setInviteHostCode] = useState("");
-  const [inviteMemberCode, setInviteMemberCode] = useState("");
-  const [deleteRoom, { loading: deleteRoomLoading, error: deleteRoomError }] =
-    useMutation(DELETE_ROOM_MUTATION);
-
-  const assetInfo = useReactiveVar(setAssetInfo);
-  const { toast } = useToast();
+const MeetsPage = () => {
   const router = useRouter();
-
-  const user_id = localStorage.getItem("user_id");
-  const room_id = localStorage.getItem("room_id");
-  const name = localStorage.getItem("name");
-
-  useEffect(() => {
-    if (!user_id) {
-      router.push("/");
-    }
-  }, [router]);
-
+  const { toast } = useToast();
+  const { data: userInfo } = useQuery(CURRENT_USER);
   const {
     data: roomsData,
     loading: roomsLoading,
@@ -134,189 +24,95 @@ const CreateMeet = () => {
   } = useQuery(ROOMS_COLLECTION_QUERY, {
     fetchPolicy: "network-only",
     variables: {
-      user_id,
+      user_id: userInfo?.user_id,
     },
   });
 
-  const {
-    data,
-    loading: assetsLoading,
-    error: assetsError,
-  } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
-    variables: {
-      room_id,
-      name,
-    },
-  });
-  if (assetsError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log(assetsError, "assetsError");
-  }
+  const [loading, setLoading] = useState(false);
+  const [openModalId, setOpenModalId] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { control, handleSubmit, getValues, setValue, reset } = useForm();
 
-  const {
-    data: roomNameData,
-    loading: roomNameLoading,
-    error: roomNameError,
-  } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
-    variables: {
-      room_id,
-      name,
-      user_id,
-    },
-  });
+  const onCreateMeet = async () => {
+    setLoading(true);
+    const formData = getValues();
+    try {
+      const response = await createRoom(formData.name, openModalId);
+      console.log("🚀 ~ onCreateMeet ~ response:", response);
+      if (response) {
+        localStorage.setItem("name", response.name);
+        localStorage.setItem("room_id", response.room_id);
+        setLoading(false);
 
-  if (roomNameError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log(roomNameError.message);
-  }
-
-  const items = data?.room_assetsCollection?.edges;
-
-  const onCreateRoom = () => {
-    const workspaceSlug = router.query.workspaceSlug;
-    router.push(`/${workspaceSlug}/create-meet/create-room`);
-  };
-
-  const inviteToMeet = async (type: string) => {
-    // Убедитесь, что codesData действительно указывает на массив
-    // console.log(roomNameData, "roomNameData");
-    const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
-      ?.codes;
-    // console.log(codesData, "codesData");
-    if (typeof codesData === "string") {
-      const parsedCodesData = JSON.parse(codesData);
-      if (parsedCodesData) {
-        // Проверка, что codesData действительно массив
-        const codeObj = parsedCodesData.data.find(
-          (codeObj: { role: string; code: string }) => codeObj.role === type
-        );
-        // console.log(codeObj, "codeObj");
-        if (codeObj) {
-          // console.log("code", codeObj.code);
-
-          if (type === "host") {
-            setInviteHostCode(codeObj.code);
-          } else if (type === "member") {
-            setInviteMemberCode(codeObj.code);
-          } else {
-            setInviteCode(codeObj.code);
-          }
-        } else {
-          console.log("No code found for type:", type);
-        }
-      } else {
-        console.error("codesData is not an array");
+        toast({
+          title: "Success",
+          description: `${response.name} created`,
+        });
+        router.push(`/workspaceSlug/create-meet/${response.room_id}`);
       }
-    } else {
-      console.error("codesData is undefined or not a string");
+    } catch (error) {
+      if (error) {
+        toast({
+          title: "Error creating room",
+          variant: "destructive",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">
+                {JSON.stringify(error, null, 2)}
+              </code>
+            </pre>
+          ),
+        });
+      } else {
+        reset({
+          title: "",
+        });
+      }
     }
   };
 
-  useEffect(() => {
-    inviteToMeet("host");
-    inviteToMeet("member");
-    inviteToMeet("guest");
-  }, [roomNameData]);
-
-  const arrayInvite = [
-    {
-      text: "Start Meet",
-      type: "host",
-    },
-    {
-      text: "Invite Member",
-      type: "member",
-    },
-    {
-      text: "Invite Guest",
-      type: "guest",
-    },
-  ];
-
-  const handlerDeleteRoom = () => {
-    deleteRoom({
-      variables: {
-        room_id,
-      },
-      onCompleted: (data) => {
-        localStorage.removeItem("room_id");
-        localStorage.removeItem("name");
-        refetch();
-        toast({
-          title: "Success! Room deleted",
-        });
-        localStorage.setItem(
-          "room_id",
-          roomNameData.roomsCollection.edges[0].node.room_id
-        );
-        localStorage.setItem(
-          "name",
-          roomNameData.roomsCollection.edges[0].node.name
-        );
-      },
-    });
+  const setOpenModalType = async (type: string) => {
+    onOpen();
+    setOpenModalId(type);
   };
 
   return (
-    <>
-      <Layout
-        loading={
-          roomsLoading || assetsLoading || roomNameLoading || deleteRoomLoading
-        }
-      >
-        <div style={{ position: "absolute", top: 75, right: 20 }}>
-          <Button onClick={onCreateRoom}>Create room</Button>
-        </div>
-        <div className="flex justify-center items-center">
-          {roomsData && <SelectBox roomsData={roomsData} />}
-        </div>
+    <Layout loading={loading || roomsLoading}>
+      <>
+        {isOpen && (
+          <MeetModal
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onOpenChange={onOpenChange}
+            onCreate={onCreateMeet}
+            control={control}
+            handleSubmit={handleSubmit}
+            getValues={getValues}
+            setValue={setValue}
+          />
+        )}
+        <SelectRoom setOpenModalType={setOpenModalType} />
         <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            marginTop: 60,
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
+          className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
+          style={{ padding: 20 }}
         >
-          {arrayInvite.map((item) => (
-            <EvervaultCard
-              key={item.type}
-              text={item.text}
-              type={item.type}
-              inviteCode={inviteCode}
-              inviteToMeet={inviteToMeet}
-              inviteHostCode={inviteHostCode}
-              inviteMemberCode={inviteMemberCode}
+          {roomsData?.roomsCollection.edges.map((room: CardRoomT) => (
+            <CardRoom
+              node={{
+                id: room.node.id,
+                title: room.node.name,
+                description: room.node.type,
+              }}
+              onClick={() =>
+                router.push(`/workspaceSlug/create-meet/${room.node.room_id}`)
+              }
+              key={room.node.id}
             />
           ))}
         </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingLeft: 10,
-            paddingRight: 10,
-          }}
-        >
-          <HoverEffect items={items} />
-        </div>
-        <div
-          style={{
-            justifyContent: "center",
-            width: "30%",
-            paddingBottom: 100,
-            alignSelf: "center",
-          }}
-        >
-          <ButtonAnimate onClick={handlerDeleteRoom}>Delete room</ButtonAnimate>
-        </div>
-      </Layout>
-    </>
+      </>
+    </Layout>
   );
 };
 
-export default CreateMeet;
+export default MeetsPage;

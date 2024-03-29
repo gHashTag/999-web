@@ -24,7 +24,7 @@ export const HoverEffect = ({ items, className }: HoverEffectProps) => {
       {items &&
         items.map((item, idx) => (
           <Link
-            href={`/workspaceSlug/create-meet/${item.node.recording_id}`}
+            href={`/workspaceSlug/create-meet/${item.node.room_id}/${item.node.recording_id}`}
             key={item.node.recording_id}
             className="relative group  block p-2 h-full w-full"
             onMouseEnter={() => setHoveredIndex(idx)}

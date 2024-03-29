@@ -18,12 +18,8 @@ import {
   ApolloProvider,
   InMemoryCache,
   NormalizedCacheObject,
-  ReactiveVar,
   createHttpLink,
   defaultDataIdFromObject,
-  gql,
-  makeVar,
-  useQuery,
 } from "@apollo/client";
 
 import {
@@ -34,7 +30,6 @@ import {
 
 import { useRouter } from "next/router";
 import { useToast } from "@/components/ui/use-toast";
-// import apolloClient from "@/apollo/apollo-client";
 import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
 import { setContext } from "@apollo/client/link/context";
 import { Spinner } from "@/components/ui/spinner";
@@ -61,54 +56,6 @@ if (__DEV__) {
 //         ? `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
 //         : "",
 
-export type VisibilityFilter = {
-  id: string;
-  displayName: string;
-};
-
-export const VisibilityFilters: { [filter: string]: VisibilityFilter } = {
-  SHOW_ALL: {
-    id: "show_all",
-    displayName: "All",
-  },
-  SHOW_COMPLETED: {
-    id: "show_completed",
-    displayName: "Completed",
-  },
-  SHOW_ACTIVE: {
-    id: "show_active",
-    displayName: "Active",
-  },
-};
-
-export interface Todo {
-  text: string;
-  completed: boolean;
-  id: number;
-}
-
-export type Todos = Todo[];
-
-const todosInitialValue: Todos = [
-  {
-    id: 0,
-    completed: false,
-    text: "Use Apollo Client 3",
-  },
-];
-
-export const todosVar: ReactiveVar<Todos> = makeVar<Todos>(todosInitialValue);
-
-export const visibilityFilterVar = makeVar<VisibilityFilter>(
-  VisibilityFilters.SHOW_ALL
-);
-
-export const IS_LOGGED_IN = gql`
-  query IsUserLoggedIn {
-    isLoggedIn @client
-  }
-`;
-
 export const cache = new InMemoryCache({
   dataIdFromObject(responseObject) {
     if ("nodeId" in responseObject) {
@@ -120,17 +67,6 @@ export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        todos: {
-          read() {
-            return todosVar();
-          },
-        },
-        visibilityFilter: {
-          read() {
-            return visibilityFilterVar();
-          },
-        },
-        // todosCollection: relayStylePagination(), // example of paginating a collection
         node: {
           read(_, { args, toReference }) {
             const ref = toReference({
