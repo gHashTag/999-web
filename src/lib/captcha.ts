@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { corsHeaders } from "../../supabase/functions/_shared/cors";
+import { corsHeaders } from "@/pages/api/corsHeaders";
 
 export async function validateCaptchaResult(result: string): Promise<boolean> {
   const { success }: { success: boolean } = await fetch(

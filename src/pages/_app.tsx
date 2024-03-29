@@ -34,7 +34,7 @@ import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
 import { setContext } from "@apollo/client/link/context";
 import { Spinner } from "@/components/ui/spinner";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
-import { corsHeaders } from "../../supabase/functions/_shared/cors";
+import { corsHeaders } from "@/pages/api/corsHeaders";
 
 var __DEV__ = process.env.NODE_ENV !== "production";
 

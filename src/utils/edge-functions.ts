@@ -1,4 +1,4 @@
-import { corsHeaders } from "../../supabase/functions/_shared/cors";
+import { corsHeaders } from "@/pages/api/corsHeaders";
 import { supabase } from "./supabase";
 
 // const getUserFromSupabase = async () => {

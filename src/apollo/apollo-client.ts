@@ -2,6 +2,7 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
 }
 
+import { corsHeaders } from "@/pages/api/corsHeaders";
 import {
   ApolloClient,
   createHttpLink,
@@ -10,7 +11,6 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { relayStylePagination } from "@apollo/client/utilities";
-import { corsHeaders } from "../../supabase/functions/_shared/cors";
 
 const cache = new InMemoryCache({
   dataIdFromObject(responseObject) {
