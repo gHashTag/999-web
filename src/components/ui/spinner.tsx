@@ -1,18 +1,19 @@
 import * as React from "react";
 import { Spinner as LoadingSpinner } from "@nextui-org/react";
 
-const Spinner = () => (
+const Spinner = ({ size }: { size: "sm" | "md" | "lg" }) => (
   <div
     style={{
       display: "flex",
       justifyContent: "center",
-      height: "100vh",
+      height: "100%",
+      width: "100%",
       alignItems: "center",
-      backgroundColor: "#000000",
+      alignSelf: "center",
     }}
   >
-    <div style={{ top: 300 }}>
-      <LoadingSpinner size="lg" />
+    <div>
+      <LoadingSpinner size={size} style={{ bottom: 50 }} />
     </div>
   </div>
 );
