@@ -36,7 +36,11 @@ import { Spinner } from "@/components/ui/spinner";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { corsHeaders } from "@/pages/api/corsHeaders";
 
-var __DEV__ = process.env.NODE_ENV !== "production";
+export var __DEV__ = process.env.NODE_ENV !== "production";
+
+export const SITE_URL = __DEV__
+  ? "http://localhost:3000/"
+  : process.env.NEXT_PUBLIC_SITE_URL;
 
 if (__DEV__) {
   // Adds messages only in a dev environment

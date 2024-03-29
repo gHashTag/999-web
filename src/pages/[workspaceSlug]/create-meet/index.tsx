@@ -38,17 +38,17 @@ const MeetsPage = () => {
     const formData = getValues();
     try {
       const response = await createRoom(formData.name, openModalId);
-      console.log("🚀 ~ onCreateMeet ~ response:", response);
+      console.log("🚀 ~ onCreateMeet ~ response:", response.rooms);
       if (response) {
-        localStorage.setItem("name", response.name);
-        localStorage.setItem("room_id", response.room_id);
+        localStorage.setItem("name", response.rooms.name);
+        localStorage.setItem("room_id", response.rooms.room_id);
         setLoading(false);
 
         toast({
           title: "Success",
-          description: `${response.name} created`,
+          description: `${response.rooms.name} created`,
         });
-        router.push(`/workspaceSlug/create-meet/${response.room_id}`);
+        router.push(`/workspaceSlug/create-meet/${response.rooms.room_id}`);
       }
     } catch (error) {
       if (error) {

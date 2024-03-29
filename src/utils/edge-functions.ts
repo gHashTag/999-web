@@ -1,6 +1,7 @@
 import { corsHeaders } from "@/pages/api/corsHeaders";
 import { supabase } from "./supabase";
 import { headers } from "./headers";
+import { __DEV__, SITE_URL } from "@/pages/_app";
 
 // const getUserFromSupabase = async () => {
 //   const userSupabase = useReactiveVar(setUserSupabase);
@@ -30,11 +31,11 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
 if (!process.env.NEXT_PUBLIC_FUNCTION_SECRET) {
   throw new Error("NEXT_PUBLIC_FUNCTION_SECRET is not set");
 }
-
+console.log(SITE_URL, "SITE_URL");
 async function createRoom(name: string, type: string) {
-  const url =
-    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/create-room?secret=${process.env.NEXT_PUBLIC_FUNCTION_SECRET}`;
+  const url = `${SITE_URL}/api/create-room`;
   const email = localStorage.getItem("email");
+
   const newData = {
     name,
     type,
@@ -49,20 +50,16 @@ async function createRoom(name: string, type: string) {
       },
       body: JSON.stringify(newData),
     });
-
+    console.log(response, "response");
     if (!response.ok) {
       throw new Error(`Error creating room: ${response.statusText}`);
     }
 
-    // Проверяем, есть ли содержимое для чтения
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error("Received non-JSON response from server");
-    }
-
     const text = await response.text(); // Сначала получаем текст
+    console.log(text, "text");
     try {
       const data = JSON.parse(text); // Пытаемся разобрать текст как JSON
+      console.log(data, "data");
       return data;
     } catch (error) {
       console.error("Error parsing JSON:", error);
