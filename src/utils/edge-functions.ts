@@ -1,5 +1,6 @@
 import { corsHeaders } from "@/pages/api/corsHeaders";
 import { supabase } from "./supabase";
+import { headers } from "./headers";
 
 // const getUserFromSupabase = async () => {
 //   const userSupabase = useReactiveVar(setUserSupabase);
@@ -25,7 +26,7 @@ import { supabase } from "./supabase";
 
 async function createRoom(name: string, type: string) {
   const url =
-    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/create-room?secret=${process.env.NEXT_PUBLIC_SUPABASE_FUNCTION_SECRET}`;
+    `${process.env.SUPABASE_URL}/functions/v1/create-room?secret=${process.env.FUNCTION_SECRET}`;
   const email = localStorage.getItem("email");
   const newData = {
     name,
@@ -36,8 +37,9 @@ async function createRoom(name: string, type: string) {
   try {
     const response = await fetch(url, {
       method: "POST",
+      mode: "no-cors",
       headers: {
-        ...corsHeaders,
+        ...headers,
       },
       body: JSON.stringify(newData),
     });
