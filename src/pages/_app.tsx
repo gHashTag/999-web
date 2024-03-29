@@ -34,6 +34,7 @@ import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
 import { setContext } from "@apollo/client/link/context";
 import { Spinner } from "@/components/ui/spinner";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+import { corsHeaders } from "../../supabase/functions/_shared/cors";
 
 var __DEV__ = process.env.NODE_ENV !== "production";
 
@@ -117,7 +118,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
         return {
           headers: {
-            ...headers,
+            ...corsHeaders,
             apiKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
           },
         };

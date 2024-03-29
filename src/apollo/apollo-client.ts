@@ -4,12 +4,13 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
 
 import {
   ApolloClient,
-  InMemoryCache,
   createHttpLink,
   defaultDataIdFromObject,
+  InMemoryCache,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { relayStylePagination } from "@apollo/client/utilities";
+import { corsHeaders } from "../../supabase/functions/_shared/cors";
 
 const cache = new InMemoryCache({
   dataIdFromObject(responseObject) {
@@ -46,7 +47,7 @@ const authLink = setContext(async (_, { headers }) => {
 
   return {
     headers: {
-      ...headers,
+      ...corsHeaders,
       apiKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     },
   };
