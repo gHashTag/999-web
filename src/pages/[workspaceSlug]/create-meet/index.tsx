@@ -2,15 +2,21 @@
 import React, { useEffect, useState } from "react";
 
 import Layout from "@/components/layout";
-import { ApolloError, gql, useQuery, useReactiveVar } from "@apollo/client";
+import {
+  ApolloError,
+  gql,
+  useMutation,
+  useQuery,
+  useReactiveVar,
+} from "@apollo/client";
 import { Button } from "@/components/ui/moving-border";
 import { SelectBox } from "@/components/ui/select-box";
-import { Spinner } from "@/components/ui/spinner";
-import { SelectRoom } from "@/components/ui/select-room";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { EvervaultCard } from "@/components/ui/evervault-card";
 import { useRouter } from "next/router";
 import { setAssetInfo } from "@/apollo/reactive-store";
+import { ButtonAnimate } from "@/components/ui/button-animate";
+import { useToast } from "@/components/ui/use-toast";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -90,15 +96,25 @@ const ROOMS_ASSETS_COLLECTION_QUERY = gql`
   }
 `;
 
+const DELETE_ROOM_MUTATION = gql`
+  mutation DeleteFromroomsCollection($room_id: String!) {
+    deleteFromroomsCollection(filter: { room_id: { eq: $room_id } }) {
+      records {
+        id
+      }
+    }
+  }
+`;
+
 const CreateMeet = () => {
-  const [isRoomCreated, setIsRoomCreated] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
   const [inviteHostCode, setInviteHostCode] = useState("");
   const [inviteMemberCode, setInviteMemberCode] = useState("");
+  const [deleteRoom, { loading: deleteRoomLoading, error: deleteRoomError }] =
+    useMutation(DELETE_ROOM_MUTATION);
 
-  const [openModalId, setOpenModalId] = useState<string>("");
   const assetInfo = useReactiveVar(setAssetInfo);
-
+  const { toast } = useToast();
   const router = useRouter();
 
   const user_id = localStorage.getItem("user_id");
@@ -154,17 +170,9 @@ const CreateMeet = () => {
     console.log(roomNameError.message);
   }
 
-  useEffect(() => {
-    const roomsEdges = roomNameData?.roomsCollection?.edges;
-    if (roomsEdges?.length === 0) {
-      setIsRoomCreated(true);
-    }
-  }, [roomNameData]);
-
   const items = data?.room_assetsCollection?.edges;
 
   const onCreateRoom = () => {
-    setIsRoomCreated(true);
     const workspaceSlug = router.query.workspaceSlug;
     router.push(`/${workspaceSlug}/create-meet/create-room`);
   };
@@ -225,9 +233,37 @@ const CreateMeet = () => {
     },
   ];
 
+  const handlerDeleteRoom = () => {
+    deleteRoom({
+      variables: {
+        room_id,
+      },
+      onCompleted: (data) => {
+        localStorage.removeItem("room_id");
+        localStorage.removeItem("name");
+        refetch();
+        toast({
+          title: "Success! Room deleted",
+        });
+        localStorage.setItem(
+          "room_id",
+          roomNameData.roomsCollection.edges[0].node.room_id
+        );
+        localStorage.setItem(
+          "name",
+          roomNameData.roomsCollection.edges[0].node.name
+        );
+      },
+    });
+  };
+
   return (
     <>
-      <Layout loading={roomsLoading || assetsLoading || roomNameLoading}>
+      <Layout
+        loading={
+          roomsLoading || assetsLoading || roomNameLoading || deleteRoomLoading
+        }
+      >
         <div style={{ position: "absolute", top: 75, right: 20 }}>
           <Button onClick={onCreateRoom}>Create room</Button>
         </div>
@@ -267,6 +303,16 @@ const CreateMeet = () => {
           }}
         >
           <HoverEffect items={items} />
+        </div>
+        <div
+          style={{
+            justifyContent: "center",
+            width: "30%",
+            paddingBottom: 100,
+            alignSelf: "center",
+          }}
+        >
+          <ButtonAnimate onClick={handlerDeleteRoom}>Delete room</ButtonAnimate>
         </div>
       </Layout>
     </>

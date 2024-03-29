@@ -33,9 +33,10 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
-import { useReactiveVar } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import { setActiveRoute, visibleHeaderVar } from "@/apollo/reactive-store";
 import { Spinner } from "@/components/ui/spinner";
+import { IS_LOGGED_IN, cache } from "@/pages/_app";
 
 type Props = {
   children: React.ReactNode;
@@ -55,7 +56,23 @@ export default function Layout({
   isLive = false,
 }: Props) {
   const router = useRouter();
+  const { data } = useQuery(IS_LOGGED_IN);
 
+  const readCache = () => {
+    cache.writeQuery({
+      query: IS_LOGGED_IN,
+      data: {
+        isLoggedIn: !!localStorage.getItem("user_id"),
+      },
+    });
+  };
+
+  useEffect(() => {
+    readCache();
+    if (data && !data.isLoggedIn) {
+      router.push("/");
+    }
+  }, [data]);
   const visibleHeader = useReactiveVar(visibleHeaderVar);
   const activeMenuButton = useReactiveVar(setActiveRoute);
 

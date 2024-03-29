@@ -56,6 +56,7 @@ const useWeb3Auth = () => {
           await createSupabaseUser();
 
           if (userInfo.email) {
+            console.log("set user info");
             localStorage.setItem("email", userInfo.email);
             const supabaseUser = await getSupabaseUser(userInfo.email);
             localStorage.setItem("user_id", supabaseUser.user_id);
@@ -96,6 +97,9 @@ const useWeb3Auth = () => {
       router.push("/");
       await web3auth.logout();
       localStorage.removeItem("email");
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("first_name");
+      localStorage.removeItem("last_name");
       // apolloClient.clearStore().then(() => {
       //   apolloClient.resetStore();
       //   router.push("/");

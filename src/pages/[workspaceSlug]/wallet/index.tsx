@@ -167,7 +167,7 @@ export default function Wallet() {
           </>
         )}
 
-        {loading && <Spinner />}
+        {loading && <Spinner size="lg" />}
         <div style={{ padding: "20px" }} />
 
         {!loading && userNode && (

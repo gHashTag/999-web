@@ -21,6 +21,7 @@ import {
   ReactiveVar,
   createHttpLink,
   defaultDataIdFromObject,
+  gql,
   makeVar,
   useQuery,
 } from "@apollo/client";
@@ -37,6 +38,15 @@ import { useToast } from "@/components/ui/use-toast";
 import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
 import { setContext } from "@apollo/client/link/context";
 import { Spinner } from "@/components/ui/spinner";
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+
+var __DEV__ = process.env.NODE_ENV !== "production";
+
+if (__DEV__) {
+  // Adds messages only in a dev environment
+  loadDevMessages();
+  loadErrorMessages();
+}
 
 // const huddleClient = new HuddleClient({
 //   projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
@@ -93,6 +103,48 @@ export const visibilityFilterVar = makeVar<VisibilityFilter>(
   VisibilityFilters.SHOW_ALL
 );
 
+export const IS_LOGGED_IN = gql`
+  query IsUserLoggedIn {
+    isLoggedIn @client
+  }
+`;
+
+export const cache = new InMemoryCache({
+  dataIdFromObject(responseObject) {
+    if ("nodeId" in responseObject) {
+      return `${responseObject.nodeId}`;
+    }
+
+    return defaultDataIdFromObject(responseObject);
+  },
+  typePolicies: {
+    Query: {
+      fields: {
+        todos: {
+          read() {
+            return todosVar();
+          },
+        },
+        visibilityFilter: {
+          read() {
+            return visibilityFilterVar();
+          },
+        },
+        // todosCollection: relayStylePagination(), // example of paginating a collection
+        node: {
+          read(_, { args, toReference }) {
+            const ref = toReference({
+              nodeId: args?.nodeId,
+            });
+
+            return ref;
+          },
+        },
+      },
+    },
+  },
+});
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const { toast } = useToast();
@@ -112,41 +164,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     async function init() {
-      const cache = new InMemoryCache({
-        dataIdFromObject(responseObject) {
-          if ("nodeId" in responseObject) {
-            return `${responseObject.nodeId}`;
-          }
-
-          return defaultDataIdFromObject(responseObject);
-        },
-        typePolicies: {
-          Query: {
-            fields: {
-              todos: {
-                read() {
-                  return todosVar();
-                },
-              },
-              visibilityFilter: {
-                read() {
-                  return visibilityFilterVar();
-                },
-              },
-              // todosCollection: relayStylePagination(), // example of paginating a collection
-              node: {
-                read(_, { args, toReference }) {
-                  const ref = toReference({
-                    nodeId: args?.nodeId,
-                  });
-
-                  return ref;
-                },
-              },
-            },
-          },
-        },
-      });
       // let newPersistor = new CachePersistor({
       //   cache,
       //   storage: new LocalStorageWrapper(window.localStorage),
@@ -194,7 +211,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   if (!client) {
-    return <Spinner />;
+    return <Spinner size="lg" />;
   }
 
   return (
