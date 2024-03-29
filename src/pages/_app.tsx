@@ -38,6 +38,10 @@ import { corsHeaders } from "@/pages/api/corsHeaders";
 
 export var __DEV__ = process.env.NODE_ENV !== "production";
 
+if (!process.env.NEXT_PUBLIC_SITE_URL) {
+  throw new Error("NEXT_PUBLIC_SITE_URL is not set");
+}
+
 export const SITE_URL = __DEV__
   ? "http://localhost:3000/"
   : process.env.NEXT_PUBLIC_SITE_URL;
