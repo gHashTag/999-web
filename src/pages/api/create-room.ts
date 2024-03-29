@@ -20,8 +20,8 @@ export const myHeaders = {
 };
 
 type ResponseData = {
-  message: string;
   rooms?: RoomNode;
+  message?: string;
 };
 
 export async function createCodes(room_id: string) {
@@ -134,7 +134,7 @@ export default async function handler(
     if (error) {
       throw new Error(`Error saving to Supabase: ${error.message}`);
     }
-
+    // @ts-ignore
     return res.status(200).json({ rooms });
   } catch (error: any) {
     console.log("error", error);
