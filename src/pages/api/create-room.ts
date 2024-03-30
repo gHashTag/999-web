@@ -46,6 +46,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>,
 ) {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: { ...corsHeaders, ...headers } });
+  }
+
   try {
     const { name, type, email } = await req.body;
 
@@ -59,7 +63,7 @@ export default async function handler(
     }
 
     const user_id = data[0].user_id;
-    console.log(user_id, "user_id");
+
     const createOrFetchRoom = async () => {
       const roomData = {
         name,
