@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "@/utils/supabase";
 import { RoomNode } from "@/types";
 import { corsHeaders, headers } from "@/helpers/headers";
+import NextCors from "nextjs-cors";
 // @ts-ignore
 import jwt from "jsonwebtoken";
 // @ts-ignore
@@ -49,6 +50,12 @@ export default async function handler(
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: { ...corsHeaders, ...headers } });
   }
+  await NextCors(req, res, {
+    // Options
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    origin: "*",
+    optionsSuccessStatus: 200,
+  });
 
   try {
     const { name, type, email } = await req.body;
