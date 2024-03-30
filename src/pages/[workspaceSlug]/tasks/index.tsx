@@ -4,7 +4,7 @@ import { UserNav } from "./components/user-nav";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 import { Metadata } from "next";
-import { columns } from "./components/columns";
+
 import { DataTable } from "./components/data-table";
 import { useToast } from "@/components/ui/use-toast";
 import {

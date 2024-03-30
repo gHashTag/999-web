@@ -459,7 +459,6 @@ function KanbanBoard() {
           getValues={getValues}
           setValue={setValue}
           isEditing={isEditing}
-          card={card}
         />
       )}
 

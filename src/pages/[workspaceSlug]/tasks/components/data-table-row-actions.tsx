@@ -47,7 +47,9 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={onClickEdit}>Edit</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onClickEdit(true)}>
+          Edit
+        </DropdownMenuItem>
         {/* <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem> */}
         {/* <DropdownMenuSeparator /> */}
@@ -64,6 +66,7 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
         <DropdownMenuSeparator />
+        {/* @ts-ignore */}
         <DropdownMenuItem onClick={() => onDelete(row.original.node.id)}>
           Delete
           {/* <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut> */}
