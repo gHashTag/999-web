@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+// @ts-ignore
 import { useForm } from "react-hook-form";
 import Layout from "@/components/layout";
 import MeetModal from "@/components/ui/meet-modal";
+// @ts-ignore
 import { useDisclosure } from "@nextui-org/react";
 import { useToast } from "@/components/ui/use-toast";
 import { createRoom } from "@/utils/edge-functions";

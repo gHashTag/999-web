@@ -39,7 +39,6 @@ const RoomPage = () => {
   const { toast } = useToast();
   const router = useRouter();
 
-  // const { data: roomInfo } = useQuery(ROOM_INFO);
   const { data: userInfo } = useQuery(CURRENT_USER);
 
   const {
@@ -50,6 +49,7 @@ const RoomPage = () => {
     fetchPolicy: "network-only",
     variables: {
       user_id: userInfo?.user_id,
+      room_id: router.query.room_id,
     },
   });
 
@@ -152,6 +152,7 @@ const RoomPage = () => {
     router.push("/workspaceSlug/create-meet");
   };
 
+  const title = roomsData?.roomsCollection?.edges[0]?.node?.name;
   return (
     <>
       <Layout
@@ -159,11 +160,20 @@ const RoomPage = () => {
           roomsLoading || assetsLoading || roomNameLoading || deleteRoomLoading
         }
       >
+        <div className="relative z-10 flex items-center justify-center">
+          <div className="relative h-10 w-44  rounded-full flex items-center justify-center text-white font-bold text-4xl">
+            <div className="absolute w-full h-full bg-white/[0.8] dark:bg-black/[0.8] blur-sm rounded-full" />
+            <span className="dark:text-white text-black z-20 text-center">
+              {title}
+            </span>
+          </div>
+        </div>
+
         <div
           style={{
             display: "flex",
             flexWrap: "wrap",
-            marginTop: 60,
+            marginTop: 20,
             justifyContent: "space-around",
             alignItems: "center",
           }}

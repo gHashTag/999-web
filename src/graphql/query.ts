@@ -19,8 +19,8 @@ export const ROOM_INFO = gql`
 `;
 
 export const ROOMS_COLLECTION_QUERY = gql`
-  query RoomsCollectionByName($user_id: String!) {
-    roomsCollection(filter: { user_id: { eq: $user_id } }) {
+  query RoomsCollectionByName($user_id: String!, $room_id: String!) {
+    roomsCollection(filter: { user_id: { eq: $user_id }, room_id: { eq: $room_id } }) {
       edges {
         node {
           id
