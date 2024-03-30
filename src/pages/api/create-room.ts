@@ -86,7 +86,7 @@ export default async function handler(
         body: JSON.stringify({ ...roomData }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS}`,
         },
       });
 
@@ -141,7 +141,7 @@ export async function createCodes(room_id: string, token: string) {
       `https://api.100ms.live/v2/room-codes/room/${room_id}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS}`,
           "Content-Type": "application/json",
         },
         method: "POST",
