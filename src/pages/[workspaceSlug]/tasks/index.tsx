@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { UserNav } from "./components/user-nav";
+import { UserNav } from "../../../components/table/user-nav";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 import { Metadata } from "next";
 
-import { DataTable } from "./components/data-table";
+import { DataTable } from "../../../components/table/data-table";
 import { useToast } from "@/components/ui/use-toast";
 import {
   gql,
@@ -18,21 +18,19 @@ import {
 import { useForm } from "react-hook-form";
 // @ts-ignore
 import { useDisclosure } from "@nextui-org/react";
-import { setUserId } from "@/apollo/reactive-store";
 import {
   CREATE_TASK_MUTATION,
   DELETE_TASK_MUTATION,
   MUTATION_TASK_UPDATE,
   TASKS_COLLECTION_QUERY,
 } from "@/graphql/query";
-import { DataTableColumnHeader } from "./components/data-table-column-header";
+import { DataTableColumnHeader } from "../../../components/table/data-table-column-header";
 import { Badge } from "@/components/ui/badge";
-import { priorities, statuses } from "./data/data";
-import { DataTableRowActions } from "./components/data-table-row-actions";
+
+import { DataTableRowActions } from "../../../components/table/data-table-row-actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/moving-border";
 import TaskModal from "@/components/Kanban/TaskModal";
-import { Task } from "@/types";
 import { useSupabase } from "@/hooks/useSupabase";
 
 export const metadata: Metadata = {
