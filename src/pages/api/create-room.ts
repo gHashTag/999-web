@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "@/utils/supabase";
 import { RoomNode } from "@/types";
-import { corsHeaders, headers, myHeaders } from "@/helpers/headers";
+import { corsHeaders, headers } from "@/helpers/headers";
 // @ts-ignore
 import jwt from "jsonwebtoken";
 // @ts-ignore
@@ -95,6 +95,7 @@ export default async function handler(
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
       }
       const codes = await codesResponse.json();
+      console.log(codes, "codes");
       const rooms = {
         ...newRoom,
         codes,
@@ -139,6 +140,7 @@ export async function createCodes(room_id: string, token: string) {
         method: "POST",
       },
     );
+    console.log(response, "createCodes");
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
