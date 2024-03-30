@@ -89,7 +89,7 @@ export default async function handler(
       const newRoom = await roomResponse.json();
 
       const id = newRoom.id;
-      const codesResponse = await createCodes(id);
+      const codesResponse = await createCodes(id, token as string);
 
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
@@ -127,12 +127,15 @@ export default async function handler(
   }
 }
 
-export async function createCodes(room_id: string) {
+export async function createCodes(room_id: string, token: string) {
   try {
     const response = await fetch(
       `https://api.100ms.live/v2/room-codes/room/${room_id}`,
       {
-        headers: myHeaders,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
         method: "POST",
       },
     );
