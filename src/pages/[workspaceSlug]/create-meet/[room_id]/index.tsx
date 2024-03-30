@@ -90,17 +90,14 @@ const RoomPage = () => {
     const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
       ?.codes;
     // console.log(codesData, "codesData");
-    if (typeof codesData === "string") {
+    if (codesData) {
       const parsedCodesData = JSON.parse(codesData);
       if (parsedCodesData) {
         // Проверка, что codesData действительно массив
         const codeObj = parsedCodesData.data.find(
           (codeObj: { role: string; code: string }) => codeObj.role === type
         );
-        // console.log(codeObj, "codeObj");
         if (codeObj) {
-          // console.log("code", codeObj.code);
-
           if (type === "host") {
             setInviteHostCode(codeObj.code);
           } else if (type === "member") {
@@ -146,23 +143,13 @@ const RoomPage = () => {
         room_id: router.query.room_id,
       },
       onCompleted: (data) => {
-        localStorage.removeItem("room_id");
-        localStorage.removeItem("name");
-        localStorage.removeItem("room_type");
         refetch();
         toast({
           title: "Success! Room deleted",
         });
-        localStorage.setItem(
-          "room_id",
-          roomNameData.roomsCollection.edges[0].node.room_id
-        );
-        localStorage.setItem(
-          "name",
-          roomNameData.roomsCollection.edges[0].node.name
-        );
       },
     });
+    router.push("/workspaceSlug/create-meet");
   };
 
   return (

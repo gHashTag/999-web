@@ -1,29 +1,6 @@
-import { corsHeaders } from "@/pages/api/corsHeaders";
-import { supabase } from "./supabase";
 import { headers } from "./headers";
 import { __DEV__, SITE_URL } from "@/pages/_app";
 
-// const getUserFromSupabase = async () => {
-//   const userSupabase = useReactiveVar(setUserSupabase);
-
-//   try {
-//     if (userSupabase) {
-//       const { data, error } = await supabase
-//         .from("users")
-//         .select("*")
-//         .eq("email", userSupabase.email);
-
-//       if (error) {
-//         console.error("error", error);
-//         throw error;
-//       }
-
-//       return data;
-//     }
-//   } catch (error: any) {
-//     throw error.response?.data ?? error;
-//   }
-// };
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
 }
@@ -31,7 +8,7 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
 if (!process.env.NEXT_PUBLIC_FUNCTION_SECRET) {
   throw new Error("NEXT_PUBLIC_FUNCTION_SECRET is not set");
 }
-console.log(SITE_URL, "SITE_URL");
+
 async function createRoom(name: string, type: string) {
   const url = `${SITE_URL}/api/create-room`;
   const email = localStorage.getItem("email");
@@ -55,11 +32,10 @@ async function createRoom(name: string, type: string) {
       throw new Error(`Error creating room: ${response.statusText}`);
     }
 
-    const text = await response.text(); // Сначала получаем текст
+    const text = await response.text();
     console.log(text, "text");
     try {
-      const data = JSON.parse(text); // Пытаемся разобрать текст как JSON
-      console.log(data, "data");
+      const data = JSON.parse(text);
       return data;
     } catch (error) {
       console.error("Error parsing JSON:", error);

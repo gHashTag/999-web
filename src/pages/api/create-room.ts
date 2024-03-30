@@ -1,47 +1,46 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "@/utils/supabase";
 import { RoomNode } from "@/types";
-export const headers = {
-  "Content-Type": "application/json",
-};
-
-export const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey",
-};
-
-if (!process.env.NEXT_PUBLIC_100MS) {
-  throw new Error("NEXT_PUBLIC_100MS is not set");
-}
-
-export const myHeaders = {
-  Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS}`,
-  "Content-Type": "application/json",
-};
+import { corsHeaders, headers, myHeaders } from "@/helpers/headers";
+// @ts-ignore
+import jwt from "jsonwebtoken";
+// @ts-ignore
+import { v4 as uuidv4 } from "uuid";
 
 type ResponseData = {
   rooms?: RoomNode;
   message?: string;
 };
 
-export async function createCodes(room_id: string) {
-  try {
-    const response = await fetch(
-      `https://api.100ms.live/v2/room-codes/room/${room_id}`,
+const createToken100ms = () => {
+  return new Promise((resolve, reject) => {
+    const { APP_ACCESS_KEY, APP_SECRET } = process.env;
+    const payload = {
+      access_key: APP_ACCESS_KEY,
+      type: "management",
+      version: 2,
+      iat: Math.floor(Date.now() / 1000),
+      nbf: Math.floor(Date.now() / 1000),
+    };
+
+    jwt.sign(
+      payload,
+      APP_SECRET,
       {
-        headers: myHeaders,
-        method: "POST",
+        algorithm: "HS256",
+        expiresIn: "24h",
+        jwtid: uuidv4(),
+      },
+      (err: any, token: string) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(token);
+        }
       },
     );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response;
-  } catch (error) {
-    console.error("Error creating codes:", error);
-    throw error;
-  }
-}
+  });
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -50,28 +49,8 @@ export default async function handler(
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: { ...corsHeaders, ...headers } });
   }
-  // let token;
-  // try {
-  //   if (!app_secret) {
-  //     throw new Error("Secret not found");
-  //   }
-  //   token = await create(header, payload, cryptoKey);
-  // } catch (err) {
-  //   console.error("Токен недействителен:", err);
-  // }
 
   try {
-    // const url = new URL(req.url);
-    // if (
-    //   url.searchParams.get("secret") !==
-    //     Deno.env.get("NEXT_PUBLIC_FUNCTION_SECRET")
-    // ) {
-    //   return new Response("Not allowed", {
-    //     status: 405,
-    //     headers: { ...headers, ...corsHeaders },
-    //   });
-    // }
-
     const { name, type, email } = await req.body;
 
     const { data, error: userError } = await supabase
@@ -93,27 +72,31 @@ export default async function handler(
         enabled: true,
       };
 
+      const token = await createToken100ms();
+
       const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
         method: "POST",
         body: JSON.stringify({ ...roomData }),
-        headers: { ...myHeaders },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
-      // console.log(roomResponse, "roomResponse");
+
       if (!roomResponse.ok) {
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-      // console.log(newRoom, "newRoom");
+
       const id = newRoom.id;
       const codesResponse = await createCodes(id);
-      // console.log(codesResponse, "codesResponse");
 
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
       }
       const codes = await codesResponse.json();
-      // console.log(codes, "codes");
       const rooms = {
+        ...newRoom,
         codes,
         type,
         name,
@@ -122,14 +105,16 @@ export default async function handler(
         room_id: id,
       };
 
+      delete rooms.id;
+
       return rooms;
     };
 
     const rooms = await createOrFetchRoom();
-    // console.log(rooms, "rooms");
+    console.log(rooms, "rooms");
+
     const { error } = await supabase.from("rooms").insert({
       ...rooms,
-      id: undefined,
     });
     if (error) {
       throw new Error(`Error saving to Supabase: ${error.message}`);
@@ -139,5 +124,24 @@ export default async function handler(
   } catch (error: any) {
     console.log("error", error);
     return res.status(500).json({ message: error.message });
+  }
+}
+
+export async function createCodes(room_id: string) {
+  try {
+    const response = await fetch(
+      `https://api.100ms.live/v2/room-codes/room/${room_id}`,
+      {
+        headers: myHeaders,
+        method: "POST",
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response;
+  } catch (error) {
+    console.error("Error creating codes:", error);
+    throw error;
   }
 }
