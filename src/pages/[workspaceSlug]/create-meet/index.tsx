@@ -24,7 +24,6 @@ const MeetsPage = () => {
     loading: roomsLoading,
     refetch,
   } = useQuery(ROOMS_COLLECTION_QUERY, {
-    fetchPolicy: "network-only",
     variables: {
       user_id: userInfo?.user_id,
     },
