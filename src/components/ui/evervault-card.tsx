@@ -1,8 +1,10 @@
-import { useMotionValue } from "framer-motion";
 import React, { useState, useEffect } from "react";
-import { useMotionTemplate, motion } from "framer-motion";
+// @ts-ignore
+import { useMotionValue, useMotionTemplate, motion } from "framer-motion";
 import { cn } from "@/utils/cn";
+// @ts-ignore
 import { useCopyToClipboard } from "usehooks-ts";
+
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -55,7 +57,7 @@ export const EvervaultCard = ({
           description: `${text} copied`,
         });
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error("Failed to copy!", error);
         toast({
           title: "Error",

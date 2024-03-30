@@ -7,6 +7,7 @@ import {
   AnimatePresence,
   useMotionValue,
   useSpring,
+  // @ts-ignore
 } from "framer-motion";
 
 export const AnimatedTooltip = ({

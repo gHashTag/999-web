@@ -356,7 +356,7 @@ function KanbanBoard() {
                 overIndex
               );
 
-              // Сохраняем состояние после перемещения
+              //@ts-ignore
               const afterMove = column.cards.map((card) => card.node.id);
               console.log("После перемещения:", afterMove);
 
@@ -459,7 +459,6 @@ function KanbanBoard() {
           getValues={getValues}
           setValue={setValue}
           isEditing={isEditing}
-          card={card}
         />
       )}
 

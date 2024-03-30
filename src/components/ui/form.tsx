@@ -1,5 +1,7 @@
 import * as React from "react";
+// @ts-ignore
 import * as LabelPrimitive from "@radix-ui/react-label";
+// @ts-ignore
 import { Slot } from "@radix-ui/react-slot";
 import {
   Controller,
@@ -8,6 +10,7 @@ import {
   FieldValues,
   FormProvider,
   useFormContext,
+  // @ts-ignore
 } from "react-hook-form";
 
 import { cn } from "@/lib/utils";

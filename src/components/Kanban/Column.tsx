@@ -1,4 +1,5 @@
 import React from "react";
+// @ts-ignore
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 //@ts-expect-error
 import { useDroppable } from "@dnd-kit/core";

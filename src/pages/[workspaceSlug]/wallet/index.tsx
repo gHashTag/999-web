@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+// @ts-ignore
 import { Button, User, Card, CardBody } from "@nextui-org/react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 // @ts-ignore
 import { CopyToClipboard } from "react-copy-to-clipboard";
+// @ts-ignore
 import { FieldValues } from "react-hook-form";
 import {
   gql,

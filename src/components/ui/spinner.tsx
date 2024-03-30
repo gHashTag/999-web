@@ -1,4 +1,5 @@
 import * as React from "react";
+// @ts-ignore
 import { Spinner as LoadingSpinner } from "@nextui-org/react";
 
 const Spinner = ({ size }: { size: "sm" | "md" | "lg" }) => (

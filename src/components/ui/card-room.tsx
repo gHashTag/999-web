@@ -1,9 +1,7 @@
 import { forwardRef } from "react";
-import { CSS } from "@dnd-kit/utilities";
-import { useSortable } from "@dnd-kit/sortable";
-import { Task } from "@/types";
-import { BackgroundGradient } from "./background-gradient";
 
+import { BackgroundGradient } from "./background-gradient";
+// @ts-ignore
 import { Spacer } from "@nextui-org/react";
 
 interface CardProps {

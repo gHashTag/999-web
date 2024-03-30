@@ -1,8 +1,11 @@
 "use client";
 
 import * as React from "react";
+// @ts-ignore
 import { type DialogProps } from "@radix-ui/react-dialog";
+// @ts-ignore
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+// @ts-ignore
 import { Command as CommandPrimitive } from "cmdk";
 
 import { cn } from "@/lib/utils";

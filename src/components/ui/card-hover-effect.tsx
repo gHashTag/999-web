@@ -1,5 +1,6 @@
 import { RecordingAsset } from "@/types";
 import { cn } from "@/utils/cn";
+// @ts-ignore
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";

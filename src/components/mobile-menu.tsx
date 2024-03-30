@@ -3,15 +3,19 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import cn from "classnames";
 import { NAVIGATION } from "@lib/constants";
+// @ts-ignore
 import { useOverlayTriggerState } from "@react-stately/overlays";
 import {
   useOverlay,
   usePreventScroll,
   useModal,
   OverlayContainer,
+  useDialog,
+  // @ts-ignore
 } from "@react-aria/overlays";
-import { useDialog } from "@react-aria/dialog";
+// @ts-ignore
 import { FocusScope } from "@react-aria/focus";
+// @ts-ignore
 import { useButton } from "@react-aria/button";
 import styles from "./mobile-menu.module.css";
 import { useReactiveVar } from "@apollo/client";
@@ -115,6 +119,7 @@ export default function Overlay() {
       </button>
       {state.isOpen && (
         <OverlayContainer>
+          {/* @ts-ignore */}
           <ModalDialog isOpen onClose={(...props) => state.close(...props)} />
         </OverlayContainer>
       )}

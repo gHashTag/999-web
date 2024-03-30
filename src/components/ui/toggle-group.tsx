@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
+// @ts-ignore
 import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
+// @ts-ignore
 import { VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";

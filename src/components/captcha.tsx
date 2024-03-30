@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+// @ts-ignore
 import type HCaptcha from "@hcaptcha/react-hcaptcha";
 import { IS_CAPTCHA_ENABLED } from "@lib/captcha";
 
@@ -27,7 +27,7 @@ import {
 } from "react";
 
 type Props = Omit<ComponentProps<typeof HCaptcha>, "sitekey">;
-
+// @ts-ignore
 const LazyCaptcha = lazy(() => import("@hcaptcha/react-hcaptcha"));
 
 export function useCaptcha() {

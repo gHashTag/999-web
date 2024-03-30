@@ -1,7 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { OptionType, RoomNode, RoomsData } from "@/types";
+
+// @ts-ignore
 import AsyncSelect from "react-select/async";
+// @ts-ignore
 import { StylesConfig, ActionMeta, SingleValue } from "react-select";
 import { setAssetInfo } from "@/apollo/reactive-store";
 
@@ -41,7 +44,7 @@ const promiseOptions = (inputValue: string) =>
   });
 
 const customStyles: StylesConfig<OptionType, false> = {
-  option: (provided, state) => ({
+  option: (provided: any, state: any) => ({
     ...provided,
     backgroundColor: state.isFocused ? "#ffb700" : "rgba(12, 10, 9, 0.8)",
     color: state.isFocused ? "black" : provided.color,
@@ -51,20 +54,20 @@ const customStyles: StylesConfig<OptionType, false> = {
       color: "black",
     },
   }),
-  menu: (provided) => ({
+  menu: (provided: any) => ({
     ...provided,
     backgroundColor: "rgba(12, 10, 9, 0.8)",
 
     zIndex: 1000,
   }),
-  menuPortal: (base) => ({
+  menuPortal: (base: any) => ({
     ...base,
     zIndex: 9999,
 
     borderColor: "gray",
     backgroundColor: "rgba(12, 10, 9, 0.8)",
   }),
-  control: (baseStyles) => ({
+  control: (baseStyles: any) => ({
     ...baseStyles,
     marginTop: 11,
     minWidth: 300,
@@ -73,7 +76,7 @@ const customStyles: StylesConfig<OptionType, false> = {
     "&:hover": { borderColor: "#ffb700" },
     backgroundColor: "rgba(12, 10, 9, 0.8)",
   }),
-  singleValue: (provided) => ({
+  singleValue: (provided: any) => ({
     ...provided,
     color: "#ffb700",
   }),

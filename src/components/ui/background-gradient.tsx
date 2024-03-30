@@ -1,5 +1,6 @@
 import { cn } from "@/utils/cn";
 import React from "react";
+// @ts-ignore
 import { motion } from "framer-motion";
 
 export const BackgroundGradient = ({

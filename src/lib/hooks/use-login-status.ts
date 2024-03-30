@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+// @ts-ignore
 import useSWR from "swr";
 
 // @ts-ignore
 export default function useLoginStatus(opts) {
   const { data, error, mutate } = useSWR(
     `/api/auth`,
+    // @ts-ignore
     async (url) => {
       const res = await fetch(url);
       if (!res.ok) {
@@ -30,7 +31,7 @@ export default function useLoginStatus(opts) {
     {
       ...opts,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   return {

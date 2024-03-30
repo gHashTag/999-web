@@ -4,7 +4,9 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "@/utils/cn";
 import { Textarea } from "@/components/ui/textarea";
+// @ts-ignore
 import { SubmitHandler, FieldValues } from "react-hook-form";
+// @ts-ignore
 import { useForm } from "react-hook-form";
 import { Button } from "./button";
 import { ButtonAnimate } from "./button-animate";

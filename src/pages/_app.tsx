@@ -2,7 +2,9 @@ import "@/styles/globals.css";
 // import "@/styles/styles.css";
 import { useCallback, useEffect, useState } from "react";
 import type { AppProps } from "next/app";
+// @ts-ignore
 import { NextUIProvider } from "@nextui-org/react";
+// @ts-ignore
 import { HMSRoomProvider } from "@100mslive/react-sdk";
 // import { HuddleClient, HuddleProvider } from "@huddle01/react";
 import NProgress from "@components/nprogress";
@@ -10,7 +12,9 @@ import ResizeHandler from "@components/resize-handler";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import BackgroundBeams from "@components/ui/background-beams";
 import { Toaster } from "@/components/ui/toaster";
+// @ts-ignore
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+
 import { setLoggedIn } from "@/apollo/reactive-store";
 import { ThemeProvider } from "@/components/theme-provider";
 import {

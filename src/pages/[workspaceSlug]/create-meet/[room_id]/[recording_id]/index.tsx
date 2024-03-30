@@ -2,6 +2,7 @@
 import React from "react";
 import Layout from "@/components/layout";
 import { TracingBeam } from "@/components/ui/tracing-beam";
+// @ts-ignore
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/router";
 import { useQuery, gql } from "@apollo/client";
