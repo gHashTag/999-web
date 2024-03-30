@@ -6,14 +6,24 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  //@ts-ignore
 } from "@nextui-org/react";
+//@ts-ignore
 import { Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+//@ts-ignore
 import styled from "styled-components";
 import { cn } from "@/utils/cn";
 import { InputMultiline } from "../ui/input-multiline";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Modal = {
   isOpen: boolean;
@@ -23,7 +33,6 @@ type Modal = {
   onUpdate: () => void;
   onDelete: () => void;
   isEditing: boolean;
-  card: any;
   control: any;
   handleSubmit: any;
   getValues: any;
@@ -46,17 +55,14 @@ function TaskModal({
   handleSubmit,
   setValue,
   isEditing,
-  card,
 }: Modal) {
-  // console.log(isOpen, "isOpen");
-  // console.log(card?.title, "card?.title");
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <Button onClick={onOpen}>
         {isEditing ? "Edit Task" : "Create Task"}
       </Button>
       <CustomModalContent>
-        {(onClose) => (
+        {(onClose: any) => (
           <>
             <ModalHeader>
               <span>{isEditing ? "Edit task" : "Create task"}</span>
@@ -68,7 +74,7 @@ function TaskModal({
                 <Controller
                   name="title"
                   control={control}
-                  render={({ field }) => (
+                  render={({ field }: any) => (
                     <Input
                       placeholder="Enter your title"
                       className="w-full h-15"
@@ -86,7 +92,7 @@ function TaskModal({
                 <Controller
                   name="description"
                   control={control}
-                  render={({ field }) => (
+                  render={({ field }: any) => (
                     <InputMultiline
                       placeholder="Enter your description"
                       {...field}
@@ -96,17 +102,46 @@ function TaskModal({
                     />
                   )}
                 />
+                <div style={{ padding: 10 }} />
+                <Label htmlFor="text">Label</Label>
+                <div style={{ padding: 5 }} />
+                <Controller
+                  name="label"
+                  control={control}
+                  render={({ field }: any) => (
+                    <Input
+                      placeholder="Enter your label"
+                      className="w-full h-15"
+                      {...field}
+                      onChange={(e) => {
+                        setValue("label", e.target.value);
+                      }}
+                    />
+                  )}
+                />
+                <div style={{ padding: 10 }} />
               </form>
             </ModalBody>
+
             <ModalFooter>
+              {/* <Select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Priority" />
+                </SelectTrigger>
+                <SelectContent onClick={(e) => e.stopPropagation()}>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select> */}
               {isEditing && (
+                // @ts-ignore
                 <Button color="warning" variant="ghost" onClick={onDelete}>
                   Delete
                 </Button>
               )}
               <Button
                 color="warning"
-                variant="ghost"
                 onClick={() => {
                   isEditing ? onUpdate() : onCreate();
                   onClose();
@@ -123,63 +158,3 @@ function TaskModal({
 }
 
 export default TaskModal;
-{
-  /* <Modal
-isOpen={openModalId === card.node.id}
-onOpenChange={closeModal}
->
-<CustomModalContent>
-  <ModalHeader>
-    <span>Edit task</span>
-  </ModalHeader>
-  <ModalBody>
-    <form onSubmit={handleSubmit(onUpdate)}>
-      <Label htmlFor="text">Title</Label>
-      <div style={{ padding: 5 }} />
-      <Controller
-        name="title"
-        control={control}
-        defaultValue={card.node.title}
-        render={({ field }) => (
-          <Input
-            placeholder="Enter your title"
-            className="w-full h-15"
-            {...field}
-            onChange={(e) => {
-              setValue("title", e.target.value);
-            }}
-          />
-        )}
-      />
-      <div style={{ padding: 10 }} />
-
-      <Label htmlFor="text">Description</Label>
-      <div style={{ padding: 5 }} />
-      <Controller
-        name="description"
-        control={control}
-        defaultValue={card.node.description}
-        render={({ field }) => (
-          <Input
-            placeholder="Enter your description"
-            className="w-full"
-            {...field}
-            onChange={(e) => {
-              setValue("description", e.target.value);
-            }}
-          />
-        )}
-      />
-    </form>
-  </ModalBody>
-  <ModalFooter>
-    <Button color="warning" variant="ghost" onClick={onDelete}>
-      Delete
-    </Button>
-    <Button color="warning" variant="ghost" onClick={onUpdate}>
-      Save
-    </Button>
-  </ModalFooter>
-</CustomModalContent>
-</Modal> */
-}

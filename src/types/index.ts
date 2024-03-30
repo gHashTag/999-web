@@ -23,7 +23,7 @@ export interface Task {
     due_date?: string;
     priority?: number;
     assigned_to?: AssignedUser[];
-    labels?: string[];
+    label?: string[];
     completed_at?: string;
     is_archived?: boolean;
     status: TaskStatus;
@@ -126,13 +126,15 @@ export type RecordingAsset = {
   transcription_id: string;
 };
 
-export type ExtendedOpenloginUserInfo = Omit<
-  OpenloginUserInfo,
-  "profileImage"
-> & {
-  avatar?: string;
-  user_id: string;
-};
+export type ExtendedOpenloginUserInfo =
+  & Omit<
+    OpenloginUserInfo,
+    "profileImage"
+  >
+  & {
+    avatar?: string;
+    user_id: string;
+  };
 
 // Rooms Data
 interface Code {

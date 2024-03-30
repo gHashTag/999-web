@@ -88,3 +88,105 @@ export const DELETE_ROOM_MUTATION = gql`
     }
   }
 `;
+
+export const TASKS_COLLECTION_QUERY = gql`
+query GetTasks($user_id: UUID!) {
+  tasksCollection(filter: {
+    and: [
+      {user_id: {eq: $user_id}}
+    ]
+  }, orderBy: {
+      created_at: DescNullsFirst
+    }) {
+    edges {
+      node {
+        id
+        user_id
+        created_at
+        title
+        description
+        updated_at
+        due_date
+        priority
+        completed_at
+        is_archived
+        status
+        label
+      }
+    }
+  }
+}
+`;
+
+export const CREATE_TASK_MUTATION = gql`
+  mutation CreateTasks($objects: [tasksInsertInput!]!) {
+    insertIntotasksCollection(objects: $objects) {
+      records {
+        id
+        user_id
+        created_at
+        title
+        description
+        updated_at
+        due_date
+        priority
+        assigned_to
+        completed_at
+        is_archived
+        status
+        order
+        label
+      }
+    }
+  }
+`;
+
+export const MUTATION_TASK_UPDATE = gql`
+  mutation updatetasksCollection(
+    $id: BigInt!
+    $status: BigInt!
+    $title: String!
+    $description: String!
+    $updated_at: Datetime!
+    $order: BigInt!
+  ) {
+    updatetasksCollection(
+      filter: { id: { eq: $id } }
+      set: {
+        status: $status
+        updated_at: $updated_at
+        title: $title
+        description: $description
+        order: $order
+      }
+    ) {
+      records {
+        id
+        user_id
+        title
+        description
+        status
+        due_date
+        assigned_to
+        completed_at
+        is_archived
+        updated_at
+        created_at
+        label
+        priority
+        order
+      }
+    }
+  }
+`;
+
+export const DELETE_TASK_MUTATION = gql`
+  mutation DeleteTask($filter: tasksFilter!, $atMost: Int!) {
+    deleteFromtasksCollection(filter: $filter, atMost: $atMost) {
+      records {
+        id
+        title
+      }
+    }
+  }
+`;
