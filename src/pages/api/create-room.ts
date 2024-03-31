@@ -73,8 +73,8 @@ export default async function handler(
 
     const createOrFetchRoom = async () => {
       const roomData = {
-        name,
-        description: user_id,
+        name: `${name}-${uuidv4()}`,
+        description: name,
         template_id: type === "audio-space"
           ? "65e84b5148b3dd31b94ff005"
           : "65efdfab48b3dd31b94ff0dc",
@@ -88,7 +88,7 @@ export default async function handler(
         body: JSON.stringify({ ...roomData }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -96,7 +96,7 @@ export default async function handler(
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-
+  
       const id = newRoom.id;
       const codesResponse = await createCodes(id, token as string);
 
@@ -142,7 +142,7 @@ export async function createCodes(room_id: string, token: string) {
       `https://api.100ms.live/v2/room-codes/room/${room_id}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         method: "POST",
