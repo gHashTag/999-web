@@ -2,7 +2,7 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
 }
 
-import { corsHeaders } from "@/pages/api/corsHeaders";
+import { corsHeaders } from "@/helpers/corsHeaders";
 import {
   ApolloClient,
   createHttpLink,

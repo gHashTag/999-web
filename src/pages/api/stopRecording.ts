@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Recorder } from "@huddle01/server-sdk/recorder";
-import { corsHeaders } from "@/pages/api/corsHeaders";
+import { corsHeaders } from "@/helpers/corsHeaders";
 
 interface Recordings {
   id: string;

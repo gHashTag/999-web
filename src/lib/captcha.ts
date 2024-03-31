@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { corsHeaders } from "@/pages/api/corsHeaders";
+import { corsHeaders } from "@/helpers/corsHeaders";
 
 export async function validateCaptchaResult(result: string): Promise<boolean> {
   const { success }: { success: boolean } = await fetch(

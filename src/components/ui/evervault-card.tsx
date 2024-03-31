@@ -12,17 +12,17 @@ export const EvervaultCard = ({
   type,
   className,
   inviteToMeet,
-  inviteCode,
   inviteHostCode,
   inviteMemberCode,
+  inviteGuestCode,
 }: {
   text: string;
   type: string;
   className?: string;
   inviteToMeet: (type: string) => void;
-  inviteCode: string;
   inviteHostCode: string;
   inviteMemberCode: string;
+  inviteGuestCode: string;
 }) => {
   const router = useRouter();
   let mouseX = useMotionValue(0);
@@ -76,7 +76,7 @@ export const EvervaultCard = ({
         targetPath = `/workspaceSlug/create-meet/meets/${inviteMemberCode}`;
         break;
       default:
-        targetPath = `/workspaceSlug/create-meet/meets/${inviteCode}`;
+        targetPath = `/workspaceSlug/create-meet/meets/${inviteGuestCode}`;
     }
 
     if (router.pathname !== "/workspaceSlug/create-meet/meets/[code]") {
@@ -91,7 +91,7 @@ export const EvervaultCard = ({
 
   const href =
     type === "host"
-      ? `/workspaceSlug/create-meet/meets/${inviteCode}`
+      ? `/workspaceSlug/create-meet/meets/${inviteHostCode}`
       : router.asPath;
 
   return (

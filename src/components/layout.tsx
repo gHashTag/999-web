@@ -72,7 +72,7 @@ export default function Layout({
       },
     });
   };
-  console.log(data, "data");
+
   useEffect(() => {
     readCache();
     if (data && !data.isLoggedIn) {

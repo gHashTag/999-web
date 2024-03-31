@@ -30,7 +30,7 @@ if (!managementToken) {
 }
 
 const RoomPage = () => {
-  const [inviteCode, setInviteCode] = useState("");
+  const [inviteGuestCode, setInviteGuestCode] = useState("");
   const [inviteHostCode, setInviteHostCode] = useState("");
   const [inviteMemberCode, setInviteMemberCode] = useState("");
   const [deleteRoom, { loading: deleteRoomLoading, error: deleteRoomError }] =
@@ -92,18 +92,19 @@ const RoomPage = () => {
     // console.log(codesData, "codesData");
     if (codesData) {
       const parsedCodesData = JSON.parse(codesData);
+
       if (parsedCodesData) {
         // Проверка, что codesData действительно массив
         const codeObj = parsedCodesData.data.find(
           (codeObj: { role: string; code: string }) => codeObj.role === type
         );
         if (codeObj) {
-          if (type === "host") {
-            setInviteHostCode(codeObj.code);
+          if (type === "guest") {
+            setInviteGuestCode(codeObj.code);
           } else if (type === "member") {
             setInviteMemberCode(codeObj.code);
-          } else {
-            setInviteCode(codeObj.code);
+          } else if (type === "host") {
+            setInviteHostCode(codeObj.code);
           }
         } else {
           console.log("No code found for type:", type);
@@ -183,8 +184,8 @@ const RoomPage = () => {
               key={item.type}
               text={item.text}
               type={item.type}
-              inviteCode={inviteCode}
               inviteToMeet={inviteToMeet}
+              inviteGuestCode={inviteGuestCode}
               inviteHostCode={inviteHostCode}
               inviteMemberCode={inviteMemberCode}
             />
