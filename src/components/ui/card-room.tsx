@@ -1,7 +1,4 @@
 import { forwardRef } from "react";
-import { CSS } from "@dnd-kit/utilities";
-import { useSortable } from "@dnd-kit/sortable";
-import { Task } from "@/types";
 import { BackgroundGradient } from "./background-gradient";
 
 import { Spacer } from "@nextui-org/react";
@@ -19,10 +16,15 @@ const CardRoom = forwardRef<HTMLDivElement, CardProps>(({ node, onClick }) => {
   return (
     <div onClick={onClick} className="cursor-pointer">
       <BackgroundGradient className="rounded-[222px] sm:p-1">
-        <div className="bg-stone-950 rounded-[17px]">
+        <div className="rounded-[17px]" style={{ backgroundColor: "#0c0a09" }}>
           <div
-            className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
-            style={{ paddingTop: 10, paddingLeft: 10, textAlign: "center" }}
+            className="text-2xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl 2xl:text-4xl font-semibold"
+            style={{
+              paddingTop: 30,
+              paddingLeft: 10,
+              paddingRight: 10,
+              textAlign: "center",
+            }}
           >
             {node?.title}
           </div>

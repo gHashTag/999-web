@@ -11,7 +11,7 @@ const cardsCreateRoom = [
   {
     title: "Audio Spaces",
     img: "Audio Spaces.png",
-    onClickType: "audio-spaces",
+    onClickType: "audio-space",
     isDisabled: false,
   },
   {

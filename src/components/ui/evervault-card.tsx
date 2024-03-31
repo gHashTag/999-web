@@ -70,16 +70,16 @@ export const EvervaultCard = ({
     let targetPath;
     switch (type) {
       case "host":
-        targetPath = `/workspaceSlug/create-meet/meets/${inviteHostCode}`;
+        targetPath = `/workspaceSlug/create-meet/meet/${inviteHostCode}`;
         break;
       case "member":
-        targetPath = `/workspaceSlug/create-meet/meets/${inviteMemberCode}`;
+        targetPath = `/workspaceSlug/create-meet/meet/${inviteMemberCode}`;
         break;
       default:
-        targetPath = `/workspaceSlug/create-meet/meets/${inviteGuestCode}`;
+        targetPath = `/workspaceSlug/create-meet/meet/${inviteGuestCode}`;
     }
 
-    if (router.pathname !== "/workspaceSlug/create-meet/meets/[code]") {
+    if (router.pathname !== "/workspaceSlug/create-meet/meet/[code]") {
       if (type !== "host") {
         handleCopy(`${window.location.origin}${targetPath}`);
         inviteToMeet(type);
@@ -91,7 +91,7 @@ export const EvervaultCard = ({
 
   const href =
     type === "host"
-      ? `/workspaceSlug/create-meet/meets/${inviteHostCode}`
+      ? `/workspaceSlug/create-meet/meet/${inviteHostCode}`
       : router.asPath;
 
   return (

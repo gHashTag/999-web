@@ -75,7 +75,9 @@ export default async function handler(
       const roomData = {
         name,
         description: user_id,
-        template_id: "65efdfab48b3dd31b94ff0dc",
+        template_id: type === "audio-space"
+          ? "65e84b5148b3dd31b94ff005"
+          : "65efdfab48b3dd31b94ff0dc",
         enabled: true,
       };
 
@@ -102,7 +104,7 @@ export default async function handler(
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
       }
       const codes = await codesResponse.json();
-      console.log(codes, "codes");
+
       const rooms = {
         ...newRoom,
         codes,
@@ -119,7 +121,6 @@ export default async function handler(
     };
 
     const rooms = await createOrFetchRoom();
-    console.log(rooms, "rooms");
 
     const { error } = await supabase.from("rooms").insert({
       ...rooms,
@@ -147,10 +148,11 @@ export async function createCodes(room_id: string, token: string) {
         method: "POST",
       },
     );
-    console.log(response, "createCodes");
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
     return response;
   } catch (error) {
     console.error("Error creating codes:", error);

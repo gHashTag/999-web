@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 // @ts-ignore
 import { useForm } from "react-hook-form";
@@ -9,7 +9,6 @@ import { useDisclosure } from "@nextui-org/react";
 import { useToast } from "@/components/ui/use-toast";
 import { createRoom } from "@/utils/edge-functions";
 import { SelectRoom } from "@/components/ui/select-room";
-import Card from "@/components/Kanban/Card";
 import { CURRENT_USER, ROOMS_COLLECTION_QUERY } from "@/graphql/query";
 import { useQuery } from "@apollo/client";
 import { CardRoomT } from "@/types";
@@ -39,17 +38,14 @@ const MeetsPage = () => {
     const formData = getValues();
     try {
       const response = await createRoom(formData.name, openModalId);
-      console.log("🚀 ~ onCreateMeet ~ response:", response.rooms);
-      if (response) {
-        localStorage.setItem("name", response.rooms.name);
-        localStorage.setItem("room_id", response.rooms.room_id);
-        setLoading(false);
 
+      if (response) {
         toast({
           title: "Success",
           description: `${response.rooms.name} created`,
         });
         router.push(`/workspaceSlug/create-meet/${response.rooms.room_id}`);
+        setLoading(false);
       }
     } catch (error) {
       if (error) {

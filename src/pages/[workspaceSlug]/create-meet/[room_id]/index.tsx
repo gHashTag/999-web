@@ -2,17 +2,10 @@
 import React, { useEffect, useState } from "react";
 
 import Layout from "@/components/layout";
-import {
-  ApolloError,
-  gql,
-  useMutation,
-  useQuery,
-  useReactiveVar,
-} from "@apollo/client";
+import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { EvervaultCard } from "@/components/ui/evervault-card";
 import { useRouter } from "next/router";
-import { setAssetInfo } from "@/apollo/reactive-store";
 import { ButtonAnimate } from "@/components/ui/button-animate";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -90,7 +83,7 @@ const RoomPage = () => {
     const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
       ?.codes;
     // console.log(codesData, "codesData");
-    if (codesData) {
+    if (typeof codesData === "string") {
       const parsedCodesData = JSON.parse(codesData);
 
       if (parsedCodesData) {
