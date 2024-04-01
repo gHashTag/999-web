@@ -21,7 +21,7 @@ export const setUserInfo = makeVar<ExtendedOpenloginUserInfo | null>(null);
 
 export const setUserSupabase = makeVar<SupabaseUser | null>(null);
 
-export const setInviteCode = makeVar<string>("");
+export const setInviteCode = makeVar<string>("dao999nft");
 
 export const setInviterUserId = makeVar<string>("");
 

@@ -19,6 +19,10 @@ import { useToast } from "@/components/ui/use-toast";
 import { SignupFormDemo } from "@/components/ui/signup-form";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { Spinner } from "@/components/ui/spinner";
+import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
+import { web3auth } from "@/utils/web3Auth";
+
+// Add the plugin to web3auth
 
 const QUERY = gql`
   query GetUserByEmail($email: String!) {
@@ -79,8 +83,9 @@ export type updateUserDataType = {
 };
 
 export default function Wallet() {
-  const { address, balance, login, logout, getAccounts, getBalance } =
+  const { address, balance, provider, login, logout, getAccounts, getBalance } =
     useWeb3Auth();
+
   const router = useRouter();
   const email = useReactiveVar(setUserEmail);
   const { toast } = useToast();
@@ -96,11 +101,32 @@ export default function Wallet() {
     variables: { email },
   });
 
+  const topUp = async () => {
+    try {
+      // Убедитесь, что Web3Auth подключен перед использованием WalletServicesPlugin
+      if (!web3auth.connected) {
+        throw new Error("Web3Auth не подключен");
+      }
+      const walletServicesPlugin = new WalletServicesPlugin();
+      // Использование WalletServicesPlugin
+      await walletServicesPlugin.showCheckout();
+    } catch (error) {
+      console.error("Ошибка при показе checkout:", error);
+    }
+  };
+
+  useEffect(() => {
+    getBalance();
+  }, [provider]);
+
   useEffect(() => {
     login();
-    getAccounts();
-    getBalance();
-  }, []);
+    setTimeout(() => {
+      getAccounts();
+
+      topUp();
+    }, 3000);
+  }, [balance]);
 
   useEffect(() => {
     const user_id = localStorage.getItem("user_id");

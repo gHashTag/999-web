@@ -9,6 +9,7 @@ const nextConfig = {
       },
     ];
   },
+  transpilePackages: ["@moonpay/login-common", "@moonpay/login-sdk"],
   reactStrictMode: false,
   images: {
     domains: [
