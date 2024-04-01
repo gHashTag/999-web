@@ -14,7 +14,7 @@ import {
   useMutation,
   ApolloError,
 } from "@apollo/client";
-import { setUserEmail } from "@/apollo/reactive-store";
+
 import { useToast } from "@/components/ui/use-toast";
 import { SignupFormDemo } from "@/components/ui/signup-form";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
@@ -83,15 +83,16 @@ export default function Wallet() {
     useWeb3Auth();
   const router = useRouter();
   const email = localStorage.getItem("email");
+  console.log(email, "email");
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
   const [mutateUser, { loading: mutationLoading, error: mutationError }] =
     useMutation(MUTATION);
 
-  if (mutationError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log(mutationError.message);
-  }
+  // if (mutationError instanceof ApolloError) {
+  //   // Обработка ошибки ApolloError
+  //   console.log(mutationError.message);
+  // }
   const { loading, error, data, refetch } = useQuery(QUERY, {
     variables: { email },
   });
@@ -111,13 +112,8 @@ export default function Wallet() {
 
   if (error) return <p>Error : {error.message}</p>;
 
-  const onCopyText = () => {
-    setCopyStatus(true);
-    setTimeout(() => setCopyStatus(false), 2000);
-  };
-
   const userNode = data?.usersCollection?.edges[0]?.node;
-
+  console.log(userNode, "userNode");
   const handleFormData = (data: FieldValues) => {
     console.log(data, "data");
     try {
@@ -151,7 +147,7 @@ export default function Wallet() {
   return (
     <Layout loading={loading}>
       <main className="flex flex-col items-center justify-between p-14">
-        {balance && <p>Balance: {balance}</p>}
+        {/* {balance && <p>Balance: {balance}</p>}
         <div style={{ padding: "10px" }} />
         {address && (
           <>
@@ -165,7 +161,7 @@ export default function Wallet() {
             <div style={{ padding: "5px" }} />
             {copyStatus && <p>Text copied to clipboard!</p>}
           </>
-        )}
+        )} */}
 
         {loading && <Spinner size="lg" />}
         <div style={{ padding: "20px" }} />
