@@ -13,8 +13,8 @@ type ResponseData = {
   message?: string;
 };
 
-if(!process.env.NEXT_PUBLIC_100MS_ACCESS_KEY) {
-  throw new Error('NEXT_PUBLIC_100MS_ACCESS_KEY is not set');
+if(!process.env.NEXT_PUBLIC_100MS) {
+  throw new Error('NEXT_PUBLIC_100MS is not set');
 }
 
 const createToken100ms = () => {
@@ -92,7 +92,7 @@ export default async function handler(
         body: JSON.stringify({ ...roomData }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS_ACCESS_KEY}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS}`,
         },
       });
 
@@ -146,7 +146,7 @@ export async function createCodes(room_id: string, token: string) {
       `https://api.100ms.live/v2/room-codes/room/${room_id}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS_ACCESS_KEY}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS}`,
           "Content-Type": "application/json",
         },
         method: "POST",
