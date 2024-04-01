@@ -82,7 +82,7 @@ export default function Wallet() {
   const { address, balance, login, logout, getAccounts, getBalance } =
     useWeb3Auth();
   const router = useRouter();
-  const email = useReactiveVar(setUserEmail);
+  const email = localStorage.getItem("email");
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
   const [mutateUser, { loading: mutationLoading, error: mutationError }] =
