@@ -139,12 +139,13 @@ export function SignupFormDemo({
             </p>
 
             <p className="text-neutral-600 text-md max-w-full mt-2 dark:text-neutral-300">
-              {designation.split("\n").map((line, index) => (
+              {designation}
+              {/* {designation.split("\n").map((line, index) => (
                 <Fragment key={index}>
                   {line}
                   <br />
                 </Fragment>
-              ))}
+              ))} */}
             </p>
             <div style={{ padding: "15px" }} />
             <ButtonAnimate onClick={() => setIsEdit(true)}>Edit</ButtonAnimate>
