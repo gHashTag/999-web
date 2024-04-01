@@ -13,6 +13,10 @@ type ResponseData = {
   message?: string;
 };
 
+if(!process.env.NEXT_PUBLIC_100MS_ACCESS_KEY) {
+  throw new Error('NEXT_PUBLIC_100MS_ACCESS_KEY is not set');
+}
+
 const createToken100ms = () => {
   return new Promise((resolve, reject) => {
     const { APP_ACCESS_KEY, APP_SECRET } = process.env;
@@ -59,7 +63,7 @@ export default async function handler(
 
   try {
     const { name, type, email } = await req.body;
-
+    console.log(req.body, "req.body");
     const { data, error: userError } = await supabase
       .from("users")
       .select("*")
@@ -70,7 +74,7 @@ export default async function handler(
     }
 
     const user_id = data[0].user_id;
-
+    console.log(user_id, 'user_id')
     const createOrFetchRoom = async () => {
       const roomData = {
         name: `${name}-${uuidv4()}`,
@@ -80,15 +84,15 @@ export default async function handler(
           : "65efdfab48b3dd31b94ff0dc",
         enabled: true,
       };
-
+      console.log(roomData, 'roomData')
       const token = await createToken100ms();
-
+      console.log(token, 'token')
       const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
         method: "POST",
         body: JSON.stringify({ ...roomData }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS_ACCESS_KEY}`,
         },
       });
 
@@ -142,7 +146,7 @@ export async function createCodes(room_id: string, token: string) {
       `https://api.100ms.live/v2/room-codes/room/${room_id}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS_ACCESS_KEY}`,
           "Content-Type": "application/json",
         },
         method: "POST",
