@@ -10,8 +10,6 @@ import { createChatCompletion } from "@/helpers/api/createChatCompletion";
 
 import { createChatCompletionJson } from "@/helpers/api/createChatCompletionJson";
 
-const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN || "");
-
 type Task = {
   assignee: {
     user_id: string;
@@ -27,7 +25,8 @@ async function sendTasksToTelegram(
   chat_id: number,
   tasks: Task[],
   summary_short: string,
-  targetLanguage: string
+  lang: string,
+  token: string
 ) {
   const newTasks = tasks.map((task) => ({
     title: task.title,
@@ -37,18 +36,20 @@ async function sendTasksToTelegram(
   console.log(newTasks, "newTasks");
   let translatedSummaryShort = summary_short;
 
-  if (targetLanguage !== "en") {
-    translatedSummaryShort = await translateText(summary_short, targetLanguage);
+  if (lang !== "en") {
+    translatedSummaryShort = await translateText(summary_short, lang);
   }
 
   console.log(translatedSummaryShort, "translatedSummaryShort");
+
+  const bot = new Bot(token);
 
   await bot.api.sendMessage(chat_id, `🚀 ${translatedSummaryShort}`);
 
   for (const task of newTasks) {
     const translatedTask = await translateText(
       `${task.title}\n${task.description}`,
-      targetLanguage
+      lang
     );
     await bot.api.sendMessage(chat_id, `${translatedTask}\n${task.assignee}`);
   }
@@ -58,6 +59,7 @@ interface Data {
   room_id: string;
   lang: string;
   chat_id: number;
+  token: string;
 }
 
 const getPreparedUsers = (usersFromSupabase: any) => {
@@ -200,38 +202,38 @@ export default async function handler(
         });
         console.log(newTasks, "newTasks");
 
-        // получаем язык комнаты
         const { data: roomData } = (await supabase
           .from("rooms")
           .select("*")
           .eq("room_id", data.room_id)) as { data: Data[]; error: any };
 
-        const lang = roomData[0].lang;
-        const chat_id = roomData[0].chat_id;
+        const { lang, chat_id, token } = roomData[0];
+
         if (chat_id) {
           sendTasksToTelegram(
             chat_id,
             newTasks,
             summary_short,
-            lang || "en"
+            lang,
+            token
           ).catch(console.error);
         }
-        // -1001978334539 - BotMother
-        //144022504 - My
-        // 6831432194 - 999 Dev;
+
         for (const task of newTasks) {
           // Убедитесь, что userId существует и не равен null
           const user_id = task?.assignee?.user_id;
 
-          const data = await supabase.from("tasks").insert([
+          const taskData = await supabase.from("tasks").insert([
             {
               user_id,
               title: task.title,
               description: task.description,
+              room_id: data.room_id,
             },
           ]);
 
-          if (data.error?.message) console.log("Error:", data.error.message);
+          if (taskData.error?.message)
+            console.log("Error:", taskData.error.message);
         }
       } else {
         console.error("Error: 'tasks' is not an array or is null");
