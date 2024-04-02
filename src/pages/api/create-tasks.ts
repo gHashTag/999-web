@@ -1,11 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "@/utils/supabase";
-import { RoomNode } from "@/types";
 import { corsHeaders, headers } from "@/helpers/headers";
 import NextCors from "nextjs-cors";
 import { Bot } from "grammy";
 import { translateText } from "@/helpers/api/translateText";
-import { translateTaskJson } from "@/helpers/api/translateTaskJson";
 import { createChatCompletion } from "@/helpers/api/createChatCompletion";
 
 import { createChatCompletionJson } from "@/helpers/api/createChatCompletionJson";
