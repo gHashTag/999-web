@@ -24,7 +24,7 @@ type Task = {
 };
 
 async function sendTasksToTelegram(
-  chatId: number,
+  chat_id: number,
   tasks: Task[],
   summary_short: string,
   targetLanguage: string
@@ -43,20 +43,21 @@ async function sendTasksToTelegram(
 
   console.log(translatedSummaryShort, "translatedSummaryShort");
 
-  await bot.api.sendMessage(chatId, `🚀 ${translatedSummaryShort}`);
+  await bot.api.sendMessage(chat_id, `🚀 ${translatedSummaryShort}`);
 
   for (const task of newTasks) {
     const translatedTask = await translateText(
       `${task.title}\n${task.description}`,
       targetLanguage
     );
-    await bot.api.sendMessage(chatId, `${translatedTask}\n${task.assignee}`);
+    await bot.api.sendMessage(chat_id, `${translatedTask}\n${task.assignee}`);
   }
 }
 
 interface Data {
   room_id: string;
   lang: string;
+  chat_id: number;
 }
 
 const getPreparedUsers = (usersFromSupabase: any) => {
@@ -198,7 +199,6 @@ export default async function handler(
           return task;
         });
         console.log(newTasks, "newTasks");
-        const chatId = -1001978334539;
 
         // получаем язык комнаты
         const { data: roomData } = (await supabase
@@ -207,13 +207,15 @@ export default async function handler(
           .eq("room_id", data.room_id)) as { data: Data[]; error: any };
 
         const lang = roomData[0].lang;
-
-        sendTasksToTelegram(
-          chatId,
-          newTasks,
-          summary_short,
-          lang || "en"
-        ).catch(console.error);
+        const chat_id = roomData[0].chat_id;
+        if (chat_id) {
+          sendTasksToTelegram(
+            chat_id,
+            newTasks,
+            summary_short,
+            lang || "en"
+          ).catch(console.error);
+        }
         // -1001978334539 - BotMother
         //144022504 - My
         // 6831432194 - 999 Dev;
