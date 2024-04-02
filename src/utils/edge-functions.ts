@@ -9,7 +9,13 @@ if (!process.env.NEXT_PUBLIC_FUNCTION_SECRET) {
   throw new Error("NEXT_PUBLIC_FUNCTION_SECRET is not set");
 }
 
-async function createRoom(name: string, type: string) {
+async function createRoom(
+  name: string,
+  type: string,
+  token: string,
+  chat_id: string,
+  lang: string
+) {
   const url = `${SITE_URL}/api/create-room`;
   const email = localStorage.getItem("email");
 
@@ -17,6 +23,9 @@ async function createRoom(name: string, type: string) {
     name,
     type,
     email,
+    token,
+    chat_id,
+    lang,
   };
 
   try {

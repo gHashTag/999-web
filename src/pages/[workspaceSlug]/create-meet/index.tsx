@@ -36,8 +36,17 @@ const MeetsPage = () => {
   const onCreateMeet = async () => {
     setLoading(true);
     const formData = getValues();
+    console.log(formData, "formData");
+    const lang = navigator.language.substring(0, 2);
+    console.log(lang);
     try {
-      const response = await createRoom(formData.name, openModalId);
+      const response = await createRoom(
+        formData.name,
+        openModalId,
+        formData.token,
+        formData.chat_id,
+        lang
+      );
 
       if (response) {
         toast({

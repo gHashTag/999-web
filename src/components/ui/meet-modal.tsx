@@ -74,6 +74,39 @@ function MeetModal({
                   )}
                 />
                 <div style={{ padding: 10 }} />
+                <Label htmlFor="text">Telegram bot token</Label>
+                <div style={{ padding: 5 }} />
+                <Controller
+                  name="token"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      placeholder="Here is the token for bot"
+                      className="w-full h-15"
+                      {...field}
+                      onChange={(e) => {
+                        setValue("token", e.target.value);
+                      }}
+                    />
+                  )}
+                />
+                <div style={{ padding: 10 }} />
+                <Label htmlFor="text">Telegram chat id</Label>
+                <div style={{ padding: 5 }} />
+                <Controller
+                  name="chat_id"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      placeholder="Here is the chat id for bot"
+                      className="w-full h-15"
+                      {...field}
+                      onChange={(e) => {
+                        setValue("chat_id", e.target.value);
+                      }}
+                    />
+                  )}
+                />
               </form>
             </ModalBody>
             <RightAlignedFooter>

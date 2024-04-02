@@ -62,7 +62,7 @@ export default async function handler(
   });
 
   try {
-    const { name, type, email, lang, chat_id } = await req.body;
+    const { name, type, email, lang, chat_id, token } = await req.body;
     console.log(req.body, "req.body");
     const { data, error: userError } = await supabase
       .from("users")
@@ -86,8 +86,8 @@ export default async function handler(
         enabled: true,
       };
       console.log(roomData, "roomData");
-      const token = await createToken100ms();
-      console.log(token, "token");
+      const newToken = await createToken100ms();
+      console.log(newToken, "newToken");
       const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
         method: "POST",
         body: JSON.stringify({ ...roomData }),
@@ -103,7 +103,7 @@ export default async function handler(
       const newRoom = await roomResponse.json();
 
       const id = newRoom.id;
-      const codesResponse = await createCodes(id, token as string);
+      const codesResponse = await createCodes(id, newToken as string);
 
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
@@ -119,6 +119,7 @@ export default async function handler(
         user_id,
         room_id: id,
         lang,
+        token,
         chat_id,
       };
 
