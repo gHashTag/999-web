@@ -13,8 +13,8 @@ type ResponseData = {
   message?: string;
 };
 
-if(!process.env.NEXT_PUBLIC_100MS) {
-  throw new Error('NEXT_PUBLIC_100MS is not set');
+if (!process.env.NEXT_PUBLIC_100MS) {
+  throw new Error("NEXT_PUBLIC_100MS is not set");
 }
 
 const createToken100ms = () => {
@@ -42,14 +42,14 @@ const createToken100ms = () => {
         } else {
           resolve(token);
         }
-      },
+      }
     );
   });
 };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: { ...corsHeaders, ...headers } });
@@ -62,7 +62,7 @@ export default async function handler(
   });
 
   try {
-    const { name, type, email } = await req.body;
+    const { name, type, email, lang } = await req.body;
     console.log(req.body, "req.body");
     const { data, error: userError } = await supabase
       .from("users")
@@ -74,19 +74,20 @@ export default async function handler(
     }
 
     const user_id = data[0].user_id;
-    console.log(user_id, 'user_id')
+    console.log(user_id, "user_id");
     const createOrFetchRoom = async () => {
       const roomData = {
-        name: `${name}-${uuidv4()}`,
+        name: `${name}-${uuidv4()}-${lang}`,
         description: name,
-        template_id: type === "audio-space"
-          ? "65e84b5148b3dd31b94ff005"
-          : "65efdfab48b3dd31b94ff0dc",
+        template_id:
+          type === "audio-space"
+            ? "65e84b5148b3dd31b94ff005"
+            : "65efdfab48b3dd31b94ff0dc",
         enabled: true,
       };
-      console.log(roomData, 'roomData')
+      console.log(roomData, "roomData");
       const token = await createToken100ms();
-      console.log(token, 'token')
+      console.log(token, "token");
       const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
         method: "POST",
         body: JSON.stringify({ ...roomData }),
@@ -100,7 +101,7 @@ export default async function handler(
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-  
+
       const id = newRoom.id;
       const codesResponse = await createCodes(id, token as string);
 
@@ -117,6 +118,7 @@ export default async function handler(
         updated_at: new Date(),
         user_id,
         room_id: id,
+        lang,
       };
 
       delete rooms.id;
@@ -150,7 +152,7 @@ export async function createCodes(room_id: string, token: string) {
           "Content-Type": "application/json",
         },
         method: "POST",
-      },
+      }
     );
 
     if (!response.ok) {
