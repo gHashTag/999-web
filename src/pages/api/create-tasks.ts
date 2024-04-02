@@ -53,6 +53,10 @@ async function sendTasksToTelegram(
     );
     await bot.api.sendMessage(chat_id, `${translatedTask}\n${task.assignee}`);
   }
+  // @ts-ignore
+  return res.status(200).json({
+    message: "Event processed successfully",
+  });
 }
 
 interface Data {
@@ -241,10 +245,6 @@ export default async function handler(
           message: "Error: 'tasks' is not an array or is null",
         });
       }
-      // @ts-ignore
-      return res.status(200).json({
-        message: "Event processed successfully",
-      });
     }
   } catch (error: any) {
     console.log("error", error);
