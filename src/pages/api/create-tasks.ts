@@ -142,7 +142,7 @@ export default async function handler(
         summary_short,
         getTitleWithEmojiSystemPrompt
       );
-      console.log(titleWithEmoji, "titleWithEmoji");
+      // console.log(titleWithEmoji, "titleWithEmoji");
 
       const roomAsset = {
         ...data,
@@ -172,7 +172,7 @@ export default async function handler(
       const { data: users } = await supabase.from("users").select("*");
 
       const preparedUsers = getPreparedUsers(users);
-      console.log(preparedUsers, "preparedUsers");
+      // console.log(preparedUsers, "preparedUsers");
 
       const prompt = `add the 'user_id' from of ${JSON.stringify(
         preparedUsers
@@ -189,11 +189,11 @@ export default async function handler(
         description: "Capture the Universe and a couple of stars in the Aldebaran constellation"
       }]) Provide your response as a JSON object and always response on English`;
 
-      console.log(preparedTasks, "preparedTasks");
+      // console.log(preparedTasks, "preparedTasks");
       const tasks = await createChatCompletionJson(prompt);
 
       const tasksArray = tasks && JSON.parse(tasks).tasks;
-      console.log(tasksArray, "tasksArray");
+      // console.log(tasksArray, "tasksArray");
       if (Array.isArray(tasksArray)) {
         const newTasks = tasksArray.map((task: any) => {
           // Если user_id отсутствует или пуст, присваиваем значение по умолчанию
