@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/**/*": {
+    "api/create-tasks.ts": {
       "maxDuration": 299
     }
   }
