@@ -243,6 +243,10 @@ export default async function handler(
           message: "Error: 'tasks' is not an array or is null",
         });
       }
+    } else {
+      return res.status(200).json({
+        message: "type is not equal to transcription.success",
+      });
     }
   } catch (error: any) {
     console.log("error", error);
