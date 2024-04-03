@@ -104,7 +104,11 @@ export default async function handler(
 
   try {
     const { type, data: initData } = await req.body;
-    console.log(initData.room_id, "initData.room_id");
+    if (!initData.room_id) {
+      return res.status(200).json({
+        message: "room_id is undefined",
+      });
+    }
     if (type === "transcription.success") {
       const { data: roomAssetValidation } = await supabase
         .from("room_assets")
