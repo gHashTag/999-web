@@ -77,7 +77,7 @@ export default async function handler(
     console.log(user_id, "user_id");
     const createOrFetchRoom = async () => {
       const roomData = {
-        name: `${name}-${uuidv4()}-${lang}`,
+        name: `${name}:${uuidv4()}:${lang}`,
         description: name,
         template_id:
           type === "audio-space"

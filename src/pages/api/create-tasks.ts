@@ -103,18 +103,31 @@ export default async function handler(
   });
 
   try {
-    const { type, data } = await req.body;
-
+    const { type, data: initData } = await req.body;
+    console.log(initData.room_id, "initData.room_id");
     if (type === "transcription.success") {
+      const { data: roomAssetValidation } = await supabase
+        .from("room_assets")
+        .select("*")
+        .eq("room_id", initData.room_id);
+
+      if (
+        roomAssetValidation &&
+        roomAssetValidation[0].room_id === initData.room_id
+      ) {
+        return res.status(200).json({
+          message: "room_id is equal to data.room_id",
+        });
+      }
       // Получаем прямую ссылку на текстовый файл транскрипции
-      const transcriptTextPresignedUrl = data.transcript_txt_presigned_url;
+      const transcriptTextPresignedUrl = initData.transcript_txt_presigned_url;
 
       // Выполняем запрос к URL для получения текста транскрипции
       const transcriptResponse = await fetch(transcriptTextPresignedUrl);
 
       const transcription = await transcriptResponse.text();
 
-      const summaryJsonPresignedUrl = data.summary_json_presigned_url;
+      const summaryJsonPresignedUrl = initData.summary_json_presigned_url;
 
       const summaryJSONResponse = await fetch(summaryJsonPresignedUrl);
       if (!summaryJSONResponse.ok) {
@@ -145,7 +158,7 @@ export default async function handler(
       // console.log(titleWithEmoji, "titleWithEmoji");
 
       const roomAsset = {
-        ...data,
+        ...initData,
         title: titleWithEmoji,
         summary_short,
         transcription,
@@ -168,7 +181,7 @@ export default async function handler(
         transcription,
         systemPrompt
       );
-      console.log("preparedTasks", preparedTasks);
+      // console.log("preparedTasks", preparedTasks);
       const { data: users } = await supabase.from("users").select("*");
 
       const preparedUsers = getPreparedUsers(users);
@@ -202,12 +215,12 @@ export default async function handler(
           }
           return task;
         });
-        console.log(newTasks, "newTasks");
+        // console.log(newTasks, "newTasks");
 
         const { data: roomData } = (await supabase
           .from("rooms")
           .select("*")
-          .eq("room_id", data.room_id)) as { data: Data[]; error: any };
+          .eq("room_id", initData.room_id)) as { data: Data[]; error: any };
 
         const { lang, chat_id, token } = roomData[0];
 
@@ -224,15 +237,16 @@ export default async function handler(
         for (const task of newTasks) {
           // Убедитесь, что userId существует и не равен null
           const user_id = task?.assignee?.user_id;
-
+          console.log(initData.room_id, "initData.room_id");
           const taskData = await supabase.from("tasks").insert([
             {
               user_id,
               title: task.title,
               description: task.description,
-              room_id: data.room_id,
+              room_id: initData.room_id,
             },
           ]);
+          console.log(taskData, "taskData");
 
           if (taskData.error?.message)
             console.log("Error:", taskData.error.message);
