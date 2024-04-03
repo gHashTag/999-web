@@ -104,6 +104,11 @@ export default async function handler(
     const { type, data } = await req.body;
     console.log(type, "type");
     console.log(data, "data");
+    if (type === undefined) {
+      return res.status(200).json({
+        message: "type is undefined",
+      });
+    }
 
     if (type === "transcription.success") {
       if (!data.room_id) {
@@ -148,7 +153,7 @@ export default async function handler(
           getTitleWithEmojiSystemPrompt
         );
         // console.log(titleWithEmoji, "titleWithEmoji");
-        const systemPrompt = `Answer with emoticons. You are an AI assistant working at dao999nft. Your goal is to extract all tasks from the text, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, assign them to executors using the colon sign: assignee, title,  description (Example: <b>Nikita Zhilin</b>: 💻 Develop functional requirements) Provide your response as a JSON object`;
+        const systemPrompt = `Answer with emoticons. You are an AI assistant working at dao999nft. Your goal is to extract all tasks from the text, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, assign them to executors using the colon sign: assignee, title,  description (Example: <b>Nikita Zhilin</b>: 💻 Develop functional requirements) If no tasks are detected, add one task indicating that no tasks were found. Provide your response as a JSON object`;
 
         const preparedTasks = await createChatCompletionJson(
           transcription,
