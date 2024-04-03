@@ -51,10 +51,6 @@ async function sendTasksToTelegram(
     );
     await bot.api.sendMessage(chat_id, `${translatedTask}\n${task.assignee}`);
   }
-  // @ts-ignore
-  return res.status(200).json({
-    message: "Event processed successfully",
-  });
 }
 
 interface Data {
@@ -114,19 +110,6 @@ export default async function handler(
       });
     } else {
       if (type === "transcription.success") {
-        const { data: roomAssetValidation } = await supabase
-          .from("room_assets")
-          .select("*")
-          .eq("room_id", data.room_id);
-
-        // if (
-        //   roomAssetValidation &&
-        //   roomAssetValidation[0].room_id === data.room_id
-        // ) {
-        //   return res.status(200).json({
-        //     message: "room_id is equal to data.data.room_id",
-        //   });
-        // }
         // Получаем прямую ссылку на текстовый файл транскрипции
         const transcriptTextPresignedUrl = data.transcript_txt_presigned_url;
 
@@ -267,6 +250,10 @@ export default async function handler(
             message: "Error: 'tasks' is not an array or is null",
           });
         }
+        // @ts-ignore
+        return res.status(200).json({
+          message: "Event processed successfully",
+        });
       } else {
         return res.status(200).json({
           message: "type is not equal to transcription.success",
