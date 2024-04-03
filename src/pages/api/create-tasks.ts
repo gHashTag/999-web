@@ -103,35 +103,36 @@ export default async function handler(
   });
 
   try {
-    const { type, data: initData } = await req.body;
-    if (!initData.room_id) {
+    const { type, data } = await req.body;
+    console.log(data, "data");
+    if (!data.room_id) {
       return res.status(200).json({
-        message: "room_id is undefined",
+        message: `check init data ${JSON.stringify(data)}`,
       });
     }
     if (type === "transcription.success") {
       const { data: roomAssetValidation } = await supabase
         .from("room_assets")
         .select("*")
-        .eq("room_id", initData.room_id);
+        .eq("room_id", data.room_id);
 
       if (
         roomAssetValidation &&
-        roomAssetValidation[0].room_id === initData.room_id
+        roomAssetValidation[0].room_id === data.room_id
       ) {
         return res.status(200).json({
-          message: "room_id is equal to data.room_id",
+          message: "room_id is equal to data.data.room_id",
         });
       }
       // Получаем прямую ссылку на текстовый файл транскрипции
-      const transcriptTextPresignedUrl = initData.transcript_txt_presigned_url;
+      const transcriptTextPresignedUrl = data.transcript_txt_presigned_url;
 
       // Выполняем запрос к URL для получения текста транскрипции
       const transcriptResponse = await fetch(transcriptTextPresignedUrl);
 
       const transcription = await transcriptResponse.text();
 
-      const summaryJsonPresignedUrl = initData.summary_json_presigned_url;
+      const summaryJsonPresignedUrl = data.summary_json_presigned_url;
 
       const summaryJSONResponse = await fetch(summaryJsonPresignedUrl);
       if (!summaryJSONResponse.ok) {
@@ -162,7 +163,7 @@ export default async function handler(
       // console.log(titleWithEmoji, "titleWithEmoji");
 
       const roomAsset = {
-        ...initData,
+        ...data,
         title: titleWithEmoji,
         summary_short,
         transcription,
@@ -224,7 +225,7 @@ export default async function handler(
         const { data: roomData } = (await supabase
           .from("rooms")
           .select("*")
-          .eq("room_id", initData.room_id)) as { data: Data[]; error: any };
+          .eq("room_id", data.room_id)) as { data: Data[]; error: any };
 
         const { lang, chat_id, token } = roomData[0];
 
@@ -241,13 +242,13 @@ export default async function handler(
         for (const task of newTasks) {
           // Убедитесь, что userId существует и не равен null
           const user_id = task?.assignee?.user_id;
-          console.log(initData.room_id, "initData.room_id");
+          console.log(data.room_id, "data.room_id");
           const taskData = await supabase.from("tasks").insert([
             {
               user_id,
               title: task.title,
               description: task.description,
-              room_id: initData.room_id,
+              room_id: data.room_id,
             },
           ]);
           console.log(taskData, "taskData");
