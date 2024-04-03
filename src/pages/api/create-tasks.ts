@@ -153,6 +153,25 @@ export default async function handler(
           getTitleWithEmojiSystemPrompt
         );
         // console.log(titleWithEmoji, "titleWithEmoji");
+
+        const roomAsset = {
+          ...data,
+          title: titleWithEmoji,
+          summary_short,
+          transcription,
+        };
+        // console.log("roomAsset", roomAsset);
+
+        const { error: errorInsertRoomAsset } = await supabase
+          .from("room_assets")
+          .insert([roomAsset]);
+
+        if (errorInsertRoomAsset) {
+          throw new Error(
+            `Asset creation failed: ${errorInsertRoomAsset.message}`
+          );
+        }
+
         const systemPrompt = `Answer with emoticons. You are an AI assistant working at dao999nft. Your goal is to extract all tasks from the text, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, assign them to executors using the colon sign: assignee, title,  description (Example: <b>Nikita Zhilin</b>: 💻 Develop functional requirements) If no tasks are detected, add one task indicating that no tasks were found. Provide your response as a JSON object`;
 
         const preparedTasks = await createChatCompletionJson(
@@ -227,24 +246,6 @@ export default async function handler(
 
             if (taskData.error?.message)
               console.log("Error:", taskData.error.message);
-          }
-
-          const roomAsset = {
-            ...data,
-            title: titleWithEmoji,
-            summary_short,
-            transcription,
-          };
-          // console.log("roomAsset", roomAsset);
-
-          const { error: errorInsertRoomAsset } = await supabase
-            .from("room_assets")
-            .insert([roomAsset]);
-
-          if (errorInsertRoomAsset) {
-            throw new Error(
-              `Asset creation failed: ${errorInsertRoomAsset.message}`
-            );
           }
         } else {
           return res.status(500).json({
