@@ -104,12 +104,13 @@ export default async function handler(
     const { type, data } = await req.body;
     console.log(type, "type");
     console.log(data, "data");
-    if (!data.room_id) {
-      return res.status(200).json({
-        message: `check init data ${JSON.stringify(data)}`,
-      });
-    } else {
-      if (type === "transcription.success") {
+
+    if (type === "transcription.success") {
+      if (!data.room_id) {
+        return res.status(200).json({
+          message: `check init data ${JSON.stringify(data)}`,
+        });
+      } else {
         // Получаем прямую ссылку на текстовый файл транскрипции
         const transcriptTextPresignedUrl = data.transcript_txt_presigned_url;
 
@@ -117,7 +118,7 @@ export default async function handler(
         const transcriptResponse = await fetch(transcriptTextPresignedUrl);
 
         const transcription = await transcriptResponse.text();
-        console.log(transcription, "transcription");
+        // console.log(transcription, "transcription");
 
         const summaryJsonPresignedUrl = data.summary_json_presigned_url;
 
@@ -127,7 +128,6 @@ export default async function handler(
         }
         const summaryResponse = await summaryJSONResponse.json();
         // console.log(summaryResponse, "summaryResponse");
-
         const summarySection = summaryResponse.sections.find(
           (section: {
             title: string;
@@ -147,39 +147,36 @@ export default async function handler(
           summary_short,
           getTitleWithEmojiSystemPrompt
         );
-        console.log(titleWithEmoji, "titleWithEmoji");
-
+        // console.log(titleWithEmoji, "titleWithEmoji");
         const systemPrompt = `Answer with emoticons. You are an AI assistant working at dao999nft. Your goal is to extract all tasks from the text, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, assign them to executors using the colon sign: assignee, title,  description (Example: <b>Nikita Zhilin</b>: 💻 Develop functional requirements) Provide your response as a JSON object`;
 
         const preparedTasks = await createChatCompletionJson(
           transcription,
           systemPrompt
         );
-        console.log("preparedTasks", preparedTasks);
+        // console.log("preparedTasks", preparedTasks);
 
         const { data: users } = await supabase.from("users").select("*");
 
         const preparedUsers = getPreparedUsers(users);
         // console.log(preparedUsers, "preparedUsers");
-
         const prompt = `add the 'user_id' from of ${JSON.stringify(
           preparedUsers
         )} to the objects of the ${JSON.stringify(
           preparedTasks
         )} array. (Example: [{
-        assignee: {
-          user_id: "1a1e4c75-830c-4fe8-a312-c901c8aa144b",
-          first_name: "Andrey",
-          last_name: "O",
-          username: "reactotron"
-        },
-        title: "🌌 Capture Universe",
-        description: "Capture the Universe and a couple of stars in the Aldebaran constellation"
-      }]) Provide your response as a JSON object and always response on English`;
+          assignee: {
+            user_id: "1a1e4c75-830c-4fe8-a312-c901c8aa144b",
+            first_name: "Andrey",
+            last_name: "O",
+            username: "reactotron"
+          },
+          title: "🌌 Capture Universe",
+          description: "Capture the Universe and a couple of stars in the Aldebaran constellation"
+        }]) Provide your response as a JSON object and always response on English`;
 
         // console.log(preparedTasks, "preparedTasks");
         const tasks = await createChatCompletionJson(prompt);
-
         const tasksArray = tasks && JSON.parse(tasks).tasks;
         // console.log(tasksArray, "tasksArray");
         if (Array.isArray(tasksArray)) {
@@ -212,7 +209,7 @@ export default async function handler(
           for (const task of newTasks) {
             // Убедитесь, что userId существует и не равен null
             const user_id = task?.assignee?.user_id;
-            console.log(data.room_id, "data.room_id");
+            // console.log(data.room_id, "data.room_id");
             const taskData = await supabase.from("tasks").insert([
               {
                 user_id,
@@ -221,7 +218,7 @@ export default async function handler(
                 room_id: data.room_id,
               },
             ]);
-            console.log(taskData, "taskData");
+            // console.log(taskData, "taskData");
 
             if (taskData.error?.message)
               console.log("Error:", taskData.error.message);
@@ -233,7 +230,7 @@ export default async function handler(
             summary_short,
             transcription,
           };
-          console.log("roomAsset", roomAsset);
+          // console.log("roomAsset", roomAsset);
 
           const { error: errorInsertRoomAsset } = await supabase
             .from("room_assets")
@@ -245,7 +242,6 @@ export default async function handler(
             );
           }
         } else {
-          console.error("Error: 'tasks' is not an array or is null");
           return res.status(500).json({
             message: "Error: 'tasks' is not an array or is null",
           });
@@ -254,14 +250,13 @@ export default async function handler(
         return res.status(200).json({
           message: "Event processed successfully",
         });
-      } else {
-        return res.status(200).json({
-          message: "type is not equal to transcription.success",
-        });
       }
+    } else {
+      return res.status(200).json({
+        message: "type is not equal to transcription.success",
+      });
     }
   } catch (error: any) {
-    console.log("error", error);
     return res.status(500).json({ message: error.message });
   }
 }
