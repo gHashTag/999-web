@@ -84,10 +84,12 @@ const getPreparedUsers = (usersFromSupabase: any) => {
   });
 };
 
-type ResponseData = {
+interface ResponseData {
   message?: string;
-};
-
+  error?: {
+    message: string;
+  };
+}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
@@ -117,14 +119,14 @@ export default async function handler(
           .select("*")
           .eq("room_id", data.room_id);
 
-        if (
-          roomAssetValidation &&
-          roomAssetValidation[0].room_id === data.room_id
-        ) {
-          return res.status(200).json({
-            message: "room_id is equal to data.data.room_id",
-          });
-        }
+        // if (
+        //   roomAssetValidation &&
+        //   roomAssetValidation[0].room_id === data.room_id
+        // ) {
+        //   return res.status(200).json({
+        //     message: "room_id is equal to data.data.room_id",
+        //   });
+        // }
         // Получаем прямую ссылку на текстовый файл транскрипции
         const transcriptTextPresignedUrl = data.transcript_txt_presigned_url;
 
@@ -132,6 +134,7 @@ export default async function handler(
         const transcriptResponse = await fetch(transcriptTextPresignedUrl);
 
         const transcription = await transcriptResponse.text();
+        console.log(transcription, "transcription");
 
         const summaryJsonPresignedUrl = data.summary_json_presigned_url;
 
@@ -161,7 +164,7 @@ export default async function handler(
           summary_short,
           getTitleWithEmojiSystemPrompt
         );
-        // console.log(titleWithEmoji, "titleWithEmoji");
+        console.log(titleWithEmoji, "titleWithEmoji");
 
         const roomAsset = {
           ...data,
@@ -169,7 +172,7 @@ export default async function handler(
           summary_short,
           transcription,
         };
-        // console.log("roomAsset", roomAsset);
+        console.log("roomAsset", roomAsset);
 
         const { error: errorInsertRoomAsset } = await supabase
           .from("room_assets")
@@ -187,7 +190,8 @@ export default async function handler(
           transcription,
           systemPrompt
         );
-        // console.log("preparedTasks", preparedTasks);
+        console.log("preparedTasks", preparedTasks);
+
         const { data: users } = await supabase.from("users").select("*");
 
         const preparedUsers = getPreparedUsers(users);
