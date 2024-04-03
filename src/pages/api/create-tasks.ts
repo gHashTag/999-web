@@ -26,19 +26,24 @@ async function sendTasksToTelegram(
   lang: string,
   token: string
 ) {
-  const newTasks = tasks.map((task) => ({
-    title: task.title,
-    description: task.description,
-    assignee: `${task.assignee.first_name} ${task.assignee.last_name} (@${task.assignee.username})`,
-  }));
-  console.log(newTasks, "newTasks");
+  const newTasks = tasks.map((task) => {
+    const assignee =
+      task.assignee.username === null
+        ? ""
+        : `${task.assignee.first_name} ${task.assignee.last_name} (@${task.assignee.username})`;
+
+    return {
+      title: task.title,
+      description: task.description,
+      assignee,
+    };
+  });
+
   let translatedSummaryShort = summary_short;
 
   if (lang !== "en") {
     translatedSummaryShort = await translateText(summary_short, lang);
   }
-
-  console.log(translatedSummaryShort, "translatedSummaryShort");
 
   const bot = new Bot(token);
 
