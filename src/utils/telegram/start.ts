@@ -35,7 +35,7 @@ export const startTelegramBotInDev = async () => {
 
 export const startTelegramBotInProduction = async () => {
   try {
-    const webhookUrl = `${WEBAPP_URL}/api/telegram-webhook?token=${process.env.TELEGRAM_BOT_WEBHOOK_TOKEN}`;
+    const webhookUrl = `${WEBAPP_URL}/api/telegram-bot?token=${process.env.TELEGRAM_BOT_TOKEN}`;
 
     logger.info("fetching  webhook info");
     const webhookInfo = await bot.api.getWebhookInfo();

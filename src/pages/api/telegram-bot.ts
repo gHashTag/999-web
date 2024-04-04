@@ -2,12 +2,11 @@ import { supabase } from "@/utils/supabase";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Bot, Context, webhookCallback } from "grammy";
 import { bot } from "@/utils/telegram/bot";
+import { startTelegramBotInDev } from "@/utils/telegram/start";
 
 type ResponseData = {
   message?: string;
 };
-
-// const WEBAPP_URL = "https://dao999nft.com";
 
 const handleUpdate = webhookCallback(bot, "std/http");
 
@@ -15,11 +14,31 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
+  await startTelegramBotInDev();
   try {
-    console.log(req.body, "req.body");
-    const { first_name, last_name, username, is_bot, language_code, id } =
-      req.body.message.from;
-    bot.command("start", (ctx) => ctx.reply("Welcome! Up and running."));
+    // const buttons = [
+    //   [{ text: "Кнопка 1" }],
+    //   [{ text: "Кнопка 2" }],
+    //   [{ text: "Кнопка 3" }],
+    // ];
+
+    // const replyMarkup = {
+    //   resize: true,
+    //   single_use: true,
+    //   selective: false,
+    //   rows: buttons,
+    // };
+
+    // // Присоединяем replyMarkup к исходящему сообщению
+    // const message = {
+    //   text: "Привет, выбери одну из кнопок:",
+    //   reply_markup: replyMarkup,
+    // };
+
+    bot.command("start", (ctx) => {
+      ctx.reply(JSON.stringify("Hello!!!!!"));
+      checkOrCreateUser(req);
+    });
 
     bot.command("ping", (ctx) =>
       ctx.reply(`Pong! ${new Date()} ${Date.now()}`)
@@ -27,6 +46,18 @@ export default async function handler(
 
     bot.start();
 
+    handleUpdate(req, res);
+    res.status(200).end();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+const checkOrCreateUser = async (req: NextApiRequest) => {
+  console.log(req, "req");
+  if (req.body.message.from) {
+    const { first_name, last_name, username, is_bot, language_code, id } =
+      req.body.message.from;
     // Проверяем, существует ли уже пользователь с таким telegram_id
     const { data: existingUser, error } = await supabase
       .from("users")
@@ -65,9 +96,7 @@ export default async function handler(
       console.error("Ошибка при создании пользователя:", insertError);
       return;
     }
-    handleUpdate(req, res);
-    res.status(200).end();
-  } catch (err) {
-    console.error(err);
+  } else {
+    console.log("Пользователь уже существует");
   }
-}
+};

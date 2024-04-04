@@ -62,15 +62,15 @@ export default async function handler(
   });
 
   try {
-    const { name, type, email, lang, chat_id, token } = await req.body;
+    const { name, type, username, lang, chat_id, token } = await req.body;
     console.log(req.body, "req.body");
     const { data, error: userError } = await supabase
       .from("users")
       .select("*")
-      .eq("email", email);
+      .eq("username", username);
 
     if (!data) {
-      throw new Error(`User not found: ${email}`);
+      throw new Error(`User not found: ${username}`);
     }
 
     const user_id = data[0].user_id;
