@@ -127,7 +127,7 @@ const MeetsPage = () => {
             setValue={setValue}
           />
         )}
-        <span>{JSON.stringify(initData)}</span>
+        <span>{data && JSON.stringify(data)}</span>
         <SelectRoom setOpenModalType={setOpenModalType} />
         <div
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
