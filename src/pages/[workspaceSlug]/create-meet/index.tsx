@@ -18,7 +18,7 @@ import { useInitData } from "@tma.js/sdk-react";
 const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
-  const { initData } = useInitData();
+  const initData = useInitData();
   const { data: userInfo } = useQuery(CURRENT_USER);
   const {
     data: roomsData,
