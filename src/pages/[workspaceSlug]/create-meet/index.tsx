@@ -13,10 +13,12 @@ import { CURRENT_USER, ROOMS_COLLECTION_QUERY } from "@/graphql/query";
 import { useQuery } from "@apollo/client";
 import { CardRoomT } from "@/types";
 import CardRoom from "@/components/ui/card-room";
+import { useInitData } from "@tma.js/sdk-react";
 
 const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
+  const { initData } = useInitData();
   const { data: userInfo } = useQuery(CURRENT_USER);
   const {
     data: roomsData,
@@ -97,6 +99,7 @@ const MeetsPage = () => {
             setValue={setValue}
           />
         )}
+        <span>{JSON.stringify(initData)}</span>
         <SelectRoom setOpenModalType={setOpenModalType} />
         <div
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"

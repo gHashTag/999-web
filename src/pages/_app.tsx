@@ -16,6 +16,13 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import {
+  SDKProvider,
+  DisplayGate,
+  useMainButton,
+  type SDKInitOptions,
+} from "@tma.js/sdk-react";
+
+import {
   ApolloClient,
   ApolloProvider,
   InMemoryCache,
@@ -161,33 +168,66 @@ export default function App({ Component, pageProps }: AppProps) {
     return <Spinner size="lg" />;
   }
 
+  interface SDKProviderErrorProps {
+    error: unknown;
+  }
+
+  function SDKProviderError({ error }: SDKProviderErrorProps) {
+    return (
+      <div>
+        Oops. Something went wrong.
+        <blockquote>
+          <code>
+            {error instanceof Error ? error.message : JSON.stringify(error)}
+          </code>
+        </blockquote>
+      </div>
+    );
+  }
+
+  function SDKProviderLoading() {
+    return <Spinner size="lg" />;
+  }
+
+  function SDKInitialState() {
+    return <div>Waiting for initialization to start.</div>;
+  }
+
   return (
     <main className="dark text-foreground bg-background">
       <div>
         {/* <HuddleProvider client={huddleClient}> */}
         <ApolloProvider client={client}>
-          <NextUIProvider>
-            <NextThemesProvider attribute="class" defaultTheme="dark">
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <Analytics />
-                <SpeedInsights />
-                <BackgroundBeams />
-                <HMSRoomProvider>
-                  <Component {...pageProps} />
+          <SDKProvider options={{ async: true, complete: true }}>
+            <DisplayGate
+              error={SDKProviderError}
+              loading={SDKProviderLoading}
+              initial={SDKInitialState}
+            >
+              <NextUIProvider>
+                <NextThemesProvider attribute="class" defaultTheme="dark">
+                  <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    enableSystem
+                    disableTransitionOnChange
+                  >
+                    <Analytics />
+                    <SpeedInsights />
+                    <BackgroundBeams />
+                    <HMSRoomProvider>
+                      <Component {...pageProps} />
 
-                  <ResizeHandler />
-                  <NProgress />
-                  <Toaster />
-                </HMSRoomProvider>
-                {/* <BackgroundBeamsTwo /> */}
-              </ThemeProvider>
-            </NextThemesProvider>
-          </NextUIProvider>
+                      <ResizeHandler />
+                      <NProgress />
+                      <Toaster />
+                    </HMSRoomProvider>
+                    {/* <BackgroundBeamsTwo /> */}
+                  </ThemeProvider>
+                </NextThemesProvider>
+              </NextUIProvider>
+            </DisplayGate>
+          </SDKProvider>
         </ApolloProvider>
         {/* </HuddleProvider> */}
       </div>
