@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 // @ts-ignore
 import { useForm } from "react-hook-form";
@@ -15,20 +15,46 @@ import { CardRoomT } from "@/types";
 import CardRoom from "@/components/ui/card-room";
 import { useInitData } from "@tma.js/sdk-react";
 
+// const data = {
+//   initData: {
+//     authDate: "2024-04-04T07:54:59.000Z",
+//     hash: "4da91c14f55572af6faea2c70d40dd7dd395025e592c5a7d663c9a6ec0265287",
+//     queryId: "AAHom5UIAAAAAOiblQjPEFOa",
+//     user: {
+//       allowsWriteToPm: true,
+//       firstName: "Dmitrii",
+//       id: 144022504,
+//       isPremium: true,
+//       languageCode: "ru",
+//       lastName: "Vasilev",
+//       username: "koshey999nft",
+//     },
+//   },
+// };
+
 const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
-  const initData = useInitData();
-  const { data: userInfo } = useQuery(CURRENT_USER);
+  const data = useInitData();
+
   const {
     data: roomsData,
     loading: roomsLoading,
     refetch,
   } = useQuery(ROOMS_COLLECTION_QUERY, {
     variables: {
-      user_id: userInfo?.user_id,
+      // @ts-ignore
+      username: data.initData.user.username,
     },
   });
+
+  useEffect(() => {
+    if (!roomsData) {
+      onCreateMeet();
+    }
+  }, [roomsData]);
+
+  const { data: userInfo } = useQuery(CURRENT_USER);
 
   const [loading, setLoading] = useState(false);
   const [openModalId, setOpenModalId] = useState("");
@@ -44,6 +70,8 @@ const MeetsPage = () => {
     try {
       const response = await createRoom(
         formData.name,
+        // @ts-ignore
+        data.initData.user.username,
         openModalId,
         formData.token,
         formData.chat_id,

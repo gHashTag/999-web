@@ -62,7 +62,8 @@ export default async function handler(
   });
 
   try {
-    const { name, type, email, lang, chat_id, token } = await req.body;
+    const { name, username, type, email, lang, chat_id, token } =
+      await req.body;
     console.log(req.body, "req.body");
     const { data, error: userError } = await supabase
       .from("users")
@@ -121,6 +122,7 @@ export default async function handler(
         lang,
         token,
         chat_id,
+        username,
       };
 
       delete rooms.id;

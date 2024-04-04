@@ -11,6 +11,7 @@ if (!process.env.NEXT_PUBLIC_FUNCTION_SECRET) {
 
 async function createRoom(
   name: string,
+  username: string,
   type: string,
   token: string,
   chat_id: string,
