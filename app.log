@@ -2,3 +2,6 @@
 {"level":"info","message":{"at":"2024-04-04T09:50:42.024Z","msg":"bot running...","username":"dao999nft_dev_bot"},"timestamp":"2024-04-04T09:50:42.025Z"}
 {"description":"Conflict: terminated by setWebhook request","error_code":409,"level":"error","method":"getUpdates","name":"GrammyError","ok":false,"parameters":{},"payload":{"allowed_updates":[],"offset":1,"timeout":30},"timestamp":"2024-04-04T09:50:59.748Z"}
 {"level":"info","message":{"at":"2024-04-04T09:52:04.262Z","msg":"bot running...","username":"dao999nft_dev_bot"},"timestamp":"2024-04-04T09:52:04.262Z"}
+{"level":"info","message":{"at":"2024-04-04T14:30:49.554Z","msg":"bot running...","username":"dao999nft_dev_bot"},"timestamp":"2024-04-04T14:30:49.555Z"}
+{"description":"Conflict: terminated by setWebhook request","error_code":409,"level":"error","method":"getUpdates","name":"GrammyError","ok":false,"parameters":{},"payload":{"offset":545008965,"timeout":30},"timestamp":"2024-04-04T14:33:50.382Z"}
+{"level":"info","message":{"at":"2024-04-04T14:33:56.141Z","msg":"bot running...","username":"dao999nft_dev_bot"},"timestamp":"2024-04-04T14:33:56.141Z"}

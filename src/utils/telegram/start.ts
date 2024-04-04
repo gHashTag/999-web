@@ -33,26 +33,26 @@ export const startTelegramBotInDev = async () => {
   }
 };
 
-export const startTelegramBotInProduction = async () => {
-  try {
-    const webhookUrl = `${WEBAPP_URL}/api/telegram-bot?token=${process.env.TELEGRAM_BOT_TOKEN}`;
+// export const startTelegramBotInProduction = async () => {
+//   try {
+//     const webhookUrl = `${WEBAPP_URL}/api/telegram-bot?token=${process.env.TELEGRAM_BOT_TOKEN}`;
 
-    logger.info("fetching  webhook info");
-    const webhookInfo = await bot.api.getWebhookInfo();
-    logger.info(`existing webhook info fetched: ${webhookInfo.url}`);
+//     logger.info("fetching  webhook info");
+//     const webhookInfo = await bot.api.getWebhookInfo();
+//     logger.info(`existing webhook info fetched: ${webhookInfo.url}`);
 
-    if (webhookInfo.url === webhookUrl) {
-      logger.info("Sorry, same url, i don't wanna waste my time here.");
-    } else {
-      logger.info("deleting existing webhook");
-      await bot.api.deleteWebhook();
-      console.info("existing webhook deleted");
+//     if (webhookInfo.url === webhookUrl) {
+//       logger.info("Sorry, same url, i don't wanna waste my time here.");
+//     } else {
+//       logger.info("deleting existing webhook");
+//       await bot.api.deleteWebhook();
+//       console.info("existing webhook deleted");
 
-      logger.info(`setting new webhook to: ${webhookUrl}`);
-      await bot.api.setWebhook(webhookUrl);
-      console.info(`bot webhook set to: ${webhookUrl}`);
-    }
-  } catch (err) {
-    console.error("failed to delete/set webhook url", err);
-  }
-};
+//       logger.info(`setting new webhook to: ${webhookUrl}`);
+//       await bot.api.setWebhook(webhookUrl);
+//       console.info(`bot webhook set to: ${webhookUrl}`);
+//     }
+//   } catch (err) {
+//     console.error("failed to delete/set webhook url", err);
+//   }
+// };

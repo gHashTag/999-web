@@ -7,6 +7,7 @@ import NextCors from "nextjs-cors";
 import jwt from "jsonwebtoken";
 // @ts-ignore
 import { v4 as uuidv4 } from "uuid";
+import { __DEV__ } from "../_app";
 
 type ResponseData = {
   rooms?: RoomNode;
@@ -91,14 +92,14 @@ export default async function handler(
         enabled: true,
       };
       console.log(roomData, "roomData");
-      const newToken = await createToken100ms();
+      const newToken = process.env.NEXT_PUBLIC_100MS;
       console.log(newToken, "newToken");
       const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
         method: "POST",
         body: JSON.stringify({ ...roomData }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS}`,
+          Authorization: `Bearer ${newToken}`,
         },
       });
 
@@ -106,10 +107,10 @@ export default async function handler(
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-
+      console.log(newRoom, "newRoom");
       const id = newRoom.id;
       const codesResponse = await createCodes(id, newToken as string);
-
+      console.log(id, "id");
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
       }
@@ -155,7 +156,7 @@ export async function createCodes(room_id: string, token: string) {
       `https://api.100ms.live/v2/room-codes/room/${room_id}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_100MS}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         method: "POST",

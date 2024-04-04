@@ -17,6 +17,24 @@ import {
 } from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
 
+export const checkUsername = async (username: string) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+
+  if (error) {
+    // console.error("Ошибка при запросе к Supabase", error);
+    return false;
+  }
+
+  if (data.length > 0) {
+    const user_id = data[0].user_id;
+    setInviterUserId(user_id);
+  }
+  return data.length > 0 ? true : false;
+};
+
 export function useSupabase() {
   const inviter = useReactiveVar(setInviterUserId);
   const userSupabase = useReactiveVar(setUserSupabase);
@@ -24,24 +42,6 @@ export function useSupabase() {
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<RecordingAsset[]>([]);
   const userInfo = useReactiveVar(setUserInfo);
-
-  const checkUsername = async (username: string) => {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("username", username);
-
-    if (error) {
-      // console.error("Ошибка при запросе к Supabase", error);
-      return false;
-    }
-
-    if (data.length > 0) {
-      const user_id = data[0].user_id;
-      setInviterUserId(user_id);
-    }
-    return data.length > 0 ? true : false;
-  };
 
   const getSupabaseUser = async (email: string) => {
     try {
