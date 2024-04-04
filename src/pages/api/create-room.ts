@@ -69,11 +69,16 @@ export default async function handler(
       .select("*")
       .eq("username", username);
 
+    console.log(data, "data");
+    if (userError) {
+      throw new Error(`Error fetching user: ${userError.message}`);
+    }
+
     if (!data) {
       throw new Error(`User not found: ${username}`);
     }
 
-    const user_id = data[0].user_id;
+    const user_id = data[0]?.user_id;
     console.log(user_id, "user_id");
     const createOrFetchRoom = async () => {
       const roomData = {
