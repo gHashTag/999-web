@@ -34,3 +34,32 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+# [grammY](https://grammy.dev) on [Supabase Edge Functions](https://supabase.com/edge-functions)
+
+> Try it out: [@supabase_example_bot](https://t.me/supabase_example_bot)
+
+## Deploying
+
+1. Create the function:
+
+```shell
+supabase functions deploy --no-verify-jwt telegram-bot
+```
+
+2. Contact [@BotFather](https://t.me/BotFather) to create a bot and get its
+   token.
+3. Set the secrets:
+
+```shell
+supabase secrets set BOT_TOKEN=your_token FUNCTION_SECRET=random_secret
+```
+
+4. Set your bot’s webhook URL to
+   `https://<PROJECT_NAME>.functions.supabase.co/telegram-bot` (replacing
+   `<...>` with respective values). To do that, you open the request URL in your
+   browser:
+
+```text
+https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<PROJECT_NAME>.functions.supabase.co/telegram-bot?secret=<FUNCTION_SECRET>
+```

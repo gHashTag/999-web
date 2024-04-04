@@ -73,12 +73,12 @@ export default function Layout({
     });
   };
 
-  useEffect(() => {
-    readCache();
-    if (data && !data.isLoggedIn) {
-      router.push("/");
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   readCache();
+  //   if (data && !data.isLoggedIn) {
+  //     router.push("/");
+  //   }
+  // }, [data]);
   const visibleHeader = useReactiveVar(visibleHeaderVar);
   const activeMenuButton = useReactiveVar(setActiveRoute);
 
