@@ -7,7 +7,7 @@ import Web3 from "web3";
 
 // Corrected the import path for useRouter
 import { useRouter } from "next/router";
-import { ExtendedOpenloginUserInfo } from "@/types";
+import { SupabaseUser } from "@/types";
 import { useSupabase } from "./useSupabase";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import {
@@ -52,7 +52,7 @@ const useWeb3Auth = () => {
         const userInfo = await web3auth.getUserInfo();
         console.log("userInfo", userInfo);
         if (userInfo) {
-          setUserInfo({ ...userInfo } as ExtendedOpenloginUserInfo);
+          setUserInfo({ ...userInfo } as SupabaseUser);
           await createSupabaseUser();
 
           if (userInfo.email) {

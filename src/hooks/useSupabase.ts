@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   Board,
   BoardData,
-  ExtendedOpenloginUserInfo,
   RecordingAsset,
   SupabaseUser,
   TasksArray,
@@ -120,7 +119,7 @@ export function useSupabase() {
         const { error } = await supabase.from("users").insert([{ ...newUser }]);
 
         if (!error) {
-          setUserInfo({ ...userData } as ExtendedOpenloginUserInfo);
+          setUserInfo({ ...userData } as SupabaseUser);
           return {
             workspaceSlug: userData.user_id,
           };
@@ -130,7 +129,7 @@ export function useSupabase() {
         }
       } else {
         // console.log(userData, "userData");
-        setUserInfo(userData as ExtendedOpenloginUserInfo);
+        setUserInfo(userData as SupabaseUser);
       }
     } catch (error) {
       // console.error("Ошибка при получении информации о пользователе:", error);
