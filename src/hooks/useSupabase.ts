@@ -5,6 +5,7 @@ import {
   BoardData,
   ExtendedOpenloginUserInfo,
   RecordingAsset,
+  SupabaseUser,
   TasksArray,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
@@ -17,22 +18,41 @@ import {
 } from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
 
-export const checkUsername = async (username: string) => {
+export const checkUsername = async (
+  username: string
+): Promise<{
+  isInviterExist: boolean;
+  invitation_codes: string[];
+  error?: boolean;
+}> => {
   const { data, error } = await supabase
     .from("users")
     .select("*")
     .eq("username", username);
 
+  const { data: rooms, error: roomsError } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("username", username);
+
+  const invitation_codes = rooms && rooms[0].invitation_codes;
+
   if (error) {
-    // console.error("Ошибка при запросе к Supabase", error);
-    return false;
+    return {
+      isInviterExist: false,
+      invitation_codes: [],
+      error: true,
+    };
   }
 
   if (data.length > 0) {
     const user_id = data[0].user_id;
     setInviterUserId(user_id);
   }
-  return data.length > 0 ? true : false;
+  return {
+    isInviterExist: data.length > 0 ? true : false,
+    invitation_codes,
+  };
 };
 
 export function useSupabase() {

@@ -126,16 +126,6 @@ export type RecordingAsset = {
   transcription_id: string;
 };
 
-export type ExtendedOpenloginUserInfo =
-  & Omit<
-    OpenloginUserInfo,
-    "profileImage"
-  >
-  & {
-    avatar?: string;
-    user_id: string;
-  };
-
 // Rooms Data
 interface Code {
   id: string;

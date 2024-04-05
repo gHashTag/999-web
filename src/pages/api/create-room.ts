@@ -127,6 +127,7 @@ export default async function handler(
         lang,
         token,
         chat_id,
+        username,
       };
 
       delete rooms.id;

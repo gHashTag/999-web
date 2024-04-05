@@ -11,7 +11,7 @@ bot.command("start", async (ctx) => {
   await ctx.replyWithChatAction("typing");
 
   ctx.reply(
-    `🔮 Добро подаловать в Тридевятое Царство, ${ctx.update.message?.from.first_name}! Всемогущая Баба Яга, владычица тайн и чародейница, пред врата неведомого мира тебя привечает. Чтоб изба к тебе передком обернулась, а не задом стояла, не забудь прошептать кабы словечко-проходное.`,
+    `🏰 Добро подаловать в Тридевятое Царство, ${ctx.update.message?.from.first_name}! Всемогущая Баба Яга, владычица тайн и чародейница, пред врата неведомого мира тебя привечает. Чтоб изба к тебе передком обернулась, а не задом стояла, не забудь прошептать кабы словечко-проходное.`,
     {
       reply_markup: {
         force_reply: true,
@@ -35,7 +35,9 @@ bot.on("message", async (ctx) => {
       // Обрабатываем ответ пользователя
       const inviteCode = ctx.message.text;
       // Действия с ответом пользователя, например, сохранение токена
-      const isInviterExist = await checkUsername(inviteCode as string);
+      const { isInviterExist, invitation_codes } = await checkUsername(
+        inviteCode as string
+      );
 
       try {
         if (isInviterExist) {
@@ -46,6 +48,7 @@ bot.on("message", async (ctx) => {
             language_code: ctx.message.from.language_code,
             telegram_id: ctx.message.from.id,
             inviter: inviteCode,
+            invitation_codes,
           };
           try {
             await supabase.from("users").insert([{ ...newUser }]);
