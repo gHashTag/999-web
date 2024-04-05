@@ -21,26 +21,31 @@ export const checkUsername = async (
   username: string
 ): Promise<{
   isInviterExist: boolean;
-  invitation_codes: string[];
+  invitation_codes: string;
+  inviter_user_id: string;
   error?: boolean;
 }> => {
+  console.log(username, "username");
   const { data, error } = await supabase
     .from("users")
     .select("*")
     .eq("username", username);
-
+  console.log(data, "data");
   const { data: rooms, error: roomsError } = await supabase
     .from("rooms")
     .select("*")
     .eq("username", username);
-
-  const invitation_codes = rooms && rooms[0].invitation_codes;
+  console.log(rooms, "rooms");
+  console.log(roomsError, "roomsError");
+  const invitation_codes = rooms && rooms[0].codes;
 
   if (error) {
+    console.log(error, "error checkUsername");
     return {
       isInviterExist: false,
-      invitation_codes: [],
+      invitation_codes: "",
       error: true,
+      inviter_user_id: "",
     };
   }
 
@@ -51,6 +56,7 @@ export const checkUsername = async (
   return {
     isInviterExist: data.length > 0 ? true : false,
     invitation_codes,
+    inviter_user_id: data[0].user_id,
   };
 };
 

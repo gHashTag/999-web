@@ -4,14 +4,14 @@ import { Bot, Context, webhookCallback } from "grammy";
 import { bot } from "@/utils/telegram/bot";
 import { createRoom } from "@/helpers/api/create-room";
 import { createUser } from "@/helpers/api/create-user";
-import { NextResponse, NextRequest } from "next/server";
+
 import { checkUsername } from "@/hooks/useSupabase";
 
 bot.command("start", async (ctx) => {
   await ctx.replyWithChatAction("typing");
 
   ctx.reply(
-    `🏰 Добро подаловать в Тридевятое Царство, ${ctx.update.message?.from.first_name}! Всемогущая Баба Яга, владычица тайн и чародейница, пред врата неведомого мира тебя привечает. Чтоб изба к тебе передком обернулась, а не задом стояла, не забудь прошептать кабы словечко-проходное.`,
+    `🏰 Добро пожаловать в Тридевятое Царство, ${ctx.update.message?.from.first_name}! Всемогущая Баба Яга, владычица тайн и чародейница, пред врата неведомого мира тебя привечает. Чтоб изба к тебе передком обернулась, а не задом стояла, не забудь прошептать кабы словечко-проходное.`,
     {
       reply_markup: {
         force_reply: true,
@@ -30,15 +30,18 @@ bot.on("message", async (ctx) => {
     // console.log(originalMessageText, "originalMessageText");
     if (
       originalMessageText &&
-      originalMessageText.includes("🔮 Добро подаловать в Тридевятое Царство")
+      originalMessageText.includes("🏰 Добро пожаловать")
     ) {
+      console.log(ctx, "ctx");
+
       // Обрабатываем ответ пользователя
       const inviteCode = ctx.message.text;
+      console.log(inviteCode, "inviteCode");
       // Действия с ответом пользователя, например, сохранение токена
-      const { isInviterExist, invitation_codes } = await checkUsername(
-        inviteCode as string
-      );
-
+      const { isInviterExist, invitation_codes, inviter_user_id } =
+        await checkUsername(inviteCode as string);
+      console.log(invitation_codes, "invitation_codes");
+      console.log(isInviterExist, "isInviterExist");
       try {
         if (isInviterExist) {
           const newUser = {
@@ -47,17 +50,19 @@ bot.on("message", async (ctx) => {
             username: ctx.message.from.username,
             language_code: ctx.message.from.language_code,
             telegram_id: ctx.message.from.id,
-            inviter: inviteCode,
+            inviter: inviter_user_id,
             invitation_codes,
           };
-          try {
-            await supabase.from("users").insert([{ ...newUser }]);
-          } catch (error) {
-            console.log(error, "error");
-          }
+          console.log(newUser, "newUser");
+
+          const { data, error } = await supabase
+            .from("users")
+            .insert([{ ...newUser }]);
+          console.log(data, "data");
+          console.log(error, "users error");
 
           const isPayment = true;
-          console.log(isPayment, "isPayment");
+
           ctx.reply(
             `🏰 Благоволи войти в волшебные пределы Тридевятого Царства, где сказание оживает, а чудеса само собой рядом ступают. ${ctx.update.message?.from.first_name}!`,
             {
@@ -154,7 +159,7 @@ bot.start();
 
 export default async function handler(req: any, res: any) {
   const handleUpdate = webhookCallback(bot, "std/http");
-  console.log(req, "req");
+
   try {
     handleUpdate(req, res);
     res.status(200).end();
@@ -164,7 +169,6 @@ export default async function handler(req: any, res: any) {
 }
 
 const checkOrCreateUser = async (req: any) => {
-  console.log(req, "req");
   if (req.body.message.from) {
     const { first_name, last_name, username, is_bot, language_code, id } =
       req.body.message.from;
