@@ -122,6 +122,12 @@ dependencies:
   '@tanstack/react-table':
     specifier: ^8.15.3
     version: 8.15.3(react-dom@18.2.0)(react@18.2.0)
+  '@tma.js/sdk':
+    specifier: ^1.5.1
+    version: 1.5.1
+  '@tma.js/sdk-react':
+    specifier: ^2.0.1
+    version: 2.0.1(@tma.js/sdk@1.5.1)(@types/react@18.2.73)(react@18.2.0)
   '@toruslabs/openlogin-utils':
     specifier: ^8.0.0
     version: 8.0.0(@babel/runtime@7.24.1)
@@ -7228,6 +7234,25 @@ packages:
       '@types/react-dom': 18.2.22
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tma.js/sdk-react@2.0.1(@tma.js/sdk@1.5.1)(@types/react@18.2.73)(react@18.2.0):
+    resolution: {integrity: sha512-tiCXPctcTf+9ruVzAPlH57zLEUid6PrkJt5sBB1MJ8mwviOvbieUe5QaLLpdzzo+7hdKWr+mOfFu4gM1rYaoNg==}
+    peerDependencies:
+      '@tma.js/sdk': 1.5.1
+      '@types/react': ^17.0.0 || ^18.0.0
+      react: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@tma.js/sdk': 1.5.1
+      '@types/react': 18.2.73
+      react: 18.2.0
+    dev: false
+
+  /@tma.js/sdk@1.5.1:
+    resolution: {integrity: sha512-M0kzo840GntTuhd6ywYof3DPddhOxM7ODd0JlyJeTsJHexL2D0+REuFPLUNddDh66rUfXOaAdFU79WDVa6wy9A==}
     dev: false
 
   /@toruslabs/base-controllers@5.5.3(@babel/runtime@7.24.1):

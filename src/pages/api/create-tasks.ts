@@ -7,6 +7,7 @@ import { translateText } from "@/helpers/api/translateText";
 import { createChatCompletion } from "@/helpers/api/createChatCompletion";
 
 import { createChatCompletionJson } from "@/helpers/api/createChatCompletionJson";
+import { ResponseData } from "@/types";
 
 type Task = {
   assignee: {
@@ -85,12 +86,6 @@ const getPreparedUsers = (usersFromSupabase: any) => {
   });
 };
 
-interface ResponseData {
-  message?: string;
-  error?: {
-    message: string;
-  };
-}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>

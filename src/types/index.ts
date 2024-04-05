@@ -183,3 +183,11 @@ export type CardRoomT = {
     room_id: string;
   };
 };
+
+export interface ResponseData {
+  data: any;
+  message?: string;
+  error?: {
+    message: string;
+  };
+}

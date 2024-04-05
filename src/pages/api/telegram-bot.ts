@@ -70,7 +70,7 @@ bot.on("message", async (ctx) => {
                 inline_keyboard: [
                   [
                     {
-                      text: "Создать комнату",
+                      text: "Построить избушку",
                       callback_data: "create_room",
                     },
                   ],
