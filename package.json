@@ -11,6 +11,7 @@
     "generate": "NEXT_PUBLIC_SUPABASE_URL=https://dmrooqbmxdhdyblqzswu.supabase.co graphql-codegen --config ./src/apollo/codegen.ts"
   },
   "dependencies": {
+    "@100mslive/hms-video-store": "^0.12.6",
     "@100mslive/react-icons": "^0.10.4",
     "@100mslive/react-sdk": "^0.10.4",
     "@100mslive/roomkit-react": "^0.3.4",

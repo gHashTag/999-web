@@ -5,6 +5,7 @@ import type { AppProps } from "next/app";
 import { NextUIProvider } from "@nextui-org/react";
 import { HMSRoomProvider } from "@100mslive/react-sdk";
 // import { HuddleClient, HuddleProvider } from "@huddle01/react";
+
 import NProgress from "@components/nprogress";
 import ResizeHandler from "@components/resize-handler";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
@@ -176,7 +177,7 @@ export default function App({ Component, pageProps }: AppProps) {
               >
                 <Analytics />
                 <SpeedInsights />
-                <BackgroundBeams />
+                {/* <BackgroundBeams /> */}
                 <HMSRoomProvider>
                   <Component {...pageProps} />
 

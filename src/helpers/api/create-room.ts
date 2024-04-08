@@ -38,7 +38,6 @@ async function createRoom({
     chat_id,
     lang,
   };
-  console.log(newData, "newData");
 
   const response = await fetch(url, {
     method: "POST",

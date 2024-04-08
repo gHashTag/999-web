@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@100mslive/hms-video-store':
+    specifier: ^0.12.6
+    version: 0.12.6(react@18.2.0)
   '@100mslive/react-icons':
     specifier: ^0.10.4
     version: 0.10.4(react@18.2.0)
@@ -13,7 +16,7 @@ dependencies:
     version: 0.10.4(react-dom@18.2.0)(react@18.2.0)
   '@100mslive/roomkit-react':
     specifier: ^0.3.4
-    version: 0.3.4(@100mslive/hms-video-store@0.12.4)(@types/react-dom@18.2.22)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0)
+    version: 0.3.4(@100mslive/hms-video-store@0.12.6)(@types/react-dom@18.2.22)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0)
   '@apollo/client':
     specifier: ^3.9.9
     version: 3.9.9(@types/react@18.2.73)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
@@ -317,12 +320,12 @@ packages:
       hls.js: 1.4.12
     dev: false
 
-  /@100mslive/hms-noise-cancellation@0.0.1(@100mslive/hms-video-store@0.12.4):
+  /@100mslive/hms-noise-cancellation@0.0.1(@100mslive/hms-video-store@0.12.6):
     resolution: {integrity: sha512-DGnzcXRDJREWypIjGX70er+f2k/XLLRF41lrXPs1+PtB1imdEkECPPS0Fg4BA0BCWKDNAGTZBHZPrBDgUmr9Lw==}
     peerDependencies:
       '@100mslive/hms-video-store': '>= 0.11.3'
     dependencies:
-      '@100mslive/hms-video-store': 0.12.4(react@18.2.0)
+      '@100mslive/hms-video-store': 0.12.6(react@18.2.0)
     dev: false
 
   /@100mslive/hms-video-store@0.12.4(react@18.2.0):
@@ -342,12 +345,29 @@ packages:
       - react
     dev: false
 
-  /@100mslive/hms-virtual-background@1.13.4(@100mslive/hms-video-store@0.12.4):
+  /@100mslive/hms-video-store@0.12.6(react@18.2.0):
+    resolution: {integrity: sha512-UQGA1dFlz+6smKkzf57Ja5XoCEbYIDcJao7xoc63G6tv1+uz0LDzTsglbwc13YNWJDprhVdJ4lhmDpGHGLExxw==}
+    engines: {node: '>=12'}
+    dependencies:
+      eventemitter2: 6.4.9
+      immer: 9.0.21
+      lodash.isequal: 4.5.0
+      reselect: 4.0.0
+      sdp-transform: 2.14.2
+      ua-parser-js: 1.0.37
+      uuid: 8.3.2
+      webrtc-adapter: 8.2.3
+      zustand: 3.5.7(react@18.2.0)
+    transitivePeerDependencies:
+      - react
+    dev: false
+
+  /@100mslive/hms-virtual-background@1.13.4(@100mslive/hms-video-store@0.12.6):
     resolution: {integrity: sha512-Fhsgde3ejZHSMyrceu3ynWPUmjO7v/GUYa85mDOEnzyrlhN8XG69autVQu9wDaAxJu5RPZTbgVtxwuOudsCQ5Q==}
     peerDependencies:
       '@100mslive/hms-video-store': 0.12.4
     dependencies:
-      '@100mslive/hms-video-store': 0.12.4(react@18.2.0)
+      '@100mslive/hms-video-store': 0.12.6(react@18.2.0)
       '@mediapipe/selfie_segmentation': 0.1.1675465747
       '@tensorflow-models/body-segmentation': 1.0.2(@mediapipe/selfie_segmentation@0.1.1675465747)(@tensorflow/tfjs-backend-webgl@3.21.0)(@tensorflow/tfjs-converter@3.21.0)(@tensorflow/tfjs-core@3.21.0)
       '@tensorflow/tfjs-backend-webgl': 3.21.0(@tensorflow/tfjs-core@3.21.0)
@@ -383,14 +403,14 @@ packages:
       - react-dom
     dev: false
 
-  /@100mslive/roomkit-react@0.3.4(@100mslive/hms-video-store@0.12.4)(@types/react-dom@18.2.22)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0):
+  /@100mslive/roomkit-react@0.3.4(@100mslive/hms-video-store@0.12.6)(@types/react-dom@18.2.22)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-+nJL4OUaE3QXxc0HXuAc6nZnvAITFO7s5XXRCR73jX6iDP9Pln+9KhPDWPjX3PbqRuZVYQav8K056cJt6UkgAw==}
     peerDependencies:
       react: '>=17.0.2 <19.0.0'
     dependencies:
       '@100mslive/hls-player': 0.3.4
-      '@100mslive/hms-noise-cancellation': 0.0.1(@100mslive/hms-video-store@0.12.4)
-      '@100mslive/hms-virtual-background': 1.13.4(@100mslive/hms-video-store@0.12.4)
+      '@100mslive/hms-noise-cancellation': 0.0.1(@100mslive/hms-video-store@0.12.6)
+      '@100mslive/hms-virtual-background': 1.13.4(@100mslive/hms-video-store@0.12.6)
       '@100mslive/react-icons': 0.10.4(react@18.2.0)
       '@100mslive/react-sdk': 0.10.4(react-dom@18.2.0)(react@18.2.0)
       '@100mslive/types-prebuilt': 0.12.7
