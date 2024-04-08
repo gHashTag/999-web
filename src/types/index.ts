@@ -185,7 +185,7 @@ export type CardRoomT = {
 };
 
 export interface ResponseData {
-  data: any;
+  data?: any;
   message?: string;
   error?: {
     message: string;
