@@ -58,7 +58,7 @@ export function SignupFormDemo({
   const onSubmitDesctination: SubmitHandler<FieldValues> = (
     data: FieldValues
   ) => {
-    console.log(data, "onSubmitDesctination");
+    // console.log(data, "onSubmitDesctination");
     onSubmit(data);
   };
 

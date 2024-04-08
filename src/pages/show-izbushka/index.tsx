@@ -48,15 +48,24 @@ const ShowIzbushka = () => {
           .select("*")
           .eq("username", username);
         setFullName(fullName);
-        console.log(error, "error");
+
         const user = data && data[0];
         console.log(user, "user");
 
-        const guestRoomId = user?.invitation_codes.data[0].code;
-        console.log(guestRoomId, "guestRoomId");
-        const codeId = slug ? slug : guestRoomId;
-        console.log(codeId, "codeId");
-        setRoomId(codeId);
+        const selectIzbushka = user?.select_izbushka;
+        const { data: selectIzbushkaData, error: selectIzbushkaError } =
+          await supabase.from("rooms").select("*").eq("id", selectIzbushka);
+        console.log(selectIzbushka, "selectIzbushka");
+        console.log(selectIzbushkaError, "selectIzbushkaError");
+
+        let roomId;
+        if (selectIzbushkaData && selectIzbushkaData[0]) {
+          roomId = selectIzbushkaData[0].codes[1].code;
+        } else {
+          roomId = user?.invitation_codes.data[0].code;
+        }
+
+        setRoomId(roomId);
 
         if (typeof roomId === "string") {
           const authToken = await hmsActions.getAuthTokenByRoomCode({

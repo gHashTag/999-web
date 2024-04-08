@@ -11,7 +11,6 @@ import { supabase } from "@/utils/supabase";
 import { web3auth } from "@/utils/web3Auth";
 import {
   setInviterUserId,
-  setUserId,
   setUserInfo,
   setUserSupabase,
 } from "@/apollo/reactive-store";
@@ -25,22 +24,20 @@ export const checkUsername = async (
   inviter_user_id: string;
   error?: boolean;
 }> => {
-  console.log(username, "username");
-  const { data, error } = await supabase
+  const { data: userData, error: userError } = await supabase
     .from("users")
     .select("*")
     .eq("username", username);
-  console.log(data, "data");
+
   const { data: rooms, error: roomsError } = await supabase
     .from("rooms")
     .select("*")
     .eq("username", username);
-  console.log(rooms, "rooms");
-  console.log(roomsError, "roomsError");
+
   const invitation_codes = rooms && rooms[0].codes;
 
-  if (error) {
-    console.log(error, "error checkUsername");
+  if (userError) {
+    console.log(userError, "error checkUsername");
     return {
       isInviterExist: false,
       invitation_codes: "",
@@ -49,14 +46,10 @@ export const checkUsername = async (
     };
   }
 
-  if (data.length > 0) {
-    const user_id = data[0].user_id;
-    setInviterUserId(user_id);
-  }
   return {
-    isInviterExist: data.length > 0 ? true : false,
+    isInviterExist: userData.length > 0 ? true : false,
     invitation_codes,
-    inviter_user_id: data[0].user_id,
+    inviter_user_id: userData[0].user_id,
   };
 };
 

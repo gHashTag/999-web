@@ -63,14 +63,14 @@ export default async function handler(
   });
 
   try {
-    const { name, type, username, lang, chat_id, token } = await req.body;
+    const { id, name, type, username, lang, chat_id, token } = await req.body;
     console.log(req.body, "req.body");
     const { data, error: userError } = await supabase
       .from("users")
       .select("*")
       .eq("username", username);
 
-    console.log(data, "data");
+    // console.log(data, "data");
     if (userError) {
       throw new Error(`Error fetching user: ${userError.message}`);
     }
@@ -91,9 +91,9 @@ export default async function handler(
             : "65efdfab48b3dd31b94ff0dc",
         enabled: true,
       };
-      console.log(roomData, "roomData");
+
       const newToken = process.env.NEXT_PUBLIC_100MS;
-      console.log(newToken, "newToken");
+
       const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
         method: "POST",
         body: JSON.stringify({ ...roomData }),
@@ -107,10 +107,10 @@ export default async function handler(
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-      console.log(newRoom, "newRoom");
+      // console.log(newRoom, "newRoom");
       const id = newRoom.id;
       const codesResponse = await createCodes(id, newToken as string);
-      console.log(id, "id");
+      // console.log(id, "id");
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
       }
@@ -137,9 +137,12 @@ export default async function handler(
 
     const rooms = await createOrFetchRoom();
 
-    const { error } = await supabase.from("rooms").insert({
-      ...rooms,
-    });
+    const { error } = await supabase
+      .from("rooms")
+      .update({
+        ...rooms,
+      })
+      .eq("id", id);
     if (error) {
       throw new Error(`Error saving to Supabase: ${error.message}`);
     }

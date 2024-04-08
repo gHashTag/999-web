@@ -1,12 +1,12 @@
 import { supabase } from "@/utils/supabase";
 
-const createRoom = async (username: string) => {
+const getUser = async (username: string) => {
   const { data, error } = await supabase
-    .from("rooms")
+    .from("users")
     .select("*")
     .eq("username", username);
 
   return data;
 };
 
-export { createRoom };
+export { getUser };

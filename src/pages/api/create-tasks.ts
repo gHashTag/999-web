@@ -102,8 +102,8 @@ export default async function handler(
 
   try {
     const { type, data } = await req.body;
-    console.log(type, "type");
-    console.log(data, "data");
+    // console.log(type, "type");
+    // console.log(data, "data");
     if (type === undefined) {
       return res.status(200).json({
         message: "type is undefined",
