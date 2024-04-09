@@ -10,10 +10,21 @@ import { useToast } from "@/components/ui/use-toast";
 import { useReactiveVar } from "@apollo/client";
 import { visibleSignInVar, openIntroModalVar } from "@/apollo/reactive-store";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
+// @ts-ignore
+import TelegramLoginButton from "react-telegram-login";
 
 const DemoButton = () => {
   const visible = useReactiveVar(visibleSignInVar);
   const openIntroModal = useReactiveVar(openIntroModalVar);
+
+  // const userFriendlyAddress = useTonAddress();
+  // const rawAddress = useTonAddress(false);
+
+  // useEffect(() => {
+  //   console.log(userFriendlyAddress, "userFriendlyAddress");
+  //   console.log(rawAddress, "rawAddress");
+  // }, [userFriendlyAddress, rawAddress]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,20 +47,31 @@ const DemoButton = () => {
     openIntroModalVar(!openIntroModal);
   };
 
+  const handleTelegramResponse = (response: any) => {
+    console.log(response, "response from telegram");
+  };
+
   return (
     <Dialog.Root open={openIntroModal} onOpenChange={handleRegister}>
       <Dialog.Overlay className={cn(styles["overlay"])} />
       {visible && (
-        <Dialog.Trigger asChild>
-          <button
-            ref={ctaRef}
-            id="cta-btn"
-            className={cn(styles["cta-btn"])}
-            onClick={handleRegister}
-          >
-            Sign In
-          </button>
-        </Dialog.Trigger>
+        <>
+          {/* <Dialog.Trigger asChild>
+            <button
+              ref={ctaRef}
+              id="cta-btn"
+              className={cn(styles["cta-btn"])}
+              onClick={handleRegister}
+            >
+              Sign In
+            </button>
+          </Dialog.Trigger> */}
+          <TelegramLoginButton
+            dataOnauth={handleTelegramResponse}
+            botName="OdauBot"
+          />
+          {/* <TonConnectButton /> */}
+        </>
       )}
       <div id="cta-tooltip" className={cn(styles["tooltip"])}>
         <InfoIcon />

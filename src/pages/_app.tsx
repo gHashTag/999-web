@@ -175,7 +175,12 @@ export default function App({ Component, pageProps }: AppProps) {
                 enableSystem
                 disableTransitionOnChange
               >
-                <TonConnectUIProvider manifestUrl="https://dao999nft.com/tonconnect-manifest.json">
+                <TonConnectUIProvider
+                  manifestUrl="https://dmrooqbmxdhdyblqzswu.supabase.co/storage/v1/object/public/docs/tonconnect-manifest.json"
+                  actionsConfiguration={{
+                    twaReturnUrl: "https://t.me/dao999nft_dev_bot/start",
+                  }}
+                >
                   <Analytics />
                   <SpeedInsights />
                   {/* <BackgroundBeams /> */}

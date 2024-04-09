@@ -1,3 +1,4 @@
+import { __DEV__ } from "@/pages/_app";
 import { OptionType, SupabaseUser } from "@/types";
 import { makeVar } from "@apollo/client";
 
@@ -21,7 +22,9 @@ export const setUserInfo = makeVar<SupabaseUser | null>(null);
 
 export const setUserSupabase = makeVar<SupabaseUser | null>(null);
 
-export const setInviteCode = makeVar<string>("");
+const initCode = `${!__DEV__ ? "dao999nft" : ""}`;
+
+export const setInviteCode = makeVar<string>(initCode);
 
 export const setInviterUserId = makeVar<string>("");
 
