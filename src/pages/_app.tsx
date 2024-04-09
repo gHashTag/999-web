@@ -45,7 +45,7 @@ if (!process.env.NEXT_PUBLIC_SITE_URL) {
 }
 
 export const SITE_URL = __DEV__
-  ? "http://localhost:3000/"
+  ? "https://0fbc0681508f.ngrok.app"
   : process.env.NEXT_PUBLIC_SITE_URL;
 
 if (__DEV__) {

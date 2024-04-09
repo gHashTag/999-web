@@ -30,7 +30,7 @@ async function create100MsRoom({
   chat_id,
   lang,
 }: CreateRoom) {
-  const url = `${SITE_URL}/api/create-room`;
+  const url = `${SITE_URL}/api/create-room-from-tg`;
 
   const newData = {
     id,

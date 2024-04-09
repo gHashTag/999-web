@@ -19,36 +19,6 @@ if (!process.env.NEXT_PUBLIC_100MS) {
   throw new Error("NEXT_PUBLIC_100MS is not set");
 }
 
-const createToken100ms = () => {
-  return new Promise((resolve, reject) => {
-    const { APP_ACCESS_KEY, APP_SECRET } = process.env;
-    const payload = {
-      access_key: APP_ACCESS_KEY,
-      type: "management",
-      version: 2,
-      iat: Math.floor(Date.now() / 1000),
-      nbf: Math.floor(Date.now() / 1000),
-    };
-
-    jwt.sign(
-      payload,
-      APP_SECRET,
-      {
-        algorithm: "HS256",
-        expiresIn: "24h",
-        jwtid: uuidv4(),
-      },
-      (err: any, token: string) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(token);
-        }
-      }
-    );
-  });
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
@@ -64,9 +34,22 @@ export default async function handler(
   });
 
   try {
-    const { user_id, name, type, username, lang, chat_id, token } =
+    const { id, name, type, username, user_id, lang, chat_id, token } =
       await req.body;
     console.log(req.body, "req.body");
+
+    const { data: dataRooms, error: errorRooms } = await supabase
+      .from("rooms")
+      .select("*")
+      .eq("user_id", user_id)
+      .order("id", { ascending: false });
+
+    console.log(dataRooms, "dataRooms");
+    const lastElement = dataRooms && dataRooms[0];
+    console.log(lastElement, "lastElement");
+    const translateName = transliterate(lastElement?.name);
+    console.log(translateName, "translateName");
+
     const { data, error: userError } = await supabase
       .from("users")
       .select("*")
@@ -81,11 +64,10 @@ export default async function handler(
       throw new Error(`User not found: ${username}`);
     }
 
-    const transliterateName = transliterate(name);
     const createOrFetchRoom = async () => {
       const roomData = {
-        name: `${transliterateName}:${uuidv4()}:${lang}`,
-        description: transliterateName,
+        name: `${name}:${uuidv4()}:${lang}`,
+        description: name,
         template_id:
           type === "audio-space"
             ? "65e84b5148b3dd31b94ff005"
@@ -103,12 +85,12 @@ export default async function handler(
           Authorization: `Bearer ${newToken}`,
         },
       });
-
+      console.log(roomResponse, "roomResponse");
       if (!roomResponse.ok) {
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-      // console.log(newRoom, "newRoom");
+      console.log(newRoom, "newRoom");
       const id = newRoom.id;
       const codesResponse = await createCodes(id, newToken as string);
       // console.log(id, "id");
@@ -129,7 +111,6 @@ export default async function handler(
         token,
         chat_id,
         username,
-        original_name: name,
       };
 
       delete rooms.id;
@@ -139,10 +120,12 @@ export default async function handler(
 
     const rooms = await createOrFetchRoom();
 
-    const { error } = await supabase.from("rooms").insert({
-      ...rooms,
-    });
-
+    const { error } = await supabase
+      .from("rooms")
+      .update({
+        ...rooms,
+      })
+      .eq("id", id);
     if (error) {
       throw new Error(`Error saving to Supabase: ${error.message}`);
     }

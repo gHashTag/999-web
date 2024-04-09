@@ -18,6 +18,7 @@ const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
   const username = localStorage.getItem("username");
+  const user_id = localStorage.getItem("user_id");
   // const { data: userInfo } = useQuery(CURRENT_USER);
   // console.log(userInfo, "userInfo");
   const {
@@ -40,23 +41,29 @@ const MeetsPage = () => {
     const formData = getValues();
 
     const lang = navigator.language.substring(0, 2);
-    console.log(lang);
-    try {
-      const response = await createRoom(
-        formData.name,
-        openModalId,
-        formData.token,
-        formData.chat_id,
-        lang
-      );
 
-      if (response) {
-        toast({
-          title: "Success",
-          description: `${response.rooms.name} created`,
+    try {
+      if (username && user_id) {
+        const response = await createRoom({
+          user_id,
+          username,
+          name: formData.name,
+          type: openModalId,
+          token: formData.token,
+          chat_id: formData.chat_id,
+          lang,
         });
-        router.push(`/workspaceSlug/create-meet/${response.rooms.room_id}`);
-        setLoading(false);
+
+        if (response) {
+          toast({
+            title: "Success",
+            description: `${response.rooms.name} created`,
+          });
+          router.push(`/workspaceSlug/create-meet/${response.rooms.room_id}`);
+          setLoading(false);
+        }
+      } else {
+        console.log("Username not a found");
       }
     } catch (error) {
       if (error) {
