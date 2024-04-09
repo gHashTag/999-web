@@ -5,7 +5,7 @@ import type { AppProps } from "next/app";
 import { NextUIProvider } from "@nextui-org/react";
 import { HMSRoomProvider } from "@100mslive/react-sdk";
 // import { HuddleClient, HuddleProvider } from "@huddle01/react";
-
+import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import NProgress from "@components/nprogress";
 import ResizeHandler from "@components/resize-handler";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
@@ -175,17 +175,19 @@ export default function App({ Component, pageProps }: AppProps) {
                 enableSystem
                 disableTransitionOnChange
               >
-                <Analytics />
-                <SpeedInsights />
-                {/* <BackgroundBeams /> */}
-                <HMSRoomProvider>
-                  <Component {...pageProps} />
+                <TonConnectUIProvider manifestUrl="https://dao999nft.com/tonconnect-manifest.json">
+                  <Analytics />
+                  <SpeedInsights />
+                  {/* <BackgroundBeams /> */}
+                  <HMSRoomProvider>
+                    <Component {...pageProps} />
 
-                  <ResizeHandler />
-                  <NProgress />
-                  <Toaster />
-                </HMSRoomProvider>
-                {/* <BackgroundBeamsTwo /> */}
+                    <ResizeHandler />
+                    <NProgress />
+                    <Toaster />
+                  </HMSRoomProvider>
+                  {/* <BackgroundBeamsTwo /> */}
+                </TonConnectUIProvider>
               </ThemeProvider>
             </NextThemesProvider>
           </NextUIProvider>

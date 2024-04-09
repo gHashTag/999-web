@@ -54,8 +54,9 @@ const ShowIzbushka = () => {
         const { selectIzbushkaData, selectIzbushkaError } =
           await getSelectIzbushkaId(selectIzbushka);
 
-        console.log(selectIzbushkaError, "selectIzbushkaError");
-        console.log(selectIzbushkaData, "selectIzbushkaData");
+        if (selectIzbushkaError) {
+          console.log(selectIzbushkaError, "selectIzbushkaError");
+        }
 
         let roomId;
         if (selectIzbushkaData) {
@@ -65,19 +66,22 @@ const ShowIzbushka = () => {
             selectIzbushkaData: inviterSelectIzbushkaData,
             selectIzbushkaError: inviterSelectIzbushkaError,
           } = await getSelectIzbushkaId(selectIzbushka);
-          console.log(inviterSelectIzbushkaData, "inviterSelectIzbushkaData");
+
+          if (inviterSelectIzbushkaError) {
+            console.log(inviterSelectIzbushkaData, "inviterSelectIzbushkaData");
+          }
+
           const id =
             inviterSelectIzbushkaData &&
             inviterSelectIzbushkaData[0].codes.data.filter(
               (item: any) => item.role === "host"
             )[0].code;
 
-          console.log(id, "id");
           roomId = id;
         } else {
           const inviter = user?.inviter;
           const data = await getUser(inviter);
-          console.log(inviter, "inviter");
+
           const inviterSelectIzbushka = data && data[1]?.select_izbushka;
           const {
             selectIzbushkaData: inviterSelectIzbushkaData,
@@ -86,7 +90,12 @@ const ShowIzbushka = () => {
           roomId =
             inviterSelectIzbushkaData &&
             inviterSelectIzbushkaData[0].codes.data[1].code;
-          console.log(inviterSelectIzbushkaError, "inviterSelectIzbushkaError");
+          if (inviterSelectIzbushkaError) {
+            console.log(
+              inviterSelectIzbushkaError,
+              "inviterSelectIzbushkaError"
+            );
+          }
         }
         console.log(roomId, "roomId");
 

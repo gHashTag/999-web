@@ -19,10 +19,23 @@ bot.command("start", async (ctx) => {
   console.log(select_izbushka, "select_izbushka");
   if (select_izbushka) {
     const username = ctx.update.message?.from.username;
-    const { data, error } = await supabase
+
+    const {
+      data: updateUserSelectIzbushkaData,
+      error: updateUserSelectIzbushkaError,
+    } = await supabase
       .from("users")
       .update({ select_izbushka })
       .eq("username", username);
+
+    if (updateUserSelectIzbushkaError) {
+      console.log(
+        updateUserSelectIzbushkaError,
+        "updateUserSelectIzbushkaError"
+      );
+    }
+
+    console.log(updateUserSelectIzbushkaData, "updateUserSelectIzbushkaData");
 
     ctx.reply(
       `📺 Что ж, путник дорогой, дабы трансляцию начать, нажми кнопку "Избушка" смелее и веселись, ибо все приготовлено к началу твоего путешествия по цифровым просторам!`
@@ -217,8 +230,6 @@ bot.on("callback_query:data", async (ctx) => {
   }
 
   if (callbackData === "show_izbushka") {
-    const user = username && (await getUser(username));
-
     const rooms = username && (await getRooms(username));
 
     try {
@@ -246,7 +257,20 @@ bot.on("callback_query:data", async (ctx) => {
   }
   if (callbackData.includes("select_izbushka")) {
     const select_izbushka = callbackData.split("_")[2];
-    console.log(select_izbushka, "select_izbushka");
+
+    if (select_izbushka) {
+      const { error: updateUserSelectIzbushkaError } = await supabase
+        .from("users")
+        .update({ select_izbushka })
+        .eq("username", username);
+
+      if (updateUserSelectIzbushkaError) {
+        console.log(
+          updateUserSelectIzbushkaError,
+          "updateUserSelectIzbushkaError"
+        );
+      }
+    }
 
     ctx.reply(
       `📺 Что ж, путник дорогой, дабы трансляцию начать, нажми кнопку "Избушка" смелее и веселись, ибо все приготовлено к началу твоего путешествия по цифровым просторам!`
@@ -255,11 +279,6 @@ bot.on("callback_query:data", async (ctx) => {
     ctx.reply(
       `Приглашение в избушку. Нажми на кнопку чтобы прсоединиться!\n\nhttps://t.me/dao999nft_dev_bot?start=${select_izbushka}`
     );
-  }
-
-  if (callbackData.includes("izbushka_invite")) {
-    const izbushka_invite_id = callbackData.split("_")[2];
-    console.log(izbushka_invite_id, "izbushka_invite_id");
   }
 });
 

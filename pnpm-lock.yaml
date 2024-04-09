@@ -131,6 +131,9 @@ dependencies:
   '@tma.js/sdk-react':
     specifier: ^2.0.1
     version: 2.0.1(@tma.js/sdk@1.5.1)(@types/react@18.2.73)(react@18.2.0)
+  '@tonconnect/ui-react':
+    specifier: ^2.0.0
+    version: 2.0.0(react-dom@18.2.0)(react@18.2.0)
   '@toruslabs/openlogin-utils':
     specifier: ^8.0.0
     version: 8.0.0(@babel/runtime@7.24.1)
@@ -7275,6 +7278,61 @@ packages:
     resolution: {integrity: sha512-M0kzo840GntTuhd6ywYof3DPddhOxM7ODd0JlyJeTsJHexL2D0+REuFPLUNddDh66rUfXOaAdFU79WDVa6wy9A==}
     dev: false
 
+  /@tonconnect/isomorphic-eventsource@0.0.2:
+    resolution: {integrity: sha512-B4UoIjPi0QkvIzZH5fV3BQLWrqSYABdrzZQSI9sJA9aA+iC0ohOzFwVVGXanlxeDAy1bcvPbb29f6sVUk0UnnQ==}
+    dependencies:
+      eventsource: 2.0.2
+    dev: false
+
+  /@tonconnect/isomorphic-fetch@0.0.3:
+    resolution: {integrity: sha512-jIg5nTrDwnite4fXao3dD83eCpTvInTjZon/rZZrIftIegh4XxyVb5G2mpMqXrVGk1e8SVXm3Kj5OtfMplQs0w==}
+    dependencies:
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@tonconnect/protocol@2.2.6:
+    resolution: {integrity: sha512-kyoDz5EqgsycYP+A+JbVsAUYHNT059BCrK+m0pqxykMODwpziuSAXfwAZmHcg8v7NB9VKYbdFY55xKeXOuEd0w==}
+    dependencies:
+      tweetnacl: 1.0.3
+      tweetnacl-util: 0.15.1
+    dev: false
+
+  /@tonconnect/sdk@3.0.0:
+    resolution: {integrity: sha512-pg0OC//c3LU6jwH2hiLJrDXxITIfNwj0tFTV55xS6FXF2I9qzvVKTUPo4OHr1w3MZVJ7oCw4uz7gKZ+bcqK2hg==}
+    dependencies:
+      '@tonconnect/isomorphic-eventsource': 0.0.2
+      '@tonconnect/isomorphic-fetch': 0.0.3
+      '@tonconnect/protocol': 2.2.6
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@tonconnect/ui-react@2.0.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-MMvwYlWkWm60/gDhEni4Uv+2bKISgH2wyE7bFmxa3fYE+PKOBOuOOTz6NkbDoR+ZmueSMPMu8Jq+6UgVvuWpgw==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-dom: '>=17.0.0'
+    dependencies:
+      '@tonconnect/ui': 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@tonconnect/ui@2.0.0:
+    resolution: {integrity: sha512-opwroucFYf45SbnuwLJJKrlObZTAGqcf29aZr9WuVEpwIPpREsRxK80QsUBD5s7HEqn5whAdvigN/NB4pRCaYw==}
+    dependencies:
+      '@tonconnect/sdk': 3.0.0
+      classnames: 2.5.1
+      deepmerge: 4.3.1
+      ua-parser-js: 1.0.37
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /@toruslabs/base-controllers@5.5.3(@babel/runtime@7.24.1):
     resolution: {integrity: sha512-bWqtP8KCx9Jl9dc0ZG9IBJDSaLn4BjqzbCQWILLYnmnXTknmnhPGgjJaWEgFlYnIv06W7I6M3Slt66nSmha5DQ==}
     engines: {node: '>=18.x', npm: '>=9.x'}
@@ -10558,6 +10616,11 @@ packages:
   /events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
+    dev: false
+
+  /eventsource@2.0.2:
+    resolution: {integrity: sha512-IzUmBGPR3+oUG9dUeXynyNmf91/3zUSJg1lCktzKw47OXuhco54U3r9B7O4XX+Rb1Itm9OZ2b0RkTs10bICOxA==}
+    engines: {node: '>=12.0.0'}
     dev: false
 
   /execa@8.0.1:
