@@ -128,8 +128,8 @@ export function useSupabase() {
           .insert([{ ...newUser }]);
 
         if (!error) {
-          console.log(error, "error");
-          const user = newSupabaseUser ? newSupabaseUser[0] : null;
+          const user = await getSupabaseUser(username);
+          console.log(user, "user");
           if (user) {
             setUserInfo(user as SupabaseUser);
           }
