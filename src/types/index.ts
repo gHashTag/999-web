@@ -41,19 +41,12 @@ export type SupabaseUser = {
   language_code: string | null;
   telegram_id: number | null;
   email: string | null;
-  avatar: string | null;
+  photo_url: string | null;
   user_id: string;
   aggregateverifier: string | null;
-  verifier: string | null;
-  typeoflogin: string | null;
   admin_email: string | null;
-  instance_name: string | null;
-  use_case: string | null;
-  onboarding_step: Record<string, any> | null;
-  cover_image: string | null;
   role: string | null;
   display_name: string | null;
-  user_timezone: string | null;
   inviter: string | null;
 };
 

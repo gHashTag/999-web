@@ -11,12 +11,14 @@ import { useReactiveVar } from "@apollo/client";
 import { visibleSignInVar, openIntroModalVar } from "@/apollo/reactive-store";
 import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
-// @ts-ignore
-import TelegramLoginButton from "react-telegram-login";
+import { TLoginButton, TLoginButtonSize, TUser } from "react-telegram-auth";
+import { useSupabase } from "@/hooks/useSupabase";
 
 const DemoButton = () => {
   const visible = useReactiveVar(visibleSignInVar);
   const openIntroModal = useReactiveVar(openIntroModalVar);
+
+  const { createSupabaseUser } = useSupabase();
 
   // const userFriendlyAddress = useTonAddress();
   // const rawAddress = useTonAddress(false);
@@ -47,10 +49,38 @@ const DemoButton = () => {
     openIntroModalVar(!openIntroModal);
   };
 
-  const handleTelegramResponse = (response: any) => {
-    console.log(response, "response from telegram");
+  const handleTelegramResponse = (user: TUser) => {
+    createSupabaseUser(user);
   };
 
+  const logout = () => {
+    fetch(
+      "https://api.telegram.org/bot6831432194:AAEQa4F9m8p5fglLUJMNaj96wIqC13GpZlw/auth.logOut",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          // Дополнительные параметры, если необходимо
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => {
+        // Обработка ответа от API
+        if (response.ok) {
+          // Успешный выход из аккаунта
+          console.log("Successfully logged out from Telegram");
+        } else {
+          // Обработка ошибки при выходе из аккаунта
+          console.error("Failed to log out from Telegram");
+        }
+      })
+      .catch((error) => {
+        // Обработка ошибки сети или других ошибок
+        console.error("Error logging out from Telegram:", error);
+      });
+  };
   return (
     <Dialog.Root open={openIntroModal} onOpenChange={handleRegister}>
       <Dialog.Overlay className={cn(styles["overlay"])} />
@@ -66,11 +96,18 @@ const DemoButton = () => {
               Sign In
             </button>
           </Dialog.Trigger> */}
-          <TelegramLoginButton
-            dataOnauth={handleTelegramResponse}
-            botName="OdauBot"
-          />
+
           {/* <TonConnectButton /> */}
+          <TLoginButton
+            botName="dao999nft_dev_bot"
+            buttonSize={TLoginButtonSize.Large}
+            lang="ru"
+            usePic={true}
+            cornerRadius={20}
+            onAuthCallback={handleTelegramResponse}
+            requestAccess={"write"}
+            additionalClasses={"css-class-for-wrapper"}
+          />
         </>
       )}
       <div id="cta-tooltip" className={cn(styles["tooltip"])}>

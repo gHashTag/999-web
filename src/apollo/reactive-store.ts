@@ -26,8 +26,6 @@ const initCode = `${!__DEV__ ? "dao999nft" : ""}`;
 
 export const setInviteCode = makeVar<string>(initCode);
 
-export const setInviterUserId = makeVar<string>("");
-
 export const setBalance = makeVar<string | null>(null);
 
 export const setAssetInfo = makeVar<OptionType | null>(null);

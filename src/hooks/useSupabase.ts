@@ -10,13 +10,14 @@ import {
 import { supabase } from "@/utils/supabase";
 import { web3auth } from "@/utils/web3Auth";
 import {
-  setInviterUserId,
+  setInviteCode,
   setUserInfo,
   setUserSupabase,
 } from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
+import { TUser } from "react-telegram-auth";
 
-export const checkUsername = async (
+export const checkUsernameCodes = async (
   username: string
 ): Promise<{
   isInviterExist: boolean;
@@ -53,22 +54,34 @@ export const checkUsername = async (
   };
 };
 
+export const checkUsername = async (username: string): Promise<boolean> => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+  if (error) {
+    console.log(error, "error checkUsername");
+    return false;
+  }
+  return data ? data.length > 0 : false;
+};
+
 export function useSupabase() {
-  const inviter = useReactiveVar(setInviterUserId);
   const userSupabase = useReactiveVar(setUserSupabase);
+  const inviter = useReactiveVar(setInviteCode);
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<RecordingAsset[]>([]);
   const userInfo = useReactiveVar(setUserInfo);
 
-  const getSupabaseUser = async (email: string) => {
+  const getSupabaseUser = async (username: string) => {
     try {
       const response = await supabase
         .from("users")
         .select("*")
-        .eq("email", email)
+        .eq("username", username)
         .single();
-
+      console.log(response, "response");
       if (response.error && response.error.code === "PGRST116") {
         console.error("Пользователь не найден");
         return null;
@@ -89,49 +102,43 @@ export function useSupabase() {
     }
   };
 
-  const createSupabaseUser = async () => {
+  const createSupabaseUser = async (user: TUser) => {
     try {
-      const user = await web3auth.getUserInfo();
-      if (!user.email) {
-        // console.error("Email пользователя не найден");
-        return { workspaceSlug: "" };
+      if (!user.username) {
+        console.error("Email пользователя не найден");
+        return;
       }
-      const userData = await getSupabaseUser(user.email);
-      if (!userData) {
-        // console.log("Создание нового пользователя, так как текущий не найден");
-        // Логика создания пользователя
-        // Пользователя с таким email нет в базе, создаем нового
-        //@ts-ignore
-        const parts = user.name.split(" ");
+      const { username, first_name, last_name, photo_url } = user;
+      const userData = await getSupabaseUser(inviter);
+
+      if (userData) {
         const newUser = {
-          // user_id: "5619bcb3-0b78-4270-bd56-0f1069d9e8a1",
-          email: user.email,
-          first_name: parts[0],
-          last_name: parts.slice(1).join(" "),
-          aggregateverifier: user.aggregateVerifier,
-          verifier: user.verifier,
-          avatar: user.profileImage,
-          typeoflogin: user.typeOfLogin,
-          inviter,
+          username,
+          first_name,
+          last_name,
+          inviter: userData.user_id,
+          photo_url,
         };
 
-        const { error } = await supabase.from("users").insert([{ ...newUser }]);
+        localStorage.setItem("username", userData.username);
+        localStorage.setItem("user_id", userData.user_id);
+
+        const { data: newSupabaseUser, error } = await supabase
+          .from("users")
+          .insert([{ ...newUser }]);
 
         if (!error) {
-          setUserInfo({ ...userData } as SupabaseUser);
-          return {
-            workspaceSlug: userData.user_id,
-          };
-        } else {
-          // console.log(error, "Ошибка создания пользователя");
-          return { workspaceSlug: "" };
+          console.log(error, "error");
+          const user = newSupabaseUser ? newSupabaseUser[0] : null;
+          if (user) {
+            setUserInfo(user as SupabaseUser);
+          }
         }
       } else {
-        // console.log(userData, "userData");
-        setUserInfo(userData as SupabaseUser);
+        console.log("Доступ запрешен, так как инвайтер не найден");
       }
     } catch (error) {
-      // console.error("Ошибка при получении информации о пользователе:", error);
+      console.error("Ошибка при получении информации о пользователе:", error);
     }
   };
 
@@ -201,6 +208,7 @@ export function useSupabase() {
   }, []);
 
   return {
+    checkUsername,
     getSupabaseUser,
     getAssetById,
     assets,
@@ -214,7 +222,7 @@ export function useSupabase() {
     setUserSupabase,
     userInfo,
     setUserInfo,
-    checkUsername,
+    checkUsernameCodes,
     getTaskById,
   };
 }

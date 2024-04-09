@@ -74,15 +74,9 @@ export default function Form({ sharePage }: Props) {
 
   const handleRegister = useCallback(async () => {
     if (inviteCode) {
-      // console.log(inviteCode, "inviteCode");
       const isInviterExist = await checkUsername(inviteCode);
-      // console.log(isInviterExist, "isInviterExist");
       if (isInviterExist) {
         visibleSignInVar(true);
-        // toast({
-        //   title: "Success",
-        //   description: "Welcome to Kingdom 999!!! Click Sing In to enter",
-        // });
       } else {
         setErrorMsg("Invite code not correct");
         setFormState("error");

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 80",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -86,7 +86,7 @@
     "react-hook-form": "^7.51.2",
     "react-hot-toast": "^2.4.1",
     "react-select": "^5.8.0",
-    "react-telegram-login": "^1.1.2",
+    "react-telegram-auth": "^1.0.4",
     "recorder": "link:@huddle01/server-sdk/recorder",
     "styled-components": "^6.1.8",
     "swr": "^2.2.5",

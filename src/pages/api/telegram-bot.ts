@@ -5,7 +5,7 @@ import { bot } from "@/utils/telegram/bot";
 import { create100MsRoom } from "@/helpers/api/create-100ms-room";
 import { createUser } from "@/helpers/api/create-user";
 
-import { checkUsername } from "@/hooks/useSupabase";
+import { checkUsernameCodes } from "@/hooks/useSupabase";
 import { transliterate } from "@/helpers/api/transliterate";
 import { getUser } from "@/helpers/api/get-user";
 import { SupabaseUser } from "@/types";
@@ -77,7 +77,7 @@ bot.on("message", async (ctx) => {
 
       // Действия с ответом пользователя, например, сохранение токена
       const { isInviterExist, invitation_codes, inviter_user_id } =
-        await checkUsername(replyText as string);
+        await checkUsernameCodes(replyText as string);
 
       try {
         if (isInviterExist) {

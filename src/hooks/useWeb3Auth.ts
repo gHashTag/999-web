@@ -53,7 +53,7 @@ const useWeb3Auth = () => {
         console.log("userInfo", userInfo);
         if (userInfo) {
           setUserInfo({ ...userInfo } as SupabaseUser);
-          await createSupabaseUser();
+          // await createSupabaseUser();
 
           if (userInfo.email) {
             console.log("set user info");
