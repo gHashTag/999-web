@@ -1,14 +1,13 @@
 import { gql } from "@apollo/client";
 
-export const CURRENT_USER = gql`
-  query CurrentUser {
-    isLoggedIn @client
-    user_id @client
-    first_name @client
-    last_name @client
-    email @client
-  }
-`;
+// export const CURRENT_USER = gql`
+//   query CurrentUser {
+//     isLoggedIn @client
+//     user_id @client
+//     first_name @client
+//     last_name @client
+//   }
+// `;
 
 export const ROOM_INFO = gql`
   query RoomInfo {
@@ -19,13 +18,16 @@ export const ROOM_INFO = gql`
 `;
 
 export const ROOMS_COLLECTION_QUERY = gql`
-  query RoomsCollectionByName($user_id: String!, $room_id: String!) {
-    roomsCollection(filter: { user_id: { eq: $user_id }, room_id: { eq: $room_id } }) {
+  query RoomsCollectionByName($username: String!, $room_id: String!) {
+    roomsCollection(
+      filter: { username: { eq: $username }, room_id: { eq: $room_id } }
+    ) {
       edges {
         node {
           id
           user_id
           name
+          username
           description
           updated_at
           created_at
@@ -90,32 +92,30 @@ export const DELETE_ROOM_MUTATION = gql`
 `;
 
 export const TASKS_COLLECTION_QUERY = gql`
-query GetTasks($user_id: UUID!) {
-  tasksCollection(filter: {
-    and: [
-      {user_id: {eq: $user_id}}
-    ]
-  }, orderBy: {
-      created_at: DescNullsFirst
-    }) {
-    edges {
-      node {
-        id
-        user_id
-        created_at
-        title
-        description
-        updated_at
-        due_date
-        priority
-        completed_at
-        is_archived
-        status
-        label
+  query GetTasks($user_id: UUID!) {
+    tasksCollection(
+      filter: { and: [{ user_id: { eq: $user_id } }] }
+      orderBy: { created_at: DescNullsFirst }
+    ) {
+      edges {
+        node {
+          id
+          user_id
+          user_id
+          created_at
+          status
+          priority
+          title
+          description
+          updated_at
+          due_date
+          completed_at
+          is_archived
+          label
+        }
       }
     }
   }
-}
 `;
 
 export const CREATE_TASK_MUTATION = gql`

@@ -37,7 +37,7 @@ import { useQuery, useReactiveVar } from "@apollo/client";
 import { setActiveRoute, visibleHeaderVar } from "@/apollo/reactive-store";
 import { Spinner } from "@/components/ui/spinner";
 import { cache } from "@/pages/_app";
-import { CURRENT_USER } from "@/graphql/query";
+// import { CURRENT_USER } from "@/graphql/query";
 
 type Props = {
   children: React.ReactNode;
@@ -57,21 +57,20 @@ export default function Layout({
   isLive = false,
 }: Props) {
   const router = useRouter();
-  const { data } = useQuery(CURRENT_USER);
+  // const { data } = useQuery(CURRENT_USER);
 
-  const readCache = () => {
-    cache.writeQuery({
-      query: CURRENT_USER,
-      data: {
-        isLoggedIn: !!localStorage.getItem("user_id"),
-        user_id: localStorage.getItem("user_id"),
-        user_name: localStorage.getItem("user_name"),
-        email: localStorage.getItem("email"),
-        first_name: localStorage.getItem("first_name"),
-        last_name: localStorage.getItem("last_name"),
-      },
-    });
-  };
+  // const readCache = () => {
+  //   cache.writeQuery({
+  //     query: CURRENT_USER,
+  //     data: {
+  //       isLoggedIn: !!localStorage.getItem("user_id"),
+  //       user_id: localStorage.getItem("user_id"),
+  //       user_name: localStorage.getItem("user_name"),
+  //       first_name: localStorage.getItem("first_name"),
+  //       last_name: localStorage.getItem("last_name"),
+  //     },
+  //   });
+  // };
 
   // useEffect(() => {
   //   readCache();

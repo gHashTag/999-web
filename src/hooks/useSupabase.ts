@@ -83,7 +83,7 @@ export function useSupabase() {
         .single();
       console.log(response, "response");
       if (response.error && response.error.code === "PGRST116") {
-        console.error("Пользователь не найден");
+        console.error("getSupabaseUser: Пользователь не найден");
         return null;
       }
 
@@ -102,11 +102,11 @@ export function useSupabase() {
     }
   };
 
-  const createSupabaseUser = async (user: TUser) => {
+  const createSupabaseUser = async (user: TUser): Promise<boolean> => {
     try {
       if (!user.username) {
         console.error("Email пользователя не найден");
-        return;
+        return false;
       }
       const { username, first_name, last_name, photo_url } = user;
       const userData = await getSupabaseUser(inviter);
@@ -118,28 +118,36 @@ export function useSupabase() {
           last_name,
           inviter: userData.user_id,
           photo_url,
+          is_bot: false,
         };
 
-        localStorage.setItem("username", userData.username);
-        localStorage.setItem("user_id", userData.user_id);
+        localStorage.setItem("username", username);
 
-        const { data: newSupabaseUser, error } = await supabase
-          .from("users")
-          .insert([{ ...newUser }]);
+        const { error } = await supabase.from("users").insert([{ ...newUser }]);
 
-        if (!error) {
-          const user = await getSupabaseUser(username);
-          console.log(user, "user");
-          if (user) {
-            setUserInfo(user as SupabaseUser);
-          }
+        setTimeout(() => {
+          const getUserId = async () => {
+            const userData = await getSupabaseUser(username);
+            const user_id = userData.user_id;
+            localStorage.setItem("user_id", user_id);
+          };
+          getUserId();
+        }, 2000);
+        if (error && error.code === "23505") {
+          console.log("Значение ключа уже существует в базе данных");
+          return true;
+        } else {
+          return true;
         }
       } else {
         console.log("Доступ запрешен, так как инвайтер не найден");
+        return false;
       }
     } catch (error) {
       console.error("Ошибка при получении информации о пользователе:", error);
+      return false;
     }
+    return false;
   };
 
   const getAllAssets = async () => {

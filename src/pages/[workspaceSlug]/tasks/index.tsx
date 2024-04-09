@@ -42,28 +42,26 @@ export const metadata: Metadata = {
 export default function Tasks() {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const username = localStorage.getItem("username");
   const user_id = localStorage.getItem("user_id");
+  console.log(user_id, "user_id");
+  console.log(username, "username");
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string | null>(null);
-  const { getTaskById } = useSupabase();
-  const { loading, error, data, refetch } = useQuery(TASKS_COLLECTION_QUERY, {
+  const { getTaskById, getSupabaseUser } = useSupabase();
+
+  const {
+    loading,
+    error: tasksError,
+    data: tasksData,
+    refetch,
+  } = useQuery(TASKS_COLLECTION_QUERY, {
     fetchPolicy: "network-only",
     variables: {
       user_id,
     },
   });
-
-  const {
-    loading: tasksLoading,
-    error: tasksError,
-    data: tasksData,
-    refetch: tasksRefetch,
-  } = useQuery(TASKS_COLLECTION_QUERY, {
-    variables: {
-      user_id,
-    },
-  });
-
+  console.log(tasksData, "tasksData");
   // const { data: taskById, error: taskByIdError } = useQuery(TASK_BY_ID_QUERY, {
   //   variables: { id: openModalId },
   //   client: apolloClient,
@@ -77,7 +75,7 @@ export default function Tasks() {
   const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
     useMutation(MUTATION_TASK_UPDATE, {
       variables: {
-        user_id,
+        username,
       },
     });
 
@@ -90,17 +88,11 @@ export default function Tasks() {
     useMutation(CREATE_TASK_MUTATION);
   if (mutateCreateTaskError instanceof ApolloError) {
     // Обработка ошибки ApolloError
-    console.log(mutateCreateTaskError.message);
+    console.log("mutateCreateTaskError", mutateCreateTaskError.message);
   }
 
-  const [deleteTask, { error: deleteTaskError }] = useMutation(
-    DELETE_TASK_MUTATION,
-    {
-      variables: {
-        user_id,
-      },
-    }
-  );
+  const [deleteTask, { error: deleteTaskError }] =
+    useMutation(DELETE_TASK_MUTATION);
 
   const columns = useMemo(
     () => [
@@ -252,24 +244,34 @@ export default function Tasks() {
   const onCreate = async () => {
     try {
       const formData = getValues();
-      const formDataWithUserId = {
-        ...formData,
-        user_id,
-      };
 
-      const mutateCreateTaskResult = await mutateCreateTask({
-        variables: {
-          objects: [formDataWithUserId],
-        },
-        onCompleted: () => {
-          refetch();
-          reset({
-            title: "",
-            description: "",
-            label: "",
-          });
-        },
-      });
+      if (username) {
+        const formDataWithUserId = {
+          ...formData,
+          user_id,
+        };
+
+        const mutateCreateTaskResult = await mutateCreateTask({
+          variables: {
+            objects: [formDataWithUserId],
+          },
+          onCompleted: () => {
+            toast({
+              title: "Task created",
+              description: "Task created successfully",
+            });
+            refetch();
+
+            reset({
+              title: "",
+              description: "",
+              label: "",
+            });
+          },
+        });
+      } else {
+        console.log("Некорректное значение для username");
+      }
     } catch (error) {
       console.log(error, "error");
       toast({

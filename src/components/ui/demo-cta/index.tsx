@@ -13,11 +13,12 @@ import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
 import { TLoginButton, TLoginButtonSize, TUser } from "react-telegram-auth";
 import { useSupabase } from "@/hooks/useSupabase";
+import { useRouter } from "next/router";
 
 const DemoButton = () => {
   const visible = useReactiveVar(visibleSignInVar);
   const openIntroModal = useReactiveVar(openIntroModalVar);
-
+  const router = useRouter();
   const { createSupabaseUser } = useSupabase();
 
   // const userFriendlyAddress = useTonAddress();
@@ -49,8 +50,14 @@ const DemoButton = () => {
     openIntroModalVar(!openIntroModal);
   };
 
-  const handleTelegramResponse = (user: TUser) => {
-    createSupabaseUser(user);
+  const handleTelegramResponse = async (user: TUser) => {
+    const res = await createSupabaseUser(user);
+    if (res) {
+      console.log("Successfully logged in");
+      router.push("/workspaceSlug/wallet");
+    } else {
+      console.log("Failed to log in");
+    }
   };
 
   const logout = () => {

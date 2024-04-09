@@ -9,7 +9,7 @@ import { useDisclosure } from "@nextui-org/react";
 import { useToast } from "@/components/ui/use-toast";
 import { createRoom } from "@/utils/edge-functions";
 import { SelectRoom } from "@/components/ui/select-room";
-import { CURRENT_USER, ROOMS_COLLECTION_QUERY } from "@/graphql/query";
+import { ROOMS_COLLECTION_QUERY } from "@/graphql/query";
 import { useQuery } from "@apollo/client";
 import { CardRoomT } from "@/types";
 import CardRoom from "@/components/ui/card-room";
@@ -17,14 +17,16 @@ import CardRoom from "@/components/ui/card-room";
 const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
-  const { data: userInfo } = useQuery(CURRENT_USER);
+  const username = localStorage.getItem("username");
+  // const { data: userInfo } = useQuery(CURRENT_USER);
+  // console.log(userInfo, "userInfo");
   const {
     data: roomsData,
     loading: roomsLoading,
     refetch,
   } = useQuery(ROOMS_COLLECTION_QUERY, {
     variables: {
-      user_id: userInfo?.user_id,
+      username,
     },
   });
 
@@ -36,7 +38,7 @@ const MeetsPage = () => {
   const onCreateMeet = async () => {
     setLoading(true);
     const formData = getValues();
-    console.log(formData, "formData");
+
     const lang = navigator.language.substring(0, 2);
     console.log(lang);
     try {

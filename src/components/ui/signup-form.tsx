@@ -15,7 +15,7 @@ export function SignupFormDemo({
   designation,
   position,
   company,
-  logout,
+  // logout,
   onSubmit,
 }: {
   first_name: string;
@@ -23,7 +23,7 @@ export function SignupFormDemo({
   designation: string;
   position: string;
   company: string;
-  logout: () => void;
+  // logout: () => void;
   onSubmit: (data: FieldValues) => void;
 }) {
   const {
@@ -149,8 +149,8 @@ export function SignupFormDemo({
             </p>
             <div style={{ padding: "15px" }} />
             <ButtonAnimate onClick={() => setIsEdit(true)}>Edit</ButtonAnimate>
-            <div style={{ padding: "10px" }} />
-            <ButtonAnimate onClick={logout}>Logout</ButtonAnimate>
+            {/* <div style={{ padding: "10px" }} />
+            <ButtonAnimate onClick={logout}>Logout</ButtonAnimate> */}
           </div>
         )}
       </form>

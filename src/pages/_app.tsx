@@ -8,7 +8,6 @@ import { HMSRoomProvider } from "@100mslive/react-sdk";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import NProgress from "@components/nprogress";
 import ResizeHandler from "@components/resize-handler";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 import BackgroundBeams from "@components/ui/background-beams";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider as NextThemesProvider } from "next-themes";

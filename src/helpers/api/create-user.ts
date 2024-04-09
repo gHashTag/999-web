@@ -31,7 +31,7 @@ async function createUser(ctx: any) {
     language_code,
     telegram_id: id,
     email: "",
-    avatar: "",
+    photo_url: "",
   };
 
   const { data, error: insertError } = await supabase

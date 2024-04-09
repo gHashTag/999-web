@@ -15,6 +15,7 @@ const nextConfig = {
       "randomuser.me",
       "images.unsplash.com",
       "lh3.googleusercontent.com",
+      "t.me",
     ],
   },
   // typescript: {

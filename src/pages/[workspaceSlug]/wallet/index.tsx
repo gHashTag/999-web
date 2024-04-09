@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+
 import { Button, User, Card, CardBody } from "@nextui-org/react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
@@ -21,15 +21,15 @@ import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { Spinner } from "@/components/ui/spinner";
 
 const QUERY = gql`
-  query GetUserByEmail($email: String!) {
-    usersCollection(filter: { email: { eq: $email } }) {
+  query GetUserByEmail($username: String!) {
+    usersCollection(filter: { username: { eq: $username } }) {
       edges {
         node {
           user_id
           first_name
           last_name
           username
-          avatar
+          photo_url
           designation
           company
           position
@@ -63,7 +63,7 @@ const MUTATION = gql`
         first_name
         last_name
         username
-        avatar
+        photo_url
         user_id
         company
         position
@@ -79,11 +79,15 @@ export type updateUserDataType = {
 };
 
 export default function Wallet() {
-  const { address, balance, login, logout, getAccounts, getBalance } =
-    useWeb3Auth();
   const router = useRouter();
-  const email = localStorage.getItem("email");
-  console.log(email, "email");
+  const username = localStorage.getItem("username");
+  console.log(username, "username");
+  useEffect(() => {
+    if (!username) {
+      router.push("/");
+    }
+  }, [router]);
+
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
   const [mutateUser, { loading: mutationLoading, error: mutationError }] =
@@ -93,22 +97,12 @@ export default function Wallet() {
   //   // Обработка ошибки ApolloError
   //   console.log(mutationError.message);
   // }
+
   const { loading, error, data, refetch } = useQuery(QUERY, {
-    variables: { email },
+    variables: {
+      username,
+    },
   });
-
-  useEffect(() => {
-    login();
-    getAccounts();
-    getBalance();
-  }, []);
-
-  useEffect(() => {
-    const user_id = localStorage.getItem("user_id");
-    if (!user_id) {
-      router.push("/");
-    }
-  }, [router]);
 
   if (error) return <p>Error : {error.message}</p>;
 
@@ -120,11 +114,12 @@ export default function Wallet() {
       if (data) {
         const variables = {
           user_id: userNode.user_id,
-          first_name: data.first_name,
-          last_name: data.last_name,
-          designation: data.designation,
-          company: data.company,
-          position: data.position,
+          first_name: data?.first_name,
+          last_name: data?.last_name,
+          designation: data?.designation,
+          company: data?.company,
+          position: data?.position,
+          username: username,
         };
 
         if (variables.first_name && variables.last_name) {
@@ -172,9 +167,9 @@ export default function Wallet() {
               items={[
                 {
                   id: 1,
-                  name: `${userNode.first_name} ${userNode.last_name}`,
-                  designation: userNode.position,
-                  image: userNode.avatar,
+                  name: `${userNode?.first_name} ${userNode?.last_name}`,
+                  designation: userNode?.position,
+                  image: userNode?.photo_url,
                 },
               ]}
             />
@@ -184,7 +179,7 @@ export default function Wallet() {
               position={userNode.position}
               company={userNode.company}
               designation={userNode.designation}
-              logout={logout}
+              // logout={logout}
               onSubmit={handleFormData}
             />
           </>

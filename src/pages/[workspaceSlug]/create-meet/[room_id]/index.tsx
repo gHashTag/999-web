@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { ButtonAnimate } from "@/components/ui/button-animate";
 import { useToast } from "@/components/ui/use-toast";
 import {
-  CURRENT_USER,
+  // CURRENT_USER,
   DELETE_ROOM_MUTATION,
   ROOMS_ASSETS_COLLECTION_QUERY,
   ROOMS_COLLECTION_QUERY,
@@ -32,7 +32,7 @@ const RoomPage = () => {
   const { toast } = useToast();
   const router = useRouter();
 
-  const { data: userInfo } = useQuery(CURRENT_USER);
+  // const { data: userInfo } = useQuery(CURRENT_USER);
 
   const {
     data: roomsData,
@@ -41,7 +41,7 @@ const RoomPage = () => {
   } = useQuery(ROOMS_COLLECTION_QUERY, {
     fetchPolicy: "network-only",
     variables: {
-      user_id: userInfo?.user_id,
+      username: localStorage.getItem("username"),
       room_id: router.query.room_id,
     },
   });
