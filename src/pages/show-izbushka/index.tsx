@@ -9,6 +9,8 @@ import {
   useHMSStore,
 } from "@100mslive/react-sdk";
 import { Spinner } from "@/components/ui/spinner";
+import { getUser } from "@/helpers/api/get-user";
+import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
 // import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 const HMSPrebuilt = dynamic(
@@ -24,7 +26,7 @@ const HMSPrebuilt = dynamic(
 
 const ShowIzbushka = () => {
   const router = useRouter();
-  const slug = router.query.slug;
+
   const { initData } = retrieveLaunchParams();
   console.log(initData, "initData");
   const hmsActions = useHMSActions();
@@ -43,40 +45,63 @@ const ShowIzbushka = () => {
         const lastName = initData?.user?.lastName;
         const fullName = `${firstName} ${lastName}`;
         console.log(fullName, "fullName");
-        const { data, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("username", username);
-        setFullName(fullName);
 
+        setFullName(fullName);
+        const data = username && (await getUser(username));
         const user = data && data[0];
-        console.log(user, "user");
 
         const selectIzbushka = user?.select_izbushka;
-        const { data: selectIzbushkaData, error: selectIzbushkaError } =
-          await supabase.from("rooms").select("*").eq("id", selectIzbushka);
-        console.log(selectIzbushka, "selectIzbushka");
+        const { selectIzbushkaData, selectIzbushkaError } =
+          await getSelectIzbushkaId(selectIzbushka);
+
         console.log(selectIzbushkaError, "selectIzbushkaError");
+        console.log(selectIzbushkaData, "selectIzbushkaData");
 
         let roomId;
-        if (selectIzbushkaData && selectIzbushkaData[0]) {
-          roomId = selectIzbushkaData[0].codes[1].code;
+        if (selectIzbushkaData) {
+          const selectIzbushka = selectIzbushkaData[0].id;
+          console.log(selectIzbushka, "selectIzbushka");
+          const {
+            selectIzbushkaData: inviterSelectIzbushkaData,
+            selectIzbushkaError: inviterSelectIzbushkaError,
+          } = await getSelectIzbushkaId(selectIzbushka);
+          console.log(inviterSelectIzbushkaData, "inviterSelectIzbushkaData");
+          const id =
+            inviterSelectIzbushkaData &&
+            inviterSelectIzbushkaData[0].codes.data.filter(
+              (item: any) => item.role === "host"
+            )[0].code;
+
+          console.log(id, "id");
+          roomId = id;
         } else {
-          roomId = user?.invitation_codes.data[0].code;
+          const inviter = user?.inviter;
+          const data = await getUser(inviter);
+          console.log(inviter, "inviter");
+          const inviterSelectIzbushka = data && data[1]?.select_izbushka;
+          const {
+            selectIzbushkaData: inviterSelectIzbushkaData,
+            selectIzbushkaError: inviterSelectIzbushkaError,
+          } = await getSelectIzbushkaId(inviterSelectIzbushka);
+          roomId =
+            inviterSelectIzbushkaData &&
+            inviterSelectIzbushkaData[0].codes.data[1].code;
+          console.log(inviterSelectIzbushkaError, "inviterSelectIzbushkaError");
         }
+        console.log(roomId, "roomId");
 
         setRoomId(roomId);
 
-        if (typeof roomId === "string") {
-          const authToken = await hmsActions.getAuthTokenByRoomCode({
-            roomCode: roomId,
-          });
-          console.log(authToken, "authToken");
-          setToken(authToken);
-          setLoading(false);
-        } else {
-          throw new Error("roomCode is not a string");
-        }
+        // if (typeof roomId === "string") {
+        //   const authToken = await hmsActions.getAuthTokenByRoomCode({
+        //     roomCode: roomId,
+        //   });
+        //   console.log(authToken, "authToken");
+        //   setToken(authToken);
+        //   setLoading(false);
+        // } else {
+        //   throw new Error("roomCode is not a string");
+        // }
       } catch (error) {
         console.error("Ошибка при получении токена: ", error);
       }
@@ -102,15 +127,15 @@ const ShowIzbushka = () => {
       window.removeEventListener("beforeunload", handleUnload);
     };
   }, [hmsActions, isConnected]);
-
+  console.log(roomId, "roomId");
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      {loading ? (
+      {loading || !roomId || !fullName ? (
         <Spinner size="lg" />
       ) : (
         <HMSPrebuilt
           //@ts-ignore
-          authToken={token}
+          // authToken={token}
           roomCode={roomId}
           options={{ userName: fullName }}
         />

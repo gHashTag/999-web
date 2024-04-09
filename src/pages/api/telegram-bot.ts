@@ -10,19 +10,34 @@ import { transliterate } from "@/helpers/api/transliterate";
 import { getUser } from "@/helpers/api/get-user";
 import { SupabaseUser } from "@/types";
 import { getRooms } from "@/helpers/api/get-rooms";
+import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
 
 bot.command("start", async (ctx) => {
   await ctx.replyWithChatAction("typing");
+  console.log(ctx, "ctx");
+  const select_izbushka = ctx?.message?.text && ctx.message.text.split(" ")[1];
+  console.log(select_izbushka, "select_izbushka");
+  if (select_izbushka) {
+    const username = ctx.update.message?.from.username;
+    const { data, error } = await supabase
+      .from("users")
+      .update({ select_izbushka })
+      .eq("username", username);
 
-  ctx.reply(
-    `🏰 Добро пожаловать в Тридевятое Царство, ${ctx.update.message?.from.first_name}! Всемогущая Баба Яга, владычица тайн и чародейница, пред врата неведомого мира тебя привечает. Чтоб изба к тебе передком обернулась, а не задом стояла, не забудь прошептать кабы словечко-проходное.`,
-    {
-      reply_markup: {
-        force_reply: true,
-      },
-    }
-  );
-  createUser(ctx);
+    ctx.reply(
+      `📺 Что ж, путник дорогой, дабы трансляцию начать, нажми кнопку "Избушка" смелее и веселись, ибо все приготовлено к началу твоего путешествия по цифровым просторам!`
+    );
+  } else {
+    ctx.reply(
+      `🏰 Добро пожаловать в Тридевятое Царство, ${ctx.update.message?.from.first_name}! Всемогущая Баба Яга, владычица тайн и чародейница, пред врата неведомого мира тебя привечает. Чтоб изба к тебе передком обернулась, а не задом стояла, не забудь прошептать кабы словечко-проходное.`,
+      {
+        reply_markup: {
+          force_reply: true,
+        },
+      }
+    );
+    createUser(ctx);
+  }
 });
 
 bot.on("message", async (ctx) => {
@@ -77,8 +92,12 @@ bot.on("message", async (ctx) => {
                 inline_keyboard: [
                   [
                     {
-                      text: "Построить избушку",
+                      text: "🛰 Построить избушку",
                       callback_data: "name_izbushka",
+                    },
+                    {
+                      text: "🏡 Узреть избушки",
+                      callback_data: "show_izbushka",
                     },
                   ],
                 ],
@@ -226,21 +245,21 @@ bot.on("callback_query:data", async (ctx) => {
     }
   }
   if (callbackData.includes("select_izbushka")) {
-    const select_izbushka_id = callbackData.split("_")[2];
-    console.log(select_izbushka_id, "select_izbushka_id");
-
-    const { data: selectRoomData, error: selectRoomError } = await supabase
-      .from("users")
-      .update({ select_izbushka: select_izbushka_id })
-      .eq("username", username)
-      .select("*");
-
-    console.log(selectRoomData, "selectRoomData");
-    console.log(selectRoomError, "selectRoomError");
+    const select_izbushka = callbackData.split("_")[2];
+    console.log(select_izbushka, "select_izbushka");
 
     ctx.reply(
       `📺 Что ж, путник дорогой, дабы трансляцию начать, нажми кнопку "Избушка" смелее и веселись, ибо все приготовлено к началу твоего путешествия по цифровым просторам!`
     );
+
+    ctx.reply(
+      `Приглашение в избушку. Нажми на кнопку чтобы прсоединиться!\n\nhttps://t.me/dao999nft_dev_bot?start=${select_izbushka}`
+    );
+  }
+
+  if (callbackData.includes("izbushka_invite")) {
+    const izbushka_invite_id = callbackData.split("_")[2];
+    console.log(izbushka_invite_id, "izbushka_invite_id");
   }
 });
 
