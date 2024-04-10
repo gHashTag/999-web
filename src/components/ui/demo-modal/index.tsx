@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import IconLogo from "@/components/icons/icon-logo";
 import { useSupabase } from "@/hooks/useSupabase";
 import { openWeb3ModalVar, openIntroModalVar } from "@/apollo/reactive-store";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+
 import { useToast } from "@/components/ui/use-toast";
 
 const data = [
