@@ -6,7 +6,7 @@ export const setUserEmail = makeVar<string>("");
 
 export const visibleSignInVar = makeVar<boolean>(false);
 
-export const visibleHeaderVar = makeVar<boolean>(true);
+export const setVisibleHeader = makeVar<boolean>(true);
 
 export const openWeb3ModalVar = makeVar<boolean>(false);
 

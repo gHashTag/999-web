@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import { setActiveRoute, visibleHeaderVar } from "@/apollo/reactive-store";
+import { setActiveRoute, setVisibleHeader } from "@/apollo/reactive-store";
 import { Spinner } from "@/components/ui/spinner";
 import { cache } from "@/pages/_app";
 // import { CURRENT_USER } from "@/graphql/query";
@@ -78,7 +78,7 @@ export default function Layout({
   //     router.push("/");
   //   }
   // }, [data]);
-  const visibleHeader = useReactiveVar(visibleHeaderVar);
+  const visibleHeader = useReactiveVar(setVisibleHeader);
   const activeMenuButton = useReactiveVar(setActiveRoute);
 
   const activeRoute = router.asPath;

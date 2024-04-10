@@ -14,15 +14,11 @@ import IconLogo from "./icon-logo";
 import { usePathname } from "next/navigation";
 import DropdownMenuApp from "./dropdown";
 import useDeviceDetect from "@/hooks/useDeviceDetect";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
-import { web3auth } from "@/utils/web3Auth";
 import { ADAPTER_EVENTS } from "@web3auth/base";
 
 // import { getPublicCompressed } from '@toruslabs/eccrypto'
 
 export default function Header() {
-  const { loggedIn } = useWeb3Auth();
-  console.log("Header - loggedIn", loggedIn);
   const { isMobile } = useDeviceDetect();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const pathname = usePathname();

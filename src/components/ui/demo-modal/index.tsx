@@ -2,7 +2,6 @@ import { ArrowRightIcon } from "@100mslive/react-icons";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
-import LinkButton from "@/components/ui/LinkButton";
 
 import IconLogo from "@/components/icons/icon-logo";
 import { useSupabase } from "@/hooks/useSupabase";
@@ -33,7 +32,6 @@ const data = [
 
 const DemoModal = () => {
   const [stage, setStage] = React.useState(``);
-  const { login } = useWeb3Auth();
   const { toast } = useToast();
 
   const router = useRouter();
@@ -44,24 +42,6 @@ const DemoModal = () => {
     }
   }, [router]);
 
-  const handlerCreateUser = async () => {
-    openWeb3ModalVar(true);
-    openIntroModalVar(false);
-    const loggedIn = await login();
-    if (loggedIn) {
-      toast({
-        title: "Success",
-        description: "Welcome to 999 kingdom!!!",
-      });
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Create user error",
-        description:
-          "An error occurred while trying to create a new user. Please try again or contact your system administrator for assistance.",
-      });
-    }
-  };
   return (
     <div className="font-sans">
       <p className="text-[32px] font-semibold my-0">
@@ -83,20 +63,6 @@ const DemoModal = () => {
             <div className="text-left max-w-xs">
               <span className={`badge ${m.roleName}-badge`}>{m.roleName}</span>
               <p className="text-gray-300 text-xs">{m.desc}</p>
-            </div>
-            <div className="flex items-center space-x-6">
-              {/* <CopyButton
-                text={`${window.location.host}/stage/${stage || "a"}?role=${
-                  m.role
-                }`}
-              /> */}
-              <LinkButton
-                className="w-[200px] bg-yellow-300"
-                onClick={handlerCreateUser}
-                // href={`${workspaceSlug}/wallet`}
-              >
-                Join as {m.name} <ArrowRightIcon height={20} color="black" />
-              </LinkButton>
             </div>
           </div>
         ))}

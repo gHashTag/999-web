@@ -2,14 +2,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
+// import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 const Globe = dynamic(() => import("./globe").then((m) => m.World), {
   ssr: false,
 });
 
 export default function WorldPage() {
-  const { logout } = useWeb3Auth();
   const globeConfig = {
     pointSize: 4,
     globeColor: "#062056",

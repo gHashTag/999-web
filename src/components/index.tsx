@@ -22,7 +22,7 @@ import Hero from "./hero";
 import Form from "./form";
 import LearnMore from "./learn-more";
 import { useReactiveVar } from "@apollo/client";
-import { setLoggedIn, visibleHeaderVar } from "@/apollo/reactive-store";
+import { setLoggedIn, setVisibleHeader } from "@/apollo/reactive-store";
 import { Globe } from "./ui/globe";
 
 export default function Conf() {
@@ -30,7 +30,7 @@ export default function Conf() {
 
   useEffect(() => {
     if (!loggedIn) {
-      visibleHeaderVar(false);
+      setVisibleHeader(false);
     }
   }, []);
 

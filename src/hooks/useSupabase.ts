@@ -13,6 +13,7 @@ import {
   setInviteCode,
   setUserInfo,
   setUserSupabase,
+  setVisibleHeader,
 } from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
 import { TUser } from "react-telegram-auth";
@@ -124,12 +125,16 @@ export function useSupabase() {
         localStorage.setItem("username", username);
 
         const { error } = await supabase.from("users").insert([{ ...newUser }]);
-
+        setVisibleHeader(true);
         setTimeout(() => {
           const getUserId = async () => {
             const userData = await getSupabaseUser(username);
             const user_id = userData.user_id;
             localStorage.setItem("user_id", user_id);
+            console.log(first_name, "first_name");
+            console.log(last_name, "last_name");
+            localStorage.setItem("first_name", first_name || "");
+            localStorage.setItem("last_name", last_name || "");
           };
           getUserId();
         }, 2000);
