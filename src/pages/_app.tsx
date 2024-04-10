@@ -185,7 +185,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 >
                   <Analytics />
                   <SpeedInsights />
-                  {/* <BackgroundBeams /> */}
+                  {!__DEV__ && <BackgroundBeams />}
                   <HMSRoomProvider>
                     <Component {...pageProps} />
 
