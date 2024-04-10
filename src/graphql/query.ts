@@ -92,9 +92,9 @@ export const DELETE_ROOM_MUTATION = gql`
 `;
 
 export const TASKS_COLLECTION_QUERY = gql`
-  query GetTasks($user_id: UUID!) {
+  query GetTasks($workspace_id: UUID!) {
     tasksCollection(
-      filter: { and: [{ user_id: { eq: $user_id } }] }
+      filter: { and: [{ workspace_id: { eq: $workspace_id } }] }
       orderBy: { created_at: DescNullsFirst }
     ) {
       edges {
@@ -103,14 +103,14 @@ export const TASKS_COLLECTION_QUERY = gql`
           user_id
           user_id
           created_at
-          status
-          priority
           title
           description
           updated_at
           due_date
+          priority
           completed_at
           is_archived
+          status
           label
         }
       }

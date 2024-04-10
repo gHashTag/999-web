@@ -14,4 +14,21 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
+export default async function getWorkspace(workspace_id: string) {
+  const { data, error } = await supabase
+    .from("workspace")
+    .select("*")
+    .eq("workspace_id", workspace_id);
+
+  return data;
+}
+
+export async function getWorkspaceByName(name: string) {
+  const { data, error } = await supabase
+    .from("workspaces")
+    .select("*")
+    .eq("name", name);
+  console.log(error, "error");
+  return data;
+}
 export { supabase };

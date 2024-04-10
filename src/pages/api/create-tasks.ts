@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "@/utils/supabase";
+import getWorkspace, { supabase } from "@/utils/supabase";
 import { corsHeaders, headers } from "@/helpers/headers";
 import NextCors from "nextjs-cors";
 import { Bot } from "grammy";
@@ -218,32 +218,47 @@ export default async function handler(
 
           const { lang, chat_id, token } = roomData[0];
 
-          for (const task of newTasks) {
-            // Убедитесь, что userId существует и не равен null
-            const user_id = task?.assignee?.user_id;
-            // console.log(data.room_id, "data.room_id");
-            const taskData = await supabase.from("tasks").insert([
-              {
-                user_id,
-                title: task.title,
-                description: task.description,
-                room_id: data.room_id,
-              },
-            ]);
-            // console.log(taskData, "taskData");
-
-            if (taskData.error?.message)
-              console.log("Error:", taskData.error.message);
+          const workspace_id = "7531debe-64f0-4471-b942-34130c52b6ab";
+          const workspace = await getWorkspace(workspace_id);
+          let workspace_name;
+          if (workspace && workspace.length > 0) {
+            workspace_name = workspace[0].name;
+          } else {
+            // Обработка случая, когда объект равен null или пустой
+            console.log("workspace_name is null");
           }
+          console.log(workspace_id, "workspace_id");
 
-          if (chat_id) {
-            sendTasksToTelegram(
-              chat_id,
-              newTasks,
-              summary_short,
-              lang,
-              token
-            ).catch(console.error);
+          if (workspace_name) {
+            for (const task of newTasks) {
+              // Убедитесь, что userId существует и не равен null
+              const user_id = task?.assignee?.user_id;
+              // console.log(data.room_id, "data.room_id");
+              const taskData = await supabase.from("tasks").insert([
+                {
+                  user_id,
+                  title: task.title,
+                  description: task.description,
+                  room_id: data.room_id,
+                  workspace_id,
+                  workspace_name,
+                },
+              ]);
+              // console.log(taskData, "taskData");
+
+              if (taskData.error?.message)
+                console.log("Error:", taskData.error.message);
+            }
+
+            if (chat_id) {
+              sendTasksToTelegram(
+                chat_id,
+                newTasks,
+                summary_short,
+                lang,
+                token
+              ).catch(console.error);
+            }
           }
         } else {
           return res.status(500).json({

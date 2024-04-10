@@ -48,6 +48,7 @@ export default function Tasks() {
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string | null>(null);
   const { getTaskById, getSupabaseUser } = useSupabase();
+  const workspace_id = "7531debe-64f0-4471-b942-34130c52b6ab";
 
   const {
     loading,
@@ -57,7 +58,7 @@ export default function Tasks() {
   } = useQuery(TASKS_COLLECTION_QUERY, {
     fetchPolicy: "network-only",
     variables: {
-      user_id,
+      workspace_id,
     },
   });
   console.log(tasksData, "tasksData");
