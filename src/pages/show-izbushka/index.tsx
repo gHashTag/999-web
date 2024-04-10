@@ -11,6 +11,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { getUser } from "@/helpers/api/get-user";
 import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
+import { getRooms } from "@/helpers/api/get-rooms";
 // test
 const HMSPrebuilt = dynamic(
   () =>
@@ -40,6 +41,7 @@ const ShowIzbushka = () => {
     const fetchToken = async () => {
       try {
         const username = initData?.user?.username;
+        console.log(username, "username");
         const firstName = initData?.user?.firstName;
         const lastName = initData?.user?.lastName;
         const fullName = `${firstName} ${lastName}`;
@@ -47,12 +49,19 @@ const ShowIzbushka = () => {
 
         setFullName(fullName);
         const data = username && (await getUser(username));
+        console.log(data, "data");
         const user = data && data[0];
+        console.log(user, "user");
+        let selectIzbushka = user?.select_izbushka;
+        if (!selectIzbushka) {
+          const firstRoom = username && (await getRooms(username));
+          selectIzbushka = firstRoom && firstRoom[0].id;
+        }
 
-        const selectIzbushka = user?.select_izbushka;
+        console.log(selectIzbushka, "selectIzbushka");
         const { selectIzbushkaData, selectIzbushkaError } =
           await getSelectIzbushkaId(selectIzbushka);
-
+        console.log(selectIzbushka, "selectIzbushka");
         if (selectIzbushkaError) {
           console.log(selectIzbushkaError, "selectIzbushkaError");
         }
