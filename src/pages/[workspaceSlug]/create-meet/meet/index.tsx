@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-// import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 const Meets = () => {
   const router = useRouter();

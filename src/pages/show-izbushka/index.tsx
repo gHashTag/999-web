@@ -11,7 +11,6 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { getUser } from "@/helpers/api/get-user";
 import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
-// import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 const HMSPrebuilt = dynamic(
   () =>

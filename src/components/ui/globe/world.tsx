@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
-// import { useWeb3Auth } from "@/hooks/useWeb3Auth";
 
 const Globe = dynamic(() => import("./globe").then((m) => m.World), {
   ssr: false,
