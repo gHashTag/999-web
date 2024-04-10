@@ -67,7 +67,7 @@ export default async function handler(
   try {
     const { user_id, name, type, username, lang, chat_id, token } =
       await req.body;
-    console.log(req.body, "req.body");
+
     const { data, error: userError } = await supabase
       .from("users")
       .select("*")
@@ -94,9 +94,7 @@ export default async function handler(
         enabled: true,
       };
 
-      const newToken = __DEV__
-        ? await createToken100ms()
-        : process.env.NEXT_PUBLIC_100MS;
+      const newToken = process.env.NEXT_PUBLIC_100MS;
       console.log(newToken, "newToken");
 
       const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
