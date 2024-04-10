@@ -13,6 +13,7 @@ import { visibleSignInVar, openIntroModalVar } from "@/apollo/reactive-store";
 import { TLoginButton, TLoginButtonSize, TUser } from "react-telegram-auth";
 import { useSupabase } from "@/hooks/useSupabase";
 import { useRouter } from "next/router";
+import { __DEV__ } from "@/pages/_app";
 
 const DemoButton = () => {
   const visible = useReactiveVar(visibleSignInVar);
@@ -104,7 +105,7 @@ const DemoButton = () => {
           </Dialog.Trigger> */}
 
           <TLoginButton
-            botName="dao999nft_dev_bot"
+            botName={`${__DEV__ ? "vasilev_dmitrii_bot" : "dao999nft_dev_bot"}`}
             buttonSize={TLoginButtonSize.Large}
             lang="ru"
             usePic={true}

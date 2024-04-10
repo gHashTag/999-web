@@ -39,15 +39,18 @@ import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { corsHeaders } from "@/helpers/corsHeaders";
 
 export var __DEV__ = process.env.NODE_ENV !== "production";
+console.log(process.env.NODE_ENV, "process.env.NODE_ENV");
+console.log(__DEV__, "__DEV__");
 
 if (!process.env.NEXT_PUBLIC_SITE_URL) {
   throw new Error("NEXT_PUBLIC_SITE_URL is not set");
 }
 
 export const SITE_URL = __DEV__
-  ? "https://0fbc0681508f.ngrok.app"
+  ? "https://a46ffbba421b.ngrok.app"
   : process.env.NEXT_PUBLIC_SITE_URL;
 
+console.log(SITE_URL, "SITE_URL");
 if (__DEV__) {
   // Adds messages only in a dev environment
   loadDevMessages();

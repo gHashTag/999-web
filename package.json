@@ -109,6 +109,7 @@
     "core": "link:@types/@dnd-kit/core",
     "eslint": "^8",
     "eslint-config-next": "14.1.4",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "postcss": "^8",
     "react-table": "link:@type/@tanstack/react-table",
     "tailwindcss": "^3.3.0",
