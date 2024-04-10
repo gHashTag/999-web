@@ -103,7 +103,7 @@ export default async function handler(
   try {
     const { type, data } = await req.body;
     console.log(type, "type");
-    console.log(data, "data");
+
     if (type === undefined) {
       return res.status(200).json({
         message: "type is undefined",
@@ -123,7 +123,6 @@ export default async function handler(
         const transcriptResponse = await fetch(transcriptTextPresignedUrl);
 
         const transcription = await transcriptResponse.text();
-        console.log(transcription, "transcription");
 
         const summaryJsonPresignedUrl = data.summary_json_presigned_url;
 
@@ -202,7 +201,7 @@ export default async function handler(
         // console.log(preparedTasks, "preparedTasks");
         const tasks = await createChatCompletionJson(prompt);
         const tasksArray = tasks && JSON.parse(tasks).tasks;
-        // console.log(tasksArray, "tasksArray");
+
         if (Array.isArray(tasksArray)) {
           const newTasks = tasksArray.map((task: any) => {
             // Если user_id отсутствует или пуст, присваиваем значение по умолчанию
@@ -211,7 +210,6 @@ export default async function handler(
             }
             return task;
           });
-          // console.log(newTasks, "newTasks");
 
           const { data: roomData } = (await supabase
             .from("rooms")
@@ -219,16 +217,6 @@ export default async function handler(
             .eq("room_id", data.room_id)) as { data: Data[]; error: any };
 
           const { lang, chat_id, token } = roomData[0];
-
-          if (chat_id) {
-            sendTasksToTelegram(
-              chat_id,
-              newTasks,
-              summary_short,
-              lang,
-              token
-            ).catch(console.error);
-          }
 
           for (const task of newTasks) {
             // Убедитесь, что userId существует и не равен null
@@ -246,6 +234,16 @@ export default async function handler(
 
             if (taskData.error?.message)
               console.log("Error:", taskData.error.message);
+          }
+
+          if (chat_id) {
+            sendTasksToTelegram(
+              chat_id,
+              newTasks,
+              summary_short,
+              lang,
+              token
+            ).catch(console.error);
           }
         } else {
           return res.status(500).json({
