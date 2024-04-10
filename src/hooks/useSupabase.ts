@@ -131,8 +131,6 @@ export function useSupabase() {
             const userData = await getSupabaseUser(username);
             const user_id = userData.user_id;
             localStorage.setItem("user_id", user_id);
-            console.log(first_name, "first_name");
-            console.log(last_name, "last_name");
             localStorage.setItem("first_name", first_name || "");
             localStorage.setItem("last_name", last_name || "");
           };
