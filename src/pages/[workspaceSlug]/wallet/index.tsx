@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { Button, User, Card, CardBody } from "@nextui-org/react";
+import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 // @ts-ignore
@@ -159,20 +159,34 @@ export default function Wallet() {
         )} */}
 
         {loading && <Spinner size="lg" />}
-        <div style={{ padding: "20px" }} />
 
         {!loading && userNode && (
           <>
-            <AnimatedTooltip
-              items={[
-                {
-                  id: 1,
-                  name: `${userNode?.first_name} ${userNode?.last_name}`,
-                  designation: userNode?.position,
-                  image: userNode?.photo_url,
-                },
-              ]}
-            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flex: 1,
+                marginRight: 20,
+                flexDirection: "column",
+              }}
+            >
+              <AnimatedTooltip
+                items={[
+                  {
+                    id: 1,
+                    name: `${userNode?.first_name} ${userNode?.last_name}`,
+                    designation: userNode?.position,
+                    image: userNode?.photo_url,
+                  },
+                ]}
+              />
+              <div style={{ padding: "10px" }} />
+
+              <TonConnectButton style={{ marginLeft: 12 }} />
+            </div>
+
             <SignupFormDemo
               first_name={userNode.first_name}
               last_name={userNode.last_name}

@@ -9,8 +9,7 @@ import DemoModal from "../demo-modal";
 import { useToast } from "@/components/ui/use-toast";
 import { useReactiveVar } from "@apollo/client";
 import { visibleSignInVar, openIntroModalVar } from "@/apollo/reactive-store";
-import { useWeb3Auth } from "@/hooks/useWeb3Auth";
-import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
+
 import { TLoginButton, TLoginButtonSize, TUser } from "react-telegram-auth";
 import { useSupabase } from "@/hooks/useSupabase";
 import { useRouter } from "next/router";
@@ -104,7 +103,6 @@ const DemoButton = () => {
             </button>
           </Dialog.Trigger> */}
 
-          {/* <TonConnectButton /> */}
           <TLoginButton
             botName="dao999nft_dev_bot"
             buttonSize={TLoginButtonSize.Large}
@@ -113,7 +111,7 @@ const DemoButton = () => {
             cornerRadius={20}
             onAuthCallback={handleTelegramResponse}
             requestAccess={"write"}
-            additionalClasses={"css-class-for-wrapper"}
+            // additionalClasses={"css-class-for-wrapper"}
           />
         </>
       )}
