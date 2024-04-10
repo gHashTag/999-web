@@ -11,7 +11,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { getUser } from "@/helpers/api/get-user";
 import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
-
+// test
 const HMSPrebuilt = dynamic(
   () =>
     import("@100mslive/roomkit-react").then((mod) => ({
