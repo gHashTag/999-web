@@ -102,8 +102,8 @@ export default async function handler(
 
   try {
     const { type, data } = await req.body;
-    // console.log(type, "type");
-    // console.log(data, "data");
+    console.log(type, "type");
+    console.log(data, "data");
     if (type === undefined) {
       return res.status(200).json({
         message: "type is undefined",
@@ -123,7 +123,7 @@ export default async function handler(
         const transcriptResponse = await fetch(transcriptTextPresignedUrl);
 
         const transcription = await transcriptResponse.text();
-        // console.log(transcription, "transcription");
+        console.log(transcription, "transcription");
 
         const summaryJsonPresignedUrl = data.summary_json_presigned_url;
 
