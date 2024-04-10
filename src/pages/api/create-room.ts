@@ -20,7 +20,6 @@ if (!process.env.NEXT_PUBLIC_100MS) {
 }
 
 const createToken100ms = () => {
-  console.log("createToken100ms");
   return new Promise((resolve, reject) => {
     const { APP_ACCESS_KEY, APP_SECRET } = process.env;
     const payload = {
@@ -95,7 +94,6 @@ export default async function handler(
       };
 
       const newToken = process.env.NEXT_PUBLIC_100MS;
-      console.log(newToken, "newToken");
 
       const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
         method: "POST",
@@ -105,15 +103,15 @@ export default async function handler(
           Authorization: `Bearer ${newToken}`,
         },
       });
-      console.log(roomResponse, "roomResponse");
+      // console.log(roomResponse, "roomResponse");
       if (!roomResponse.ok) {
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-      console.log(newRoom, "newRoom");
+      // console.log(newRoom, "newRoom");
       const id = newRoom.id;
       const codesResponse = await createCodes(id, newToken as string);
-      console.log(codesResponse, "codesResponse");
+      // console.log(codesResponse, "codesResponse");
 
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
@@ -141,7 +139,7 @@ export default async function handler(
     };
 
     const rooms = await createOrFetchRoom();
-    console.log(rooms, "rooms");
+    // console.log(rooms, "rooms");
     const { error } = await supabase.from("rooms").insert({
       ...rooms,
     });

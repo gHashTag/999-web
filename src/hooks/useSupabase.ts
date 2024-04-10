@@ -39,7 +39,6 @@ export const checkUsernameCodes = async (
   const invitation_codes = rooms && rooms[0].codes;
 
   if (userError) {
-    console.log(userError, "error checkUsername");
     return {
       isInviterExist: false,
       invitation_codes: "",
@@ -82,7 +81,7 @@ export function useSupabase() {
         .select("*")
         .eq("username", username)
         .single();
-      console.log(response, "response");
+
       if (response.error && response.error.code === "PGRST116") {
         console.error("getSupabaseUser: Пользователь не найден");
         return null;

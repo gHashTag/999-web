@@ -44,8 +44,7 @@ export default function Tasks() {
   const [isEditing, setIsEditing] = useState(false);
   const username = localStorage.getItem("username");
   const user_id = localStorage.getItem("user_id");
-  console.log(user_id, "user_id");
-  console.log(username, "username");
+
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string | null>(null);
   const { getTaskById, getSupabaseUser } = useSupabase();

@@ -53,41 +53,13 @@ const DemoButton = () => {
   const handleTelegramResponse = async (user: TUser) => {
     const res = await createSupabaseUser(user);
     if (res) {
-      console.log("Successfully logged in");
+      // console.log("Successfully logged in");
       router.push("/workspaceSlug/wallet");
     } else {
       console.log("Failed to log in");
     }
   };
 
-  const logout = () => {
-    fetch(
-      "https://api.telegram.org/bot6831432194:AAEQa4F9m8p5fglLUJMNaj96wIqC13GpZlw/auth.logOut",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          // Дополнительные параметры, если необходимо
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => {
-        // Обработка ответа от API
-        if (response.ok) {
-          // Успешный выход из аккаунта
-          console.log("Successfully logged out from Telegram");
-        } else {
-          // Обработка ошибки при выходе из аккаунта
-          console.error("Failed to log out from Telegram");
-        }
-      })
-      .catch((error) => {
-        // Обработка ошибки сети или других ошибок
-        console.error("Error logging out from Telegram:", error);
-      });
-  };
   return (
     <Dialog.Root open={openIntroModal} onOpenChange={handleRegister}>
       <Dialog.Overlay className={cn(styles["overlay"])} />

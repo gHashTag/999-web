@@ -16,12 +16,6 @@ async function createUser(ctx: any) {
     return;
   }
 
-  // Если пользователь существует, прекращаем выполнение функции
-  // if (existingUser) {
-  //   console.log("Пользователь уже существует:", existingUser);
-  //   return;
-  // }
-
   // Если пользователя нет, создаем нового
   const usersData = {
     first_name,

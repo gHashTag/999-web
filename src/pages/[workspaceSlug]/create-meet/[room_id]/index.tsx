@@ -137,10 +137,10 @@ const RoomPage = () => {
         room_id: router.query.room_id,
       },
       onCompleted: (data) => {
-        refetch();
         toast({
           title: "Success! Room deleted",
         });
+        refetch();
       },
     });
     router.push("/workspaceSlug/create-meet");

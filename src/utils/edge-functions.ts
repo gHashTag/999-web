@@ -39,8 +39,6 @@ async function createRoom({
     chat_id,
     lang,
   };
-  console.log(newData, "newData");
-
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -49,13 +47,13 @@ async function createRoom({
       },
       body: JSON.stringify(newData),
     });
-    console.log(response, "response");
+
     if (!response.ok) {
       throw new Error(`Error creating room: ${response.statusText}`);
     }
 
     const text = await response.text();
-    console.log(text, "text");
+
     try {
       const data = JSON.parse(text);
       return data;

@@ -49,7 +49,7 @@ export const EvervaultCard = ({
   const handleCopy = (text: string) => {
     copy(text)
       .then(() => {
-        console.log("Copied!", { text });
+        // console.log("Copied!", { text });
         toast({
           title: "Copied!",
           description: `${text} copied`,

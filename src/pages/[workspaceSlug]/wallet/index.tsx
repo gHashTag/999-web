@@ -81,7 +81,7 @@ export type updateUserDataType = {
 export default function Wallet() {
   const router = useRouter();
   const username = localStorage.getItem("username");
-  console.log(username, "username");
+
   useEffect(() => {
     if (!username) {
       router.push("/");

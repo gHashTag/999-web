@@ -14,9 +14,9 @@ import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
 
 bot.command("start", async (ctx) => {
   await ctx.replyWithChatAction("typing");
-  console.log(ctx, "ctx");
+
   const select_izbushka = ctx?.message?.text && ctx.message.text.split(" ")[1];
-  console.log(select_izbushka, "select_izbushka");
+
   if (select_izbushka) {
     const username = ctx.update.message?.from.username;
 
@@ -90,12 +90,10 @@ bot.on("message", async (ctx) => {
             inviter: inviter_user_id,
             invitation_codes,
           };
-          console.log(newUser, "newUser");
 
           const { data: createUserData, error: createUserError } =
             await supabase.from("users").insert([{ ...newUser }]);
-          console.log(createUserData, "createUserData");
-          console.log(createUserError, "createUserError");
+
           const isPayment = true;
 
           ctx.reply(
@@ -162,11 +160,10 @@ bot.on("message", async (ctx) => {
         .eq("user_id", user_id)
         .order("id", { ascending: false });
 
-      console.log(dataRooms, "dataRooms");
       const lastElement = dataRooms && dataRooms[0];
-      console.log(lastElement, "lastElement");
+
       const translateName = transliterate(lastElement?.name);
-      console.log(translateName, "translateName");
+
       const newData = {
         id: lastElement?.id,
         name: translateName,
@@ -212,9 +209,9 @@ bot.on("message", async (ctx) => {
 
 bot.on("callback_query:data", async (ctx) => {
   await ctx.replyWithChatAction("typing");
-  console.log(ctx, "ctx callback_query:data");
+
   const callbackData = ctx.callbackQuery.data;
-  console.log(ctx.update.callback_query, "ctx.update.callback_query");
+
   const username = ctx.update && ctx.update.callback_query.from.username;
 
   if (callbackData === "name_izbushka") {

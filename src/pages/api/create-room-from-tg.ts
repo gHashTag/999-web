@@ -85,15 +85,15 @@ export default async function handler(
           Authorization: `Bearer ${newToken}`,
         },
       });
-      console.log(roomResponse, "roomResponse");
+
       if (!roomResponse.ok) {
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-      console.log(newRoom, "newRoom");
+
       const id = newRoom.id;
       const codesResponse = await createCodes(id, newToken as string);
-      // console.log(id, "id");
+
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
       }

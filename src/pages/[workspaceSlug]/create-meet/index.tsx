@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 // @ts-ignore
 import { useForm } from "react-hook-form";
@@ -30,6 +30,13 @@ const MeetsPage = () => {
       username,
     },
   });
+
+  useEffect(() => {
+    if (!username) {
+      router.push("/");
+    }
+    refetch();
+  }, [refetch]);
 
   const [loading, setLoading] = useState(false);
   const [openModalId, setOpenModalId] = useState("");

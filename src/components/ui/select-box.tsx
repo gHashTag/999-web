@@ -34,7 +34,7 @@ const filterColors = (inputValue: string) => {
 
 const promiseOptions = (inputValue: string) =>
   new Promise<ColourOption[]>((resolve) => {
-    console.log(inputValue, "inputValue");
+    // console.log(inputValue, "inputValue");
     setTimeout(() => {
       resolve(filterColors(inputValue));
     }, 1000);
