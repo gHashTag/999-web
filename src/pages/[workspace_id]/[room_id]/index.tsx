@@ -15,6 +15,9 @@ import {
   ROOMS_COLLECTION_QUERY,
   ROOM_NAME_COLLECTION_QUERY,
 } from "@/graphql/query";
+import { DataTable } from "@/components/table/data-table";
+import { __DEV__ } from "@/pages/_app";
+import { useTable } from "@/hooks/useTable";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -23,6 +26,11 @@ if (!managementToken) {
 }
 
 const RoomPage = () => {
+  const router = useRouter();
+  console.log(router, "router");
+  const room_id = router.query.room_id;
+  const workspace_id = router.query.workspace_id as string;
+
   const [inviteGuestCode, setInviteGuestCode] = useState("");
   const [inviteHostCode, setInviteHostCode] = useState("");
   const [inviteMemberCode, setInviteMemberCode] = useState("");
@@ -30,7 +38,31 @@ const RoomPage = () => {
     useMutation(DELETE_ROOM_MUTATION);
 
   const { toast } = useToast();
-  const router = useRouter();
+
+  const username = localStorage.getItem("username");
+  const user_id = localStorage.getItem("user_id");
+
+  const userName = __DEV__ ? "koshey999nft" : username;
+  const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
+  const workspaceId = __DEV__
+    ? "54dc9d0e-dd96-43e7-bf72-02c2807f8977"
+    : workspace_id;
+
+  const recordingId = __DEV__
+    ? "660d30d5a71969a17ddc027e" // Используем это значение, если __DEV__ true
+    : Array.isArray(router.query.recording_id)
+    ? router.query.recording_id[0] // Если массив, берем первый элемент
+    : router.query.recording_id; // Иначе используем значение как есть
+
+  // Гарантируем, что recordingId будет строкой, используя приведение типа
+  const recordingIdString: string = recordingId as string;
+
+  const { loading, data, columns } = useTable({
+    username: userName || "",
+    user_id: userId || "",
+    workspace_id: workspaceId || "",
+    room_id,
+  });
 
   // const { data: userInfo } = useQuery(CURRENT_USER);
 
@@ -47,7 +79,7 @@ const RoomPage = () => {
   });
 
   const {
-    data,
+    data: assetsData,
     loading: assetsLoading,
     error: assetsError,
   } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
@@ -75,7 +107,7 @@ const RoomPage = () => {
     console.log(roomNameError.message);
   }
 
-  const items = data?.room_assetsCollection?.edges;
+  const items = assetsData?.room_assetsCollection?.edges;
 
   const inviteToMeet = async (type: string) => {
     // Убедитесь, что codesData действительно указывает на массив
@@ -151,7 +183,11 @@ const RoomPage = () => {
     <>
       <Layout
         loading={
-          roomsLoading || assetsLoading || roomNameLoading || deleteRoomLoading
+          loading ||
+          roomsLoading ||
+          assetsLoading ||
+          roomNameLoading ||
+          deleteRoomLoading
         }
       >
         <div className="relative z-10 flex items-center justify-center">
@@ -197,6 +233,17 @@ const RoomPage = () => {
         >
           <HoverEffect items={items} />
         </div>
+        <div
+          style={{
+            paddingLeft: 20,
+            paddingRight: 20,
+          }}
+        >
+          {data && (
+            <DataTable data={data.tasksCollection.edges} columns={columns} />
+          )}
+        </div>
+
         <div
           style={{
             justifyContent: "center",

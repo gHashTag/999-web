@@ -61,6 +61,131 @@ export const WORKSPACES_COLLECTION_QUERY = gql`
   }
 `;
 
+export const GET_ALL_TASKS_QUERY = gql`
+  query GetRoomTasks {
+    tasksCollection(orderBy: { created_at: DescNullsFirst }) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          room_id
+          recording_id
+          created_at
+          title
+          description
+          updated_at
+          due_date
+          priority
+          completed_at
+          is_archived
+          status
+          label
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USER_TASKS_QUERY = gql`
+  query GetUserTasks($user_id: UUID!) {
+    tasksCollection(
+      filter: { and: [{ user_id: { eq: $user_id } }] }
+      orderBy: { created_at: DescNullsFirst }
+    ) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          room_id
+          created_at
+          recording_id
+          title
+          description
+          updated_at
+          due_date
+          priority
+          completed_at
+          is_archived
+          status
+          label
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ROOM_TASKS_QUERY = gql`
+  query GetRoomTasks($user_id: UUID!, $workspace_id: UUID!) {
+    tasksCollection(
+      filter: {
+        and: [
+          { workspace_id: { eq: $workspace_id }, user_id: { eq: $user_id } }
+        ]
+      }
+      orderBy: { created_at: DescNullsFirst }
+    ) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          room_id
+          created_at
+          recording_id
+          title
+          description
+          updated_at
+          due_date
+          priority
+          completed_at
+          is_archived
+          status
+          label
+        }
+      }
+    }
+  }
+`;
+
+export const GET_RECORDING_TASKS_QUERY = gql`
+  query GetRoomTasks($user_id: UUID!, $room_id: String!, $workspace_id: UUID!) {
+    tasksCollection(
+      filter: {
+        and: [
+          {
+            workspace_id: { eq: $workspace_id }
+            user_id: { eq: $user_id }
+            room_id: { eq: $room_id }
+          }
+        ]
+      }
+      orderBy: { created_at: DescNullsFirst }
+    ) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          room_id
+          created_at
+          title
+          description
+          recording_id
+          updated_at
+          due_date
+          priority
+          completed_at
+          is_archived
+          status
+          label
+        }
+      }
+    }
+  }
+`;
+
 export const ROOM_NAME_COLLECTION_QUERY = gql`
   query RoomsCollectionByName($room_id: String!) {
     roomsCollection(filter: { room_id: { eq: $room_id } }) {
@@ -286,6 +411,22 @@ export const DELETE_TASK_MUTATION = gql`
       records {
         id
         title
+      }
+    }
+  }
+`;
+
+export const GET_ROOM_ASSETS = gql`
+  query RoomAssetsCollection($recording_id: String!) {
+    room_assetsCollection(filter: { recording_id: { eq: $recording_id } }) {
+      edges {
+        node {
+          id
+          title
+          summary_short
+          transcription
+          recording_id
+        }
       }
     }
   }

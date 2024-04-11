@@ -8,7 +8,7 @@ import {
   TasksArray,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
-import { web3auth } from "@/utils/web3Auth";
+
 import {
   setInviteCode,
   setUserInfo,
@@ -52,6 +52,24 @@ export const checkUsernameCodes = async (
     invitation_codes,
     inviter_user_id: userData[0].user_id,
   };
+};
+
+export const getRooms = async (username: string) => {
+  const { data, error } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("username", username);
+
+  return data;
+};
+
+export const getUser = async (username: string) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+
+  return data;
 };
 
 export const checkUsername = async (username: string): Promise<boolean> => {
@@ -218,6 +236,8 @@ export function useSupabase() {
   }, []);
 
   return {
+    getUser,
+    getRooms,
     checkUsername,
     getSupabaseUser,
     getAssetById,

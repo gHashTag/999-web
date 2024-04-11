@@ -9,9 +9,10 @@ import {
   useHMSStore,
 } from "@100mslive/react-sdk";
 import { Spinner } from "@/components/ui/spinner";
-import { getUser } from "@/helpers/api/get-user";
+
 import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
-import { getRooms } from "@/helpers/api/get-rooms";
+
+import { useSupabase } from "@/hooks/useSupabase";
 
 const HMSPrebuilt = dynamic(
   () =>
@@ -25,9 +26,8 @@ const HMSPrebuilt = dynamic(
 );
 
 const ShowIzbushka = () => {
-  const router = useRouter();
-
   const { initData } = retrieveLaunchParams();
+  const { getUser, getRooms } = useSupabase();
 
   const hmsActions = useHMSActions();
   const [token, setToken] = useState<string | undefined>(undefined);

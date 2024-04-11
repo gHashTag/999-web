@@ -4,21 +4,226 @@ import { useDisclosure } from "@nextui-org/react";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { priorities, statuses } from "@/helpers/data/data";
+import { useSupabase } from "./useSupabase";
+
+import { Badge } from "@/components/ui/badge";
+
+import {
+  gql,
+  useQuery,
+  useReactiveVar,
+  useMutation,
+  ApolloError,
+} from "@apollo/client";
+// @ts-ignore
+import { useForm } from "react-hook-form";
+import {
+  CREATE_TASK_MUTATION,
+  DELETE_TASK_MUTATION,
+  GET_ALL_TASKS_QUERY,
+  GET_RECORDING_TASKS_QUERY,
+  GET_ROOM_TASKS_QUERY,
+  GET_USER_TASKS_QUERY,
+  MUTATION_TASK_UPDATE,
+  TASKS_COLLECTION_QUERY,
+} from "@/graphql/query";
+import { useToast } from "@/components/ui/use-toast";
 
 type UseTableProps = {
-  openModal: (cardId: string) => Promise<void>;
-  onDelete: (id: string) => void;
-  setIsEditing: (value: boolean) => void;
-  setOpenModalId: (value: string | null) => void;
+  username: string;
+  user_id?: string | string[] | undefined;
+  workspace_id?: string | string[] | undefined;
+  room_id?: string | string[] | undefined;
+  recording_id?: string | string[] | undefined;
 };
 
 const useTable = ({
-  openModal,
-  onDelete,
-  setIsEditing,
-  setOpenModalId,
+  username,
+  user_id,
+  workspace_id,
+  room_id,
+  recording_id,
 }: UseTableProps) => {
+  const user = { user_id, username, workspace_id, room_id, recording_id };
+
+  const { toast } = useToast();
+  const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { getTaskById } = useSupabase();
+  const [isEditing, setIsEditing] = useState(false);
+  const [openModalId, setOpenModalId] = useState<string | null>(null);
+
+  let tasksQuery = TASKS_COLLECTION_QUERY;
+
+  let queryVariables = {
+    user_id,
+    room_id,
+    recording_id,
+    workspace_id,
+  };
+
+  if (!recording_id) {
+    tasksQuery = GET_RECORDING_TASKS_QUERY;
+    delete queryVariables.recording_id;
+  }
+
+  if (!room_id && !recording_id) {
+    tasksQuery = GET_ROOM_TASKS_QUERY;
+    delete queryVariables.recording_id;
+    delete queryVariables.room_id;
+  }
+
+  if (!recording_id && !room_id && !workspace_id) {
+    tasksQuery = GET_USER_TASKS_QUERY;
+    delete queryVariables.workspace_id;
+    delete queryVariables.recording_id;
+    delete queryVariables.room_id;
+  }
+
+  if (!recording_id && !room_id && !workspace_id && !user_id) {
+    tasksQuery = GET_ALL_TASKS_QUERY;
+    delete queryVariables.workspace_id;
+    delete queryVariables.recording_id;
+    delete queryVariables.room_id;
+    delete queryVariables.user_id;
+  }
+
+  const {
+    loading,
+    error: tasksError,
+    data,
+    refetch,
+  } = useQuery(tasksQuery, {
+    fetchPolicy: "network-only",
+    variables: {
+      user_id,
+      room_id,
+      recording_id,
+      workspace_id,
+    },
+  });
+
+  const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
+    useMutation(MUTATION_TASK_UPDATE, {
+      variables: {
+        username,
+      },
+    });
+
+  if (mutateUpdateTaskStatusError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(mutateUpdateTaskStatusError.message);
+  }
+
+  const [mutateCreateTask, { error: mutateCreateTaskError }] =
+    useMutation(CREATE_TASK_MUTATION);
+  if (mutateCreateTaskError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log("mutateCreateTaskError", mutateCreateTaskError.message);
+  }
+
+  const [deleteTask, { error: deleteTaskError }] =
+    useMutation(DELETE_TASK_MUTATION);
+
+  const onCreateNewTask = () => {
+    setValue("title", "");
+    setValue("description", "");
+    setValue("label", "");
+    onOpen();
+    setIsEditing(false);
+  };
+
+  const openModal = async (cardId: string) => {
+    setOpenModalId(cardId);
+    const card = await getTaskById(cardId);
+    setValue("title", card?.title);
+    setValue("description", card?.description);
+    setValue("label", card?.label);
+    onOpen();
+    setIsEditing(true);
+  };
+
+  const onCreate = async () => {
+    try {
+      const formData = getValues();
+
+      const formDataWithUserId = {
+        ...formData,
+        user_id,
+      };
+
+      const mutateCreateTaskResult = await mutateCreateTask({
+        variables: {
+          objects: [formDataWithUserId],
+        },
+        onCompleted: () => {
+          toast({
+            title: "Task created",
+            description: "Task created successfully",
+          });
+          refetch();
+
+          reset({
+            title: "",
+            description: "",
+            label: "",
+          });
+        },
+      });
+    } catch (error) {
+      console.log(error, "error");
+      toast({
+        title: "Error creating task:",
+        variant: "destructive",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(mutateCreateTaskError, null, 2)}
+            </code>
+          </pre>
+        ),
+      });
+    }
+  };
+
+  const onUpdate = () => {
+    const formData = getValues();
+
+    const variables = {
+      id: openModalId,
+      title: formData.title,
+      description: formData.description,
+      updated_at: new Date().toISOString(),
+    };
+
+    mutateUpdateTaskStatus({
+      variables,
+      onCompleted: () => {
+        refetch();
+      },
+    });
+  };
+
+  const onDelete = (id: string) => {
+    deleteTask({
+      variables: {
+        filter: {
+          id: {
+            eq: Number(id),
+          },
+        },
+      },
+      onCompleted: () => {
+        refetch();
+      },
+    });
+    closeModal();
+  };
+
+  const closeModal = () => {
+    setOpenModalId(null);
+    onClose();
+  };
 
   const columns = useMemo(
     () => [
@@ -160,11 +365,24 @@ const useTable = ({
   );
 
   return {
+    data,
+    loading,
+    openModalId,
+    isEditing,
     columns,
     isOpen,
     onOpen,
     onOpenChange,
-    onClose,
+    onCreateNewTask,
+    onCreate,
+    onUpdate,
+    onDelete,
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    reset,
+    setIsEditing,
   };
 };
 

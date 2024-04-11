@@ -20,11 +20,15 @@ import {
   CREATE_WORKSPACE_MUTATION,
   DELETE_TASK_MUTATION,
   MUTATION_WORKSPACE_UPDATE,
+  TASKS_COLLECTION_QUERY,
   WORKSPACES_COLLECTION_QUERY,
 } from "@/graphql/query";
 import WorkspaceModal from "@/components/modal/WorkspaceModal";
 import { useDisclosure } from "@nextui-org/react";
 import { useSupabase } from "@/hooks/useSupabase";
+import { DataTable } from "@/components/table/data-table";
+import { __DEV__ } from "@/pages/_app";
+import { useTable } from "@/hooks/useTable";
 
 const MUTATION = gql`
   mutation UpdateUser(
@@ -68,27 +72,55 @@ export type updateUserDataType = {
 export default function Office() {
   const router = useRouter();
   const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState(false);
+
   const username = localStorage.getItem("username");
   const user_id = localStorage.getItem("user_id");
 
-  const [openModalId, setOpenModalId] = useState<string | null>(null);
+  const workspace_id = localStorage.getItem("workspace_id");
+  const room_id = localStorage.getItem("room_id");
+  const recording_id = localStorage.getItem("recording_id");
+  const userName = __DEV__ ? "koshey999nft" : username;
+  const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
+  const workspaceId = __DEV__
+    ? "54dc9d0e-dd96-43e7-bf72-02c2807f8977"
+    : workspace_id;
+  const roomId = __DEV__ ? "6601894fe4bed726368e290b" : room_id;
+  const recordingId = __DEV__ ? "660d30d5a71969a17ddc027e" : recording_id;
 
-  const { control, handleSubmit, getValues, setValue, reset } = useForm();
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const { getTaskById, getSupabaseUser } = useSupabase();
+  const {
+    loading,
+    data,
+    setValue,
+    openModalId,
+    isEditing,
+    columns,
+    isOpen,
+    control,
+    handleSubmit,
+    getValues,
+    onOpen,
+    onOpenChange,
+    onCreateNewTask,
+    setIsEditing,
+    onCreate,
+    onUpdate,
+    onDelete,
+  } = useTable({
+    username: userName || "",
+    user_id: userId || "",
+  });
 
-  useEffect(() => {
-    if (!username) {
-      router.push("/");
-    }
-  }, [router]);
+  // useEffect(() => {
+  //   if (!username) {
+  //     router.push("/");
+  //   }
+  // }, [router]);
 
   const {
     data: workspacesData,
-    loading,
+    loading: workspacesLoading,
     error: workspacesError,
-    refetch,
+    refetch: workspacesRefetch,
   } = useQuery(WORKSPACES_COLLECTION_QUERY, {
     variables: {
       user_id,
@@ -96,9 +128,9 @@ export default function Office() {
   });
 
   if (workspacesError) return <p>Error : {workspacesError.message}</p>;
-
+  console.log(workspacesData, "workspacesData");
   const workspaceNode = workspacesData?.workspacesCollection?.edges;
-
+  console.log(workspaceNode, "workspaceNode");
   const [
     mutateUpdateWorkspaceStatus,
     { error: mutateUpdateWorkspaceStatusError },
@@ -136,94 +168,8 @@ export default function Office() {
     setIsEditing(false);
   };
 
-  const onCreate = async () => {
-    try {
-      const formData = getValues();
-
-      if (username) {
-        const formDataWithUserId = {
-          ...formData,
-          user_id,
-        };
-
-        const mutateCreateWorkspaceResult = await mutateCreateWorkspace({
-          variables: {
-            objects: [formDataWithUserId],
-          },
-          onCompleted: () => {
-            toast({
-              title: "Workspace created",
-              description: "Workspace created successfully",
-            });
-            refetch();
-
-            reset({
-              title: "",
-              description: "",
-              label: "",
-            });
-          },
-        });
-      } else {
-        console.log("Некорректное значение для username");
-      }
-    } catch (error) {
-      console.log(error, "error");
-      toast({
-        title: "Error creating workspace:",
-        variant: "destructive",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              {JSON.stringify(mutateCreateWorkspaceError, null, 2)}
-            </code>
-          </pre>
-        ),
-      });
-    }
-  };
-
-  const closeModal = () => {
-    setOpenModalId(null);
-    onClose();
-  };
-
-  const onDelete = (id: string) => {
-    deleteTask({
-      variables: {
-        filter: {
-          id: {
-            eq: Number(id),
-          },
-        },
-      },
-      onCompleted: () => {
-        refetch();
-      },
-    });
-    closeModal();
-  };
-
-  const onUpdate = () => {
-    const formData = getValues();
-
-    const variables = {
-      id: openModalId,
-      title: formData.title,
-      description: formData.description,
-      updated_at: new Date().toISOString(),
-    };
-
-    mutateUpdateWorkspaceStatus({
-      variables,
-      onCompleted: () => {
-        refetch();
-      },
-    });
-  };
-
   return (
-    <Layout loading={loading}>
+    <Layout loading={loading || workspacesLoading}>
       <main className="flex flex-col items-center justify-between p-14">
         {loading && <Spinner size="lg" />}
         <div className="relative z-10 flex items-center justify-center">
@@ -258,8 +204,10 @@ export default function Office() {
             onClick={(workspace_id) => goToOffice(workspace_id)}
           />
         )}
-
         <div style={{ padding: "10px" }} />
+        {data && (
+          <DataTable data={data.tasksCollection.edges} columns={columns} />
+        )}
       </main>
     </Layout>
   );

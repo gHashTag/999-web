@@ -69,7 +69,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" style={{ width: "100%" }}>
       <DataTableToolbar table={table} />
       <div className="rounded-md border" style={{ borderColor: "#3b2a13" }}>
         <Table>

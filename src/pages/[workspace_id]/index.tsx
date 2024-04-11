@@ -10,19 +10,41 @@ import { useToast } from "@/components/ui/use-toast";
 import { createRoom } from "@/utils/edge-functions";
 import { SelectRoom } from "@/components/ui/select-room";
 import { ROOMS_COLLECTION_QUERY } from "@/graphql/query";
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import { CardRoomT } from "@/types";
 import CardRoom from "@/components/ui/card-room";
+import { DataTable } from "@/components/table/data-table";
+import { __DEV__ } from "../_app";
+import { useTable } from "@/hooks/useTable";
+import { setLoading } from "@/apollo/reactive-store";
 
 const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
+  const loading = useReactiveVar(setLoading);
   const username = localStorage.getItem("username");
   const user_id = localStorage.getItem("user_id");
   // const { data: userInfo } = useQuery(CURRENT_USER);
   // console.log(userInfo, "userInfo");
 
   const workspace_id = router.query.workspace_id as string;
+
+  const userName = __DEV__ ? "koshey999nft" : username;
+  const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
+
+  const {
+    loading: tableLoading,
+    data,
+    columns,
+  } = useTable({
+    username: userName || "",
+    user_id: userId || "",
+    workspace_id,
+  });
+  console.log(username, "username");
+  console.log(user_id, "user_id");
+  console.log(workspace_id, "workspace_id");
+
   const {
     data: roomsData,
     loading: roomsLoading,
@@ -40,7 +62,6 @@ const MeetsPage = () => {
     refetch();
   }, [refetch]);
 
-  const [loading, setLoading] = useState(false);
   const [openModalId, setOpenModalId] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
@@ -102,7 +123,7 @@ const MeetsPage = () => {
   };
 
   return (
-    <Layout loading={loading || roomsLoading}>
+    <Layout loading={loading || roomsLoading || tableLoading}>
       <>
         {isOpen && (
           <MeetModal
@@ -132,6 +153,17 @@ const MeetsPage = () => {
               key={room.node.id}
             />
           ))}
+        </div>
+        <div
+          style={{
+            padding: 20,
+            paddingTop: 50,
+            paddingBottom: 200,
+          }}
+        >
+          {data && (
+            <DataTable data={data.tasksCollection.edges} columns={columns} />
+          )}
         </div>
       </>
     </Layout>

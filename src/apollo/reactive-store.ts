@@ -31,3 +31,5 @@ export const setBalance = makeVar<string | null>(null);
 export const setAssetInfo = makeVar<OptionType | null>(null);
 
 export const setActiveRoute = makeVar<string>("/");
+
+export const setLoading = makeVar<boolean>(false);

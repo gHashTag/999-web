@@ -5,32 +5,51 @@ import { TracingBeam } from "@/components/ui/tracing-beam";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/router";
 import { useQuery, gql } from "@apollo/client";
-
-const GET_ROOM_ASSETS = gql`
-  query RoomAssetsCollection($recording_id: String!) {
-    room_assetsCollection(filter: { recording_id: { eq: $recording_id } }) {
-      edges {
-        node {
-          id
-          title
-          summary_short
-          transcription
-          recording_id
-        }
-      }
-    }
-  }
-`;
+import { DataTable } from "@/components/table/data-table";
+import { __DEV__ } from "@/pages/_app";
+import { useTable } from "@/hooks/useTable";
+import { GET_ROOM_ASSETS } from "@/graphql/query";
 
 const RecordingPage = () => {
   const router = useRouter();
   const { recording_id } = router.query;
 
-  const { loading, error, data } = useQuery(GET_ROOM_ASSETS, {
+  const {
+    loading: assetsLoading,
+    error,
+    data: assetsData,
+  } = useQuery(GET_ROOM_ASSETS, {
     variables: { recording_id },
   });
 
-  const asset = data?.room_assetsCollection?.edges[0]?.node;
+  const asset = assetsData?.room_assetsCollection?.edges[0]?.node;
+
+  const username = localStorage.getItem("username");
+  const user_id = localStorage.getItem("user_id");
+
+  const workspace_id = localStorage.getItem("workspace_id");
+  const room_id = localStorage.getItem("room_id");
+
+  const userName = __DEV__ ? "koshey999nft" : username;
+  console.log(user_id, "user_id");
+
+  const workspaceId = __DEV__
+    ? "54dc9d0e-dd96-43e7-bf72-02c2807f8977"
+    : workspace_id;
+
+  const roomId = __DEV__ ? "6601894fe4bed726368e290b" : room_id;
+
+  // Гарантируем, что recordingId будет строкой, используя приведение типа
+  const recordingIdString = router.query.recording_id as string;
+
+  const { loading, data, columns } = useTable({
+    username: userName || "",
+    user_id: user_id || "",
+    workspace_id: workspaceId || "",
+    room_id: roomId || "",
+    recording_id: recordingIdString || "",
+  });
+
   function HighlightName({ text }: { text: string }) {
     const [name, ...message] = text.split(":");
     const restOfMessage = message.join(":");
@@ -44,8 +63,8 @@ const RecordingPage = () => {
   }
   return (
     <>
-      <Layout loading={loading}>
-        {!loading && data && (
+      <Layout loading={loading || assetsLoading}>
+        {!loading && assetsData && (
           <div
             className="flex-col mt-10"
             style={{
@@ -73,6 +92,12 @@ const RecordingPage = () => {
                       ))}
                   </div>
                 </div>
+                {data && (
+                  <DataTable
+                    data={data.tasksCollection.edges}
+                    columns={columns}
+                  />
+                )}
               </div>
             </TracingBeam>
           </div>

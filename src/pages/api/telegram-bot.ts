@@ -7,9 +7,9 @@ import { createUser } from "@/helpers/api/create-user";
 
 import { checkUsernameCodes } from "@/hooks/useSupabase";
 import { transliterate } from "@/helpers/api/transliterate";
-import { getUser } from "@/helpers/api/get-user";
+import { getRooms } from "@/hooks/useSupabase";
 import { SupabaseUser } from "@/types";
-import { getRooms } from "@/helpers/api/get-rooms";
+
 import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
 
 bot.command("start", async (ctx) => {
