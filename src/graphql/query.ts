@@ -384,7 +384,7 @@ export const MUTATION_TASK_UPDATE = gql`
   }
 `;
 
-export const MUTATION_WORKSPACE_UPDATE = gql`
+export const WORKSPACE_UPDATE_MUTATION = gql`
   mutation updateworkspacesCollection(
     $id: BigInt!
     $status: BigInt!
@@ -423,7 +423,7 @@ export const MUTATION_WORKSPACE_UPDATE = gql`
   }
 `;
 
-export const DELETE_WORKSPACE_MUTATION = gql`
+export const WORKSPACE_DELETE_MUTATION = gql`
   mutation DeleteWorkspace($filter: workspacesFilter!, $atMost: Int!) {
     deleteFromworkspacesCollection(filter: $filter, atMost: $atMost) {
       records {

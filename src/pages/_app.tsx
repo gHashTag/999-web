@@ -45,7 +45,7 @@ if (!process.env.NEXT_PUBLIC_SITE_URL) {
 }
 
 export const SITE_URL = __DEV__
-  ? "https://a46ffbba421b.ngrok.app"
+  ? process.env.NEXT_PUBLIC_LOCAL_URL
   : process.env.NEXT_PUBLIC_SITE_URL;
 
 if (__DEV__) {

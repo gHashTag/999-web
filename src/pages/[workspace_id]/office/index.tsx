@@ -1,61 +1,22 @@
 "use client";
-import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 
 import { Button } from "@/components/ui/moving-border";
-import { gql, useQuery, useMutation, ApolloError } from "@apollo/client";
-
-import { useToast } from "@/components/ui/use-toast";
+import { useQuery } from "@apollo/client";
 
 import { Spinner } from "@/components/ui/spinner";
 
 import { CanvasRevealEffectDemo } from "@/components/ui/canvas-reveal-effect-demo";
-import {
-  CREATE_WORKSPACE_MUTATION,
-  DELETE_TASK_MUTATION,
-  MUTATION_WORKSPACE_UPDATE,
-  WORKSPACES_COLLECTION_QUERY,
-} from "@/graphql/query";
+import { WORKSPACES_COLLECTION_QUERY } from "@/graphql/query";
 import WorkspaceModal from "@/components/modal/WorkspaceModal";
 
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/pages/_app";
 import { useTable } from "@/hooks/useTable";
 import { useEffect } from "react";
+import { useWorkspace } from "@/hooks/useWorkspace";
 
-const MUTATION = gql`
-  mutation UpdateUser(
-    $user_id: UUID
-    $first_name: String!
-    $last_name: String!
-    $designation: String!
-    $company: String!
-    $position: String!
-  ) {
-    updateusersCollection(
-      filter: { user_id: { eq: $user_id } }
-      set: {
-        first_name: $first_name
-        last_name: $last_name
-        designation: $designation
-        company: $company
-        position: $position
-      }
-    ) {
-      records {
-        id
-        first_name
-        last_name
-        username
-        photo_url
-        user_id
-        company
-        position
-      }
-    }
-  }
-`;
 export type updateUserDataType = {
   user_id: string;
   first_name: string;
@@ -65,8 +26,6 @@ export type updateUserDataType = {
 
 export default function Office() {
   const router = useRouter();
-  const { toast } = useToast();
-
   const username = localStorage.getItem("username");
   const user_id = localStorage.getItem("user_id");
 
@@ -88,31 +47,6 @@ export default function Office() {
 
   const workspaceNode = workspacesData?.workspacesCollection?.edges;
 
-  const [
-    mutateUpdateWorkspaceStatus,
-    { error: mutateUpdateWorkspaceStatusError },
-  ] = useMutation(MUTATION_WORKSPACE_UPDATE, {
-    variables: {
-      username,
-    },
-  });
-
-  if (mutateUpdateWorkspaceStatusError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log(mutateUpdateWorkspaceStatusError.message);
-  }
-
-  const [mutateCreateWorkspace, { error: mutateCreateWorkspaceError }] =
-    useMutation(CREATE_WORKSPACE_MUTATION);
-
-  if (mutateCreateWorkspaceError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log("mutateCreateTaskError", mutateCreateWorkspaceError.message);
-  }
-
-  const [deleteTask, { error: deleteTaskError }] =
-    useMutation(DELETE_TASK_MUTATION);
-
   const {
     loading,
     data,
@@ -126,15 +60,16 @@ export default function Office() {
     getValues,
     onOpen,
     onOpenChange,
-    onCreateNewTask,
     setIsEditing,
-    onCreate,
-    onUpdate,
-    onDelete,
   } = useTable({
     username: userName || "",
     user_id: userId || "",
   });
+
+  const { onCreate, onDelete, onUpdate } = useWorkspace(
+    userName || "",
+    userId || ""
+  );
 
   useEffect(() => {
     if (!username) {
