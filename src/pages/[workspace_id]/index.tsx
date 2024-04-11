@@ -21,13 +21,15 @@ const MeetsPage = () => {
   const user_id = localStorage.getItem("user_id");
   // const { data: userInfo } = useQuery(CURRENT_USER);
   // console.log(userInfo, "userInfo");
+
+  const workspace_id = router.query.workspace_id as string;
   const {
     data: roomsData,
     loading: roomsLoading,
     refetch,
   } = useQuery(ROOMS_COLLECTION_QUERY, {
     variables: {
-      username,
+      workspace_id,
     },
   });
 
@@ -54,6 +56,7 @@ const MeetsPage = () => {
         const response = await createRoom({
           user_id,
           username,
+          workspace_id,
           name: formData.name,
           type: openModalId,
           token: formData.token,
@@ -66,7 +69,7 @@ const MeetsPage = () => {
             title: "Success",
             description: `${response.rooms.name} created`,
           });
-          router.push(`/workspaceSlug/create-meet/${response.rooms.room_id}`);
+          router.push(`/workspace_id/${response.rooms.room_id}`);
           setLoading(false);
         }
       } else {
@@ -125,9 +128,7 @@ const MeetsPage = () => {
                 title: room.node.name,
                 description: room.node.type,
               }}
-              onClick={() =>
-                router.push(`/workspaceSlug/create-meet/${room.node.room_id}`)
-              }
+              onClick={() => router.push(`/workspace_id/${room.node.room_id}`)}
               key={room.node.id}
             />
           ))}

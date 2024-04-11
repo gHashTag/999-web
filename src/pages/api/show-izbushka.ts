@@ -16,6 +16,6 @@
 //   //   const code = user?.invitation_codes.data[0].code;
 //   //   res.redirect(
 //   //     302,
-//   //     `https://dao999nft.com/workspaceSlug/create-meet/meet/${code}`
+//   //     `https://dao999nft.com/workspace_id/meet/${code}`
 //   //   );
 // }

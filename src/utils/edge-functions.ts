@@ -13,6 +13,7 @@ type CreateRoomProps = {
   user_id: string;
   username: string;
   name: string;
+  workspace_id: string;
   type: string;
   token: string;
   chat_id: string;
@@ -23,6 +24,7 @@ async function createRoom({
   user_id,
   username,
   name,
+  workspace_id,
   type,
   token,
   chat_id,
@@ -34,6 +36,7 @@ async function createRoom({
     user_id,
     username,
     name,
+    workspace_id,
     type,
     token,
     chat_id,

@@ -44,7 +44,7 @@ function ModalDialog(
             <Link
               key={name}
               href={{
-                pathname: `/workspaceSlug${route}`,
+                pathname: `/workspace_id${route}`,
               }}
               className={cn(styles["nav-item"], {
                 [styles["nav-active"]]: activeRoute.startsWith(route),

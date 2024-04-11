@@ -18,14 +18,13 @@ export const ROOM_INFO = gql`
 `;
 
 export const ROOMS_COLLECTION_QUERY = gql`
-  query RoomsCollectionByName($username: String!, $room_id: String!) {
-    roomsCollection(
-      filter: { username: { eq: $username }, room_id: { eq: $room_id } }
-    ) {
+  query RoomsCollectionByName($workspace_id: UUID!) {
+    roomsCollection(filter: { workspace_id: { eq: $workspace_id } }) {
       edges {
         node {
           id
           user_id
+          workspace_id
           name
           username
           description
@@ -36,6 +35,26 @@ export const ROOMS_COLLECTION_QUERY = gql`
           description
           codes
           room_id
+        }
+      }
+    }
+  }
+`;
+
+export const WORKSPACES_COLLECTION_QUERY = gql`
+  query WorkspacesCollection($user_id: UUID!) {
+    workspacesCollection(filter: { user_id: { eq: $user_id } }) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          colors
+          background
+          title
+          type
+          updated_at
+          created_at
         }
       }
     }
@@ -92,16 +111,32 @@ export const DELETE_ROOM_MUTATION = gql`
 `;
 
 export const TASKS_COLLECTION_QUERY = gql`
-  query GetTasks($workspace_id: UUID!) {
+  query GetTasks(
+    $user_id: UUID!
+    $room_id: String!
+    $recording_id: String
+    $workspace_id: UUID!
+  ) {
     tasksCollection(
-      filter: { and: [{ workspace_id: { eq: $workspace_id } }] }
+      filter: {
+        and: [
+          {
+            workspace_id: { eq: $workspace_id }
+            user_id: { eq: $user_id }
+            room_id: { eq: $room_id }
+            recording_id: { eq: $recording_id }
+          }
+        ]
+      }
       orderBy: { created_at: DescNullsFirst }
     ) {
       edges {
         node {
           id
           user_id
-          user_id
+          workspace_id
+          room_id
+          recording_id
           created_at
           title
           description
@@ -141,6 +176,21 @@ export const CREATE_TASK_MUTATION = gql`
   }
 `;
 
+export const CREATE_WORKSPACE_MUTATION = gql`
+  mutation CreateWorkspaces($objects: [workspacesInsertInput!]!) {
+    insertIntoworkspacesCollection(objects: $objects) {
+      records {
+        id
+        user_id
+        created_at
+        title
+        description
+        updated_at
+      }
+    }
+  }
+`;
+
 export const MUTATION_TASK_UPDATE = gql`
   mutation updatetasksCollection(
     $id: BigInt!
@@ -175,6 +225,56 @@ export const MUTATION_TASK_UPDATE = gql`
         label
         priority
         order
+      }
+    }
+  }
+`;
+
+export const MUTATION_WORKSPACE_UPDATE = gql`
+  mutation updateworkspacesCollection(
+    $id: BigInt!
+    $status: BigInt!
+    $title: String!
+    $description: String!
+    $updated_at: Datetime!
+    $order: BigInt!
+  ) {
+    updatetasksCollection(
+      filter: { id: { eq: $id } }
+      set: {
+        status: $status
+        updated_at: $updated_at
+        title: $title
+        description: $description
+        order: $order
+      }
+    ) {
+      records {
+        id
+        user_id
+        title
+        description
+        status
+        due_date
+        assigned_to
+        completed_at
+        is_archived
+        updated_at
+        created_at
+        label
+        priority
+        order
+      }
+    }
+  }
+`;
+
+export const DELETE_WORKSPACE_MUTATION = gql`
+  mutation DeleteWorkspace($filter: workspacesFilter!, $atMost: Int!) {
+    deleteFromworkspacesCollection(filter: $filter, atMost: $atMost) {
+      records {
+        id
+        title
       }
     }
   }

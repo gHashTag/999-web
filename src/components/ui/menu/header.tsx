@@ -55,7 +55,7 @@ export default function Header() {
             color={isTabActive("/meets") ? "primary" : "foreground"}
             href="/meets"
           >
-            Meetsdd
+            Meets
           </Link>
         </NavbarItem>
         <NavbarItem isActive={isTabActive("/tasks")}>

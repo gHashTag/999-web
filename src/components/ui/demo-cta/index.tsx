@@ -54,7 +54,7 @@ const DemoButton = () => {
     const res = await createSupabaseUser(user);
     if (res) {
       // console.log("Successfully logged in");
-      router.push("/workspaceSlug/wallet");
+      router.push("/workspace_id/wallet");
     } else {
       console.log("Failed to log in");
     }

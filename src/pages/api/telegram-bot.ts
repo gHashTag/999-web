@@ -294,12 +294,15 @@ bot.start();
 
 export default async function handler(req: any, res: any) {
   const handleUpdate = webhookCallback(bot, "std/http");
-
-  try {
-    handleUpdate(req, res);
-    res.status(200).end();
-  } catch (err) {
-    console.error(err);
+  if (typeof req.json === "function") {
+    try {
+      handleUpdate(req, res);
+      res.status(200).end();
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    console.error("Метод json не найден в объекте req");
   }
 }
 

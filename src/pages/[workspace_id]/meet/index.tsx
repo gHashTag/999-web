@@ -10,13 +10,13 @@ const Meets = () => {
         if (router.query.slug) {
           router.push(
             {
-              pathname: `/[workspaceSlug]/create-meet/audio-space/[roomId]`,
+              pathname: `/[workspace_id]/meet/[roomId]`,
               query: {
-                workspaceSlug: router.query.workspaceSlug,
+                workspace_id: router.query.workspace_id,
                 roomId: router.query.slug,
               },
             },
-            `/${router.query.workspaceSlug}/create-meet/audio-space/${router.query.slug}`
+            `/${router.query.workspace_id}/meet/${router.query.slug}`
           );
         }
       } catch (error) {

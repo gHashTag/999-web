@@ -103,7 +103,7 @@ export default function Layout({
                         <a onClick={() => setActiveRoute(route)}>
                           <Link
                             href={{
-                              pathname: `/workspaceSlug${route}`,
+                              pathname: `/workspace_id${route}`,
                             }}
                             legacyBehavior
                             passHref

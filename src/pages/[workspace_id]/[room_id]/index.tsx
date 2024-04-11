@@ -143,7 +143,7 @@ const RoomPage = () => {
         refetch();
       },
     });
-    router.push("/workspaceSlug/create-meet");
+    router.push("/workspace_id");
   };
 
   const title = roomsData?.roomsCollection?.edges[0]?.node?.name;
@@ -155,7 +155,7 @@ const RoomPage = () => {
         }
       >
         <div className="relative z-10 flex items-center justify-center">
-          <div className="relative h-10 w-44  rounded-full flex items-center justify-center text-white font-bold text-4xl">
+          <div className="relative h-10  rounded-full flex items-center justify-center text-white font-bold text-4xl">
             <div className="absolute w-full h-full bg-white/[0.8] dark:bg-black/[0.8] blur-sm rounded-full" />
             <span className="dark:text-white text-black z-20 text-center">
               {title}
@@ -167,7 +167,7 @@ const RoomPage = () => {
           style={{
             display: "flex",
             flexWrap: "wrap",
-            marginTop: 20,
+            marginTop: 40,
             justifyContent: "space-around",
             alignItems: "center",
           }}

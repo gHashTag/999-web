@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getWorkspaceByName, supabase } from "@/utils/supabase";
+import { getWorkspaceById, supabase } from "@/utils/supabase";
 import { RoomNode } from "@/types";
 import { corsHeaders, headers } from "@/helpers/headers";
 import NextCors from "nextjs-cors";
@@ -64,10 +64,17 @@ export default async function handler(
   });
 
   try {
-    const { user_id, name, type, username, lang, chat_id, token } =
-      await req.body;
-
-    const workspace_name = "dao999nft";
+    const {
+      user_id,
+      name,
+      type,
+      workspace_id,
+      username,
+      lang,
+      chat_id,
+      token,
+    } = await req.body;
+    console.log(workspace_id, "workspace_id");
 
     const { data, error: userError } = await supabase
       .from("users")
@@ -86,13 +93,13 @@ export default async function handler(
     const transliterateName = transliterate(name);
 
     const createOrFetchRoom = async () => {
-      const workspace = await getWorkspaceByName(workspace_name);
-
-      const workspace_id = workspace && workspace[0].workspace_id;
-
+      const workspace = await getWorkspaceById(workspace_id);
+      console.log(workspace, "workspace");
+      const workspaceID = workspace && workspace[0].workspace_id;
+      console.log(workspaceID, "workspaceID");
       const roomData = {
         name: `${transliterateName}`,
-        description: `${workspace_id}:${workspace_name}:${uuidv4()}:${lang}`,
+        description: workspace_id,
         template_id:
           type === "audio-space"
             ? "65e84b5148b3dd31b94ff005"

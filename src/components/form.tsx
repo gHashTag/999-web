@@ -45,7 +45,7 @@ export default function Form({ sharePage }: Props) {
   const { toast } = useToast();
 
   const visible = useReactiveVar(visibleSignInVar);
-  const workspaceSlug = useReactiveVar(setUserId);
+  const workspace_id = useReactiveVar(setUserId);
   const inviteCode = useReactiveVar(setInviteCode);
 
   const [errorMsg, setErrorMsg] = useState("");
@@ -64,8 +64,8 @@ export default function Form({ sharePage }: Props) {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (workspaceSlug) {
-      router.push(`/${workspaceSlug}/wallet`);
+    if (workspace_id) {
+      router.push(`/${workspace_id}/wallet`);
     }
     if (inputRef.current) {
       (inputRef.current as any)?.focus();

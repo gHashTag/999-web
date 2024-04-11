@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getWorkspace, { supabase } from "@/utils/supabase";
+import { getWorkspaceById, supabase } from "@/utils/supabase";
 import { corsHeaders, headers } from "@/helpers/headers";
 import NextCors from "nextjs-cors";
 import { Bot } from "grammy";
@@ -64,6 +64,7 @@ interface Data {
   lang: string;
   chat_id: number;
   token: string;
+  description: string;
 }
 
 const getPreparedUsers = (usersFromSupabase: any) => {
@@ -216,13 +217,16 @@ export default async function handler(
             .select("*")
             .eq("room_id", data.room_id)) as { data: Data[]; error: any };
 
-          const { lang, chat_id, token } = roomData[0];
+          const { lang, chat_id, token, description } = roomData[0];
 
-          const workspace_id = "7531debe-64f0-4471-b942-34130c52b6ab";
-          const workspace = await getWorkspace(workspace_id);
+          console.log(description, "description");
+          const workspace_id = description;
+          console.log(workspace_id, "workspace_id");
+          const workspace = await getWorkspaceById(workspace_id);
+          console.log(workspace, "workspace");
           let workspace_name;
-          if (workspace && workspace.length > 0) {
-            workspace_name = workspace[0].name;
+          if (workspace) {
+            workspace_name = workspace[0].title;
           } else {
             // Обработка случая, когда объект равен null или пустой
             console.log("workspace_name is null");
@@ -237,10 +241,11 @@ export default async function handler(
               const taskData = await supabase.from("tasks").insert([
                 {
                   user_id,
-                  title: task.title,
-                  description: task.description,
                   room_id: data.room_id,
                   workspace_id,
+                  recording_id: data.recording_id,
+                  title: task.title,
+                  description: task.description,
                   workspace_name,
                 },
               ]);

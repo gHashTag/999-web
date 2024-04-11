@@ -70,16 +70,16 @@ export const EvervaultCard = ({
     let targetPath;
     switch (type) {
       case "host":
-        targetPath = `/workspaceSlug/create-meet/meet/${inviteHostCode}`;
+        targetPath = `/workspace_id/meet/${inviteHostCode}`;
         break;
       case "member":
-        targetPath = `/workspaceSlug/create-meet/meet/${inviteMemberCode}`;
+        targetPath = `/workspace_id/meet/${inviteMemberCode}`;
         break;
       default:
-        targetPath = `/workspaceSlug/create-meet/meet/${inviteGuestCode}`;
+        targetPath = `/workspace_id/meet/${inviteGuestCode}`;
     }
 
-    if (router.pathname !== "/workspaceSlug/create-meet/meet/[code]") {
+    if (router.pathname !== "/workspace_id/meet/[code]") {
       if (type !== "host") {
         handleCopy(`${window.location.origin}${targetPath}`);
         inviteToMeet(type);
@@ -90,9 +90,7 @@ export const EvervaultCard = ({
   };
 
   const href =
-    type === "host"
-      ? `/workspaceSlug/create-meet/meet/${inviteHostCode}`
-      : router.asPath;
+    type === "host" ? `/workspace_id/meet/${inviteHostCode}` : router.asPath;
 
   return (
     <>
@@ -106,7 +104,7 @@ export const EvervaultCard = ({
         <Icon className="absolute h-6 w-6 -top-3 -right-3 dark:text-yellow-500 text-black" />
         <Icon className="absolute h-6 w-6 -bottom-3 -right-3 dark:text-yellow-500 text-black" />
         <div
-          style={{ width: 380, height: 200 }}
+          style={{ width: 380, height: 170 }}
           className={cn(
             "p-0.5  bg-transparent aspect-square  flex items-center justify-center w-full h-full relative",
             className
