@@ -12,6 +12,7 @@ import {
   // CURRENT_USER,
   DELETE_ROOM_MUTATION,
   ROOMS_ASSETS_COLLECTION_QUERY,
+  ROOMS_BY_ID_COLLECTION_QUERY,
   ROOMS_COLLECTION_QUERY,
   ROOM_NAME_COLLECTION_QUERY,
 } from "@/graphql/query";
@@ -44,9 +45,6 @@ const RoomPage = () => {
 
   const userName = __DEV__ ? "koshey999nft" : username;
   const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
-  const workspaceId = __DEV__
-    ? "54dc9d0e-dd96-43e7-bf72-02c2807f8977"
-    : workspace_id;
 
   const recordingId = __DEV__
     ? "660d30d5a71969a17ddc027e" // Используем это значение, если __DEV__ true
@@ -60,7 +58,7 @@ const RoomPage = () => {
   const { loading, data, columns } = useTable({
     username: userName || "",
     user_id: userId || "",
-    workspace_id: workspaceId || "",
+    workspace_id: workspace_id || "",
     room_id,
   });
 
@@ -70,10 +68,9 @@ const RoomPage = () => {
     data: roomsData,
     loading: roomsLoading,
     refetch,
-  } = useQuery(ROOMS_COLLECTION_QUERY, {
+  } = useQuery(ROOMS_BY_ID_COLLECTION_QUERY, {
     fetchPolicy: "network-only",
     variables: {
-      username: localStorage.getItem("username"),
       room_id: router.query.room_id,
     },
   });

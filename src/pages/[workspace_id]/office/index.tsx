@@ -1,18 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
-
 import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
-// @ts-ignore
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { FieldValues, useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/moving-border";
 import { gql, useQuery, useMutation, ApolloError } from "@apollo/client";
 
 import { useToast } from "@/components/ui/use-toast";
-import { SignupFormDemo } from "@/components/ui/signup-form";
-import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
+
 import { Spinner } from "@/components/ui/spinner";
 
 import { CanvasRevealEffectDemo } from "@/components/ui/canvas-reveal-effect-demo";
@@ -20,15 +15,14 @@ import {
   CREATE_WORKSPACE_MUTATION,
   DELETE_TASK_MUTATION,
   MUTATION_WORKSPACE_UPDATE,
-  TASKS_COLLECTION_QUERY,
   WORKSPACES_COLLECTION_QUERY,
 } from "@/graphql/query";
 import WorkspaceModal from "@/components/modal/WorkspaceModal";
-import { useDisclosure } from "@nextui-org/react";
-import { useSupabase } from "@/hooks/useSupabase";
+
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/pages/_app";
 import { useTable } from "@/hooks/useTable";
+import { useEffect } from "react";
 
 const MUTATION = gql`
   mutation UpdateUser(
@@ -76,45 +70,8 @@ export default function Office() {
   const username = localStorage.getItem("username");
   const user_id = localStorage.getItem("user_id");
 
-  const workspace_id = localStorage.getItem("workspace_id");
-  const room_id = localStorage.getItem("room_id");
-  const recording_id = localStorage.getItem("recording_id");
   const userName = __DEV__ ? "koshey999nft" : username;
   const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
-  const workspaceId = __DEV__
-    ? "54dc9d0e-dd96-43e7-bf72-02c2807f8977"
-    : workspace_id;
-  const roomId = __DEV__ ? "6601894fe4bed726368e290b" : room_id;
-  const recordingId = __DEV__ ? "660d30d5a71969a17ddc027e" : recording_id;
-
-  const {
-    loading,
-    data,
-    setValue,
-    openModalId,
-    isEditing,
-    columns,
-    isOpen,
-    control,
-    handleSubmit,
-    getValues,
-    onOpen,
-    onOpenChange,
-    onCreateNewTask,
-    setIsEditing,
-    onCreate,
-    onUpdate,
-    onDelete,
-  } = useTable({
-    username: userName || "",
-    user_id: userId || "",
-  });
-
-  // useEffect(() => {
-  //   if (!username) {
-  //     router.push("/");
-  //   }
-  // }, [router]);
 
   const {
     data: workspacesData,
@@ -128,9 +85,9 @@ export default function Office() {
   });
 
   if (workspacesError) return <p>Error : {workspacesError.message}</p>;
-  console.log(workspacesData, "workspacesData");
+
   const workspaceNode = workspacesData?.workspacesCollection?.edges;
-  console.log(workspaceNode, "workspaceNode");
+
   const [
     mutateUpdateWorkspaceStatus,
     { error: mutateUpdateWorkspaceStatusError },
@@ -155,6 +112,35 @@ export default function Office() {
 
   const [deleteTask, { error: deleteTaskError }] =
     useMutation(DELETE_TASK_MUTATION);
+
+  const {
+    loading,
+    data,
+    setValue,
+    openModalId,
+    isEditing,
+    columns,
+    isOpen,
+    control,
+    handleSubmit,
+    getValues,
+    onOpen,
+    onOpenChange,
+    onCreateNewTask,
+    setIsEditing,
+    onCreate,
+    onUpdate,
+    onDelete,
+  } = useTable({
+    username: userName || "",
+    user_id: userId || "",
+  });
+
+  useEffect(() => {
+    if (!username) {
+      router.push("/");
+    }
+  }, [router]);
 
   const goToOffice = (workspace_id: string) => {
     router.push(`/${workspace_id}`);

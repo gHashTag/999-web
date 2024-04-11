@@ -121,7 +121,7 @@ const MeetsPage = () => {
     onOpen();
     setOpenModalId(type);
   };
-
+  // console.log(roomsData, "roomsData");
   return (
     <Layout loading={loading || roomsLoading || tableLoading}>
       <>
@@ -149,10 +149,14 @@ const MeetsPage = () => {
                 title: room.node.name,
                 description: room.node.type,
               }}
-              onClick={() => router.push(`/workspace_id/${room.node.room_id}`)}
+              onClick={() =>
+                router.push(`/${workspace_id}/${room.node.room_id}`)
+              }
               key={room.node.id}
             />
           ))}
+          {/* https://a46ffbba421b.ngrok.app/d696abd8-3b7a-46f2-907f-5342a2b533a0/6617f3b8f22c5c6a76021925
+          https://a46ffbba421b.ngrok.app/d696abd8-3b7a-46f2-907f-5342a2b533a0/6617f31ff22c5c6a76021913 */}
         </div>
         <div
           style={{

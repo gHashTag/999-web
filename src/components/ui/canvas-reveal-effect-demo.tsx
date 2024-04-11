@@ -16,6 +16,7 @@ export function CanvasRevealEffectDemo({
       <div className="py-20 flex flex-col lg:flex-row items-center justify-center w-full gap-4 mx-auto px-8">
         {officeData.map(({ node }: any) => (
           <Card
+            key={node.id}
             workspace_id={node.workspace_id}
             title={node.title}
             onClick={onClick}

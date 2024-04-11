@@ -17,9 +17,38 @@ export const ROOM_INFO = gql`
   }
 `;
 
+export const ROOMS_BY_ID_COLLECTION_QUERY = gql`
+  query RoomsCollectionByName($room_id: String!) {
+    roomsCollection(filter: { room_id: { eq: $room_id } }) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          name
+          username
+          description
+          updated_at
+          created_at
+          type
+          enabled
+          description
+          codes
+          room_id
+        }
+      }
+    }
+  }
+`;
+
 export const ROOMS_COLLECTION_QUERY = gql`
   query RoomsCollectionByName($workspace_id: UUID!) {
-    roomsCollection(filter: { workspace_id: { eq: $workspace_id } }) {
+    roomsCollection(
+      filter: {
+        workspace_id: { eq: $workspace_id }
+        workspace_id: { eq: $workspace_id }
+      }
+    ) {
       edges {
         node {
           id

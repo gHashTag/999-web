@@ -324,9 +324,17 @@ const useTable = ({
         header: ({ column }: any) => (
           <DataTableColumnHeader column={column} title="Status" />
         ),
+        accessorFn: (row: any) => {
+          return row.node.status;
+        },
+        filterFn: (row: any, id: any, value: any) => {
+          return value.includes(row.getValue(id));
+        },
         cell: ({ row }: any) => {
           const status = statuses.find(
-            (status: any) => status.value === row.original.node.status
+            (status: any) =>
+              status.value.toLowerCase() ===
+              row.original.node.status.toLowerCase()
           );
 
           if (!status) {
@@ -341,9 +349,6 @@ const useTable = ({
               <span>{status.label}</span>
             </div>
           );
-        },
-        filterFn: (row: any, id: any, value: any) => {
-          return value.includes(row.getValue(id));
         },
       },
       {

@@ -34,6 +34,16 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   }[];
 }
 
+interface DataTableFacetedFilterProps<TData, TValue> {
+  column?: Column<TData, TValue>;
+  title?: string;
+  options: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
+}
+
 export function DataTableFacetedFilter<TData, TValue>({
   column,
   title,
@@ -45,7 +55,6 @@ export function DataTableFacetedFilter<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        {/* @ts-ignore */}
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
           {title}
@@ -53,7 +62,6 @@ export function DataTableFacetedFilter<TData, TValue>({
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
-                // @ts-ignore
                 variant="secondary"
                 className="rounded-sm px-1 font-normal lg:hidden"
               >
@@ -62,7 +70,6 @@ export function DataTableFacetedFilter<TData, TValue>({
               <div className="hidden space-x-1 lg:flex">
                 {selectedValues.size > 2 ? (
                   <Badge
-                    // @ts-ignore
                     variant="secondary"
                     className="rounded-sm px-1 font-normal"
                   >
@@ -73,7 +80,6 @@ export function DataTableFacetedFilter<TData, TValue>({
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
                       <Badge
-                        // @ts-ignore
                         variant="secondary"
                         key={option.value}
                         className="rounded-sm px-1 font-normal"
@@ -95,6 +101,7 @@ export function DataTableFacetedFilter<TData, TValue>({
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value);
+
                 return (
                   <CommandItem
                     key={option.value}

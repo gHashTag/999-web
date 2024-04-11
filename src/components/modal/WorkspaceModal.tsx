@@ -106,18 +106,21 @@ function WorkspaceModal({
                 <div style={{ padding: 10 }} />
               </form>
             </ModalBody>
-
+            {/* <Select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Priority" />
+              </SelectTrigger>
+              <SelectContent
+                onClick={() => {
+                  console.log("click");
+                }}
+              >
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+              </SelectContent>
+            </Select> */}
             <ModalFooter>
-              {/* <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Priority" />
-                </SelectTrigger>
-                <SelectContent onClick={(e) => e.stopPropagation()}>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select> */}
               {isEditing && (
                 // @ts-ignore
                 <Button color="warning" variant="ghost" onClick={onDelete}>

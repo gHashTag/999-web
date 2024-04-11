@@ -4,7 +4,7 @@ import Layout from "@/components/layout";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/router";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/pages/_app";
 import { useTable } from "@/hooks/useTable";
@@ -31,7 +31,6 @@ const RecordingPage = () => {
   const room_id = localStorage.getItem("room_id");
 
   const userName = __DEV__ ? "koshey999nft" : username;
-  console.log(user_id, "user_id");
 
   const workspaceId = __DEV__
     ? "54dc9d0e-dd96-43e7-bf72-02c2807f8977"
@@ -39,7 +38,6 @@ const RecordingPage = () => {
 
   const roomId = __DEV__ ? "6601894fe4bed726368e290b" : room_id;
 
-  // Гарантируем, что recordingId будет строкой, используя приведение типа
   const recordingIdString = router.query.recording_id as string;
 
   const { loading, data, columns } = useTable({
