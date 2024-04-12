@@ -193,9 +193,6 @@ const useTable = ({
     mutateCreateTaskError,
     refetch,
     reset,
-    setIsEditing,
-    setOpenModalId,
-    setValue,
     toast,
     user_id,
   ]);
@@ -216,20 +213,12 @@ const useTable = ({
         refetch();
       },
     });
-  }, [
-    mutateUpdateTaskStatus,
-    openModalId,
-    refetch,
-    setIsEditing,
-    setOpenModalId,
-    setValue,
-    getValues,
-  ]);
+  }, [mutateUpdateTaskStatus, openModalId, refetch, getValues]);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setOpenModalId(null);
     onClose();
-  };
+  }, [onClose]);
 
   const onDelete = useCallback(
     (id: string) => {

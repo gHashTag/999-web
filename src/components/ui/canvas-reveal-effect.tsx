@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/utils/cn";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import React, { useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 //@ts-ignore
 import * as THREE from "three";
 
@@ -253,7 +253,7 @@ const ShaderMaterial = ({
       value: new THREE.Vector2(size.width * 2, size.height * 2),
     }; // Initialize u_resolution
     return preparedUniforms;
-  }, [size]);
+  }, [size, uniforms]);
 
   // Shader material
   const material = useMemo(() => {
