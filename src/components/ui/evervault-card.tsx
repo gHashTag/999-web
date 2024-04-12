@@ -7,6 +7,19 @@ import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+type EvervaultCardProps = {
+  text: string;
+  type: string;
+  className?: string;
+  inviteToMeet: (type: string) => void;
+  inviteHostCode: string;
+  inviteMemberCode: string;
+  inviteGuestCode: string;
+  user_id: string;
+  workspace_id: string;
+  room_id: string;
+};
+
 export const EvervaultCard = ({
   text,
   type,
@@ -15,15 +28,10 @@ export const EvervaultCard = ({
   inviteHostCode,
   inviteMemberCode,
   inviteGuestCode,
-}: {
-  text: string;
-  type: string;
-  className?: string;
-  inviteToMeet: (type: string) => void;
-  inviteHostCode: string;
-  inviteMemberCode: string;
-  inviteGuestCode: string;
-}) => {
+  user_id,
+  workspace_id,
+  room_id,
+}: EvervaultCardProps) => {
   const router = useRouter();
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
@@ -70,16 +78,19 @@ export const EvervaultCard = ({
     let targetPath;
     switch (type) {
       case "host":
-        targetPath = `/workspace_id/meet/${inviteHostCode}`;
+        targetPath = `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`;
         break;
       case "member":
-        targetPath = `/workspace_id/meet/${inviteMemberCode}`;
+        targetPath = `/${user_id}/${workspace_id}/${room_id}/${inviteMemberCode}`;
         break;
       default:
-        targetPath = `/workspace_id/meet/${inviteGuestCode}`;
+        targetPath = `/${user_id}/${workspace_id}/${room_id}/${inviteGuestCode}`;
     }
 
-    if (router.pathname !== "/workspace_id/meet/[code]") {
+    if (
+      router.pathname !==
+      `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`
+    ) {
       if (type !== "host") {
         handleCopy(`${window.location.origin}${targetPath}`);
         inviteToMeet(type);
@@ -90,7 +101,9 @@ export const EvervaultCard = ({
   };
 
   const href =
-    type === "host" ? `/workspace_id/meet/${inviteHostCode}` : router.asPath;
+    type === "host"
+      ? `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`
+      : router.asPath;
 
   return (
     <>

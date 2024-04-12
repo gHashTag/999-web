@@ -14,7 +14,7 @@ import { useQuery, useReactiveVar } from "@apollo/client";
 import { CardRoomT } from "@/types";
 import CardRoom from "@/components/ui/card-room";
 import { DataTable } from "@/components/table/data-table";
-import { __DEV__ } from "../_app";
+import { __DEV__ } from "../../_app";
 import { useTable } from "@/hooks/useTable";
 import { setLoading } from "@/apollo/reactive-store";
 
@@ -90,7 +90,7 @@ const MeetsPage = () => {
             title: "Success",
             description: `${response.rooms.name} created`,
           });
-          router.push(`/workspace_id/${response.rooms.room_id}`);
+          router.push(`/${user_id}/${workspace_id}/${response.rooms.room_id}`);
           setLoading(false);
         }
       } else {

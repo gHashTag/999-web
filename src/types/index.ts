@@ -31,23 +31,40 @@ export interface Task {
   };
 }
 
-export type SupabaseUser = {
-  id: number;
-  created_at: Date;
+export interface User {
+  username: string | null;
   first_name: string | null;
   last_name: string | null;
-  username: string | null;
+  inviter: string | null;
+  photo_url: string | null;
   is_bot: boolean | null;
   language_code: string | null;
   telegram_id: number | null;
   email: string | null;
-  photo_url: string | null;
-  user_id: string;
-  aggregateverifier: string | null;
-  admin_email: string | null;
-  role: string | null;
-  display_name: string | null;
-  inviter: string | null;
+}
+
+export type TUser = Readonly<{
+  auth_date?: number;
+  first_name: string;
+  last_name?: string;
+  hash?: string;
+  id?: number;
+  photo_url?: string;
+  username?: string;
+}>;
+
+export type SupabaseUser = TUser & {
+  inviter?: string | null;
+  is_bot?: boolean | null;
+  language_code?: string | null;
+  telegram_id?: number | null;
+  email?: string | null;
+  created_at?: Date;
+  user_id?: string;
+  aggregateverifier?: string | null;
+  admin_email?: string | null;
+  role?: string | null;
+  display_name?: string | null;
 };
 
 // Дополнительно, вы можете определить тип для таблицы users

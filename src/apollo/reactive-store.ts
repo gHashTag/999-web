@@ -33,3 +33,7 @@ export const setAssetInfo = makeVar<OptionType | null>(null);
 export const setActiveRoute = makeVar<string>("/");
 
 export const setLoading = makeVar<boolean>(false);
+
+export const setIsEditing = makeVar<boolean>(false);
+
+export const setOpenModalId = makeVar<string | null>(null);

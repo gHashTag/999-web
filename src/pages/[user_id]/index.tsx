@@ -3,7 +3,7 @@ import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 
 import { Button } from "@/components/ui/moving-border";
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 
 import { Spinner } from "@/components/ui/spinner";
 
@@ -13,8 +13,9 @@ import WorkspaceModal from "@/components/modal/WorkspaceModal";
 
 import { DataTable } from "@/components/table/data-table";
 import { useTable } from "@/hooks/useTable";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useWorkspace } from "@/hooks/useWorkspace";
+import { setIsEditing, setOpenModalId } from "@/apollo/reactive-store";
 
 export type updateUserDataType = {
   user_id: string;
@@ -27,6 +28,9 @@ export default function Office() {
   const router = useRouter();
   const username = localStorage.getItem("username") || "";
   const user_id = localStorage.getItem("user_id") || "";
+  const { onCreate, onDelete, onUpdate } = useWorkspace(user_id, username);
+  const openModalId = useReactiveVar(setOpenModalId);
+  const isEditing = useReactiveVar(setIsEditing);
 
   useEffect(() => {
     if (!username) {
@@ -44,7 +48,7 @@ export default function Office() {
       user_id,
     },
   });
-
+  console.log(workspacesError, "workspacesError");
   if (workspacesError) return <p>Error : {workspacesError.message}</p>;
 
   const workspaceNode = workspacesData?.workspacesCollection?.edges;
@@ -53,8 +57,6 @@ export default function Office() {
     loading,
     data,
     setValue,
-    openModalId,
-    isEditing,
     columns,
     isOpen,
     control,
@@ -62,16 +64,13 @@ export default function Office() {
     getValues,
     onOpen,
     onOpenChange,
-    setIsEditing,
   } = useTable({
     username,
     user_id,
   });
 
-  const { onCreate, onDelete, onUpdate } = useWorkspace(user_id, username);
-
   const goToOffice = (workspace_id: string) => {
-    router.push(`/${workspace_id}`);
+    router.push(`/${user_id}/${workspace_id}`);
     localStorage.setItem("workspace_id", workspace_id);
   };
 
@@ -83,7 +82,7 @@ export default function Office() {
   };
 
   return (
-    <Layout loading={loading || workspacesLoading}>
+    <div>
       <main className="flex flex-col items-center justify-between p-14">
         {loading && <Spinner size="lg" />}
         <div className="relative z-10 flex items-center justify-center">
@@ -97,21 +96,7 @@ export default function Office() {
         <div style={{ position: "absolute", top: 60, right: 30 }}>
           <Button onClick={onCreateNewWorkspace}>Create workspace</Button>
         </div>
-        {isOpen && (
-          <WorkspaceModal
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onOpenChange={onOpenChange}
-            onCreate={onCreate}
-            onDelete={() => openModalId && onDelete(openModalId)}
-            onUpdate={onUpdate}
-            control={control}
-            handleSubmit={handleSubmit}
-            getValues={getValues}
-            setValue={setValue}
-            isEditing={isEditing}
-          />
-        )}
+
         {!loading && (
           <CanvasRevealEffectDemo
             officeData={workspaceNode || []}
@@ -122,7 +107,24 @@ export default function Office() {
         {data && (
           <DataTable data={data.tasksCollection.edges} columns={columns} />
         )}
+        <>
+          {isOpen && (
+            <WorkspaceModal
+              isOpen={isOpen}
+              onOpen={onOpen}
+              onOpenChange={onOpenChange}
+              onCreate={onCreate}
+              onDelete={() => openModalId && onDelete(openModalId)}
+              onUpdate={onUpdate}
+              control={control}
+              handleSubmit={handleSubmit}
+              getValues={getValues}
+              setValue={setValue}
+              isEditing={isEditing}
+            />
+          )}
+        </>
       </main>
-    </Layout>
+    </div>
   );
 }

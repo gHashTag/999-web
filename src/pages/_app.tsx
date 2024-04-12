@@ -24,12 +24,6 @@ import {
   defaultDataIdFromObject,
 } from "@apollo/client";
 
-import {
-  authenticateUser,
-  initWeb3Auth,
-  subscribeToEvents,
-} from "@/utils/auth";
-
 import { useRouter } from "next/router";
 import { useToast } from "@/components/ui/use-toast";
 import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
@@ -95,15 +89,6 @@ export const cache = new InMemoryCache({
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const { toast } = useToast();
-
-  useEffect(() => {
-    initWeb3Auth(router, toast);
-    const unsubscribe = subscribeToEvents(async () => {
-      await authenticateUser();
-      setLoggedIn(true);
-    });
-    return unsubscribe;
-  }, [router, toast]);
 
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
   // const [persistor, setPersistor] =

@@ -164,7 +164,7 @@ const RoomPage = () => {
         refetch();
       },
     });
-    router.push("/workspace_id");
+    router.push(`/${user_id}/${workspace_id}`);
   };
 
   const title = roomsData?.roomsCollection?.edges[0]?.node?.name;

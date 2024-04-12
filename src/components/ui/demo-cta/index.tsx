@@ -51,13 +51,8 @@ const DemoButton = () => {
   };
 
   const handleTelegramResponse = async (user: TUser) => {
-    const res = await createSupabaseUser(user);
-    if (res) {
-      // console.log("Successfully logged in");
-      router.push("/workspace_id/wallet");
-    } else {
-      console.log("Failed to log in");
-    }
+    const user_id = await createSupabaseUser(user);
+    router.push(`/${user_id}`);
   };
 
   return (

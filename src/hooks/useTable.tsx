@@ -28,6 +28,7 @@ import {
   TASKS_COLLECTION_QUERY,
 } from "@/graphql/query";
 import { useToast } from "@/components/ui/use-toast";
+import { setIsEditing, setOpenModalId } from "@/apollo/reactive-store";
 
 type UseTableProps = {
   username: string;
@@ -44,14 +45,12 @@ const useTable = ({
   room_id,
   recording_id,
 }: UseTableProps) => {
-  const user = { user_id, username, workspace_id, room_id, recording_id };
-
   const { toast } = useToast();
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { getTaskById } = useSupabase();
-  const [isEditing, setIsEditing] = useState(false);
-  const [openModalId, setOpenModalId] = useState<string | null>(null);
+  const openModalId = useReactiveVar(setOpenModalId);
+  const isEditing = useReactiveVar(setIsEditing);
 
   let tasksQuery = TASKS_COLLECTION_QUERY;
 
@@ -143,7 +142,7 @@ const useTable = ({
       onOpen();
       setIsEditing(true);
     },
-    [getTaskById, onOpen, setIsEditing, setOpenModalId, setValue]
+    [getTaskById, onOpen, setOpenModalId, setValue]
   );
 
   const onCreate = useCallback(async () => {

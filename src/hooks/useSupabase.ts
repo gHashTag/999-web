@@ -6,6 +6,7 @@ import {
   RecordingAsset,
   SupabaseUser,
   TasksArray,
+  TUser,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
 
@@ -16,7 +17,6 @@ import {
   setVisibleHeader,
 } from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
-import { TUser } from "react-telegram-auth";
 
 export const checkUsernameCodes = async (
   username: string
@@ -90,7 +90,7 @@ export function useSupabase() {
   const [tasks, setTasks] = useState<TasksArray>([]);
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<RecordingAsset[]>([]);
-  const userInfo = useReactiveVar(setUserInfo);
+  const [userId, setUserId] = useState<string>("");
 
   const getSupabaseUser = async (username: string) => {
     try {
@@ -120,12 +120,38 @@ export function useSupabase() {
     }
   };
 
-  const createSupabaseUser = async (user: TUser): Promise<boolean> => {
+  const createUserInDatabase = async (
+    newUser: SupabaseUser
+  ): Promise<{ user_id: string }> => {
+    await supabase.from("users").insert([newUser]);
+    const user = await getSupabaseUser(newUser.username || "");
+    console.log(user, "user");
+    return user;
+  };
+
+  const updateUserLocalStorage = (
+    user_id: string,
+    username: string,
+    first_name: string,
+    last_name: string
+  ) => {
+    console.log(user_id, "user_id updateUserLocalStorage");
+    setUserId(user_id);
+    localStorage.setItem("username", username);
+    localStorage.setItem("user_id", user_id);
+    localStorage.setItem("first_name", first_name || "");
+    localStorage.setItem("last_name", last_name || "");
+  };
+
+  const createSupabaseUser = async (
+    user: TUser
+  ): Promise<string | undefined> => {
     try {
       if (!user.username) {
-        console.error("Email пользователя не найден");
-        return false;
+        console.error("Username пользователя не найден");
+        return "";
       }
+
       const { username, first_name, last_name, photo_url } = user;
       const userData = await getSupabaseUser(inviter);
 
@@ -139,35 +165,19 @@ export function useSupabase() {
           is_bot: false,
         };
 
-        localStorage.setItem("username", username);
+        const user = await createUserInDatabase(newUser);
 
-        const { error } = await supabase.from("users").insert([{ ...newUser }]);
-        setVisibleHeader(true);
-        setTimeout(() => {
-          const getUserId = async () => {
-            const userData = await getSupabaseUser(username);
-            const user_id = userData.user_id;
-            localStorage.setItem("user_id", user_id);
-            localStorage.setItem("first_name", first_name || "");
-            localStorage.setItem("last_name", last_name || "");
-          };
-          getUserId();
-        }, 2000);
-        if (error && error.code === "23505") {
-          console.log("Значение ключа уже существует в базе данных");
-          return true;
-        } else {
-          return true;
-        }
-      } else {
-        console.log("Доступ запрешен, так как инвайтер не найден");
-        return false;
+        const user_id = user.user_id;
+
+        setUserId(user_id);
+
+        updateUserLocalStorage(user_id, username, first_name, last_name || "");
+        return userData.user_id;
       }
     } catch (error) {
       console.error("Ошибка при получении информации о пользователе:", error);
-      return false;
+      return "";
     }
-    return false;
   };
 
   const getAllAssets = async () => {
@@ -236,6 +246,7 @@ export function useSupabase() {
   }, []);
 
   return {
+    user_id: userId,
     getUser,
     getRooms,
     checkUsername,
@@ -250,7 +261,6 @@ export function useSupabase() {
     createSupabaseUser,
     userSupabase,
     setUserSupabase,
-    userInfo,
     setUserInfo,
     checkUsernameCodes,
     getTaskById,
