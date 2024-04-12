@@ -133,14 +133,15 @@ export function useSupabase() {
     user_id: string,
     username: string,
     first_name: string,
-    last_name: string
+    last_name: string,
+    photo_url: string
   ) => {
-    console.log(user_id, "user_id updateUserLocalStorage");
     setUserId(user_id);
     localStorage.setItem("username", username);
     localStorage.setItem("user_id", user_id);
     localStorage.setItem("first_name", first_name || "");
     localStorage.setItem("last_name", last_name || "");
+    localStorage.setItem("photo_url", photo_url || "");
   };
 
   const createSupabaseUser = async (
@@ -171,7 +172,13 @@ export function useSupabase() {
 
         setUserId(user_id);
 
-        updateUserLocalStorage(user_id, username, first_name, last_name || "");
+        updateUserLocalStorage(
+          user_id,
+          username,
+          first_name,
+          last_name || "",
+          photo_url || ""
+        );
         return userData.user_id;
       }
     } catch (error) {

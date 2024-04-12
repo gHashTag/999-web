@@ -15,8 +15,8 @@ const cardsCreateRoom = [
     isDisabled: false,
   },
   {
-    title: "Token-gated Room",
-    img: "Token-gated Room.png",
+    title: "Token-gated",
+    img: "Token-gated.png",
     onClickType: "token-gated",
     isDisabled: true,
   },
@@ -33,11 +33,11 @@ const SelectRoom = ({
         className="flex-col"
         style={{
           paddingTop: 10,
-          paddingRight: 20,
-          paddingLeft: 20,
+          paddingRight: 80,
+          paddingLeft: 80,
         }}
       >
-        <div className="grid lg:grid-cols-3 gap-4 grid-cols-1 mt-6">
+        <div className="grid lg:grid-cols-3 gap-4 grid-cols-3 mt-6">
           {cardsCreateRoom.map((card) => (
             <SubCard
               key={card.title}

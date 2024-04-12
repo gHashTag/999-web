@@ -140,7 +140,7 @@ const MeetsPage = () => {
         <SelectRoom setOpenModalType={setOpenModalType} />
         <div
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
-          style={{ padding: 20 }}
+          style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
         >
           {roomsData?.roomsCollection.edges.map((room: CardRoomT) => (
             <CardRoom
@@ -158,18 +158,17 @@ const MeetsPage = () => {
           {/* https://a46ffbba421b.ngrok.app/d696abd8-3b7a-46f2-907f-5342a2b533a0/6617f3b8f22c5c6a76021925
           https://a46ffbba421b.ngrok.app/d696abd8-3b7a-46f2-907f-5342a2b533a0/6617f31ff22c5c6a76021913 */}
         </div>
-        <div
-          style={{
-            padding: 20,
-            paddingTop: 50,
-            paddingBottom: 200,
-          }}
-        >
-          {data && (
-            <DataTable data={data.tasksCollection.edges} columns={columns} />
-          )}
-        </div>
       </>
+      <div
+        style={{
+          paddingTop: 50,
+          paddingBottom: 200,
+        }}
+      >
+        {data && (
+          <DataTable data={data.tasksCollection.edges} columns={columns} />
+        )}
+      </div>
     </Layout>
   );
 };

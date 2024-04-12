@@ -1,25 +1,17 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
+import { TonConnectButton } from "@tonconnect/ui-react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
-// @ts-ignore
-import { CopyToClipboard } from "react-copy-to-clipboard";
+
 import { FieldValues } from "react-hook-form";
-import {
-  gql,
-  useQuery,
-  useReactiveVar,
-  useMutation,
-  ApolloError,
-} from "@apollo/client";
+import { gql, useQuery, useMutation, ApolloError } from "@apollo/client";
 
 import { useToast } from "@/components/ui/use-toast";
 import { SignupFormDemo } from "@/components/ui/signup-form";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { Spinner } from "@/components/ui/spinner";
-import { Card, CardBody } from "@nextui-org/react";
 
 const QUERY = gql`
   query GetUserByEmail($username: String!) {
@@ -72,6 +64,7 @@ const MUTATION = gql`
     }
   }
 `;
+
 export type updateUserDataType = {
   user_id: string;
   first_name: string;
@@ -89,23 +82,15 @@ export default function Wallet() {
     }
   }, [router, username]);
 
-  const userFriendlyAddress = useTonAddress();
-  const rawAddress = useTonAddress(false);
-
-  useEffect(() => {
-    console.log(userFriendlyAddress, "userFriendlyAddress");
-    console.log(rawAddress, "rawAddress");
-  }, [userFriendlyAddress, rawAddress]);
-
   const { toast } = useToast();
-  const [copyStatus, setCopyStatus] = useState(false);
+
   const [mutateUser, { loading: mutationLoading, error: mutationError }] =
     useMutation(MUTATION);
 
-  // if (mutationError instanceof ApolloError) {
-  //   // Обработка ошибки ApolloError
-  //   console.log(mutationError.message);
-  // }
+  if (mutationError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(mutationError.message);
+  }
 
   const { loading, error, data, refetch } = useQuery(QUERY, {
     variables: {
@@ -118,7 +103,6 @@ export default function Wallet() {
   const userNode = data?.usersCollection?.edges[0]?.node;
 
   const handleFormData = (data: FieldValues) => {
-    // console.log(data, "data");
     try {
       if (data) {
         const variables = {
@@ -147,10 +131,6 @@ export default function Wallet() {
         description: JSON.stringify(error),
       });
     }
-  };
-
-  const onCopyText = () => {
-    setCopyStatus(true);
   };
 
   return (
@@ -186,22 +166,6 @@ export default function Wallet() {
 
               <TonConnectButton style={{ marginLeft: 12 }} />
               <div style={{ padding: "10px" }} />
-              {/* {userFriendlyAddress && (
-                <>
-                  <Card>
-                    <CardBody>
-                      <CopyToClipboard
-                        text={userFriendlyAddress}
-                        onCopy={onCopyText}
-                      >
-                        <span>{userFriendlyAddress}</span>
-                      </CopyToClipboard>
-                    </CardBody>
-                  </Card>
-                  <div style={{ padding: "5px" }} />
-                  {copyStatus && <p>Text copied to clipboard!</p>}
-                </>
-              )} */}
             </div>
 
             <SignupFormDemo

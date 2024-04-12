@@ -89,7 +89,7 @@ export default function Office() {
 
   return (
     <Layout loading={loading}>
-      <main className="flex flex-col items-center justify-between p-14">
+      <main className="flex flex-col items-center justify-between">
         {loading && <Spinner size="lg" />}
         <div className="relative z-10 flex items-center justify-center">
           <div className="relative h-10  rounded-full flex items-center justify-center text-white font-bold text-4xl">
@@ -99,7 +99,7 @@ export default function Office() {
             </span>
           </div>
         </div>
-        <div style={{ position: "absolute", top: 60, right: 30 }}>
+        <div style={{ position: "absolute", top: 100, right: 70 }}>
           <Button onClick={onCreateNewWorkspace}>Create workspace</Button>
         </div>
 

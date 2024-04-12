@@ -58,7 +58,7 @@ const LandingIcons: ISvgIcon = {
       />
     </svg>
   ),
-  "Token-gated Room": (
+  "Token-gated": (
     <svg
       width="44"
       height="44"

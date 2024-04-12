@@ -46,8 +46,8 @@ const SubCard: React.FC<SubCardProps> = ({
           {LandingIcons[title]}
         </div>
         <div
-          className="flex items-center justify-center text-slate-900 text-base font-medium mt-2"
-          style={{ marginBottom: 20, fontSize: 20 }}
+          className="flex items-center justify-center text-slate-900 text-base font-medium mt-2 text-lg md:text-xl lg:text-2xl"
+          style={{ marginBottom: 20 }}
         >
           {title}
         </div>

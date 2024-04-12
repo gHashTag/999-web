@@ -42,7 +42,7 @@ const DemoButton = () => {
         <TLoginButton
           botName={`${__DEV__ ? "vasilev_dmitrii_bot" : "dao999nft_dev_bot"}`}
           buttonSize={TLoginButtonSize.Large}
-          lang="ru"
+          lang="en"
           usePic={true}
           cornerRadius={20}
           onAuthCallback={handleTelegramResponse}

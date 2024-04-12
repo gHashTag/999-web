@@ -37,7 +37,7 @@ import { useQuery, useReactiveVar } from "@apollo/client";
 import { setActiveRoute, setVisibleHeader } from "@/apollo/reactive-store";
 import { Spinner } from "@/components/ui/spinner";
 import { cache } from "@/pages/_app";
-// import { CURRENT_USER } from "@/graphql/query";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Props = {
   children: React.ReactNode;
@@ -122,6 +122,14 @@ export default function Layout({
   const user_id = localStorage.getItem("user_id");
   const activeRoute = router.asPath;
 
+  const firstName = localStorage && localStorage.getItem("first_name");
+  const lastName = localStorage && localStorage.getItem("last_name");
+  const photo_url = localStorage && localStorage.getItem("photo_url");
+
+  const shortName = `${(firstName && firstName[0]) || ""}${
+    (lastName && lastName[0]) || ""
+  }`;
+
   return (
     <>
       <div className={styles.background}>
@@ -129,12 +137,12 @@ export default function Layout({
           <header className={cn(styles.header)}>
             <div className={styles["header-logos"]}>
               <MobileMenu key={router.asPath} />
-              <Link href="/" className={styles.logo}>
+              <Link href={`/${user_id}`} className={styles.logo}>
                 <Logo />
               </Link>
             </div>
             <div className={styles.menu}>
-              <NavigationMenu>
+              {/* <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
                     {visibleHeader && (
@@ -167,7 +175,7 @@ export default function Layout({
                     )}
                   </NavigationMenuItem>
                 </NavigationMenuList>
-              </NavigationMenu>
+              </NavigationMenu> */}
             </div>
 
             <div
@@ -178,6 +186,14 @@ export default function Layout({
               }
             >
               {activeRoute === "/" && <DemoButton />}
+            </div>
+            <div className={styles["header-logos"]}>
+              <Link href={`/wallet`} className={styles.logo}>
+                <Avatar>
+                  <AvatarImage src={photo_url || ""} />
+                  <AvatarFallback>{shortName}</AvatarFallback>
+                </Avatar>
+              </Link>
             </div>
           </header>
         )}
