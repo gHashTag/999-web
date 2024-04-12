@@ -39,21 +39,6 @@ export default function Office() {
   }, [router, username]);
 
   const {
-    data: workspacesData,
-    loading: workspacesLoading,
-    error: workspacesError,
-    refetch: workspacesRefetch,
-  } = useQuery(WORKSPACES_COLLECTION_QUERY, {
-    variables: {
-      user_id,
-    },
-  });
-  console.log(workspacesError, "workspacesError");
-  if (workspacesError) return <p>Error : {workspacesError.message}</p>;
-
-  const workspaceNode = workspacesData?.workspacesCollection?.edges;
-
-  const {
     loading,
     data,
     setValue,
@@ -68,6 +53,21 @@ export default function Office() {
     username,
     user_id,
   });
+
+  const {
+    data: workspacesData,
+    loading: workspacesLoading,
+    error: workspacesError,
+    refetch: workspacesRefetch,
+  } = useQuery(WORKSPACES_COLLECTION_QUERY, {
+    variables: {
+      user_id,
+    },
+  });
+  console.log(workspacesError, "workspacesError");
+  if (workspacesError) return <p>Error : {workspacesError.message}</p>;
+
+  const workspaceNode = workspacesData?.workspacesCollection?.edges;
 
   const goToOffice = (workspace_id: string) => {
     router.push(`/${user_id}/${workspace_id}`);
