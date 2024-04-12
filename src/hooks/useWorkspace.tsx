@@ -10,7 +10,7 @@ import { useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-const useWorkspace = (username: string, user_id: string) => {
+const useWorkspace = (user_id: string, username: string) => {
   const { toast } = useToast();
   const { onClose } = useDisclosure();
   const { getValues, reset } = useForm();

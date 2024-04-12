@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 // @ts-expect-error
 import { Color, Scene, Fog, PerspectiveCamera, Vector3 } from "three";
 import ThreeGlobe from "three-globe";
@@ -186,11 +186,12 @@ export function Globe({ globeConfig, data }: WorldProps) {
         (defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings
       );
   }, [
+    data,
+    globeData,
     defaultProps.arcLength,
     defaultProps.arcTime,
     defaultProps.maxRings,
     defaultProps.rings,
-    globeRef.current,
   ]);
 
   useEffect(() => {

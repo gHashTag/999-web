@@ -103,7 +103,7 @@ export default function App({ Component, pageProps }: AppProps) {
       setLoggedIn(true);
     });
     return unsubscribe;
-  }, []);
+  }, [router, toast]);
 
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
   // const [persistor, setPersistor] =

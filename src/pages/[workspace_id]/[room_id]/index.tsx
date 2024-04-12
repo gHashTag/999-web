@@ -135,7 +135,7 @@ const RoomPage = () => {
     inviteToMeet("host");
     inviteToMeet("member");
     inviteToMeet("guest");
-  }, [roomNameData]);
+  }, [roomNameData, inviteToMeet]);
 
   const arrayInvite = [
     {

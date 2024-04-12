@@ -12,7 +12,6 @@ import { WORKSPACES_COLLECTION_QUERY } from "@/graphql/query";
 import WorkspaceModal from "@/components/modal/WorkspaceModal";
 
 import { DataTable } from "@/components/table/data-table";
-import { __DEV__ } from "@/pages/_app";
 import { useTable } from "@/hooks/useTable";
 import { useEffect } from "react";
 import { useWorkspace } from "@/hooks/useWorkspace";
@@ -26,17 +25,14 @@ export type updateUserDataType = {
 
 export default function Office() {
   const router = useRouter();
-  const username = localStorage.getItem("username");
-  const user_id = localStorage.getItem("user_id");
+  const username = localStorage.getItem("username") || "";
+  const user_id = localStorage.getItem("user_id") || "";
 
   useEffect(() => {
     if (!username) {
       router.push("/");
     }
   }, [router, username]);
-
-  const userName = __DEV__ ? "koshey999nft" : username;
-  const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
 
   const {
     data: workspacesData,
@@ -68,14 +64,11 @@ export default function Office() {
     onOpenChange,
     setIsEditing,
   } = useTable({
-    username: userName || "",
-    user_id: userId || "",
+    username,
+    user_id,
   });
 
-  const { onCreate, onDelete, onUpdate } = useWorkspace(
-    userName || "",
-    userId || ""
-  );
+  const { onCreate, onDelete, onUpdate } = useWorkspace(user_id, username);
 
   const goToOffice = (workspace_id: string) => {
     router.push(`/${workspace_id}`);

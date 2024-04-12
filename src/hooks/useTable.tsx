@@ -133,15 +133,18 @@ const useTable = ({
     setIsEditing(false);
   };
 
-  const openModal = useCallback(async (cardId: string) => {
-    setOpenModalId(cardId);
-    const card = await getTaskById(cardId);
-    setValue("title", card?.title);
-    setValue("description", card?.description);
-    setValue("label", card?.label);
-    onOpen();
-    setIsEditing(true);
-  }, [getTaskById, onOpen, setIsEditing, setOpenModalId, setValue]);
+  const openModal = useCallback(
+    async (cardId: string) => {
+      setOpenModalId(cardId);
+      const card = await getTaskById(cardId);
+      setValue("title", card?.title);
+      setValue("description", card?.description);
+      setValue("label", card?.label);
+      onOpen();
+      setIsEditing(true);
+    },
+    [getTaskById, onOpen, setIsEditing, setOpenModalId, setValue]
+  );
 
   const onCreate = useCallback(async () => {
     try {
@@ -184,9 +187,19 @@ const useTable = ({
         ),
       });
     }
-  };
+  }, [
+    getValues,
+    mutateCreateTask,
+    mutateCreateTaskError,
+    refetch,
+    reset,
+    setIsEditing,
+    setOpenModalId,
+    setValue,
+    toast,
+  ]);
 
-  const onUpdate = () => {
+  const onUpdate = useCallback(() => {
     const formData = getValues();
 
     const variables = {
@@ -202,7 +215,14 @@ const useTable = ({
         refetch();
       },
     });
-  };
+  }, [
+    mutateUpdateTaskStatus,
+    openModalId,
+    refetch,
+    setIsEditing,
+    setOpenModalId,
+    setValue,
+  ]);
 
   const onDelete = useCallback(
     (id: string) => {
