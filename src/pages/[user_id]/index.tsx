@@ -16,6 +16,7 @@ import { useTable } from "@/hooks/useTable";
 import { useEffect, useState } from "react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import {
+  setHeaderName,
   setIsEditing,
   setOpenModalId,
   setVisibleHeader,
@@ -41,6 +42,7 @@ export default function Office() {
       router.push("/");
     } else {
       setVisibleHeader(true);
+      setHeaderName("Workspaces");
     }
   }, [router, username]);
 
@@ -52,6 +54,7 @@ export default function Office() {
     isOpen,
     control,
     handleSubmit,
+    onCreateNewTask,
     getValues,
     onOpen,
     onOpenChange,
@@ -75,9 +78,11 @@ export default function Office() {
 
   const workspaceNode = workspacesData?.workspacesCollection?.edges;
 
-  const goToOffice = (workspace_id: string) => {
+  const goToOffice = (workspace_id: string, workspace_name: string) => {
+    console.log(workspace_name, "workspace_name");
     router.push(`/${user_id}/${workspace_id}`);
     localStorage.setItem("workspace_id", workspace_id);
+    localStorage.setItem("workspace_name", workspace_name);
   };
 
   const onCreateNewWorkspace = () => {
@@ -91,25 +96,23 @@ export default function Office() {
     <Layout loading={loading}>
       <main className="flex flex-col items-center justify-between">
         {loading && <Spinner size="lg" />}
-        <div className="relative z-10 flex items-center justify-center">
-          <div className="relative h-10  rounded-full flex items-center justify-center text-white font-bold text-4xl">
-            <div className="absolute w-full h-full bg-white/[0.8] dark:bg-black/[0.8] blur-sm rounded-full" />
-            <span className="dark:text-white text-black z-20 text-center">
-              Workspaces
-            </span>
-          </div>
-        </div>
-        <div style={{ position: "absolute", top: 100, right: 70 }}>
+
+        <div style={{ position: "absolute", top: 75, right: 70 }}>
           <Button onClick={onCreateNewWorkspace}>Create workspace</Button>
         </div>
 
         {!loading && (
           <CanvasRevealEffectDemo
             officeData={workspaceNode || []}
-            onClick={(workspace_id) => goToOffice(workspace_id)}
+            onClick={(workspace_id, workspace_name) =>
+              goToOffice(workspace_id, workspace_name)
+            }
           />
         )}
         <div style={{ padding: "10px" }} />
+        <div style={{ position: "absolute", top: 600, right: 70 }}>
+          <Button onClick={onCreateNewTask}>Create task</Button>
+        </div>
         {data && (
           <DataTable data={data.tasksCollection.edges} columns={columns} />
         )}

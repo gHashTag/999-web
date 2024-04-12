@@ -16,7 +16,7 @@ import CardRoom from "@/components/ui/card-room";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "../../_app";
 import { useTable } from "@/hooks/useTable";
-import { setLoading } from "@/apollo/reactive-store";
+import { setHeaderName, setLoading } from "@/apollo/reactive-store";
 
 const MeetsPage = () => {
   const router = useRouter();
@@ -55,11 +55,15 @@ const MeetsPage = () => {
     },
   });
 
+  console.log(roomsData, "roomsData");
+
   useEffect(() => {
     if (!username) {
       router.push("/");
+    } else {
+      const workspace_name = localStorage.getItem("workspace_name");
+      workspace_name && setHeaderName(workspace_name);
     }
-    refetch();
   }, [refetch, router, username]);
 
   const [openModalId, setOpenModalId] = useState("");

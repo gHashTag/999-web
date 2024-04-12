@@ -9,11 +9,14 @@ export function CanvasRevealEffectDemo({
   onClick,
 }: {
   officeData: any;
-  onClick: (workspace_id: string) => void;
+  onClick: (workspace_id: string, workspace_name: string) => void;
 }) {
   return (
     <>
-      <div className="py-20 flex flex-col lg:flex-row items-center justify-center w-full gap-4 mx-auto px-8">
+      <div
+        className="py-20 flex flex-col lg:flex-row   items-center justify-center w-full gap-4 mx-auto px-8"
+        style={{ width: "93%" }}
+      >
         {officeData.map(({ node }: any) => (
           <Card
             key={node.id}
@@ -46,12 +49,12 @@ const Card = ({
   workspace_id: string;
   icon: React.ReactNode;
   children?: React.ReactNode;
-  onClick: (workspace_id: string) => void;
+  onClick: (workspace_id: string, workspace_name: string) => void;
 }) => {
   const [hovered, setHovered] = React.useState(false);
   return (
     <div
-      onClick={() => onClick(workspace_id)}
+      onClick={() => onClick(workspace_id, title)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="border border-black/[0.2] group/canvas-card flex items-center justify-center dark:border-white/[0.2]  max-w-sm w-full mx-auto p-4 relative h-[23rem] relative"

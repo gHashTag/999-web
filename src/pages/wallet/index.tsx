@@ -12,6 +12,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { SignupFormDemo } from "@/components/ui/signup-form";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { Spinner } from "@/components/ui/spinner";
+import { setHeaderName } from "@/apollo/reactive-store";
 
 const QUERY = gql`
   query GetUserByEmail($username: String!) {
@@ -79,6 +80,8 @@ export default function Wallet() {
   useEffect(() => {
     if (!username) {
       router.push("/");
+    } else {
+      setHeaderName("Wallet");
     }
   }, [router, username]);
 

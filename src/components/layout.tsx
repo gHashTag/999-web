@@ -24,7 +24,7 @@ import Logo from "./icons/icon-logo";
 import MobileMenu from "./mobile-menu";
 
 import React, { useEffect } from "react";
-import { useToast } from "@/components/ui/use-toast";
+
 import DemoButton from "@/components/ui/demo-cta";
 import {
   NavigationMenu,
@@ -34,7 +34,11 @@ import {
 } from "@/components/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import { setActiveRoute, setVisibleHeader } from "@/apollo/reactive-store";
+import {
+  setActiveRoute,
+  setHeaderName,
+  setVisibleHeader,
+} from "@/apollo/reactive-store";
 import { Spinner } from "@/components/ui/spinner";
 import { cache } from "@/pages/_app";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -117,7 +121,7 @@ export default function Layout({
   //     router.push("/");
   //   }
   // }, [data]);
-  const visibleHeader = useReactiveVar(setVisibleHeader);
+  const headerName = useReactiveVar(setHeaderName);
   const activeMenuButton = useReactiveVar(setActiveRoute);
   const user_id = localStorage.getItem("user_id");
   const activeRoute = router.asPath;
@@ -141,7 +145,14 @@ export default function Layout({
                 <Logo />
               </Link>
             </div>
-            <div className={styles.menu}>
+            <div>
+              <div className="relative flex items-center justify-center">
+                <div className="relative  rounded-full flex items-center justify-center text-white font-bold text-4xl">
+                  <span className="dark:text-white text-black text-center">
+                    {headerName}
+                  </span>
+                </div>
+              </div>
               {/* <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
