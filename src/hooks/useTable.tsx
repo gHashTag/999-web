@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { useDisclosure } from "@nextui-org/react";
 import { Checkbox } from "@radix-ui/react-checkbox";
@@ -133,7 +133,7 @@ const useTable = ({
     setIsEditing(false);
   };
 
-  const openModal = async (cardId: string) => {
+  const openModal = useCallback(async (cardId: string) => {
     setOpenModalId(cardId);
     const card = await getTaskById(cardId);
     setValue("title", card?.title);
@@ -141,9 +141,9 @@ const useTable = ({
     setValue("label", card?.label);
     onOpen();
     setIsEditing(true);
-  };
+  }, [getTaskById, onOpen, setIsEditing, setOpenModalId, setValue]);
 
-  const onCreate = async () => {
+  const onCreate = useCallback(async () => {
     try {
       const formData = getValues();
 
@@ -204,21 +204,24 @@ const useTable = ({
     });
   };
 
-  const onDelete = (id: string) => {
-    deleteTask({
-      variables: {
-        filter: {
-          id: {
-            eq: Number(id),
+  const onDelete = useCallback(
+    (id: string) => {
+      deleteTask({
+        variables: {
+          filter: {
+            id: {
+              eq: Number(id),
+            },
           },
         },
-      },
-      onCompleted: () => {
-        refetch();
-      },
-    });
-    closeModal();
-  };
+        onCompleted: () => {
+          refetch();
+        },
+      });
+      closeModal();
+    },
+    [deleteTask, refetch]
+  );
 
   const closeModal = () => {
     setOpenModalId(null);

@@ -60,7 +60,7 @@ const MeetsPage = () => {
       router.push("/");
     }
     refetch();
-  }, [refetch]);
+  }, [refetch, router, username]);
 
   const [openModalId, setOpenModalId] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();

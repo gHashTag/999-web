@@ -86,7 +86,7 @@ export default function Wallet() {
     if (!username) {
       router.push("/");
     }
-  }, [router]);
+  }, [router, username]);
 
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
@@ -107,7 +107,7 @@ export default function Wallet() {
   if (error) return <p>Error : {error.message}</p>;
 
   const userNode = data?.usersCollection?.edges[0]?.node;
-  console.log(userNode, "userNode");
+
   const handleFormData = (data: FieldValues) => {
     // console.log(data, "data");
     try {

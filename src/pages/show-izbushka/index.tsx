@@ -122,7 +122,16 @@ const ShowIzbushka = () => {
     };
 
     fetchToken();
-  }, [hmsActions, fullName, roomId]);
+  }, [
+    hmsActions,
+    fullName,
+    roomId,
+    getRooms,
+    getUser,
+    initData?.user?.firstName,
+    initData?.user?.lastName,
+    initData?.user?.username,
+  ]);
 
   useEffect(() => {
     const handleUnload = async () => {

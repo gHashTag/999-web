@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Layout from "@/components/layout";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
@@ -28,7 +28,7 @@ if (!managementToken) {
 
 const RoomPage = () => {
   const router = useRouter();
-  console.log(router, "router");
+
   const room_id = router.query.room_id;
   const workspace_id = router.query.workspace_id as string;
 
@@ -46,23 +46,12 @@ const RoomPage = () => {
   const userName = __DEV__ ? "koshey999nft" : username;
   const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
 
-  const recordingId = __DEV__
-    ? "660d30d5a71969a17ddc027e" // Используем это значение, если __DEV__ true
-    : Array.isArray(router.query.recording_id)
-    ? router.query.recording_id[0] // Если массив, берем первый элемент
-    : router.query.recording_id; // Иначе используем значение как есть
-
-  // Гарантируем, что recordingId будет строкой, используя приведение типа
-  const recordingIdString: string = recordingId as string;
-
   const { loading, data, columns } = useTable({
     username: userName || "",
     user_id: userId || "",
     workspace_id: workspace_id || "",
     room_id,
   });
-
-  // const { data: userInfo } = useQuery(CURRENT_USER);
 
   const {
     data: roomsData,
@@ -106,44 +95,47 @@ const RoomPage = () => {
 
   const items = assetsData?.room_assetsCollection?.edges;
 
-  const inviteToMeet = async (type: string) => {
-    // Убедитесь, что codesData действительно указывает на массив
-    // console.log(roomNameData, "roomNameData");
-    const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
-      ?.codes;
-    // console.log(codesData, "codesData");
-    if (typeof codesData === "string") {
-      const parsedCodesData = JSON.parse(codesData);
+  const inviteToMeet = useCallback(
+    async (type: string) => {
+      // Убедитесь, что codesData действительно указывает на массив
+      // console.log(roomNameData, "roomNameData");
+      const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
+        ?.codes;
+      // console.log(codesData, "codesData");
+      if (typeof codesData === "string") {
+        const parsedCodesData = JSON.parse(codesData);
 
-      if (parsedCodesData) {
-        // Проверка, что codesData действительно массив
-        const codeObj = parsedCodesData.data.find(
-          (codeObj: { role: string; code: string }) => codeObj.role === type
-        );
-        if (codeObj) {
-          if (type === "guest") {
-            setInviteGuestCode(codeObj.code);
-          } else if (type === "member") {
-            setInviteMemberCode(codeObj.code);
-          } else if (type === "host") {
-            setInviteHostCode(codeObj.code);
+        if (parsedCodesData) {
+          // Проверка, что codesData действительно массив
+          const codeObj = parsedCodesData.data.find(
+            (codeObj: { role: string; code: string }) => codeObj.role === type
+          );
+          if (codeObj) {
+            if (type === "guest") {
+              setInviteGuestCode(codeObj.code);
+            } else if (type === "member") {
+              setInviteMemberCode(codeObj.code);
+            } else if (type === "host") {
+              setInviteHostCode(codeObj.code);
+            }
+          } else {
+            console.log("No code found for type:", type);
           }
         } else {
-          console.log("No code found for type:", type);
+          console.error("codesData is not an array");
         }
       } else {
-        console.error("codesData is not an array");
+        console.error("codesData is undefined or not a string");
       }
-    } else {
-      console.error("codesData is undefined or not a string");
-    }
-  };
+    },
+    [roomNameData]
+  );
 
   useEffect(() => {
     inviteToMeet("host");
     inviteToMeet("member");
     inviteToMeet("guest");
-  }, [roomNameData, inviteToMeet]);
+  }, [roomNameData]);
 
   const arrayInvite = [
     {

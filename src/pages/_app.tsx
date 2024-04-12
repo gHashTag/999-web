@@ -144,7 +144,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
 
     init().catch(console.error);
-  }, []);
+  }, [router, toast]);
 
   // const clearCache = useCallback(() => {
   //   if (!persistor) {
