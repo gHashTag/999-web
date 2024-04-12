@@ -25,7 +25,7 @@ const Meets = () => {
     };
 
     setRoute();
-  }, []);
+  }, [router]);
 };
 
 export default Meets;

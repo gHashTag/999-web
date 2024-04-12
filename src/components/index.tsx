@@ -32,7 +32,7 @@ export default function Conf() {
     if (!loggedIn) {
       setVisibleHeader(false);
     }
-  }, []);
+  }, [loggedIn]);
 
   return (
     <Layout loading={false}>

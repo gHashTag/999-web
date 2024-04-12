@@ -366,7 +366,7 @@ const useTable = ({
         ),
       },
     ],
-    []
+    [onDelete, openModal]
   );
 
   return {

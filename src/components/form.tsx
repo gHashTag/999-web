@@ -70,7 +70,7 @@ export default function Form({ sharePage }: Props) {
     if (inputRef.current) {
       (inputRef.current as any)?.focus();
     }
-  }, []);
+  }, [router, workspace_id]);
 
   const handleRegister = useCallback(async () => {
     if (inviteCode) {
@@ -90,7 +90,7 @@ export default function Form({ sharePage }: Props) {
         return;
       }
     }
-  }, [inviteCode]);
+  }, [inviteCode, checkUsername, toast]);
 
   const onSubmit = useCallback(
     (e: React.FormEvent) => {

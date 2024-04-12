@@ -33,7 +33,7 @@ export default function Office() {
     if (!username) {
       router.push("/");
     }
-  }, [router]);
+  }, [router, username]);
 
   const userName = __DEV__ ? "koshey999nft" : username;
   const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
