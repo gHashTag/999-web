@@ -156,21 +156,7 @@ export default function Wallet() {
   return (
     <Layout loading={loading}>
       <main className="flex flex-col items-center justify-between p-14">
-        {userFriendlyAddress && <p>Balance: {userFriendlyAddress}</p>}
         <div style={{ padding: "10px" }} />
-        {userFriendlyAddress && (
-          <>
-            <Card>
-              <CardBody>
-                <CopyToClipboard text={userFriendlyAddress} onCopy={onCopyText}>
-                  <span>{userFriendlyAddress}</span>
-                </CopyToClipboard>
-              </CardBody>
-            </Card>
-            <div style={{ padding: "5px" }} />
-            {copyStatus && <p>Text copied to clipboard!</p>}
-          </>
-        )}
 
         {loading && <Spinner size="lg" />}
 
@@ -199,6 +185,23 @@ export default function Wallet() {
               <div style={{ padding: "10px" }} />
 
               <TonConnectButton style={{ marginLeft: 12 }} />
+              <div style={{ padding: "10px" }} />
+              {/* {userFriendlyAddress && (
+                <>
+                  <Card>
+                    <CardBody>
+                      <CopyToClipboard
+                        text={userFriendlyAddress}
+                        onCopy={onCopyText}
+                      >
+                        <span>{userFriendlyAddress}</span>
+                      </CopyToClipboard>
+                    </CardBody>
+                  </Card>
+                  <div style={{ padding: "5px" }} />
+                  {copyStatus && <p>Text copied to clipboard!</p>}
+                </>
+              )} */}
             </div>
 
             <SignupFormDemo

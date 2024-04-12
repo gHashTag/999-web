@@ -48,6 +48,45 @@ type Props = {
   loading: boolean;
 };
 
+type CustomLinkProps = {
+  route: string;
+  pathname: string;
+  legacyBehavior: boolean;
+  passHref: boolean;
+  activeMenuButton: string;
+  name: string;
+  navigationMenuTriggerStyle: () => string;
+  setActiveRoute: (route: string) => void;
+};
+
+const CustomLink = ({
+  route,
+  pathname,
+  legacyBehavior,
+  passHref,
+  activeMenuButton,
+  name,
+  navigationMenuTriggerStyle,
+  setActiveRoute,
+}: CustomLinkProps) => (
+  <a onClick={() => setActiveRoute(route)}>
+    <Link
+      href={{
+        pathname: pathname,
+      }}
+      legacyBehavior={legacyBehavior}
+      passHref={passHref}
+    >
+      <NavigationMenuLink
+        className={navigationMenuTriggerStyle()}
+        style={activeMenuButton === route ? { color: "#f6ff00" } : {}}
+      >
+        {name.toUpperCase()}
+      </NavigationMenuLink>
+    </Link>
+  </a>
+);
+
 export default function Layout({
   children,
   className,
@@ -80,7 +119,7 @@ export default function Layout({
   // }, [data]);
   const visibleHeader = useReactiveVar(setVisibleHeader);
   const activeMenuButton = useReactiveVar(setActiveRoute);
-
+  const user_id = localStorage.getItem("user_id");
   const activeRoute = router.asPath;
 
   return (
@@ -97,32 +136,36 @@ export default function Layout({
             <div className={styles.menu}>
               <NavigationMenu>
                 <NavigationMenuList>
-                  {NAVIGATION.map(({ name, route }) => (
-                    <NavigationMenuItem key={name}>
-                      {visibleHeader && (
-                        <a onClick={() => setActiveRoute(route)}>
-                          <Link
-                            href={{
-                              pathname: `/workspace_id${route}`,
-                            }}
-                            legacyBehavior
-                            passHref
-                          >
-                            <NavigationMenuLink
-                              className={navigationMenuTriggerStyle()}
-                              style={
-                                activeMenuButton === route
-                                  ? { color: "#f6ff00" }
-                                  : {}
-                              }
-                            >
-                              {name.toUpperCase()}
-                            </NavigationMenuLink>
-                          </Link>
-                        </a>
-                      )}
-                    </NavigationMenuItem>
-                  ))}
+                  <NavigationMenuItem>
+                    {visibleHeader && (
+                      <>
+                        <CustomLink
+                          route="office"
+                          pathname={`/${user_id}`}
+                          legacyBehavior
+                          passHref
+                          activeMenuButton={activeMenuButton}
+                          name="Office"
+                          navigationMenuTriggerStyle={
+                            navigationMenuTriggerStyle
+                          }
+                          setActiveRoute={setActiveRoute}
+                        />
+                        <CustomLink
+                          route="wallet"
+                          pathname={`/wallet`}
+                          legacyBehavior
+                          passHref
+                          activeMenuButton={activeMenuButton}
+                          name="Wallet"
+                          navigationMenuTriggerStyle={
+                            navigationMenuTriggerStyle
+                          }
+                          setActiveRoute={setActiveRoute}
+                        />
+                      </>
+                    )}
+                  </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
             </div>

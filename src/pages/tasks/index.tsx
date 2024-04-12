@@ -2,7 +2,7 @@
 
 import Layout from "@/components/layout";
 import { Metadata } from "next";
-import { DataTable } from "../../../../components/table/data-table";
+import { DataTable } from "../../components/table/data-table";
 // @ts-ignore
 import { useForm } from "react-hook-form";
 

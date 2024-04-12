@@ -15,7 +15,11 @@ import { DataTable } from "@/components/table/data-table";
 import { useTable } from "@/hooks/useTable";
 import { useEffect, useState } from "react";
 import { useWorkspace } from "@/hooks/useWorkspace";
-import { setIsEditing, setOpenModalId } from "@/apollo/reactive-store";
+import {
+  setIsEditing,
+  setOpenModalId,
+  setVisibleHeader,
+} from "@/apollo/reactive-store";
 
 export type updateUserDataType = {
   user_id: string;
@@ -35,6 +39,8 @@ export default function Office() {
   useEffect(() => {
     if (!username) {
       router.push("/");
+    } else {
+      setVisibleHeader(true);
     }
   }, [router, username]);
 
@@ -82,7 +88,7 @@ export default function Office() {
   };
 
   return (
-    <div>
+    <Layout loading={loading}>
       <main className="flex flex-col items-center justify-between p-14">
         {loading && <Spinner size="lg" />}
         <div className="relative z-10 flex items-center justify-center">
@@ -125,6 +131,6 @@ export default function Office() {
           )}
         </>
       </main>
-    </div>
+    </Layout>
   );
 }
