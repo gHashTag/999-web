@@ -197,6 +197,7 @@ const useTable = ({
     setOpenModalId,
     setValue,
     toast,
+    user_id,
   ]);
 
   const onUpdate = useCallback(() => {
@@ -222,7 +223,13 @@ const useTable = ({
     setIsEditing,
     setOpenModalId,
     setValue,
+    getValues,
   ]);
+
+  const closeModal = () => {
+    setOpenModalId(null);
+    onClose();
+  };
 
   const onDelete = useCallback(
     (id: string) => {
@@ -240,13 +247,8 @@ const useTable = ({
       });
       closeModal();
     },
-    [deleteTask, refetch]
+    [deleteTask, refetch, closeModal]
   );
-
-  const closeModal = () => {
-    setOpenModalId(null);
-    onClose();
-  };
 
   const columns = useMemo(
     () => [
