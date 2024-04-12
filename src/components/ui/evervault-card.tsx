@@ -17,7 +17,7 @@ type EvervaultCardProps = {
   inviteGuestCode: string;
   user_id: string;
   workspace_id: string;
-  room_id: string;
+  room_id: string | string[];
 };
 
 export const EvervaultCard = ({

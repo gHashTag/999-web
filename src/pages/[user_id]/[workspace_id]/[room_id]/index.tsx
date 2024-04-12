@@ -206,6 +206,9 @@ const RoomPage = () => {
               inviteGuestCode={inviteGuestCode}
               inviteHostCode={inviteHostCode}
               inviteMemberCode={inviteMemberCode}
+              user_id={user_id || ""}
+              workspace_id={workspace_id || ""}
+              room_id={room_id || ""}
             />
           ))}
         </div>
