@@ -29,6 +29,12 @@ export default function Office() {
   const username = localStorage.getItem("username");
   const user_id = localStorage.getItem("user_id");
 
+  useEffect(() => {
+    if (!username) {
+      router.push("/");
+    }
+  }, [router]);
+
   const userName = __DEV__ ? "koshey999nft" : username;
   const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
 
@@ -70,12 +76,6 @@ export default function Office() {
     userName || "",
     userId || ""
   );
-
-  useEffect(() => {
-    if (!username) {
-      router.push("/");
-    }
-  }, [router]);
 
   const goToOffice = (workspace_id: string) => {
     router.push(`/${workspace_id}`);
