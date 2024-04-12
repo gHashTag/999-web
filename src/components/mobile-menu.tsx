@@ -18,9 +18,11 @@ import { useReactiveVar } from "@apollo/client";
 import { setUserId } from "@/apollo/reactive-store";
 
 function ModalDialog(
-  props: Parameters<typeof useOverlay>[0] & Parameters<typeof useDialog>[0]
+  props: Parameters<typeof useOverlay>[0] &
+    Parameters<typeof useDialog>[0] & { closeMenu: () => void }
 ) {
   const router = useRouter();
+  const user_id = localStorage.getItem("user_id");
   const activeRoute = router.asPath;
 
   const ref = useRef<HTMLElement | null>(null);
@@ -40,19 +42,32 @@ function ModalDialog(
           {...modalProps}
           ref={ref}
         >
-          {NAVIGATION.map(({ name, route }) => (
-            <Link
-              key={name}
-              href={{
-                pathname: `/workspace_id${route}`,
-              }}
-              className={cn(styles["nav-item"], {
-                [styles["nav-active"]]: activeRoute.startsWith(route),
-              })}
-            >
-              {name}
-            </Link>
-          ))}
+          <Link
+            href={{
+              pathname: `/${user_id}`,
+            }}
+            className={cn(styles["nav-item"], {
+              [styles["nav-active"]]: activeRoute.startsWith(`/${user_id}`),
+            })}
+            onClick={() => {
+              props.closeMenu();
+            }}
+          >
+            Office
+          </Link>
+          <Link
+            href={{
+              pathname: `/wallet`,
+            }}
+            className={cn(styles["nav-item"], {
+              [styles["nav-active"]]: activeRoute.startsWith(`/wallet`),
+            })}
+            onClick={() => {
+              props.closeMenu();
+            }}
+          >
+            Wallet
+          </Link>
         </nav>
       </FocusScope>
     </div>
@@ -68,6 +83,10 @@ export default function Overlay() {
     },
     ref
   );
+
+  const closeMenu = () => {
+    state.close();
+  };
 
   return (
     <>
@@ -115,7 +134,11 @@ export default function Overlay() {
       </button>
       {state.isOpen && (
         <OverlayContainer>
-          <ModalDialog isOpen onClose={(...props) => state.close(...props)} />
+          <ModalDialog
+            isOpen
+            onClose={(...props) => state.close(...props)}
+            closeMenu={closeMenu}
+          />
         </OverlayContainer>
       )}
     </>

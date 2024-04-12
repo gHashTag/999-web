@@ -21,7 +21,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: black;
+  background-color: rgba(0, 0, 0, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +50,8 @@
 
 .nav-active {
   color: #fff;
-  background: linear-gradient(90deg, var(--brand), var(--brand)) left bottom transparent no-repeat;
+  background: linear-gradient(90deg, var(--brand), var(--brand)) left bottom
+    transparent no-repeat;
   background-size: 100% 2px;
 }
 
