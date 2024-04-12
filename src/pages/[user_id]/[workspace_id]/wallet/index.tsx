@@ -19,6 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { SignupFormDemo } from "@/components/ui/signup-form";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { Spinner } from "@/components/ui/spinner";
+import { Card, CardBody } from "@nextui-org/react";
 
 const QUERY = gql`
   query GetUserByEmail($username: String!) {
@@ -88,6 +89,14 @@ export default function Wallet() {
     }
   }, [router, username]);
 
+  const userFriendlyAddress = useTonAddress();
+  const rawAddress = useTonAddress(false);
+
+  useEffect(() => {
+    console.log(userFriendlyAddress, "userFriendlyAddress");
+    console.log(rawAddress, "rawAddress");
+  }, [userFriendlyAddress, rawAddress]);
+
   const { toast } = useToast();
   const [copyStatus, setCopyStatus] = useState(false);
   const [mutateUser, { loading: mutationLoading, error: mutationError }] =
@@ -139,24 +148,29 @@ export default function Wallet() {
       });
     }
   };
+
+  const onCopyText = () => {
+    setCopyStatus(true);
+  };
+
   return (
     <Layout loading={loading}>
       <main className="flex flex-col items-center justify-between p-14">
-        {/* {balance && <p>Balance: {balance}</p>}
+        {userFriendlyAddress && <p>Balance: {userFriendlyAddress}</p>}
         <div style={{ padding: "10px" }} />
-        {address && (
+        {userFriendlyAddress && (
           <>
             <Card>
               <CardBody>
-                <CopyToClipboard text={address} onCopy={onCopyText}>
-                  <span>{address}</span>
+                <CopyToClipboard text={userFriendlyAddress} onCopy={onCopyText}>
+                  <span>{userFriendlyAddress}</span>
                 </CopyToClipboard>
               </CardBody>
             </Card>
             <div style={{ padding: "5px" }} />
             {copyStatus && <p>Text copied to clipboard!</p>}
           </>
-        )} */}
+        )}
 
         {loading && <Spinner size="lg" />}
 

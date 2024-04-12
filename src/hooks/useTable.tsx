@@ -63,28 +63,28 @@ const useTable = ({
 
   if (!recording_id) {
     tasksQuery = GET_RECORDING_TASKS_QUERY;
-    delete queryVariables.recording_id;
+    delete queryVariables?.recording_id;
   }
 
   if (!room_id && !recording_id) {
     tasksQuery = GET_ROOM_TASKS_QUERY;
-    delete queryVariables.recording_id;
-    delete queryVariables.room_id;
+    delete queryVariables?.recording_id;
+    delete queryVariables?.room_id;
   }
 
   if (!recording_id && !room_id && !workspace_id) {
     tasksQuery = GET_USER_TASKS_QUERY;
-    delete queryVariables.workspace_id;
-    delete queryVariables.recording_id;
-    delete queryVariables.room_id;
+    delete queryVariables?.workspace_id;
+    delete queryVariables?.recording_id;
+    delete queryVariables?.room_id;
   }
 
   if (!recording_id && !room_id && !workspace_id && !user_id) {
     tasksQuery = GET_ALL_TASKS_QUERY;
-    delete queryVariables.workspace_id;
-    delete queryVariables.recording_id;
-    delete queryVariables.room_id;
-    delete queryVariables.user_id;
+    delete queryVariables?.workspace_id;
+    delete queryVariables?.recording_id;
+    delete queryVariables?.room_id;
+    delete queryVariables?.user_id;
   }
 
   const {
@@ -101,6 +101,10 @@ const useTable = ({
       workspace_id,
     },
   });
+  if (tasksError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(tasksError.message);
+  }
 
   const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
     useMutation(MUTATION_TASK_UPDATE, {
@@ -164,7 +168,6 @@ const useTable = ({
             description: "Task created successfully",
           });
           refetch();
-
           reset({
             title: "",
             description: "",
