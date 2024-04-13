@@ -82,9 +82,7 @@ export function DataTable<TData, TValue>({
           justifyContent: "flex-end",
           paddingBottom: 20,
         }}
-      >
-        <Button onClick={onCreateNewTask}>Create task</Button>
-      </div>
+      ></div>
       <DataTableToolbar table={table} />
       <div className="rounded-md border" style={{ borderColor: "#3b2a13" }}>
         <Table>

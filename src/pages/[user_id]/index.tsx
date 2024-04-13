@@ -23,6 +23,7 @@ import {
 import { useTasks } from "@/hooks/useTasks";
 import { useUser } from "@/hooks/useUser";
 import TaskModal from "@/components/modal/TaskModal";
+import { Button } from "@/components/ui/moving-border";
 
 export type updateUserDataType = {
   user_id: string;
@@ -125,9 +126,12 @@ export default function Office() {
             }
           />
         )}
-        <div style={{ padding: "10px" }} />
 
+        <div style={{ alignSelf: "flex-end", paddingRight: "70px" }}>
+          <Button onClick={() => onCreateNewTask()}>Create task</Button>
+        </div>
         {tasksData && <DataTable data={tasksData} columns={columns} />}
+
         <>
           {isOpenModalWorkspace && (
             <WorkspaceModal
@@ -146,6 +150,7 @@ export default function Office() {
               isEditing={isEditingWorkspace}
             />
           )}
+
           {isOpenModalTask && (
             <TaskModal
               isOpen={isOpenModalTask}
