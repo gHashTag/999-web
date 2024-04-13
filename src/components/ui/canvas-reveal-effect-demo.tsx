@@ -3,6 +3,7 @@ import React from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
+import { useUser } from "@/hooks/useUser";
 
 export function CanvasRevealEffectDemo({
   officeData,
@@ -11,6 +12,19 @@ export function CanvasRevealEffectDemo({
   officeData: any;
   onClick: (workspace_id: string, workspace_name: string) => void;
 }) {
+  const { lang } = useUser();
+  const getTitle = (title: string) => {
+    if (title === "Fire") {
+      return lang === "ru" ? "Огонь" : "Fire";
+    }
+    if (title === "Water") {
+      return lang === "ru" ? "Вода" : "Water";
+    }
+    if (title === "Earth") {
+      return lang === "ru" ? "Медные трубы" : "Earth";
+    } else return title;
+  };
+
   return (
     <>
       <div
@@ -21,7 +35,7 @@ export function CanvasRevealEffectDemo({
           <Card
             key={node.id}
             workspace_id={node.workspace_id}
-            title={node.title}
+            title={getTitle(node.title)}
             onClick={onClick}
             icon={<NineNineNineIcon />}
           >

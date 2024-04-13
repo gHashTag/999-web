@@ -2,7 +2,6 @@
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 
-import { Button } from "@/components/ui/moving-border";
 import { useReactiveVar } from "@apollo/client";
 
 import { Spinner } from "@/components/ui/spinner";
@@ -94,7 +93,7 @@ export default function Office() {
     if (id_task) {
       setOpenModalTaskId(id_task);
     }
-  }, [id_task]);
+  }, [id_task, setOpenModalTaskId]);
 
   const goToOffice = (workspace_id: string, workspace_name: string) => {
     router.push(`/${user_id}/${workspace_id}`);

@@ -9,6 +9,7 @@ const useUser = () => {
   const photo_url = localStorage.getItem("photo_url") || "";
   const firstName = localStorage.getItem("first_name");
   const lastName = localStorage.getItem("last_name");
+  const lang = navigator.language.substring(0, 2);
 
   return {
     username,
@@ -21,6 +22,7 @@ const useUser = () => {
     photo_url,
     firstName,
     lastName,
+    lang,
   };
 };
 
