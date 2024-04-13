@@ -29,7 +29,6 @@ import {
   GET_RECORDING_TASKS_QUERY,
   GET_ROOM_TASKS_QUERY,
   GET_USER_TASKS_QUERY,
-  TASKS_COLLECTION_QUERY,
 } from "@/graphql/query";
 
 type UseTasksReturn = {
@@ -41,7 +40,7 @@ type UseTasksReturn = {
   onUpdate: () => void;
   onCreateNewTask: () => void;
   deleteTask: any;
-  onClickEdit: (isEditing: boolean, id: string) => void;
+  onClickEdit: (isEditing: boolean, id: number) => void;
   isEditing: boolean;
   columns: any;
   isOpen: boolean;
@@ -54,7 +53,7 @@ const useTasks = (): UseTasksReturn => {
   const { getTaskById } = useSupabase();
   const openModalId = useReactiveVar(setOpenModalId);
   const { username, user_id, workspace_id, room_id, recording_id } = useUser();
-  console.log(user_id, "user_id");
+
   const isEditing = useReactiveVar(setIsEditing);
 
   const { getValues, setValue, reset } = useForm();
@@ -112,11 +111,10 @@ const useTasks = (): UseTasksReturn => {
     skip: !queryVariables,
   });
 
-  const onClickEdit = (isEditing: boolean, id: string) => {
+  const onClickEdit = (isEditing: boolean, id: number) => {
     console.log(isEditing, "isEditing");
     setIsEditing(true);
     setOpenModalId(id);
-    openModal(id);
   };
 
   if (tasksError instanceof ApolloError) {
@@ -155,9 +153,9 @@ const useTasks = (): UseTasksReturn => {
   };
 
   const openModal = useCallback(
-    async (cardId: string) => {
+    async (cardId: number) => {
       setOpenModalId(cardId);
-      const card = await getTaskById(cardId);
+      const card = await getTaskById(cardId.toString());
       setValue("title", card?.title);
       setValue("description", card?.description);
       setValue("label", card?.label);

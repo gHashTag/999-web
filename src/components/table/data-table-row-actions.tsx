@@ -22,18 +22,43 @@ import {
 
 import { labels } from "../../helpers/data/data";
 import { taskSchema } from "../../helpers/data/schema";
+import { AssignedUser, TaskStatus } from "@/types";
 
-interface DataTableRowActionsProps<TData> {
-  row: Row<TData>;
+export interface RowTaskType {
+  __typename: string;
+  original: {
+    node: {
+      id: string;
+      user_id: string;
+      created_at?: string;
+      title: string;
+      description: string;
+      updated_at?: string;
+      due_date?: string;
+      priority?: number;
+      assigned_to?: AssignedUser[];
+      label?: string[];
+      completed_at?: string;
+      is_archived?: boolean;
+      status: TaskStatus;
+      order: number;
+    };
+  };
+}
+
+interface DataTableRowActionsProps {
+  row: RowTaskType;
   onDelete: (id: string) => void;
-  onClickEdit: (isEditing: boolean, id: string) => void;
+  onClickEdit: (isEditing: boolean, id: number) => void;
 }
 
 export function DataTableRowActions<TData>({
   row,
   onDelete,
   onClickEdit,
-}: DataTableRowActionsProps<TData>) {
+}: DataTableRowActionsProps) {
+  console.log(row, "row");
+  console.log(row.original.node.id, "row.original.node.id");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
