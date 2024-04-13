@@ -35,11 +35,11 @@ export async function getWorkspaceByName(name: string) {
 export async function setMyWorkspace(user_id: string) {
   const { data, error } = await supabase.from("workspaces").insert([
     {
-      name: "Fire",
+      title: "Fire",
       user_id: user_id,
     },
   ]);
-  console.log(error, "error");
+  console.log(error, "setMyWorkspace error:::");
   return data;
 }
 

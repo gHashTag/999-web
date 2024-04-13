@@ -24,7 +24,7 @@ const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
   const loading = useReactiveVar(setLoading);
-  const { username, user_id } = useUser();
+  const { username, user_id, lang, workspace_name } = useUser();
 
   const workspace_id = router.query.workspace_id as string;
   const { tasksData, columns } = useTasks({
@@ -41,15 +41,13 @@ const MeetsPage = () => {
     },
   });
 
-  const { workspace_name } = useUser();
-
   useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
       workspace_name && setHeaderName(workspace_name);
     }
-  }, [refetch, router, username]);
+  }, [refetch, router, username, workspace_name]);
 
   const [openModalId, setOpenModalId] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -58,8 +56,6 @@ const MeetsPage = () => {
   const onCreateMeet = async () => {
     setLoading(true);
     const formData = getValues();
-
-    const lang = navigator.language.substring(0, 2);
 
     try {
       if (username && user_id) {
