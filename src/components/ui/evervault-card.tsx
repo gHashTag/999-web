@@ -94,6 +94,7 @@ export const EvervaultCard = ({
         inviteToMeet(type);
       } else if (type === "member") {
         inviteToMeet(type);
+        handleCopy(`${window.location.origin}${targetPath}`);
         onOpenModalPassport();
       } else {
         inviteToMeet(type);
