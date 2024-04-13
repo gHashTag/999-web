@@ -10,12 +10,19 @@ import { useDisclosure } from "@nextui-org/react";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useUser } from "./useUser";
+import { WorkspaceArray } from "@/types";
 
-const useWorkspace = () => {
+const useWorkspace = (): UseWorkspaceReturn => {
   const { user_id, username } = useUser();
   const { toast } = useToast();
-  const { onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
+
+  const [openModalWorkspaceId, setOpenModalWorkspaceId] = useState<
+    number | null
+  >(null);
+  const [isEditing, setIsEditing] = useState(false);
+
   const [openModalId, setOpenModalId] = useState<string | null>(null);
   const {
     data: workspacesData,
@@ -65,7 +72,7 @@ const useWorkspace = () => {
     console.log(mutateDeleteWorkspaceError.message);
   }
 
-  const onCreate = async () => {
+  const onCreateWorkspace = async () => {
     try {
       const formData = getValues();
 
@@ -108,7 +115,7 @@ const useWorkspace = () => {
     }
   };
 
-  const onUpdate = () => {
+  const onUpdateWorkspace = () => {
     const formData = getValues();
 
     const variables = {
@@ -126,7 +133,7 @@ const useWorkspace = () => {
     });
   };
 
-  const onDelete = (id: string) => {
+  const onDeleteWorkspace = (id: number) => {
     mutateDeleteWorkspace({
       variables: {
         filter: {
@@ -152,14 +159,42 @@ const useWorkspace = () => {
     workspacesLoading,
     workspacesError,
     workspacesRefetch,
-    control,
-    handleSubmit,
-    setValue,
-    getValues,
-    onCreate,
-    onDelete,
-    onUpdate,
+    isOpenModalWorkspace: isOpen,
+    onOpenModalWorkspace: onOpen,
+    onOpenChangeModalWorkspace: onOpenChange,
+    onCreateWorkspace,
+    onDeleteWorkspace,
+    onUpdateWorkspace,
+    setValueWorkspace: setValue,
+    controlWorkspace: control,
+    handleSubmitWorkspace: handleSubmit,
+    getValuesWorkspace: getValues,
+    openModalWorkspaceId,
+    setOpenModalWorkspaceId,
+    isEditingWorkspace: isEditing,
+    setIsEditingWorkspace: setIsEditing,
   };
+};
+
+type UseWorkspaceReturn = {
+  workspacesData: WorkspaceArray;
+  workspacesLoading: boolean;
+  workspacesError: any;
+  workspacesRefetch: () => void;
+  isOpenModalWorkspace: boolean;
+  onOpenModalWorkspace: () => void;
+  onOpenChangeModalWorkspace: () => void;
+  onCreateWorkspace: () => void;
+  onUpdateWorkspace: () => void;
+  onDeleteWorkspace: (id: number) => void;
+  setValueWorkspace: (id: string, value: any) => void;
+  controlWorkspace: any;
+  handleSubmitWorkspace: any;
+  getValuesWorkspace: any;
+  openModalWorkspaceId: number | null;
+  setOpenModalWorkspaceId: (id: number | null) => void;
+  isEditingWorkspace: boolean;
+  setIsEditingWorkspace: (isEditing: boolean) => void;
 };
 
 export { useWorkspace };

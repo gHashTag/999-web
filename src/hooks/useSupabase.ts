@@ -212,7 +212,7 @@ export function useSupabase() {
     }
   };
 
-  const getTaskById = async (id: string) => {
+  const getTaskById = async (id: number) => {
     try {
       let { data, error } = await supabase
         .from("tasks")

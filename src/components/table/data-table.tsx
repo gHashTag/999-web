@@ -16,7 +16,7 @@ import {
   useReactTable,
   // @ts-ignore
 } from "@tanstack/react-table";
-
+import { Button } from "@/components/ui/moving-border";
 import {
   Table,
   TableBody,
@@ -28,6 +28,7 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { useTasks } from "@/hooks/useTasks";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -68,11 +69,22 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const { onCreateNewTask } = useTasks();
+
   return (
     <div
       className="space-y-4"
       style={{ width: "100%", paddingLeft: "75px", paddingRight: "75px" }}
     >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          paddingBottom: 20,
+        }}
+      >
+        <Button onClick={onCreateNewTask}>Create task</Button>
+      </div>
       <DataTableToolbar table={table} />
       <div className="rounded-md border" style={{ borderColor: "#3b2a13" }}>
         <Table>

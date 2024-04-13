@@ -2,19 +2,15 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   CREATE_TASK_MUTATION,
   DELETE_TASK_MUTATION,
+  MUTATION_TASK_STATUS_UPDATE,
   MUTATION_TASK_UPDATE,
 } from "@/graphql/query";
-import {
-  ApolloError,
-  useMutation,
-  useQuery,
-  useReactiveVar,
-} from "@apollo/client";
+import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useDisclosure } from "@nextui-org/react";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSupabase } from "./useSupabase";
-import { setIsEditing, setOpenModalId } from "@/apollo/reactive-store";
+import { setOpenModalId } from "@/apollo/reactive-store";
 import { useUser } from "./useUser";
 import { TasksArray } from "@/types";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
@@ -31,32 +27,17 @@ import {
   GET_USER_TASKS_QUERY,
 } from "@/graphql/query";
 
-type UseTasksReturn = {
-  tasksData: TasksArray;
-  tasksLoading: boolean;
-  tasksError: any;
-  refetchTasks: () => void;
-  onCreate: () => void;
-  onUpdate: () => void;
-  onCreateNewTask: () => void;
-  deleteTask: any;
-  onClickEdit: (isEditing: boolean, id: number) => void;
-  isEditing: boolean;
-  columns: any;
-  isOpen: boolean;
-  onOpen: () => void;
-  onOpenChange: () => void;
-};
 const useTasks = (): UseTasksReturn => {
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { getTaskById } = useSupabase();
-  const openModalId = useReactiveVar(setOpenModalId);
+
   const { username, user_id, workspace_id, room_id, recording_id } = useUser();
 
-  const isEditing = useReactiveVar(setIsEditing);
+  const [openModalTaskId, setOpenModalTaskId] = useState<number | null>(null);
+  const [isEditing, setIsEditingTask] = useState<boolean>(false);
 
-  const { getValues, setValue, reset } = useForm();
+  const { control, handleSubmit, getValues, setValue, reset } = useForm();
 
   let tasksQuery = GET_USER_TASKS_QUERY;
 
@@ -112,18 +93,17 @@ const useTasks = (): UseTasksReturn => {
   });
 
   const onClickEdit = (isEditing: boolean, id: number) => {
-    console.log(isEditing, "isEditing");
-    setIsEditing(true);
+    setIsEditingTask(isEditing);
     setOpenModalId(id);
+    openModal(id);
   };
 
   if (tasksError instanceof ApolloError) {
     // Обработка ошибки ApolloError
     console.log("tasksError", tasksError.message);
   }
-
   const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
-    useMutation(MUTATION_TASK_UPDATE, {
+    useMutation(MUTATION_TASK_STATUS_UPDATE, {
       variables: {
         username,
       },
@@ -132,6 +112,19 @@ const useTasks = (): UseTasksReturn => {
   if (mutateUpdateTaskStatusError instanceof ApolloError) {
     // Обработка ошибки ApolloError
     console.log(mutateUpdateTaskStatusError.message);
+  }
+
+  const [mutateUpdateTask, { error: mutateUpdateTaskError }] = useMutation(
+    MUTATION_TASK_UPDATE,
+    {
+      variables: {
+        username,
+      },
+    }
+  );
+  if (mutateUpdateTaskError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(mutateUpdateTaskError.message);
   }
 
   const [mutateCreateTask, { error: mutateCreateTaskError }] =
@@ -149,23 +142,21 @@ const useTasks = (): UseTasksReturn => {
     setValue("description", "");
     setValue("label", "");
     onOpen();
-    setIsEditing(false);
+    setIsEditingTask(false);
   };
 
-  const openModal = useCallback(
-    async (cardId: number) => {
-      setOpenModalId(cardId);
-      const card = await getTaskById(cardId.toString());
-      setValue("title", card?.title);
-      setValue("description", card?.description);
-      setValue("label", card?.label);
-      onOpen();
-      setIsEditing(true);
-    },
-    [getTaskById, onOpen, setOpenModalId, setValue]
-  );
+  const openModal = async (cardId: number) => {
+    setOpenModalId(cardId);
+    const card = await getTaskById(cardId);
+    console.log(card, "card");
+    setValue("title", card?.title);
+    setValue("description", card?.description);
+    setValue("label", card?.label);
+    onOpen();
+    setIsEditingTask(true);
+  };
 
-  const onCreate = useCallback(async () => {
+  const onCreateTask = useCallback(async () => {
     try {
       const formData = getValues();
 
@@ -215,32 +206,59 @@ const useTasks = (): UseTasksReturn => {
     user_id,
   ]);
 
-  const onUpdate = useCallback(() => {
-    const formData = getValues();
+  const onUpdateTaskStatus = useCallback(
+    async (id: number) => {
+      const formData = getValues();
+      console.log(formData, "formData");
 
-    const variables = {
-      id: openModalId,
-      title: formData.title,
-      description: formData.description,
-      updated_at: new Date().toISOString(),
-    };
+      const variables = {
+        id,
+        title: formData.title,
+        description: formData.description,
+        updated_at: new Date().toISOString(),
+      };
+      console.log(variables, "variablesvariables");
 
-    mutateUpdateTaskStatus({
-      variables,
-      onCompleted: () => {
-        refetchTasks();
-      },
-    });
-  }, [mutateUpdateTaskStatus, openModalId, refetchTasks, getValues]);
-  console.log(tasksData, "tasksData");
+      await mutateUpdateTaskStatus({
+        variables,
+        onCompleted: () => {
+          refetchTasks();
+        },
+      });
+    },
+    [mutateUpdateTaskStatus, openModalTaskId, refetchTasks, getValues]
+  );
 
-  const onDelete = useCallback(
-    (id: string) => {
+  const onUpdateTask = useCallback(
+    async (id: number) => {
+      const formData = getValues();
+      console.log(formData, "formData");
+
+      const variables = {
+        id,
+        title: formData.title,
+        description: formData.description,
+        updated_at: new Date().toISOString(),
+      };
+      console.log(variables, "variablesvariables");
+
+      await mutateUpdateTask({
+        variables,
+        onCompleted: () => {
+          refetchTasks();
+        },
+      });
+    },
+    [mutateUpdateTaskStatus, openModalTaskId, refetchTasks, getValues]
+  );
+
+  const onDeleteTask = useCallback(
+    (id: number) => {
       deleteTask({
         variables: {
           filter: {
             id: {
-              eq: Number(id),
+              eq: id,
             },
           },
         },
@@ -389,13 +407,13 @@ const useTasks = (): UseTasksReturn => {
         cell: ({ row }: any) => (
           <DataTableRowActions
             row={row}
-            onDelete={onDelete}
+            onDelete={onDeleteTask}
             onClickEdit={onClickEdit}
           />
         ),
       },
     ],
-    [onClickEdit, onDelete]
+    [onClickEdit, onDeleteTask]
   );
 
   return {
@@ -403,17 +421,46 @@ const useTasks = (): UseTasksReturn => {
     tasksLoading,
     tasksError,
     refetchTasks,
-    onCreate,
-    onUpdate,
+    isOpenModalTask: isOpen,
+    onOpenModalTask: onOpen,
+    onOpenChangeModalTask: onOpenChange,
+    onCreateTask,
+    onDeleteTask,
+    onUpdateTask,
+    onUpdateTaskStatus,
+    setValueTask: setValue,
+    openModalTaskId,
+    setOpenModalTaskId,
+    controlTask: control,
+    handleSubmitTask: handleSubmit,
+    getValuesTask: getValues,
     onCreateNewTask,
-    deleteTask,
-    onClickEdit,
-    isEditing,
     columns,
-    isOpen,
-    onOpen,
-    onOpenChange,
+    isEditingTask: isEditing,
   };
+};
+
+type UseTasksReturn = {
+  tasksData: TasksArray;
+  tasksLoading: boolean;
+  tasksError: any;
+  refetchTasks: () => void;
+  isOpenModalTask: boolean;
+  onOpenModalTask: () => void;
+  onOpenChangeModalTask: () => void;
+  onCreateTask: () => void;
+  onUpdateTask: (id: number) => void;
+  onUpdateTaskStatus: (id: number) => void;
+  onDeleteTask: (id: number) => void;
+  setValueTask: (id: string, value: any) => void;
+  openModalTaskId: number | null;
+  setOpenModalTaskId: (id: number | null) => void;
+  controlTask: any;
+  handleSubmitTask: any;
+  getValuesTask: any;
+  onCreateNewTask: () => void;
+  columns: any;
+  isEditingTask: boolean;
 };
 
 export { useTasks };

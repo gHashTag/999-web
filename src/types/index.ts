@@ -9,6 +9,14 @@ export type StatusMap = {
 // Использование Record для BoardItem
 export type BoardItem = Record<TaskStatus, Task[]>;
 
+export type Workspace = {
+  id: string;
+  title: string;
+  description: string;
+};
+
+export type WorkspaceArray = Workspace[];
+
 export type TasksArray = Task[];
 
 export interface Task {

@@ -56,6 +56,7 @@ function TaskModal({
   setValue,
   isEditing,
 }: Modal) {
+  console.log(handleSubmit, "handleSubmit");
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <Button onClick={onOpen}>

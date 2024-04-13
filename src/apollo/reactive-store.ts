@@ -34,8 +34,8 @@ export const setActiveRoute = makeVar<string>("/");
 
 export const setLoading = makeVar<boolean>(false);
 
-export const setIsEditing = makeVar<boolean>(false);
-
 export const setOpenModalId = makeVar<number | null>(null);
 
 export const setHeaderName = makeVar<string>("");
+
+export const setIdTask = makeVar<number | null>(null);

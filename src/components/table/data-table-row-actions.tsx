@@ -23,12 +23,13 @@ import {
 import { labels } from "../../helpers/data/data";
 import { taskSchema } from "../../helpers/data/schema";
 import { AssignedUser, TaskStatus } from "@/types";
+import { setIdTask } from "@/apollo/reactive-store";
 
 export interface RowTaskType {
   __typename: string;
   original: {
     node: {
-      id: string;
+      id: number;
       user_id: string;
       created_at?: string;
       title: string;
@@ -48,7 +49,7 @@ export interface RowTaskType {
 
 interface DataTableRowActionsProps {
   row: RowTaskType;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   onClickEdit: (isEditing: boolean, id: number) => void;
 }
 
@@ -57,8 +58,6 @@ export function DataTableRowActions<TData>({
   onDelete,
   onClickEdit,
 }: DataTableRowActionsProps) {
-  console.log(row, "row");
-  console.log(row.original.node.id, "row.original.node.id");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -73,7 +72,10 @@ export function DataTableRowActions<TData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem
-          onClick={() => onClickEdit(true, row.original.node.id)}
+          onClick={() => {
+            setIdTask(row.original.node.id);
+            onClickEdit(true, row.original.node.id);
+          }}
         >
           Edit
         </DropdownMenuItem>

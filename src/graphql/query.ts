@@ -345,7 +345,7 @@ export const CREATE_WORKSPACE_MUTATION = gql`
   }
 `;
 
-export const MUTATION_TASK_UPDATE = gql`
+export const MUTATION_TASK_STATUS_UPDATE = gql`
   mutation updatetasksCollection(
     $id: BigInt!
     $status: BigInt!
@@ -362,6 +362,47 @@ export const MUTATION_TASK_UPDATE = gql`
         title: $title
         description: $description
         order: $order
+      }
+    ) {
+      records {
+        id
+        user_id
+        title
+        description
+        status
+        due_date
+        assigned_to
+        completed_at
+        is_archived
+        updated_at
+        created_at
+        label
+        priority
+        order
+      }
+    }
+  }
+`;
+
+export const MUTATION_TASK_UPDATE = gql`
+  mutation updatetasksCollection(
+    $id: BigInt!
+    $status: String!
+    $label: String!
+    $title: String!
+    $description: String!
+    $updated_at: Datetime!
+    $order: BigInt!
+  ) {
+    updatetasksCollection(
+      filter: { id: { eq: $id } }
+      set: {
+        status: $status
+        updated_at: $updated_at
+        title: $title
+        description: $description
+        order: $order
+        label: $label
       }
     ) {
       records {

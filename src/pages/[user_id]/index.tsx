@@ -17,13 +17,14 @@ import { useEffect } from "react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import {
   setHeaderName,
-  setIsEditing,
+  setIdTask,
   setOpenModalId,
   setVisibleHeader,
 } from "@/apollo/reactive-store";
 
 import { useTasks } from "@/hooks/useTasks";
 import { useUser } from "@/hooks/useUser";
+import TaskModal from "@/components/modal/TaskModal";
 
 export type updateUserDataType = {
   user_id: string;
@@ -41,16 +42,20 @@ export default function Office() {
     workspacesData,
     workspacesLoading,
     workspacesError,
-    onCreate,
-    onDelete,
-    onUpdate,
-    setValue,
-    control,
-    handleSubmit,
-    getValues,
+    isOpenModalWorkspace,
+    onOpenModalWorkspace,
+    onOpenChangeModalWorkspace,
+    onCreateWorkspace,
+    onDeleteWorkspace,
+    onUpdateWorkspace,
+    setValueWorkspace,
+    controlWorkspace,
+    handleSubmitWorkspace,
+    getValuesWorkspace,
+    openModalWorkspaceId,
+    isEditingWorkspace,
+    setIsEditingWorkspace,
   } = useWorkspace();
-  const openModalId = useReactiveVar(setOpenModalId);
-  const isEditing = useReactiveVar(setIsEditing);
 
   useEffect(() => {
     if (!username) {
@@ -64,12 +69,32 @@ export default function Office() {
   const {
     tasksData,
     tasksLoading,
+    tasksError,
+    refetchTasks,
+    isOpenModalTask,
+    onOpenModalTask,
+    onOpenChangeModalTask,
+    onCreateTask,
+    onDeleteTask,
+    onUpdateTask,
+    setValueTask,
+    controlTask,
+    handleSubmitTask,
+    getValuesTask: getValues,
     onCreateNewTask,
     columns,
-    isOpen,
-    onOpen,
-    onOpenChange,
+    openModalTaskId,
+    setOpenModalTaskId,
+    isEditingTask,
   } = useTasks();
+
+  const id_task = useReactiveVar(setIdTask);
+
+  useEffect(() => {
+    if (id_task) {
+      setOpenModalTaskId(id_task);
+    }
+  }, [id_task]);
 
   const goToOffice = (workspace_id: string, workspace_name: string) => {
     router.push(`/${user_id}/${workspace_id}`);
@@ -78,10 +103,10 @@ export default function Office() {
   };
 
   const onCreateNewWorkspace = () => {
-    setValue("title", "");
-    setValue("description", "");
-    onOpen();
-    setIsEditing(false);
+    setValueWorkspace("title", "");
+    setValueWorkspace("description", "");
+    onOpenModalWorkspace();
+    setIsEditingWorkspace(false);
   };
 
   return (
@@ -102,24 +127,39 @@ export default function Office() {
           />
         )}
         <div style={{ padding: "10px" }} />
-        <div style={{ position: "absolute", top: 600, right: 70 }}>
-          <Button onClick={onCreateNewTask}>Create task</Button>
-        </div>
+
         {tasksData && <DataTable data={tasksData} columns={columns} />}
         <>
-          {isOpen && (
+          {isOpenModalWorkspace && (
             <WorkspaceModal
-              isOpen={isOpen}
-              onOpen={onOpen}
-              onOpenChange={onOpenChange}
-              onCreate={onCreate}
-              onDelete={() => openModalId && onDelete(openModalId)}
-              onUpdate={onUpdate}
-              control={control}
-              handleSubmit={handleSubmit}
+              isOpen={isOpenModalWorkspace}
+              onOpen={onOpenModalWorkspace}
+              onOpenChange={onOpenChangeModalWorkspace}
+              onCreate={onCreateWorkspace}
+              onDelete={() =>
+                openModalWorkspaceId && onDeleteWorkspace(openModalWorkspaceId)
+              }
+              onUpdate={onUpdateWorkspace}
+              control={controlWorkspace}
+              handleSubmit={handleSubmitWorkspace}
+              getValues={getValuesWorkspace}
+              setValue={setValueWorkspace}
+              isEditing={isEditingWorkspace}
+            />
+          )}
+          {isOpenModalTask && (
+            <TaskModal
+              isOpen={isOpenModalTask}
+              onOpen={onOpenModalTask}
+              onOpenChange={onOpenChangeModalTask}
+              onCreate={onCreateTask}
+              onDelete={() => openModalTaskId && onDeleteTask(openModalTaskId)}
+              onUpdate={() => openModalTaskId && onUpdateTask(openModalTaskId)}
+              control={controlTask}
+              handleSubmit={handleSubmitTask}
               getValues={getValues}
-              setValue={setValue}
-              isEditing={isEditing}
+              setValue={setValueTask}
+              isEditing={isEditingTask}
             />
           )}
         </>
