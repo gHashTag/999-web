@@ -9,34 +9,74 @@ export type StatusMap = {
 // Использование Record для BoardItem
 export type BoardItem = Record<TaskStatus, Task[]>;
 
-export type Workspace = {
+interface WorkspaceNode {
+  __typename: string;
+  background: string;
+  colors: string[][];
+  created_at: string;
   id: string;
   title: string;
-  description: string;
+  type: string;
+  updated_at: string;
+  user_id: string;
+  workspace_id: string;
+}
+
+export type Workspace = {
+  __typename: string;
+  node: WorkspaceNode;
 };
 
 export type WorkspaceArray = Workspace[];
 
+interface PassportNode {
+  __typename: string;
+  background: string;
+  colors: string[][];
+  created_at: string;
+  id: string;
+  title: string;
+  type: string;
+  updated_at: string;
+  user_id: string;
+  workspace_id: string;
+  photo_url: string;
+  username: string;
+}
+export type Passport = {
+  __typename: string;
+  node: PassportNode;
+};
+
+export type PassportArray = Passport[];
+
 export type TasksArray = Task[];
+
+type TaskNode = {
+  __typename: string;
+  id: string;
+  user_id: string;
+  created_at: string;
+  title: string;
+  description: string;
+  updated_at?: string;
+  due_date?: string;
+  priority?: number;
+  assigned_to?: AssignedUser[];
+  label?: string[];
+  completed_at?: string;
+  is_archived?: boolean;
+  status: TaskStatus;
+  order: number;
+  background: string;
+  colors: string[][];
+  type: string;
+  workspace_id: string;
+};
 
 export interface Task {
   __typename: string;
-  node: {
-    id: string;
-    user_id: string;
-    created_at?: string;
-    title: string;
-    description: string;
-    updated_at?: string;
-    due_date?: string;
-    priority?: number;
-    assigned_to?: AssignedUser[];
-    label?: string[];
-    completed_at?: string;
-    is_archived?: boolean;
-    status: TaskStatus;
-    order: number;
-  };
+  node: TaskNode;
 }
 
 export interface User {

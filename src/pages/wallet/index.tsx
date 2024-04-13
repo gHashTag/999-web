@@ -160,7 +160,7 @@ export default function Wallet() {
                 items={[
                   {
                     id: 1,
-                    name: `${userNode?.first_name} ${userNode?.last_name}`,
+                    name: `${userNode?.username}`,
                     designation: userNode?.position,
                     image: userNode?.photo_url,
                   },

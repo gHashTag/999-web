@@ -18,7 +18,6 @@ import { useWorkspace } from "@/hooks/useWorkspace";
 import {
   setHeaderName,
   setIdTask,
-  setOpenModalId,
   setVisibleHeader,
 } from "@/apollo/reactive-store";
 
@@ -55,6 +54,7 @@ export default function Office() {
     openModalWorkspaceId,
     isEditingWorkspace,
     setIsEditingWorkspace,
+    welcomeMenu,
   } = useWorkspace();
 
   useEffect(() => {
@@ -114,13 +114,13 @@ export default function Office() {
       <main className="flex flex-col items-center justify-between">
         {tasksLoading && workspacesLoading && <Spinner size="lg" />}
 
-        <div style={{ position: "absolute", top: 75, right: 70 }}>
+        {/* <div style={{ position: "absolute", top: 75, right: 70 }}>
           <Button onClick={onCreateNewWorkspace}>Create workspace</Button>
-        </div>
+        </div> */}
 
         {!tasksLoading && (
           <CanvasRevealEffectDemo
-            officeData={workspacesData || []}
+            officeData={welcomeMenu || []}
             onClick={(workspace_id, workspace_name) =>
               goToOffice(workspace_id, workspace_name)
             }

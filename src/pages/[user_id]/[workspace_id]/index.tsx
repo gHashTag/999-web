@@ -136,9 +136,10 @@ const MeetsPage = () => {
                 title: room.node.name,
                 description: room.node.type,
               }}
-              onClick={() =>
-                router.push(`/${user_id}/${workspace_id}/${room.node.room_id}`)
-              }
+              onClick={() => {
+                router.push(`/${user_id}/${workspace_id}/${room.node.room_id}`);
+                localStorage.setItem("room_id", room.node.room_id);
+              }}
               key={room.node.id}
             />
           ))}

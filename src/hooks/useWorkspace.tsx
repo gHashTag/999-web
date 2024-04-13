@@ -1,6 +1,7 @@
 import { useToast } from "@/components/ui/use-toast";
 import {
   CREATE_WORKSPACE_MUTATION,
+  MY_WORKSPACE_COLLECTION_QUERY,
   WORKSPACE_DELETE_MUTATION,
   WORKSPACE_UPDATE_MUTATION,
   WORKSPACES_COLLECTION_QUERY,
@@ -17,6 +18,19 @@ const useWorkspace = (): UseWorkspaceReturn => {
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
+
+  const {
+    data: myWorkspaceData,
+    loading: myWorkspaceLoading,
+    error: myWorkspaceError,
+    refetch: myWorkspaceRefetch,
+  } = useQuery(MY_WORKSPACE_COLLECTION_QUERY, {
+    variables: {
+      user_id,
+    },
+  });
+
+  const myWorkspaceNode = myWorkspaceData?.workspacesCollection?.edges;
 
   const [openModalWorkspaceId, setOpenModalWorkspaceId] = useState<
     number | null
@@ -35,7 +49,51 @@ const useWorkspace = (): UseWorkspaceReturn => {
     },
   });
 
-  const workspaceNode = workspacesData?.workspacesCollection?.edges;
+  const workspaceNode = workspacesData?.workspacesCollection?.edges[0];
+
+  const myWorkspace = workspaceNode && workspaceNode;
+
+  let welcomeMenu: WorkspaceArray = [];
+
+  if (myWorkspace) {
+    welcomeMenu.push(myWorkspace);
+  }
+
+  welcomeMenu.push(
+    {
+      __typename: "workspacesEdge",
+      node: {
+        __typename: "workspaces",
+        background: "bg-sky-600",
+        colors: [["125", "211", "252"]],
+        created_at: "2024-04-10T15:39:50.949122+00:00",
+        id: "2",
+        title: "Вода",
+        type: "water",
+        updated_at: "2024-04-10T15:39:50.949122+00:00",
+        user_id: "ec0c948a-2b96-4ccd-942f-0a991d78a94f",
+        workspace_id: "54dc9d0e-dd96-43e7-bf72-02c2807f8977",
+      },
+    },
+    {
+      __typename: "workspacesEdge",
+      node: {
+        __typename: "workspaces",
+        background: "bg-black",
+        colors: [
+          ["236", "72", "153"],
+          ["232", "121", "249"],
+        ],
+        created_at: "2024-04-10T15:39:50.949122+00:00",
+        id: "4",
+        title: "Медные трубы",
+        type: "earth",
+        updated_at: "2024-04-10T15:39:50.949122+00:00",
+        user_id: "ec0c948a-2b96-4ccd-942f-0a991d78a94f",
+        workspace_id: "d696abd8-3b7a-46f2-907f-5342a2b533a0",
+      },
+    }
+  );
 
   const [mutateCreateWorkspace, { error: mutateCreateWorkspaceError }] =
     useMutation(CREATE_WORKSPACE_MUTATION);
@@ -81,7 +139,7 @@ const useWorkspace = (): UseWorkspaceReturn => {
         user_id,
       };
 
-      const mutateCreateTaskResult = await mutateCreateWorkspace({
+      const mutateCreateWorkspaceResult = await mutateCreateWorkspace({
         variables: {
           objects: [formDataWithUserId],
         },
@@ -173,6 +231,7 @@ const useWorkspace = (): UseWorkspaceReturn => {
     setOpenModalWorkspaceId,
     isEditingWorkspace: isEditing,
     setIsEditingWorkspace: setIsEditing,
+    welcomeMenu,
   };
 };
 
@@ -195,6 +254,7 @@ type UseWorkspaceReturn = {
   setOpenModalWorkspaceId: (id: number | null) => void;
   isEditingWorkspace: boolean;
   setIsEditingWorkspace: (isEditing: boolean) => void;
+  welcomeMenu: WorkspaceArray;
 };
 
 export { useWorkspace };

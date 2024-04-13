@@ -6,7 +6,7 @@ import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { EvervaultCard } from "@/components/ui/evervault-card";
 import { useRouter } from "next/router";
 import { ButtonAnimate } from "@/components/ui/button-animate";
-
+import { usePassport } from "@/hooks/usePassport";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/pages/_app";
 
@@ -14,6 +14,9 @@ import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 import { useRooms } from "@/hooks/useRooms";
 import { setHeaderName } from "@/apollo/reactive-store";
+import InviteMemberModal from "@/components/modal/InviteMemberModal";
+import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
+import { AnimatedTooltipCommon } from "@/components/ui/animated-tooltip-common";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -37,28 +40,54 @@ const RoomPage = () => {
     inviteHostCode,
     inviteMemberCode,
   } = useRooms();
-
-  const { username } = useUser();
+  const { username, workspace_id, room_id } = useUser();
+  const {
+    passportData,
+    passportLoading,
+    passportError,
+    isOpenModalPassport,
+    onOpenModalPassport,
+    onOpenChangeModalPassport,
+    onCreatePassport,
+    onDeletePassport,
+    onUpdatePassport,
+    setValuePassport,
+    controlPassport,
+    handleSubmitPassport,
+    getValuesPassport,
+    openModalPassportId,
+    isEditingPassport,
+  } = usePassport({
+    room_id,
+    workspace_id,
+  });
 
   useEffect(() => {
     if (!username) {
       router.push("/");
+    } else {
+      setHeaderName(roomsData?.name);
     }
-  }, [router]);
+  }, [router, roomsData]);
 
   const { tasksData, tasksLoading, columns, tasksError } = useTasks();
-
+  console.log(passportData, "passportData");
   return (
     <>
-      <Layout
-        loading={
-          tasksLoading ||
-          roomsLoading ||
-          assetsLoading ||
-          roomNameLoading ||
-          deleteRoomLoading
-        }
-      >
+      <Layout loading={assetsLoading || passportLoading}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+            marginRight: 20,
+            paddingTop: 30,
+            flexDirection: "column",
+          }}
+        >
+          <AnimatedTooltipCommon items={passportData} />
+        </div>
         <div
           style={{
             display: "flex",
@@ -79,6 +108,7 @@ const RoomPage = () => {
               inviteGuestCode={inviteGuestCode}
               inviteHostCode={inviteHostCode}
               inviteMemberCode={inviteMemberCode}
+              onOpenModalPassport={onOpenModalPassport}
             />
           ))}
         </div>
@@ -96,6 +126,23 @@ const RoomPage = () => {
           }}
         >
           <HoverEffect items={assetsItems} />
+          {isOpenModalPassport && (
+            <InviteMemberModal
+              isOpen={isOpenModalPassport}
+              onOpen={onOpenModalPassport}
+              onOpenChange={onOpenChangeModalPassport}
+              onCreate={onCreatePassport}
+              onDelete={() =>
+                openModalPassportId && onDeletePassport(openModalPassportId)
+              }
+              onUpdate={onUpdatePassport}
+              control={controlPassport}
+              handleSubmit={handleSubmitPassport}
+              getValues={getValuesPassport}
+              setValue={setValuePassport}
+              isEditing={isEditingPassport}
+            />
+          )}
         </div>
         <div>
           {tasksData && <DataTable data={tasksData} columns={columns} />}

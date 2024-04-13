@@ -8,7 +8,7 @@ import {
   TasksArray,
   TUser,
 } from "@/types";
-import { supabase } from "@/utils/supabase";
+import { setMyWorkspace, supabase } from "@/utils/supabase";
 
 import {
   setInviteCode,
@@ -82,6 +82,30 @@ export const checkUsername = async (username: string): Promise<boolean> => {
     return false;
   }
   return data ? data.length > 0 : false;
+};
+
+export const checkUsernameAndReturnUser = async (
+  username: string
+): Promise<{
+  isUserExist: boolean;
+  user: SupabaseUser;
+}> => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+
+  if (error) {
+    console.log(error, "error checkUsername");
+    return {
+      isUserExist: false,
+      user: {} as SupabaseUser,
+    };
+  }
+  return {
+    isUserExist: data ? data.length > 0 : false,
+    user: data[0],
+  };
 };
 
 export function useSupabase() {
@@ -167,6 +191,8 @@ export function useSupabase() {
         };
 
         const user = await createUserInDatabase(newUser);
+
+        await setMyWorkspace(user.user_id);
 
         const user_id = user.user_id;
 

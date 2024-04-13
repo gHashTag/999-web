@@ -16,6 +16,7 @@ type EvervaultCardProps = {
   inviteHostCode: string;
   inviteMemberCode: string;
   inviteGuestCode: string;
+  onOpenModalPassport: () => void;
 };
 
 export const EvervaultCard = ({
@@ -26,6 +27,7 @@ export const EvervaultCard = ({
   inviteHostCode,
   inviteMemberCode,
   inviteGuestCode,
+  onOpenModalPassport,
 }: EvervaultCardProps) => {
   const router = useRouter();
   let mouseX = useMotionValue(0);
@@ -87,9 +89,12 @@ export const EvervaultCard = ({
       router.pathname !==
       `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`
     ) {
-      if (type !== "host") {
+      if (type === "guest") {
         handleCopy(`${window.location.origin}${targetPath}`);
         inviteToMeet(type);
+      } else if (type === "member") {
+        inviteToMeet(type);
+        onOpenModalPassport();
       } else {
         inviteToMeet(type);
       }

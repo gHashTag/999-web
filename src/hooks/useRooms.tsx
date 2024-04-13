@@ -23,7 +23,7 @@ const useRooms = () => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const { user_id, workspace_id } = useUser();
+  const { user_id, workspace_id, room_id } = useUser();
 
   const {
     data: roomsData,
@@ -32,7 +32,7 @@ const useRooms = () => {
   } = useQuery(ROOMS_BY_ID_COLLECTION_QUERY, {
     fetchPolicy: "network-only",
     variables: {
-      room_id: router.query.room_id,
+      room_id,
     },
   });
 
@@ -42,7 +42,7 @@ const useRooms = () => {
     error: assetsError,
   } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
     variables: {
-      room_id: router.query.room_id,
+      room_id,
     },
   });
   if (assetsError instanceof ApolloError) {
@@ -56,7 +56,7 @@ const useRooms = () => {
     error: roomNameError,
   } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
     variables: {
-      room_id: router.query.room_id,
+      room_id,
     },
   });
 
@@ -127,7 +127,7 @@ const useRooms = () => {
   const handlerDeleteRoom = () => {
     deleteRoom({
       variables: {
-        room_id: router.query.room_id,
+        room_id,
       },
       onCompleted: (data) => {
         toast({
@@ -143,7 +143,7 @@ const useRooms = () => {
   localStorage.setItem("room_name", room_name);
 
   return {
-    roomsData,
+    roomsData: roomsData?.roomsCollection?.edges[0]?.node,
     assetsLoading,
     handlerDeleteRoom,
     deleteRoomLoading,
