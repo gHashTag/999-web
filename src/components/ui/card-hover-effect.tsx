@@ -11,10 +11,11 @@ type HoverEffectProps = {
   }[];
   className?: string;
 };
-const { user_id, workspace_id } = useUser();
 
 export const HoverEffect = ({ items, className }: HoverEffectProps) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const { user_id, workspace_id } = useUser();
 
   return (
     <div
