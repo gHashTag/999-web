@@ -28,7 +28,7 @@ export function CanvasRevealEffectDemo({
   return (
     <>
       <div
-        className="py-20 flex flex-col lg:flex-row   items-center justify-center w-full gap-4 mx-auto px-8"
+        className="py-10 flex flex-col lg:flex-row items-center justify-center w-full gap-4 mx-auto px-8"
         style={{ width: "93%" }}
       >
         {officeData.map(({ node }: any) => (
