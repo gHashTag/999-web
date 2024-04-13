@@ -86,7 +86,7 @@ export default function Office() {
     openModalTaskId,
     setOpenModalTaskId,
     isEditingTask,
-  } = useTasks();
+  } = useTasks({});
 
   const id_task = useReactiveVar(setIdTask);
 

@@ -1,3 +1,4 @@
+import { useUser } from "@/hooks/useUser";
 import { RecordingAsset } from "@/types";
 import { cn } from "@/utils/cn";
 import { AnimatePresence, motion } from "framer-motion";
@@ -10,6 +11,7 @@ type HoverEffectProps = {
   }[];
   className?: string;
 };
+const { user_id, workspace_id } = useUser();
 
 export const HoverEffect = ({ items, className }: HoverEffectProps) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -24,7 +26,7 @@ export const HoverEffect = ({ items, className }: HoverEffectProps) => {
       {items &&
         items.map((item, idx) => (
           <Link
-            href={`/workspace_id/${item.node.room_id}/${item.node.recording_id}`}
+            href={`/${user_id}/${workspace_id}/${item.node.room_id}/${item.node.recording_id}`}
             key={item.node.recording_id}
             className="relative group  block p-2 h-full w-full"
             onMouseEnter={() => setHoveredIndex(idx)}

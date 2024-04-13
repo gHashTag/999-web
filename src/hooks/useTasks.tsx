@@ -27,12 +27,22 @@ import {
   GET_USER_TASKS_QUERY,
 } from "@/graphql/query";
 
-const useTasks = (): UseTasksReturn => {
+type PassportType = {
+  room_id?: string;
+  workspace_id?: string;
+  recording_id?: string | string[] | undefined;
+};
+
+const useTasks = ({
+  room_id,
+  workspace_id,
+  recording_id,
+}: PassportType): UseTasksReturn => {
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { getTaskById } = useSupabase();
 
-  const { username, user_id, workspace_id, room_id, recording_id } = useUser();
+  const { username, user_id } = useUser();
 
   const [openModalTaskId, setOpenModalTaskId] = useState<number | null>(null);
   const [isEditing, setIsEditingTask] = useState<boolean>(false);

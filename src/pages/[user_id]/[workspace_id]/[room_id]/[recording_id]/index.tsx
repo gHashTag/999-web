@@ -11,6 +11,7 @@ import { __DEV__ } from "@/pages/_app";
 import { GET_ROOM_ASSETS } from "@/graphql/query";
 
 import { useTasks } from "@/hooks/useTasks";
+import { useUser } from "@/hooks/useUser";
 
 const RecordingPage = () => {
   const router = useRouter();
@@ -25,8 +26,13 @@ const RecordingPage = () => {
   });
 
   const asset = assetsData?.room_assetsCollection?.edges[0]?.node;
+  const { user_id, workspace_id, room_id } = useUser();
 
-  const { tasksData, tasksLoading, columns } = useTasks();
+  const { tasksData, tasksLoading, columns } = useTasks({
+    workspace_id,
+    room_id,
+    recording_id,
+  });
 
   function HighlightName({ text }: { text: string }) {
     const [name, ...message] = text.split(":");
@@ -43,17 +49,10 @@ const RecordingPage = () => {
     <>
       <Layout loading={tasksLoading || assetsLoading}>
         {!tasksLoading && assetsData && (
-          <div
-            className="flex-col mt-10"
-            style={{
-              paddingRight: 20,
-              paddingLeft: 20,
-              paddingBottom: 70,
-            }}
-          >
+          <div className="flex-col mt-10">
             <TracingBeam className="px-6">
               <div className="max-w-2xl mx-auto antialiased pt-4 relative">
-                <div className="mb-10">
+                <div className="mb-1">
                   <p className={twMerge("text-4xl mb-4")}>{asset?.title}</p>
                   <p className={twMerge("text-xl mb-4")}>
                     {asset?.summary_short}
@@ -70,11 +69,11 @@ const RecordingPage = () => {
                       ))}
                   </div>
                 </div>
-                {tasksData && <DataTable data={tasksData} columns={columns} />}
               </div>
             </TracingBeam>
           </div>
         )}
+        {tasksData && <DataTable data={tasksData} columns={columns} />}
       </Layout>
     </>
   );

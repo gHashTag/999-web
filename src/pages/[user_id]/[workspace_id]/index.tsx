@@ -27,7 +27,9 @@ const MeetsPage = () => {
   const { username, user_id } = useUser();
 
   const workspace_id = router.query.workspace_id as string;
-  const { tasksData, columns } = useTasks();
+  const { tasksData, columns } = useTasks({
+    workspace_id,
+  });
 
   const {
     data: roomsData,

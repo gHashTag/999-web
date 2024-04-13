@@ -70,8 +70,11 @@ const RoomPage = () => {
     }
   }, [router, roomsData]);
 
-  const { tasksData, tasksLoading, columns, tasksError } = useTasks();
-  console.log(passportData, "passportData");
+  const { tasksData, tasksLoading, columns, tasksError } = useTasks({
+    workspace_id,
+    room_id,
+  });
+
   return (
     <>
       <Layout loading={assetsLoading || passportLoading}>

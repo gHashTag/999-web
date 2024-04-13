@@ -69,7 +69,7 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  const { onCreateNewTask } = useTasks();
+  const { onCreateNewTask } = useTasks({});
 
   return (
     <div
