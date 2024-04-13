@@ -15,35 +15,19 @@ import { CardRoomT } from "@/types";
 import CardRoom from "@/components/ui/card-room";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "../../_app";
-import { useTable } from "@/hooks/useTable";
+
 import { setHeaderName, setLoading } from "@/apollo/reactive-store";
+import { useUser } from "@/hooks/useUser";
+import { useTasks } from "@/hooks/useTasks";
 
 const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
   const loading = useReactiveVar(setLoading);
-  const username = localStorage.getItem("username");
-  const user_id = localStorage.getItem("user_id");
-  // const { data: userInfo } = useQuery(CURRENT_USER);
-  // console.log(userInfo, "userInfo");
+  const { username, user_id } = useUser();
 
   const workspace_id = router.query.workspace_id as string;
-
-  const userName = __DEV__ ? "koshey999nft" : username;
-  const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
-
-  const {
-    loading: tableLoading,
-    data,
-    columns,
-  } = useTable({
-    username: userName || "",
-    user_id: userId || "",
-    workspace_id,
-  });
-  console.log(username, "username");
-  console.log(user_id, "user_id");
-  console.log(workspace_id, "workspace_id");
+  const { tasksData, columns } = useTasks();
 
   const {
     data: roomsData,
@@ -55,13 +39,12 @@ const MeetsPage = () => {
     },
   });
 
-  console.log(roomsData, "roomsData");
+  const { workspace_name } = useUser();
 
   useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
-      const workspace_name = localStorage.getItem("workspace_name");
       workspace_name && setHeaderName(workspace_name);
     }
   }, [refetch, router, username]);
@@ -127,7 +110,7 @@ const MeetsPage = () => {
   };
   // console.log(roomsData, "roomsData");
   return (
-    <Layout loading={loading || roomsLoading || tableLoading}>
+    <Layout loading={loading || roomsLoading}>
       <>
         {isOpen && (
           <MeetModal
@@ -154,7 +137,7 @@ const MeetsPage = () => {
                 description: room.node.type,
               }}
               onClick={() =>
-                router.push(`/${workspace_id}/${room.node.room_id}`)
+                router.push(`/${user_id}/${workspace_id}/${room.node.room_id}`)
               }
               key={room.node.id}
             />
@@ -169,9 +152,7 @@ const MeetsPage = () => {
           paddingBottom: 200,
         }}
       >
-        {data && (
-          <DataTable data={data.tasksCollection.edges} columns={columns} />
-        )}
+        {tasksData && <DataTable data={tasksData} columns={columns} />}
       </div>
     </Layout>
   );

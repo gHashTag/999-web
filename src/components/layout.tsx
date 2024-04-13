@@ -42,6 +42,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { cache } from "@/pages/_app";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUser } from "@/hooks/useUser";
 
 type Props = {
   children: React.ReactNode;
@@ -123,16 +124,15 @@ export default function Layout({
   // }, [data]);
   const headerName = useReactiveVar(setHeaderName);
   const activeMenuButton = useReactiveVar(setActiveRoute);
-  const user_id = localStorage.getItem("user_id");
-  const activeRoute = router.asPath;
 
-  const firstName = localStorage && localStorage.getItem("first_name");
-  const lastName = localStorage && localStorage.getItem("last_name");
-  const photo_url = localStorage && localStorage.getItem("photo_url");
+  const activeRoute = router.asPath;
+  const { user_id, photo_url, firstName, lastName } = useUser();
 
   const shortName = `${(firstName && firstName[0]) || ""}${
     (lastName && lastName[0]) || ""
   }`;
+
+  const mainButtonRoute = activeRoute !== "/" ? `/${user_id}` : "/";
 
   return (
     <>
@@ -141,7 +141,7 @@ export default function Layout({
           <header className={cn(styles.header)}>
             <div className={styles["header-logos"]}>
               <MobileMenu key={router.asPath} />
-              <Link href={`/${user_id}`} className={styles.logo}>
+              <Link href={mainButtonRoute} className={styles.logo}>
                 <Logo />
               </Link>
             </div>
@@ -198,14 +198,16 @@ export default function Layout({
             >
               {activeRoute === "/" && <DemoButton />}
             </div>
-            <div className={styles["header-logos"]}>
-              <Link href={`/wallet`} className={styles.logo}>
-                <Avatar>
-                  <AvatarImage src={photo_url || ""} />
-                  <AvatarFallback>{shortName}</AvatarFallback>
-                </Avatar>
-              </Link>
-            </div>
+            {activeRoute !== "/" && (
+              <div className={styles["header-logos"]}>
+                <Link href={`/wallet`} className={styles.logo}>
+                  <Avatar>
+                    <AvatarImage src={photo_url || ""} />
+                    <AvatarFallback>{shortName}</AvatarFallback>
+                  </Avatar>
+                </Link>
+              </div>
+            )}
           </header>
         )}
         {/* <ViewSource /> */}

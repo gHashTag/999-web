@@ -26,7 +26,7 @@ import { taskSchema } from "../../helpers/data/schema";
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
   onDelete: (id: string) => void;
-  onClickEdit: (isEditing: boolean) => void;
+  onClickEdit: (isEditing: boolean, id: string) => void;
 }
 
 export function DataTableRowActions<TData>({
@@ -47,7 +47,9 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={() => onClickEdit(true)}>
+        <DropdownMenuItem
+          onClick={() => onClickEdit(true, row.original.node.id)}
+        >
           Edit
         </DropdownMenuItem>
         {/* <DropdownMenuItem>Make a copy</DropdownMenuItem>

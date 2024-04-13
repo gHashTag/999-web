@@ -1,109 +1,127 @@
-import { useCallback, useMemo, useState } from "react";
-import { DataTableRowActions } from "@/components/table/data-table-row-actions";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  CREATE_TASK_MUTATION,
+  DELETE_TASK_MUTATION,
+  MUTATION_TASK_UPDATE,
+} from "@/graphql/query";
+import {
+  ApolloError,
+  useMutation,
+  useQuery,
+  useReactiveVar,
+} from "@apollo/client";
 import { useDisclosure } from "@nextui-org/react";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { useSupabase } from "./useSupabase";
+import { setIsEditing, setOpenModalId } from "@/apollo/reactive-store";
+import { useUser } from "./useUser";
+import { TasksArray } from "@/types";
+import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { priorities, statuses } from "@/helpers/data/data";
-import { useSupabase } from "./useSupabase";
 
 import { Badge } from "@/components/ui/badge";
 
 import {
-  gql,
-  useQuery,
-  useReactiveVar,
-  useMutation,
-  ApolloError,
-} from "@apollo/client";
-// @ts-ignore
-import { useForm } from "react-hook-form";
-import {
-  CREATE_TASK_MUTATION,
-  DELETE_TASK_MUTATION,
   GET_ALL_TASKS_QUERY,
   GET_RECORDING_TASKS_QUERY,
   GET_ROOM_TASKS_QUERY,
   GET_USER_TASKS_QUERY,
-  MUTATION_TASK_UPDATE,
   TASKS_COLLECTION_QUERY,
 } from "@/graphql/query";
-import { useToast } from "@/components/ui/use-toast";
-import { setIsEditing, setOpenModalId } from "@/apollo/reactive-store";
 
-type UseTableProps = {
-  username: string;
-  user_id?: string | string[] | undefined;
-  workspace_id?: string | string[] | undefined;
-  room_id?: string | string[] | undefined;
-  recording_id?: string | string[] | undefined;
+type UseTasksReturn = {
+  tasksData: TasksArray;
+  tasksLoading: boolean;
+  tasksError: any;
+  refetchTasks: () => void;
+  onCreate: () => void;
+  onUpdate: () => void;
+  onCreateNewTask: () => void;
+  deleteTask: any;
+  onClickEdit: (isEditing: boolean, id: string) => void;
+  isEditing: boolean;
+  columns: any;
+  isOpen: boolean;
+  onOpen: () => void;
+  onOpenChange: () => void;
 };
-
-const useTable = ({
-  username,
-  user_id,
-  workspace_id,
-  room_id,
-  recording_id,
-}: UseTableProps) => {
+const useTasks = (): UseTasksReturn => {
   const { toast } = useToast();
-  const { control, handleSubmit, getValues, setValue, reset } = useForm();
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { getTaskById } = useSupabase();
   const openModalId = useReactiveVar(setOpenModalId);
+  const { username, user_id, workspace_id, room_id, recording_id } = useUser();
+  console.log(user_id, "user_id");
   const isEditing = useReactiveVar(setIsEditing);
 
-  let tasksQuery = TASKS_COLLECTION_QUERY;
+  const { getValues, setValue, reset } = useForm();
 
-  let queryVariables = {
-    user_id,
-    room_id,
-    recording_id,
-    workspace_id,
-  };
+  let tasksQuery = GET_USER_TASKS_QUERY;
+
+  let queryVariables;
+
+  if (recording_id && room_id && workspace_id && user_id) {
+    tasksQuery = GET_ALL_TASKS_QUERY;
+    queryVariables = {
+      user_id,
+      room_id,
+      workspace_id,
+      recording_id,
+    };
+  }
 
   if (!recording_id) {
     tasksQuery = GET_RECORDING_TASKS_QUERY;
-    delete queryVariables?.recording_id;
+    queryVariables = {
+      user_id,
+      room_id,
+      workspace_id,
+    };
   }
 
   if (!room_id && !recording_id) {
     tasksQuery = GET_ROOM_TASKS_QUERY;
-    delete queryVariables?.recording_id;
-    delete queryVariables?.room_id;
+    queryVariables = {
+      user_id,
+      workspace_id,
+    };
   }
 
   if (!recording_id && !room_id && !workspace_id) {
     tasksQuery = GET_USER_TASKS_QUERY;
-    delete queryVariables?.workspace_id;
-    delete queryVariables?.recording_id;
-    delete queryVariables?.room_id;
+    queryVariables = {
+      user_id,
+    };
   }
 
   if (!recording_id && !room_id && !workspace_id && !user_id) {
     tasksQuery = GET_ALL_TASKS_QUERY;
-    delete queryVariables?.workspace_id;
-    delete queryVariables?.recording_id;
-    delete queryVariables?.room_id;
-    delete queryVariables?.user_id;
   }
 
   const {
-    loading,
+    data: tasksData,
+    loading: tasksLoading,
     error: tasksError,
-    data,
-    refetch,
+    refetch: refetchTasks,
   } = useQuery(tasksQuery, {
     fetchPolicy: "network-only",
-    variables: {
-      user_id,
-      room_id,
-      recording_id,
-      workspace_id,
-    },
+    variables: queryVariables,
+    skip: !queryVariables,
   });
+
+  const onClickEdit = (isEditing: boolean, id: string) => {
+    console.log(isEditing, "isEditing");
+    setIsEditing(true);
+    setOpenModalId(id);
+    openModal(id);
+  };
+
   if (tasksError instanceof ApolloError) {
     // Обработка ошибки ApolloError
-    console.log(tasksError.message);
+    console.log("tasksError", tasksError.message);
   }
 
   const [mutateUpdateTaskStatus, { error: mutateUpdateTaskStatusError }] =
@@ -167,7 +185,7 @@ const useTable = ({
             title: "Task created",
             description: "Task created successfully",
           });
-          refetch();
+          refetchTasks();
           reset({
             title: "",
             description: "",
@@ -193,7 +211,7 @@ const useTable = ({
     getValues,
     mutateCreateTask,
     mutateCreateTaskError,
-    refetch,
+    refetchTasks,
     reset,
     toast,
     user_id,
@@ -212,15 +230,11 @@ const useTable = ({
     mutateUpdateTaskStatus({
       variables,
       onCompleted: () => {
-        refetch();
+        refetchTasks();
       },
     });
-  }, [mutateUpdateTaskStatus, openModalId, refetch, getValues]);
-
-  const closeModal = useCallback(() => {
-    setOpenModalId(null);
-    onClose();
-  }, [onClose]);
+  }, [mutateUpdateTaskStatus, openModalId, refetchTasks, getValues]);
+  console.log(tasksData, "tasksData");
 
   const onDelete = useCallback(
     (id: string) => {
@@ -233,13 +247,18 @@ const useTable = ({
           },
         },
         onCompleted: () => {
-          refetch();
+          refetchTasks();
         },
       });
       closeModal();
     },
-    [deleteTask, refetch, closeModal]
+    [onClose]
   );
+
+  const closeModal = useCallback(() => {
+    setOpenModalId(null);
+    onClose();
+  }, [onClose]);
 
   const columns = useMemo(
     () => [
@@ -373,38 +392,30 @@ const useTable = ({
           <DataTableRowActions
             row={row}
             onDelete={onDelete}
-            onClickEdit={() => {
-              setIsEditing(true);
-              setOpenModalId(row.original.node.id);
-              openModal(row.original.node.id);
-            }}
+            onClickEdit={onClickEdit}
           />
         ),
       },
     ],
-    [onDelete, openModal]
+    [onClickEdit, onDelete]
   );
 
   return {
-    data,
-    loading,
-    openModalId,
+    tasksData: tasksData?.tasksCollection?.edges,
+    tasksLoading,
+    tasksError,
+    refetchTasks,
+    onCreate,
+    onUpdate,
+    onCreateNewTask,
+    deleteTask,
+    onClickEdit,
     isEditing,
     columns,
     isOpen,
     onOpen,
     onOpenChange,
-    onCreateNewTask,
-    onCreate,
-    onUpdate,
-    onDelete,
-    control,
-    handleSubmit,
-    getValues,
-    setValue,
-    reset,
-    setIsEditing,
   };
 };
 
-export { useTable };
+export { useTasks };

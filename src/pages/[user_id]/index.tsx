@@ -3,17 +3,17 @@ import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 
 import { Button } from "@/components/ui/moving-border";
-import { useQuery, useReactiveVar } from "@apollo/client";
+import { useReactiveVar } from "@apollo/client";
 
 import { Spinner } from "@/components/ui/spinner";
 
 import { CanvasRevealEffectDemo } from "@/components/ui/canvas-reveal-effect-demo";
-import { WORKSPACES_COLLECTION_QUERY } from "@/graphql/query";
+
 import WorkspaceModal from "@/components/modal/WorkspaceModal";
 
 import { DataTable } from "@/components/table/data-table";
-import { useTable } from "@/hooks/useTable";
-import { useEffect, useState } from "react";
+
+import { useEffect } from "react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import {
   setHeaderName,
@@ -21,6 +21,9 @@ import {
   setOpenModalId,
   setVisibleHeader,
 } from "@/apollo/reactive-store";
+
+import { useTasks } from "@/hooks/useTasks";
+import { useUser } from "@/hooks/useUser";
 
 export type updateUserDataType = {
   user_id: string;
@@ -31,9 +34,21 @@ export type updateUserDataType = {
 
 export default function Office() {
   const router = useRouter();
-  const username = localStorage.getItem("username") || "";
-  const user_id = localStorage.getItem("user_id") || "";
-  const { onCreate, onDelete, onUpdate } = useWorkspace(user_id, username);
+
+  const { username, user_id } = useUser();
+
+  const {
+    workspacesData,
+    workspacesLoading,
+    workspacesError,
+    onCreate,
+    onDelete,
+    onUpdate,
+    setValue,
+    control,
+    handleSubmit,
+    getValues,
+  } = useWorkspace();
   const openModalId = useReactiveVar(setOpenModalId);
   const isEditing = useReactiveVar(setIsEditing);
 
@@ -47,39 +62,16 @@ export default function Office() {
   }, [router, username]);
 
   const {
-    loading,
-    data,
-    setValue,
+    tasksData,
+    tasksLoading,
+    onCreateNewTask,
     columns,
     isOpen,
-    control,
-    handleSubmit,
-    onCreateNewTask,
-    getValues,
     onOpen,
     onOpenChange,
-  } = useTable({
-    username,
-    user_id,
-  });
-
-  const {
-    data: workspacesData,
-    loading: workspacesLoading,
-    error: workspacesError,
-    refetch: workspacesRefetch,
-  } = useQuery(WORKSPACES_COLLECTION_QUERY, {
-    variables: {
-      user_id,
-    },
-  });
-  console.log(workspacesError, "workspacesError");
-  if (workspacesError) return <p>Error : {workspacesError.message}</p>;
-
-  const workspaceNode = workspacesData?.workspacesCollection?.edges;
+  } = useTasks();
 
   const goToOffice = (workspace_id: string, workspace_name: string) => {
-    console.log(workspace_name, "workspace_name");
     router.push(`/${user_id}/${workspace_id}`);
     localStorage.setItem("workspace_id", workspace_id);
     localStorage.setItem("workspace_name", workspace_name);
@@ -93,17 +85,17 @@ export default function Office() {
   };
 
   return (
-    <Layout loading={loading}>
+    <Layout loading={tasksLoading || workspacesLoading}>
       <main className="flex flex-col items-center justify-between">
-        {loading && <Spinner size="lg" />}
+        {tasksLoading && workspacesLoading && <Spinner size="lg" />}
 
         <div style={{ position: "absolute", top: 75, right: 70 }}>
           <Button onClick={onCreateNewWorkspace}>Create workspace</Button>
         </div>
 
-        {!loading && (
+        {!tasksLoading && (
           <CanvasRevealEffectDemo
-            officeData={workspaceNode || []}
+            officeData={workspacesData || []}
             onClick={(workspace_id, workspace_name) =>
               goToOffice(workspace_id, workspace_name)
             }
@@ -113,9 +105,7 @@ export default function Office() {
         <div style={{ position: "absolute", top: 600, right: 70 }}>
           <Button onClick={onCreateNewTask}>Create task</Button>
         </div>
-        {data && (
-          <DataTable data={data.tasksCollection.edges} columns={columns} />
-        )}
+        {tasksData && <DataTable data={tasksData} columns={columns} />}
         <>
           {isOpen && (
             <WorkspaceModal
@@ -133,6 +123,7 @@ export default function Office() {
             />
           )}
         </>
+        <div style={{ padding: "100px" }} />
       </main>
     </Layout>
   );

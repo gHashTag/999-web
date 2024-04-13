@@ -33,6 +33,9 @@ const DemoButton = () => {
 
   const handleTelegramResponse = async (user: TUser) => {
     const user_id = await createSupabaseUser(user);
+    localStorage.setItem("recording_id", "");
+    localStorage.setItem("room_id", "");
+    localStorage.setItem("workspace_id", "");
     router.push(`/${user_id}`);
   };
 

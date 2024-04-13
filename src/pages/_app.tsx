@@ -11,7 +11,7 @@ import ResizeHandler from "@components/resize-handler";
 import BackgroundBeams from "@components/ui/background-beams";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { setLoggedIn } from "@/apollo/reactive-store";
+import { setHeaderName, setLoggedIn } from "@/apollo/reactive-store";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -104,6 +104,7 @@ export default function App({ Component, pageProps }: AppProps) {
       // });
       // await newPersistor.restore();
       // setPersistor(newPersistor);
+      setHeaderName("");
       const httpLink = createHttpLink({
         uri: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/graphql/v1`,
       });

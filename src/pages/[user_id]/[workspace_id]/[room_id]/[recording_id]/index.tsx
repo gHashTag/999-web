@@ -7,8 +7,10 @@ import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/pages/_app";
-import { useTable } from "@/hooks/useTable";
+
 import { GET_ROOM_ASSETS } from "@/graphql/query";
+
+import { useTasks } from "@/hooks/useTasks";
 
 const RecordingPage = () => {
   const router = useRouter();
@@ -24,29 +26,7 @@ const RecordingPage = () => {
 
   const asset = assetsData?.room_assetsCollection?.edges[0]?.node;
 
-  const username = localStorage.getItem("username");
-  const user_id = localStorage.getItem("user_id");
-
-  const workspace_id = localStorage.getItem("workspace_id");
-  const room_id = localStorage.getItem("room_id");
-
-  const userName = __DEV__ ? "koshey999nft" : username;
-
-  const workspaceId = __DEV__
-    ? "54dc9d0e-dd96-43e7-bf72-02c2807f8977"
-    : workspace_id;
-
-  const roomId = __DEV__ ? "6601894fe4bed726368e290b" : room_id;
-
-  const recordingIdString = router.query.recording_id as string;
-
-  const { loading, data, columns } = useTable({
-    username: userName || "",
-    user_id: user_id || "",
-    workspace_id: workspaceId || "",
-    room_id: roomId || "",
-    recording_id: recordingIdString || "",
-  });
+  const { tasksData, tasksLoading, columns } = useTasks();
 
   function HighlightName({ text }: { text: string }) {
     const [name, ...message] = text.split(":");
@@ -61,8 +41,8 @@ const RecordingPage = () => {
   }
   return (
     <>
-      <Layout loading={loading || assetsLoading}>
-        {!loading && assetsData && (
+      <Layout loading={tasksLoading || assetsLoading}>
+        {!tasksLoading && assetsData && (
           <div
             className="flex-col mt-10"
             style={{
@@ -90,12 +70,7 @@ const RecordingPage = () => {
                       ))}
                   </div>
                 </div>
-                {data && (
-                  <DataTable
-                    data={data.tasksCollection.edges}
-                    columns={columns}
-                  />
-                )}
+                {tasksData && <DataTable data={tasksData} columns={columns} />}
               </div>
             </TracingBeam>
           </div>

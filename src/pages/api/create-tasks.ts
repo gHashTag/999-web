@@ -219,11 +219,10 @@ export default async function handler(
 
           const { lang, chat_id, token, description } = roomData[0];
 
-          console.log(description, "description");
           const workspace_id = description;
-          console.log(workspace_id, "workspace_id");
+
           const workspace = await getWorkspaceById(workspace_id);
-          console.log(workspace, "workspace");
+
           let workspace_name;
           if (workspace) {
             workspace_name = workspace[0].title;
@@ -231,7 +230,6 @@ export default async function handler(
             // Обработка случая, когда объект равен null или пустой
             console.log("workspace_name is null");
           }
-          console.log(workspace_id, "workspace_id");
 
           if (workspace_name) {
             for (const task of newTasks) {

@@ -2,23 +2,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import Layout from "@/components/layout";
-import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { EvervaultCard } from "@/components/ui/evervault-card";
 import { useRouter } from "next/router";
 import { ButtonAnimate } from "@/components/ui/button-animate";
-import { useToast } from "@/components/ui/use-toast";
-import {
-  // CURRENT_USER,
-  DELETE_ROOM_MUTATION,
-  ROOMS_ASSETS_COLLECTION_QUERY,
-  ROOMS_BY_ID_COLLECTION_QUERY,
-  ROOMS_COLLECTION_QUERY,
-  ROOM_NAME_COLLECTION_QUERY,
-} from "@/graphql/query";
+
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/pages/_app";
-import { useTable } from "@/hooks/useTable";
+
+import { useUser } from "@/hooks/useUser";
+import { useTasks } from "@/hooks/useTasks";
+import { useRooms } from "@/hooks/useRooms";
+import { setHeaderName } from "@/apollo/reactive-store";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -28,172 +23,50 @@ if (!managementToken) {
 
 const RoomPage = () => {
   const router = useRouter();
-
-  const room_id = router.query.room_id;
-  const workspace_id = router.query.workspace_id as string;
-
-  const [inviteGuestCode, setInviteGuestCode] = useState("");
-  const [inviteHostCode, setInviteHostCode] = useState("");
-  const [inviteMemberCode, setInviteMemberCode] = useState("");
-  const [deleteRoom, { loading: deleteRoomLoading, error: deleteRoomError }] =
-    useMutation(DELETE_ROOM_MUTATION);
-
-  const { toast } = useToast();
-
-  const username = localStorage.getItem("username");
-  const user_id = localStorage.getItem("user_id");
-
-  const userName = __DEV__ ? "koshey999nft" : username;
-  const userId = __DEV__ ? "ec0c948a-2b96-4ccd-942f-0a991d78a94f" : user_id;
-
-  const { loading, data, columns } = useTable({
-    username: userName || "",
-    user_id: userId || "",
-    workspace_id: workspace_id || "",
-    room_id,
-  });
-
   const {
-    data: roomsData,
-    loading: roomsLoading,
-    refetch,
-  } = useQuery(ROOMS_BY_ID_COLLECTION_QUERY, {
-    fetchPolicy: "network-only",
-    variables: {
-      room_id: router.query.room_id,
-    },
-  });
+    roomsData,
+    assetsLoading,
+    handlerDeleteRoom,
+    deleteRoomLoading,
+    arrayInvite,
+    assetsItems,
+    roomsLoading,
+    roomNameLoading,
+    inviteToMeet,
+    inviteGuestCode,
+    inviteHostCode,
+    inviteMemberCode,
+  } = useRooms();
 
-  const {
-    data: assetsData,
-    loading: assetsLoading,
-    error: assetsError,
-  } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
-    variables: {
-      room_id: router.query.room_id,
-    },
-  });
-  if (assetsError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log(assetsError, "assetsError");
-  }
-
-  const {
-    data: roomNameData,
-    loading: roomNameLoading,
-    error: roomNameError,
-  } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
-    variables: {
-      room_id: router.query.room_id,
-    },
-  });
-
-  if (roomNameError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log(roomNameError.message);
-  }
-
-  const items = assetsData?.room_assetsCollection?.edges;
-
-  const inviteToMeet = useCallback(
-    async (type: string) => {
-      // Убедитесь, что codesData действительно указывает на массив
-      // console.log(roomNameData, "roomNameData");
-      const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
-        ?.codes;
-      // console.log(codesData, "codesData");
-      if (typeof codesData === "string") {
-        const parsedCodesData = JSON.parse(codesData);
-
-        if (parsedCodesData) {
-          // Проверка, что codesData действительно массив
-          const codeObj = parsedCodesData.data.find(
-            (codeObj: { role: string; code: string }) => codeObj.role === type
-          );
-          if (codeObj) {
-            if (type === "guest") {
-              setInviteGuestCode(codeObj.code);
-            } else if (type === "member") {
-              setInviteMemberCode(codeObj.code);
-            } else if (type === "host") {
-              setInviteHostCode(codeObj.code);
-            }
-          } else {
-            console.log("No code found for type:", type);
-          }
-        } else {
-          console.error("codesData is not an array");
-        }
-      } else {
-        console.error("codesData is undefined or not a string");
-      }
-    },
-    [roomNameData]
-  );
+  const { username } = useUser();
 
   useEffect(() => {
-    inviteToMeet("host");
-    inviteToMeet("member");
-    inviteToMeet("guest");
-  }, [roomNameData, inviteToMeet]);
+    if (!username) {
+      router.push("/");
+    }
+  }, [router]);
 
-  const arrayInvite = [
-    {
-      text: "Start Meet",
-      type: "host",
-    },
-    {
-      text: "Invite Member",
-      type: "member",
-    },
-    {
-      text: "Invite Guest",
-      type: "guest",
-    },
-  ];
+  const { tasksData, tasksLoading, columns, tasksError } = useTasks();
 
-  const handlerDeleteRoom = () => {
-    deleteRoom({
-      variables: {
-        room_id: router.query.room_id,
-      },
-      onCompleted: (data) => {
-        toast({
-          title: "Success! Room deleted",
-        });
-        refetch();
-      },
-    });
-    router.push(`/${user_id}/${workspace_id}`);
-  };
-
-  const title = roomsData?.roomsCollection?.edges[0]?.node?.name;
   return (
     <>
       <Layout
         loading={
-          loading ||
+          tasksLoading ||
           roomsLoading ||
           assetsLoading ||
           roomNameLoading ||
           deleteRoomLoading
         }
       >
-        <div className="relative z-10 flex items-center justify-center">
-          <div className="relative h-10  rounded-full flex items-center justify-center text-white font-bold text-4xl">
-            <div className="absolute w-full h-full bg-white/[0.8] dark:bg-black/[0.8] blur-sm rounded-full" />
-            <span className="dark:text-white text-black z-20 text-center">
-              {title}
-            </span>
-          </div>
-        </div>
-
         <div
           style={{
             display: "flex",
             flexWrap: "wrap",
             marginTop: 40,
-            justifyContent: "space-around",
+            width: "96%",
+            alignSelf: "center",
+            justifyContent: "center",
             alignItems: "center",
           }}
         >
@@ -206,9 +79,6 @@ const RoomPage = () => {
               inviteGuestCode={inviteGuestCode}
               inviteHostCode={inviteHostCode}
               inviteMemberCode={inviteMemberCode}
-              user_id={user_id || ""}
-              workspace_id={workspace_id || ""}
-              room_id={room_id || ""}
             />
           ))}
         </div>
@@ -221,19 +91,14 @@ const RoomPage = () => {
             alignItems: "center",
             paddingLeft: 10,
             paddingRight: 10,
+            width: "92%",
+            alignSelf: "center",
           }}
         >
-          <HoverEffect items={items} />
+          <HoverEffect items={assetsItems} />
         </div>
-        <div
-          style={{
-            paddingLeft: 20,
-            paddingRight: 20,
-          }}
-        >
-          {data && (
-            <DataTable data={data.tasksCollection.edges} columns={columns} />
-          )}
+        <div>
+          {tasksData && <DataTable data={tasksData} columns={columns} />}
         </div>
 
         <div
@@ -244,7 +109,9 @@ const RoomPage = () => {
             alignSelf: "center",
           }}
         >
+          <div style={{ padding: "20px" }} />
           <ButtonAnimate onClick={handlerDeleteRoom}>Delete room</ButtonAnimate>
+          <div style={{ padding: "100px" }} />
         </div>
       </Layout>
     </>

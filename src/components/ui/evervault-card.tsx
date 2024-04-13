@@ -6,6 +6,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useUser } from "@/hooks/useUser";
 
 type EvervaultCardProps = {
   text: string;
@@ -15,9 +16,6 @@ type EvervaultCardProps = {
   inviteHostCode: string;
   inviteMemberCode: string;
   inviteGuestCode: string;
-  user_id: string;
-  workspace_id: string;
-  room_id: string | string[];
 };
 
 export const EvervaultCard = ({
@@ -28,9 +26,6 @@ export const EvervaultCard = ({
   inviteHostCode,
   inviteMemberCode,
   inviteGuestCode,
-  user_id,
-  workspace_id,
-  room_id,
 }: EvervaultCardProps) => {
   const router = useRouter();
   let mouseX = useMotionValue(0);
@@ -39,6 +34,7 @@ export const EvervaultCard = ({
   const [copiedText, copy] = useCopyToClipboard();
   const [randomString, setRandomString] = useState("");
   const { toast } = useToast();
+  const { user_id, workspace_id, room_id } = useUser();
 
   useEffect(() => {
     let str = generateRandomString(1500);
@@ -110,14 +106,14 @@ export const EvervaultCard = ({
       <Link
         href={href}
         onClick={handleClick}
-        className="cursor-pointer border border-black/[0.2] dark:border-yellow-500/[0.2] flex flex-col items-start max-w-md container mx-auto px-4 md:px-6 lg:px-8 p-4 relative h-[13rem]"
+        className="cursor-pointer border border-black/[0.2] dark:border-yellow-500/[0.2] flex flex-col items-start max-w-sm container mx-auto px-4 md:px-6 lg:px-8 p-4 relative h-[13rem]"
       >
         <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-yellow-500 text-black" />
         <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-yellow-500 text-black" />
         <Icon className="absolute h-6 w-6 -top-3 -right-3 dark:text-yellow-500 text-black" />
         <Icon className="absolute h-6 w-6 -bottom-3 -right-3 dark:text-yellow-500 text-black" />
         <div
-          style={{ width: 380, height: 170 }}
+          style={{ width: 320, height: 170 }}
           className={cn(
             "p-0.5  bg-transparent aspect-square  flex items-center justify-center w-full h-full relative",
             className

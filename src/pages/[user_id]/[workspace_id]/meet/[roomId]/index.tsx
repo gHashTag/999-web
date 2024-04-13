@@ -9,6 +9,7 @@ import {
 
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
+import { useUser } from "@/hooks/useUser";
 
 const HMSPrebuilt = dynamic(
   () =>
@@ -66,9 +67,9 @@ const Rooms = () => {
     };
   }, [hmsActions, isConnected]);
 
-  const first_name = localStorage.getItem("first_name");
-  const last_name = localStorage.getItem("last_name");
-  const userName = `${first_name} ${last_name || ""}` || "";
+  const { firstName, lastName } = useUser();
+
+  const userName = `${firstName} ${lastName || ""}` || "";
 
   return (
     <Layout loading={loading}>

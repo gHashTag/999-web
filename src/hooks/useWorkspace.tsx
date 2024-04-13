@@ -7,19 +7,21 @@ import {
 } from "@/graphql/query";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useDisclosure } from "@nextui-org/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useUser } from "./useUser";
 
-const useWorkspace = (user_id: string, username: string) => {
+const useWorkspace = () => {
+  const { user_id, username } = useUser();
   const { toast } = useToast();
   const { onClose } = useDisclosure();
-  const { getValues, reset } = useForm();
+  const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [openModalId, setOpenModalId] = useState<string | null>(null);
   const {
     data: workspacesData,
-    loading,
-    error,
-    refetch,
+    loading: workspacesLoading,
+    error: workspacesError,
+    refetch: workspacesRefetch,
   } = useQuery(WORKSPACES_COLLECTION_QUERY, {
     variables: {
       user_id,
@@ -33,10 +35,12 @@ const useWorkspace = (user_id: string, username: string) => {
 
   if (mutateCreateWorkspaceError instanceof ApolloError) {
     // Обработка ошибки ApolloError
-    console.log("mutateCreateTaskError", mutateCreateWorkspaceError.message);
+    console.log(
+      "mutateCreateWorkspaceError",
+      mutateCreateWorkspaceError.message
+    );
   }
 
-  console.log(workspaceNode, "workspaceNode");
   const [mutateUpdateWorkspace, { error: mutateUpdateWorkspaceError }] =
     useMutation(WORKSPACE_UPDATE_MUTATION, {
       variables: {
@@ -79,7 +83,7 @@ const useWorkspace = (user_id: string, username: string) => {
             title: "Workspace created",
             description: "Workspace created successfully",
           });
-          refetch();
+          workspacesRefetch();
 
           reset({
             title: "",
@@ -117,7 +121,7 @@ const useWorkspace = (user_id: string, username: string) => {
     mutateUpdateWorkspace({
       variables,
       onCompleted: () => {
-        refetch();
+        workspacesRefetch();
       },
     });
   };
@@ -132,18 +136,30 @@ const useWorkspace = (user_id: string, username: string) => {
         },
       },
       onCompleted: () => {
-        refetch();
+        workspacesRefetch();
       },
     });
     closeModal();
   };
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setOpenModalId(null);
     onClose();
-  };
+  }, [onClose]);
 
-  return { onCreate, onDelete, onUpdate };
+  return {
+    workspacesData: workspaceNode,
+    workspacesLoading,
+    workspacesError,
+    workspacesRefetch,
+    control,
+    handleSubmit,
+    setValue,
+    getValues,
+    onCreate,
+    onDelete,
+    onUpdate,
+  };
 };
 
 export { useWorkspace };

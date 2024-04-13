@@ -13,6 +13,7 @@ import { SignupFormDemo } from "@/components/ui/signup-form";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { Spinner } from "@/components/ui/spinner";
 import { setHeaderName } from "@/apollo/reactive-store";
+import { useUser } from "@/hooks/useUser";
 
 const QUERY = gql`
   query GetUserByEmail($username: String!) {
@@ -75,7 +76,7 @@ export type updateUserDataType = {
 
 export default function Wallet() {
   const router = useRouter();
-  const username = localStorage.getItem("username");
+  const { username } = useUser();
 
   useEffect(() => {
     if (!username) {
