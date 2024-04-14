@@ -90,7 +90,7 @@ export const EvervaultCard = ({
       `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`
     ) {
       if (type === "guest") {
-        handleCopy(`${window.location.origin}${targetPath}`);
+        handleCopy(`/${user_id}/${workspace_id}/meet/${inviteGuestCode}`);
         inviteToMeet(type);
       } else if (type === "member") {
         inviteToMeet(type);
