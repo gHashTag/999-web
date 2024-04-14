@@ -13,10 +13,11 @@ import { __DEV__ } from "@/pages/_app";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 import { useRooms } from "@/hooks/useRooms";
-import { setHeaderName } from "@/apollo/reactive-store";
+import { setHeaderName, setRoomName } from "@/apollo/reactive-store";
 import InviteMemberModal from "@/components/modal/InviteMemberModal";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { AnimatedTooltipCommon } from "@/components/ui/animated-tooltip-common";
+import { useReactiveVar } from "@apollo/client";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -40,7 +41,7 @@ const RoomPage = () => {
     inviteHostCode,
     inviteMemberCode,
   } = useRooms();
-  const { username, workspace_id, room_id } = useUser();
+  const { username, workspace_id, room_id, room_name } = useUser();
   const {
     passportData,
     passportLoading,
@@ -62,13 +63,15 @@ const RoomPage = () => {
     workspace_id,
   });
 
+  const roomName = useReactiveVar(setRoomName);
+
   useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
-      setHeaderName(roomsData?.name);
+      setHeaderName(roomName);
     }
-  }, [router, roomsData]);
+  }, [router, roomsData, roomName]);
 
   const { tasksData, tasksLoading, columns, tasksError } = useTasks({
     workspace_id,

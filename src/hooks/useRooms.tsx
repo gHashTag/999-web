@@ -76,11 +76,12 @@ const useRooms = () => {
       // console.log(codesData, "codesData");
       if (typeof codesData === "string") {
         const parsedCodesData = JSON.parse(codesData);
-
         if (parsedCodesData) {
           // Проверка, что codesData действительно массив
           const codeObj = parsedCodesData.data.find(
-            (codeObj: { role: string; code: string }) => codeObj.role === type
+            (codeObj: { role: string; code: string }) => {
+              return codeObj.role === type;
+            }
           );
           if (codeObj) {
             if (type === "guest") {
