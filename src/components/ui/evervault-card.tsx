@@ -76,13 +76,13 @@ export const EvervaultCard = ({
     let targetPath;
     switch (type) {
       case "host":
-        targetPath = `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`;
+        targetPath = `/${user_id}/${workspace_id}/meet/${inviteHostCode}`;
         break;
       case "member":
-        targetPath = `/${user_id}/${workspace_id}/${room_id}/${inviteMemberCode}`;
+        targetPath = `/${user_id}/${workspace_id}/meet/${inviteMemberCode}`;
         break;
       default:
-        targetPath = `/${user_id}/${workspace_id}/${room_id}/${inviteGuestCode}`;
+        targetPath = `/${user_id}/${workspace_id}/meet/${inviteGuestCode}`;
     }
 
     if (
@@ -94,8 +94,9 @@ export const EvervaultCard = ({
         inviteToMeet(type);
       } else if (type === "member") {
         inviteToMeet(type);
+        handleCopy(`${window.location.origin}${targetPath}`);
         onOpenModalPassport();
-      } else {
+      } else if (type === "host") {
         inviteToMeet(type);
       }
     }
@@ -103,7 +104,7 @@ export const EvervaultCard = ({
 
   const href =
     type === "host"
-      ? `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`
+      ? `/${user_id}/${workspace_id}/meet/${inviteHostCode}`
       : router.asPath;
 
   return (
