@@ -16,7 +16,11 @@ import CardRoom from "@/components/ui/card-room";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "../../_app";
 
-import { setHeaderName, setLoading } from "@/apollo/reactive-store";
+import {
+  setHeaderName,
+  setLoading,
+  setRoomName,
+} from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 
@@ -75,6 +79,8 @@ const MeetsPage = () => {
             title: "Success",
             description: `${response.rooms.name} created`,
           });
+          localStorage.setItem("room_name", response.rooms.name);
+          setRoomName(response.rooms.name);
           router.push(`/${user_id}/${workspace_id}/${response.rooms.room_id}`);
           setLoading(false);
         }
