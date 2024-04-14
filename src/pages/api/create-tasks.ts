@@ -92,7 +92,7 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: { ...corsHeaders, ...headers } });
+    return new Response("ok", { headers: { ...headers } });
   }
   await NextCors(req, res, {
     // Options
@@ -112,6 +112,7 @@ export default async function handler(
     }
 
     if (type === "transcription.success") {
+      console.log(data, "data");
       if (!data.room_id) {
         return res.status(200).json({
           message: `check init data ${JSON.stringify(data)}`,
