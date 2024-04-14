@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getWorkspaceById, supabase } from "@/utils/supabase";
-import { corsHeaders, headers } from "@/helpers/headers";
+import { headers } from "@/helpers/headers";
 import NextCors from "nextjs-cors";
 import { Bot } from "grammy";
 import { translateText } from "@/helpers/api/translateText";

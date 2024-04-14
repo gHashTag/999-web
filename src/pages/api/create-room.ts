@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getWorkspaceById, supabase } from "@/utils/supabase";
 import { RoomNode } from "@/types";
-import { corsHeaders, headers } from "@/helpers/headers";
+import { headers } from "@/helpers/headers";
 import NextCors from "nextjs-cors";
 // @ts-ignore
 import jwt from "jsonwebtoken";
@@ -54,7 +54,7 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: { ...corsHeaders, ...headers } });
+    return new Response("ok", { headers: { ...headers } });
   }
   await NextCors(req, res, {
     // Options
