@@ -83,8 +83,6 @@ const usePassport = ({
     };
   }
 
-  console.log(queryVariables, "queryVariables");
-
   // if (!recording_id && !room_id && !workspace_id && !user_id) {
   //   passportQuery = GET_ALL_PASSPORTS_QUERY;
   // }
@@ -98,9 +96,7 @@ const usePassport = ({
     variables: queryVariables,
   });
 
-  console.log(passportData, "passportData");
   const passportNode = passportData?.user_passportCollection?.edges;
-  console.log(passportNode, "passportNode");
 
   const [mutateCreatePassport, { error: mutateCreatePassportError }] =
     useMutation(PASSPORT_CREATE_MUTATION);

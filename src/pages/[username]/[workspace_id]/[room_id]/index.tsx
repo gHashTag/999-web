@@ -18,6 +18,7 @@ import InviteMemberModal from "@/components/modal/InviteMemberModal";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { AnimatedTooltipCommon } from "@/components/ui/animated-tooltip-common";
 import { useReactiveVar } from "@apollo/client";
+import TaskModal from "@/components/modal/TaskModal";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -42,6 +43,32 @@ const RoomPage = () => {
     inviteMemberCode,
   } = useRooms();
   const { username, workspace_id, room_id, room_name } = useUser();
+
+  const {
+    tasksData,
+    tasksLoading,
+    tasksError,
+    refetchTasks,
+    isOpenModalTask,
+    onOpenModalTask,
+    onOpenChangeModalTask,
+    onCreateTask,
+    onDeleteTask,
+    onUpdateTask,
+    setValueTask,
+    controlTask,
+    handleSubmitTask,
+    getValuesTask,
+    onCreateNewTask,
+    columns,
+    openModalTaskId,
+    setOpenModalTaskId,
+    isEditingTask,
+  } = useTasks({
+    workspace_id,
+    room_id,
+  });
+
   const {
     passportData,
     passportLoading,
@@ -72,12 +99,6 @@ const RoomPage = () => {
       setHeaderName(roomName);
     }
   }, [router, roomsData, roomName]);
-
-  const { tasksData, tasksLoading, columns, tasksError, onCreateNewTask } =
-    useTasks({
-      workspace_id,
-      room_id,
-    });
 
   return (
     <>
@@ -133,23 +154,6 @@ const RoomPage = () => {
           }}
         >
           <HoverEffect items={assetsItems} />
-          {isOpenModalPassport && (
-            <InviteMemberModal
-              isOpen={isOpenModalPassport}
-              onOpen={onOpenModalPassport}
-              onOpenChange={onOpenChangeModalPassport}
-              onCreate={onCreatePassport}
-              onDelete={() =>
-                openModalPassportId && onDeletePassport(openModalPassportId)
-              }
-              onUpdate={onUpdatePassport}
-              control={controlPassport}
-              handleSubmit={handleSubmitPassport}
-              getValues={getValuesPassport}
-              setValue={setValuePassport}
-              isEditing={isEditingPassport}
-            />
-          )}
         </div>
         <div
           style={{
@@ -176,6 +180,38 @@ const RoomPage = () => {
           <ButtonAnimate onClick={handlerDeleteRoom}>Delete room</ButtonAnimate>
           <div style={{ padding: "100px" }} />
         </div>
+        {isOpenModalPassport && (
+          <InviteMemberModal
+            isOpen={isOpenModalPassport}
+            onOpen={onOpenModalPassport}
+            onOpenChange={onOpenChangeModalPassport}
+            onCreate={onCreatePassport}
+            onDelete={() =>
+              openModalPassportId && onDeletePassport(openModalPassportId)
+            }
+            onUpdate={onUpdatePassport}
+            control={controlPassport}
+            handleSubmit={handleSubmitPassport}
+            getValues={getValuesPassport}
+            setValue={setValuePassport}
+            isEditing={isEditingPassport}
+          />
+        )}
+        {isOpenModalTask && (
+          <TaskModal
+            isOpen={isOpenModalTask}
+            onOpen={onOpenModalTask}
+            onOpenChange={onOpenChangeModalTask}
+            onCreate={onCreateTask}
+            onDelete={() => openModalTaskId && onDeleteTask(openModalTaskId)}
+            onUpdate={() => openModalTaskId && onUpdateTask(openModalTaskId)}
+            control={controlTask}
+            handleSubmit={handleSubmitTask}
+            getValues={getValuesTask}
+            setValue={setValueTask}
+            isEditing={isEditingTask}
+          />
+        )}
       </Layout>
     </>
   );

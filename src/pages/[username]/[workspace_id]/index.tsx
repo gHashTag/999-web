@@ -24,6 +24,7 @@ import {
 } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
+import TaskModal from "@/components/modal/TaskModal";
 
 const MeetsPage = () => {
   const router = useRouter();
@@ -32,7 +33,27 @@ const MeetsPage = () => {
   const { username, user_id, lang, workspace_name } = useUser();
 
   const workspace_id = router.query.workspace_id as string;
-  const { tasksData, columns, onCreateNewTask } = useTasks({
+  const {
+    tasksData,
+    tasksLoading,
+    tasksError,
+    refetchTasks,
+    isOpenModalTask,
+    onOpenModalTask,
+    onOpenChangeModalTask,
+    onCreateTask,
+    onDeleteTask,
+    onUpdateTask,
+    setValueTask,
+    controlTask,
+    handleSubmitTask,
+    getValuesTask,
+    onCreateNewTask,
+    columns,
+    openModalTaskId,
+    setOpenModalTaskId,
+    isEditingTask,
+  } = useTasks({
     workspace_id,
   });
 
@@ -155,6 +176,7 @@ const MeetsPage = () => {
           style={{
             display: "flex",
             justifyContent: "flex-end",
+            top: 20,
             paddingRight: "70px",
           }}
         >
@@ -171,6 +193,21 @@ const MeetsPage = () => {
       >
         {tasksData && <DataTable data={tasksData} columns={columns} />}
       </div>
+      {isOpenModalTask && (
+        <TaskModal
+          isOpen={isOpenModalTask}
+          onOpen={onOpenModalTask}
+          onOpenChange={onOpenChangeModalTask}
+          onCreate={onCreateTask}
+          onDelete={() => openModalTaskId && onDeleteTask(openModalTaskId)}
+          onUpdate={() => openModalTaskId && onUpdateTask(openModalTaskId)}
+          control={controlTask}
+          handleSubmit={handleSubmitTask}
+          getValues={getValuesTask}
+          setValue={setValueTask}
+          isEditing={isEditingTask}
+        />
+      )}
     </Layout>
   );
 };

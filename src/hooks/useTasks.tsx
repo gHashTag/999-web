@@ -460,6 +460,7 @@ const useTasks = ({
     onCreateNewTask,
     columns,
     isEditingTask: isEditing,
+    resetTask: reset,
   };
 };
 
@@ -488,6 +489,7 @@ type UseTasksReturn = {
   ) => void;
   columns: any;
   isEditingTask: boolean;
+  resetTask: any;
 };
 
 export { useTasks };
