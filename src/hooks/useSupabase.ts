@@ -170,11 +170,14 @@ export function useSupabase() {
 
   const createSupabaseUser = async (
     user: TUser
-  ): Promise<string | undefined> => {
+  ): Promise<{ user_id: string; username: string } | undefined> => {
     try {
       if (!user.username) {
         console.error("Username пользователя не найден");
-        return "";
+        return {
+          user_id: "",
+          username: "",
+        };
       }
 
       const { username, first_name, last_name, photo_url } = user;
@@ -205,11 +208,17 @@ export function useSupabase() {
           last_name || "",
           photo_url || ""
         );
-        return userData.user_id;
+        return {
+          user_id: userData.user_id,
+          username,
+        };
       }
     } catch (error) {
       console.error("Ошибка при получении информации о пользователе:", error);
-      return "";
+      return {
+        user_id: "",
+        username: "",
+      };
     }
   };
 

@@ -9,7 +9,7 @@ import { ButtonAnimate } from "@/components/ui/button-animate";
 import { usePassport } from "@/hooks/usePassport";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/pages/_app";
-
+import { Button } from "@/components/ui/moving-border";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 import { useRooms } from "@/hooks/useRooms";
@@ -73,10 +73,11 @@ const RoomPage = () => {
     }
   }, [router, roomsData, roomName]);
 
-  const { tasksData, tasksLoading, columns, tasksError } = useTasks({
-    workspace_id,
-    room_id,
-  });
+  const { tasksData, tasksLoading, columns, tasksError, onCreateNewTask } =
+    useTasks({
+      workspace_id,
+      room_id,
+    });
 
   return (
     <>
@@ -150,9 +151,18 @@ const RoomPage = () => {
             />
           )}
         </div>
-        <div>
-          {tasksData && <DataTable data={tasksData} columns={columns} />}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            paddingRight: "70px",
+          }}
+        >
+          <Button onClick={() => onCreateNewTask(workspace_id, room_id)}>
+            Create task
+          </Button>
         </div>
+        {tasksData && <DataTable data={tasksData} columns={columns} />}
 
         <div
           style={{

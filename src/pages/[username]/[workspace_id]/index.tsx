@@ -13,6 +13,7 @@ import { ROOMS_COLLECTION_QUERY } from "@/graphql/query";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { CardRoomT } from "@/types";
 import CardRoom from "@/components/ui/card-room";
+import { Button } from "@/components/ui/moving-border";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "../../_app";
 
@@ -31,7 +32,7 @@ const MeetsPage = () => {
   const { username, user_id, lang, workspace_name } = useUser();
 
   const workspace_id = router.query.workspace_id as string;
-  const { tasksData, columns } = useTasks({
+  const { tasksData, columns, onCreateNewTask } = useTasks({
     workspace_id,
   });
 
@@ -75,14 +76,14 @@ const MeetsPage = () => {
         });
 
         if (response) {
+          localStorage.setItem("room_name", response.rooms.name);
+          setRoomName(response.rooms.name);
+          router.push(`/${username}/${workspace_id}/${response.rooms.room_id}`);
+          setLoading(false);
           toast({
             title: "Success",
             description: `${response.rooms.name} created`,
           });
-          localStorage.setItem("room_name", response.rooms.name);
-          setRoomName(response.rooms.name);
-          router.push(`/${user_id}/${workspace_id}/${response.rooms.room_id}`);
-          setLoading(false);
         }
       } else {
         console.log("Username not a found");
@@ -112,7 +113,7 @@ const MeetsPage = () => {
     onOpen();
     setOpenModalId(type);
   };
-  // console.log(roomsData, "roomsData");
+
   return (
     <Layout loading={loading || roomsLoading}>
       <>
@@ -141,14 +142,25 @@ const MeetsPage = () => {
                 description: room.node.type,
               }}
               onClick={() => {
-                router.push(`/${user_id}/${workspace_id}/${room.node.room_id}`);
+                router.push(
+                  `/${username}/${workspace_id}/${room.node.room_id}`
+                );
                 localStorage.setItem("room_id", room.node.room_id);
               }}
               key={room.node.id}
             />
           ))}
-          {/* https://a46ffbba421b.ngrok.app/d696abd8-3b7a-46f2-907f-5342a2b533a0/6617f3b8f22c5c6a76021925
-          https://a46ffbba421b.ngrok.app/d696abd8-3b7a-46f2-907f-5342a2b533a0/6617f31ff22c5c6a76021913 */}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            paddingRight: "70px",
+          }}
+        >
+          <Button onClick={() => onCreateNewTask(workspace_id)}>
+            Create task
+          </Button>
         </div>
       </>
       <div

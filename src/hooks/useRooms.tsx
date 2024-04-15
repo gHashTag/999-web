@@ -23,7 +23,7 @@ const useRooms = () => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const { user_id, workspace_id, room_id } = useUser();
+  const { username, workspace_id, room_id } = useUser();
 
   const {
     data: roomsData,
@@ -137,7 +137,8 @@ const useRooms = () => {
         refetch();
       },
     });
-    router.push(`/${user_id}/${workspace_id}`);
+
+    router.push(`/${username}/${workspace_id}`);
   };
 
   const room_name = roomNameData?.roomsCollection?.edges[0]?.node?.name;

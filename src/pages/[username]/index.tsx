@@ -23,7 +23,8 @@ import {
 import { useTasks } from "@/hooks/useTasks";
 import { useUser } from "@/hooks/useUser";
 import TaskModal from "@/components/modal/TaskModal";
-import { Button } from "@/components/ui/moving-border";
+
+import { __DEV__ } from "../_app";
 
 export type updateUserDataType = {
   user_id: string;
@@ -35,7 +36,7 @@ export type updateUserDataType = {
 export default function Office() {
   const router = useRouter();
 
-  const { username, user_id } = useUser();
+  const { username, workspace_id } = useUser();
 
   const {
     workspacesData,
@@ -59,7 +60,7 @@ export default function Office() {
 
   useEffect(() => {
     if (!username) {
-      router.push("/");
+      !__DEV__ && router.push("/");
     } else {
       setVisibleHeader(true);
       setHeaderName("Workspaces");
@@ -97,7 +98,7 @@ export default function Office() {
   }, [id_task, setOpenModalTaskId]);
 
   const goToOffice = (workspace_id: string, workspace_name: string) => {
-    router.push(`/${user_id}/${workspace_id}`);
+    router.push(`/${username}/${workspace_id}`);
     localStorage.setItem("workspace_id", workspace_id);
     localStorage.setItem("workspace_name", workspace_name);
   };
@@ -127,9 +128,6 @@ export default function Office() {
           />
         )}
 
-        <div style={{ alignSelf: "flex-end", paddingRight: "70px" }}>
-          <Button onClick={() => onCreateNewTask()}>Create task</Button>
-        </div>
         {tasksData && <DataTable data={tasksData} columns={columns} />}
 
         <>

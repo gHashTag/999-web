@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/pages/_app";
-
+import { Button } from "@/components/ui/moving-border";
 import { GET_ROOM_ASSETS } from "@/graphql/query";
 
 import { useTasks } from "@/hooks/useTasks";
@@ -28,7 +28,7 @@ const RecordingPage = () => {
   const asset = assetsData?.room_assetsCollection?.edges[0]?.node;
   const { user_id, workspace_id, room_id } = useUser();
 
-  const { tasksData, tasksLoading, columns } = useTasks({
+  const { tasksData, tasksLoading, columns, onCreateNewTask } = useTasks({
     workspace_id,
     room_id,
     recording_id,
@@ -48,6 +48,21 @@ const RecordingPage = () => {
   return (
     <>
       <Layout loading={tasksLoading || assetsLoading}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            paddingRight: "70px",
+          }}
+        >
+          <Button
+            onClick={() =>
+              onCreateNewTask(workspace_id, room_id, recording_id as string)
+            }
+          >
+            Create task
+          </Button>
+        </div>
         {!tasksLoading && assetsData && (
           <div className="flex-col mt-10">
             <TracingBeam className="px-6">
@@ -73,6 +88,7 @@ const RecordingPage = () => {
             </TracingBeam>
           </div>
         )}
+
         {tasksData && <DataTable data={tasksData} columns={columns} />}
       </Layout>
     </>

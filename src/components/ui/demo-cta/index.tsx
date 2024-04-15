@@ -32,11 +32,11 @@ const DemoButton = () => {
   useClickOutside(ctaRef, clickedOutside);
 
   const handleTelegramResponse = async (user: TUser) => {
-    const user_id = await createSupabaseUser(user);
+    await createSupabaseUser(user);
     localStorage.setItem("recording_id", "");
     localStorage.setItem("room_id", "");
     localStorage.setItem("workspace_id", "");
-    router.push(`/${user_id}`);
+    router.push(`/${user.username}`);
   };
 
   return (

@@ -41,6 +41,9 @@ const useTasks = ({
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { getTaskById } = useSupabase();
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
+  const [roomId, setRoomId] = useState<string | null>(null);
+  const [recordingId, setRecordingId] = useState<string | null>(null);
 
   const { username, user_id } = useUser();
 
@@ -147,10 +150,17 @@ const useTasks = ({
   const [deleteTask, { error: deleteTaskError }] =
     useMutation(DELETE_TASK_MUTATION);
 
-  const onCreateNewTask = () => {
+  const onCreateNewTask = (
+    workspace_id: string,
+    room_id?: string,
+    recording_id?: string
+  ) => {
     setValue("title", "");
     setValue("description", "");
     setValue("label", "");
+    setWorkspaceId(workspace_id);
+    room_id && setRoomId(room_id);
+    recording_id && setRecordingId(recording_id);
     onOpen();
     setIsEditingTask(false);
   };
@@ -172,6 +182,9 @@ const useTasks = ({
 
       const formDataWithUserId = {
         ...formData,
+        workspace_id: workspaceId,
+        room_id: roomId,
+        recording_id: recordingId,
         user_id,
       };
 
@@ -468,7 +481,11 @@ type UseTasksReturn = {
   controlTask: any;
   handleSubmitTask: any;
   getValuesTask: any;
-  onCreateNewTask: () => void;
+  onCreateNewTask: (
+    workspace_id: string,
+    room_id?: string,
+    recording_id?: string
+  ) => void;
   columns: any;
   isEditingTask: boolean;
 };
