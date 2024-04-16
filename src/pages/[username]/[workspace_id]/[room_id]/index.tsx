@@ -71,8 +71,6 @@ const RoomPage = () => {
     room_id,
   });
 
-  console.log(openModalTaskId, "openModalTaskId");
-
   const {
     passportData,
     passportLoading,

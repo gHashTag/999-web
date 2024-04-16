@@ -1,7 +1,7 @@
 import { OpenloginUserInfo } from "@toruslabs/openlogin-utils";
 
 // Определение типа статуса задачи
-export type TaskStatus = 1 | 2 | 3 | 4;
+export type TaskStatus = "todo" | "in_progress" | "done" | "archived";
 
 export type StatusMap = {
   [key: string]: number;
@@ -54,14 +54,14 @@ export type TasksArray = Task[];
 
 type TaskNode = {
   __typename: string;
-  id: string;
+  id: number;
   user_id: string;
   created_at: string;
   title: string;
   description: string;
   updated_at?: string;
   due_date?: string;
-  priority?: number;
+  priority?: string;
   assigned_to?: AssignedUser[];
   label?: string[];
   completed_at?: string;

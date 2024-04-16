@@ -3,13 +3,20 @@ import {
   CREATE_TASK_MUTATION,
   DELETE_TASK_MUTATION,
   GET_RECORDING_ID_TASKS_QUERY,
+  GET_TASKS_BY_ID_QUERY,
   MUTATION_TASK_STATUS_UPDATE,
   MUTATION_TASK_UPDATE,
 } from "@/graphql/query";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useDisclosure } from "@nextui-org/react";
 import { useCallback, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import {
+  FieldValues,
+  UseFormHandleSubmit,
+  UseFormSetValue,
+  UseFormWatch,
+  useForm,
+} from "react-hook-form";
 import { useSupabase } from "./useSupabase";
 import { setOpenModalId } from "@/apollo/reactive-store";
 import { useUser } from "./useUser";
@@ -32,7 +39,7 @@ type PassportType = {
   room_id?: string;
   workspace_id?: string;
   recording_id?: string | string[] | undefined;
-  task_id?: number;
+  task_id?: string;
 };
 
 const useTasks = ({
@@ -53,7 +60,8 @@ const useTasks = ({
   const [openModalTaskId, setOpenModalTaskId] = useState<number | null>(null);
   const [isEditing, setIsEditingTask] = useState<boolean>(false);
 
-  const { control, handleSubmit, getValues, setValue, reset } = useForm();
+  const { control, handleSubmit, getValues, setValue, reset, watch } =
+    useForm();
 
   let tasksQuery = GET_USER_TASKS_QUERY;
 
@@ -94,7 +102,7 @@ const useTasks = ({
   }
 
   if (!recording_id && !room_id && !workspace_id && task_id) {
-    tasksQuery = GET_USER_TASKS_QUERY;
+    tasksQuery = GET_TASKS_BY_ID_QUERY;
     queryVariables = {
       task_id,
     };
@@ -173,7 +181,6 @@ const useTasks = ({
     room_id?: string,
     recording_id?: string
   ) => {
-    console.log(workspace_id, "workspace_id");
     setValue("title", "");
     setValue("description", "");
     setValue("label", "");
@@ -198,7 +205,7 @@ const useTasks = ({
   const onCreateTask = useCallback(async () => {
     try {
       const formData = getValues();
-      console.log(workspaceId, "workspaceId");
+
       const formDataWithUserId = {
         ...formData,
         workspace_id: workspaceId,
@@ -206,8 +213,6 @@ const useTasks = ({
         recording_id: recordingId,
         user_id,
       };
-
-      console.log(formDataWithUserId, "formDataWithUserId");
 
       const mutateCreateTaskResult = await mutateCreateTask({
         variables: {
@@ -227,7 +232,6 @@ const useTasks = ({
         },
       });
     } catch (error) {
-      console.log(error, "error");
       toast({
         title: "Error creating task:",
         variant: "destructive",
@@ -274,14 +278,17 @@ const useTasks = ({
   const onUpdateTask = useCallback(
     async (id: number) => {
       const formData = getValues();
-      console.log(formData, "formData");
+      console.log(formData.priority, "formData.priority");
+      console.log(id, "id");
       const variables = {
         id,
         title: formData.title,
         description: formData.description,
         updated_at: new Date().toISOString(),
+        priority: formData.priority,
+        status: formData.status,
       };
-      console.log(variables, "variablesvariables");
+      console.log(variables, "variables");
 
       await mutateUpdateTask({
         variables,
@@ -479,6 +486,7 @@ const useTasks = ({
     columns,
     isEditingTask: isEditing,
     resetTask: reset,
+    watchTask: watch,
   };
 };
 
@@ -494,11 +502,9 @@ type UseTasksReturn = {
   onUpdateTask: (id: number) => void;
   onUpdateTaskStatus: (id: number) => void;
   onDeleteTask: (id: number) => void;
-  setValueTask: (id: string, value: any) => void;
   openModalTaskId: number | null;
   setOpenModalTaskId: (id: number | null) => void;
   controlTask: any;
-  handleSubmitTask: any;
   getValuesTask: any;
   onCreateNewTask: (
     workspace_id: string,
@@ -508,6 +514,9 @@ type UseTasksReturn = {
   columns: any;
   isEditingTask: boolean;
   resetTask: any;
+  handleSubmitTask: UseFormHandleSubmit<FieldValues, undefined>;
+  watchTask: UseFormWatch<FieldValues>;
+  setValueTask: UseFormSetValue<FieldValues>;
 };
 
 export { useTasks };

@@ -27,7 +27,6 @@ const RecordingPage = () => {
   });
 
   const asset = assetsData?.room_assetsCollection?.edges[0]?.node;
-  const { workspace_id, room_id } = useUser();
 
   const {
     tasksData,

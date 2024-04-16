@@ -16,15 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 //@ts-ignore
 import styled from "styled-components";
-import { cn } from "@/utils/cn";
-import { InputMultiline } from "../ui/input-multiline";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { useUser } from "@/hooks/useUser";
 
 type WorkspaceModalType = {
@@ -95,20 +87,7 @@ function InviteMemberModal({
                 <div style={{ padding: 10 }} />
               </form>
             </ModalBody>
-            {/* <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Priority" />
-              </SelectTrigger>
-              <SelectContent
-                onClick={() => {
-                  console.log("click");
-                }}
-              >
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-              </SelectContent>
-            </Select> */}
+
             <ModalFooter>
               {isEditing && (
                 // @ts-ignore

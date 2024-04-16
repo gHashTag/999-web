@@ -1,50 +1,50 @@
 "use client";
 import React from "react";
 import Layout from "@/components/layout";
-import { TracingBeam } from "@/components/ui/tracing-beam";
-import { twMerge } from "tailwind-merge";
+
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
-import { DataTable } from "@/components/table/data-table";
-import { __DEV__ } from "@/pages/_app";
-import { Button } from "@/components/ui/moving-border";
-import { GET_ROOM_ASSETS } from "@/graphql/query";
 
 import { useTasks } from "@/hooks/useTasks";
-import { useUser } from "@/hooks/useUser";
+
+import { TaskForm } from "@/components/ui/task-form";
 
 const TaskPage = () => {
   const router = useRouter();
   const { task_id } = router.query;
 
-  const { workspace_id, room_id } = useUser();
-
-  const { tasksData, tasksLoading, columns, onCreateNewTask } = useTasks({
-    task_id,
+  const {
+    tasksData,
+    tasksLoading,
+    onUpdateTask,
+    handleSubmitTask,
+    watchTask,
+    setValueTask,
+  } = useTasks({
+    task_id: task_id as string,
   });
 
-  function HighlightName({ text }: { text: string }) {
-    const [name, ...message] = text.split(":");
-    const restOfMessage = message.join(":");
-
-    return (
-      <span>
-        <strong className="text-yellow-500">{name}</strong>
-        {restOfMessage}
-      </span>
-    );
-  }
   return (
     <>
       <Layout loading={tasksLoading}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            paddingRight: "70px",
-          }}
-        ></div>
-        Task: {task_id}
+        {!tasksLoading &&
+          tasksData.map(({ node }) => {
+            console.log(node.priority, "node.priority");
+            return (
+              <TaskForm
+                key={node.id}
+                id={node.id}
+                title={node.title}
+                description={node.description}
+                priority={node.priority || "low"}
+                status={node.status || "todo"}
+                created_at={node.created_at}
+                handleSubmitTask={handleSubmitTask}
+                watchTask={watchTask}
+                setValueTask={setValueTask}
+                onUpdateTask={onUpdateTask}
+              />
+            );
+          })}
         <div style={{ padding: "100px" }} />
       </Layout>
     </>

@@ -295,6 +295,7 @@ export const GET_USER_TASKS_QUERY = gql`
     }
   }
 `;
+
 export const GET_RECORDING_ID_TASKS_QUERY = gql`
   query GetUserTasks($recording_id: String!) {
     tasksCollection(
@@ -581,6 +582,7 @@ export const MUTATION_TASK_UPDATE = gql`
   mutation updatetasksCollection(
     $id: BigInt!
     $status: String!
+    $priority: String!
     $label: String!
     $title: String!
     $description: String!
@@ -590,12 +592,13 @@ export const MUTATION_TASK_UPDATE = gql`
     updatetasksCollection(
       filter: { id: { eq: $id } }
       set: {
-        status: $status
-        updated_at: $updated_at
         title: $title
         description: $description
         order: $order
         label: $label
+        status: $status
+        priority: $priority
+        updated_at: $updated_at
       }
     ) {
       records {
