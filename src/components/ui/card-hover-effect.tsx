@@ -30,7 +30,10 @@ export const HoverEffect = ({ items, className }: HoverEffectProps) => {
             href={`/${user_id}/${workspace_id}/${item.node.room_id}/${item.node.recording_id}`}
             key={item.node.recording_id}
             className="relative group  block p-2 h-full w-full"
-            onMouseEnter={() => setHoveredIndex(idx)}
+            onMouseEnter={() => {
+              setHoveredIndex(idx);
+              localStorage.setItem("recording_id", item.node.recording_id);
+            }}
             onMouseLeave={() => setHoveredIndex(null)}
           >
             <AnimatePresence>

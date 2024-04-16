@@ -326,9 +326,25 @@ export const GET_RECORDING_ID_TASKS_QUERY = gql`
 `;
 
 export const GET_TASKS_BY_ID_QUERY = gql`
-  query GetUserTasks($task_id: UUID!) {
+  query GetUserTasks(
+    $id: UUID!
+    $user_id: UUID!
+    $workspace_id: UUID!
+    $room_id: String!
+    $recording_id: String!
+  ) {
     tasksCollection(
-      filter: { and: [{ task_id: { eq: $task_id } }] }
+      filter: {
+        and: [
+          {
+            id: { eq: $id }
+            user_id: { eq: $user_id }
+            workspace_id: { eq: $workspace_id }
+            room_id: { eq: $room_id }
+            recording_id: { eq: $recording_id }
+          }
+        ]
+      }
       orderBy: { created_at: DescNullsFirst }
     ) {
       edges {

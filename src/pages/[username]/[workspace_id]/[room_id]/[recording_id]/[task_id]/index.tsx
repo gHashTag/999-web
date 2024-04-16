@@ -7,11 +7,10 @@ import { useRouter } from "next/router";
 import { useTasks } from "@/hooks/useTasks";
 
 import { TaskForm } from "@/components/ui/task-form";
+import { useUser } from "@/hooks/useUser";
 
 const TaskPage = () => {
   const router = useRouter();
-  const { task_id } = router.query;
-
   const {
     tasksData,
     tasksLoading,
@@ -19,16 +18,13 @@ const TaskPage = () => {
     handleSubmitTask,
     watchTask,
     setValueTask,
-  } = useTasks({
-    task_id: task_id as string,
-  });
+  } = useTasks({});
 
   return (
     <>
       <Layout loading={tasksLoading}>
         {!tasksLoading &&
           tasksData.map(({ node }) => {
-            console.log(node.priority, "node.priority");
             return (
               <TaskForm
                 key={node.id}

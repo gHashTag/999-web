@@ -73,6 +73,7 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem
           onClick={() => {
+            localStorage.setItem("id", row.original.node.id.toString());
             setIdTask(row.original.node.id);
             onClickEdit(true, row.original.node.id);
           }}

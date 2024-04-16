@@ -7,6 +7,7 @@ import {
   MUTATION_TASK_STATUS_UPDATE,
   MUTATION_TASK_UPDATE,
 } from "@/graphql/query";
+import { useRouter } from "next/router";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useDisclosure } from "@nextui-org/react";
 import { useCallback, useMemo, useState } from "react";
@@ -35,19 +36,21 @@ import {
   GET_USER_TASKS_QUERY,
 } from "@/graphql/query";
 
-type PassportType = {
-  room_id?: string;
+type TasksType = {
   workspace_id?: string;
+  room_id?: string;
   recording_id?: string | string[] | undefined;
-  task_id?: string;
+  id?: string;
 };
 
 const useTasks = ({
-  room_id,
   workspace_id,
+  room_id,
   recording_id,
-  task_id,
-}: PassportType): UseTasksReturn => {
+}: TasksType): UseTasksReturn => {
+  const paramsTasks = { workspace_id, room_id, recording_id };
+
+  const router = useRouter();
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { getTaskById } = useSupabase();
@@ -67,7 +70,8 @@ const useTasks = ({
 
   let queryVariables;
 
-  if (recording_id && room_id && workspace_id && user_id) {
+  if (recording_id && room_id && workspace_id) {
+    console.log("4");
     tasksQuery = GET_ALL_TASKS_QUERY;
     queryVariables = {
       user_id,
@@ -77,7 +81,8 @@ const useTasks = ({
     };
   }
 
-  if (!recording_id) {
+  if (!recording_id && room_id && workspace_id) {
+    console.log("3");
     tasksQuery = GET_RECORDING_TASKS_QUERY;
     queryVariables = {
       user_id,
@@ -86,7 +91,8 @@ const useTasks = ({
     };
   }
 
-  if (!room_id && !recording_id) {
+  if (!room_id && !recording_id && workspace_id) {
+    console.log("2");
     tasksQuery = GET_ROOM_TASKS_QUERY;
     queryVariables = {
       user_id,
@@ -94,30 +100,34 @@ const useTasks = ({
     };
   }
 
-  if (!recording_id && !room_id && !workspace_id) {
-    tasksQuery = GET_USER_TASKS_QUERY;
-    queryVariables = {
-      user_id,
-    };
-  }
+  // if (!recording_id && !room_id && !workspace_id && !openModalTaskId) {
+  //   console.log("1");
+  //   tasksQuery = GET_USER_TASKS_QUERY;
+  //   queryVariables = {
+  //     user_id,
+  //   };
+  // }
 
-  if (!recording_id && !room_id && !workspace_id && task_id) {
+  if (!recording_id && !room_id && !workspace_id) {
+    console.log("0");
     tasksQuery = GET_TASKS_BY_ID_QUERY;
     queryVariables = {
-      task_id,
+      id: localStorage.getItem("id"),
     };
   }
 
-  if (recording_id && !room_id && !workspace_id && !task_id) {
+  if (recording_id && !room_id && !workspace_id) {
+    console.log("6");
     tasksQuery = GET_RECORDING_ID_TASKS_QUERY;
     queryVariables = {
       recording_id,
     };
   }
 
-  if (!recording_id && !room_id && !workspace_id && !user_id) {
-    tasksQuery = GET_ALL_TASKS_QUERY;
-  }
+  // if (!recording_id && !room_id && !workspace_id) {
+  //   console.log("7");
+  //   tasksQuery = GET_ALL_TASKS_QUERY;
+  // }
 
   const {
     data: tasksData,
@@ -133,8 +143,9 @@ const useTasks = ({
   const onClickEdit = (isEditing: boolean, id: number) => {
     setOpenModalTaskId(id);
     setIsEditingTask(isEditing);
-    setOpenModalId(id);
-    openModal(id);
+    router.push(`/0/1/2/3/${id}`);
+    // setOpenModalId(id);
+    // openModal(id);
   };
 
   if (tasksError instanceof ApolloError) {
