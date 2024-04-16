@@ -76,7 +76,6 @@ const useRooms = ({ workspace_id, room_id }: UseRoomsProps): UseRoomsReturn => {
     fetchPolicy: "network-only",
     variables: queryVariables,
   });
-  console.log(roomsData, "roomsData");
 
   const {
     data: assetsData,

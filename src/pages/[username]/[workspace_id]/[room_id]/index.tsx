@@ -71,6 +71,8 @@ const RoomPage = () => {
     room_id,
   });
 
+  console.log(openModalTaskId, "openModalTaskId");
+
   const {
     passportData,
     passportLoading,
@@ -177,6 +179,7 @@ const RoomPage = () => {
             Create task
           </Button>
         </div>
+
         {tasksData && <DataTable data={tasksData} columns={columns} />}
 
         <div

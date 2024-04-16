@@ -12,6 +12,7 @@ import { GET_ROOM_ASSETS } from "@/graphql/query";
 
 import { useTasks } from "@/hooks/useTasks";
 import { useUser } from "@/hooks/useUser";
+import TaskModal from "@/components/modal/TaskModal";
 
 const RecordingPage = () => {
   const router = useRouter();
@@ -26,11 +27,29 @@ const RecordingPage = () => {
   });
 
   const asset = assetsData?.room_assetsCollection?.edges[0]?.node;
-  const { user_id, workspace_id, room_id } = useUser();
+  const { workspace_id, room_id } = useUser();
 
-  const { tasksData, tasksLoading, columns, onCreateNewTask } = useTasks({
-    workspace_id,
-    room_id,
+  const {
+    tasksData,
+    tasksLoading,
+    tasksError,
+    refetchTasks,
+    isOpenModalTask,
+    onOpenModalTask,
+    onOpenChangeModalTask,
+    onCreateTask,
+    onDeleteTask,
+    onUpdateTask,
+    setValueTask,
+    controlTask,
+    handleSubmitTask,
+    getValuesTask,
+    onCreateNewTask,
+    columns,
+    openModalTaskId,
+    setOpenModalTaskId,
+    isEditingTask,
+  } = useTasks({
     recording_id,
   });
 
@@ -48,21 +67,6 @@ const RecordingPage = () => {
   return (
     <>
       <Layout loading={tasksLoading || assetsLoading}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            paddingRight: "70px",
-          }}
-        >
-          <Button
-            onClick={() =>
-              onCreateNewTask(workspace_id, room_id, recording_id as string)
-            }
-          >
-            Create task
-          </Button>
-        </div>
         {!tasksLoading && assetsData && (
           <div className="flex-col mt-10">
             <TracingBeam className="px-6">
@@ -88,8 +92,38 @@ const RecordingPage = () => {
             </TracingBeam>
           </div>
         )}
-
+        {/* <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            paddingRight: "70px",
+          }}
+        >
+          <Button
+            onClick={() =>
+              onCreateNewTask(workspace_id, room_id, recording_id as string)
+            }
+          >
+            Create task
+          </Button>
+        </div> */}
         {tasksData && <DataTable data={tasksData} columns={columns} />}
+        {isOpenModalTask && (
+          <TaskModal
+            isOpen={isOpenModalTask}
+            onOpen={onOpenModalTask}
+            onOpenChange={onOpenChangeModalTask}
+            onCreate={onCreateTask}
+            onDelete={() => openModalTaskId && onDeleteTask(openModalTaskId)}
+            onUpdate={() => openModalTaskId && onUpdateTask(openModalTaskId)}
+            control={controlTask}
+            handleSubmit={handleSubmitTask}
+            getValues={getValuesTask}
+            setValue={setValueTask}
+            isEditing={isEditingTask}
+          />
+        )}
+        <div style={{ padding: "100px" }} />
       </Layout>
     </>
   );

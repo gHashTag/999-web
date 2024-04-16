@@ -59,7 +59,6 @@ const usePassport = ({
   }
 
   if (!recording_id) {
-    console.log("!recording_id");
     passportQuery = GET_ROOM_PASSPORTS_QUERY;
     queryVariables = {
       user_id,

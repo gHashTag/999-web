@@ -2,6 +2,7 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   CREATE_TASK_MUTATION,
   DELETE_TASK_MUTATION,
+  GET_RECORDING_ID_TASKS_QUERY,
   MUTATION_TASK_STATUS_UPDATE,
   MUTATION_TASK_UPDATE,
 } from "@/graphql/query";
@@ -31,12 +32,14 @@ type PassportType = {
   room_id?: string;
   workspace_id?: string;
   recording_id?: string | string[] | undefined;
+  task_id?: number;
 };
 
 const useTasks = ({
   room_id,
   workspace_id,
   recording_id,
+  task_id,
 }: PassportType): UseTasksReturn => {
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -90,6 +93,20 @@ const useTasks = ({
     };
   }
 
+  if (!recording_id && !room_id && !workspace_id && task_id) {
+    tasksQuery = GET_USER_TASKS_QUERY;
+    queryVariables = {
+      task_id,
+    };
+  }
+
+  if (recording_id && !room_id && !workspace_id && !task_id) {
+    tasksQuery = GET_RECORDING_ID_TASKS_QUERY;
+    queryVariables = {
+      recording_id,
+    };
+  }
+
   if (!recording_id && !room_id && !workspace_id && !user_id) {
     tasksQuery = GET_ALL_TASKS_QUERY;
   }
@@ -106,6 +123,7 @@ const useTasks = ({
   });
 
   const onClickEdit = (isEditing: boolean, id: number) => {
+    setOpenModalTaskId(id);
     setIsEditingTask(isEditing);
     setOpenModalId(id);
     openModal(id);
@@ -155,6 +173,7 @@ const useTasks = ({
     room_id?: string,
     recording_id?: string
   ) => {
+    console.log(workspace_id, "workspace_id");
     setValue("title", "");
     setValue("description", "");
     setValue("label", "");
@@ -168,10 +187,10 @@ const useTasks = ({
   const openModal = async (cardId: number) => {
     setOpenModalId(cardId);
     const card = await getTaskById(cardId);
-    console.log(card, "card");
+
     setValue("title", card?.title);
     setValue("description", card?.description);
-    setValue("label", card?.label);
+    setValue("label", card?.label || "");
     onOpen();
     setIsEditingTask(true);
   };
@@ -179,7 +198,7 @@ const useTasks = ({
   const onCreateTask = useCallback(async () => {
     try {
       const formData = getValues();
-
+      console.log(workspaceId, "workspaceId");
       const formDataWithUserId = {
         ...formData,
         workspace_id: workspaceId,
@@ -241,7 +260,6 @@ const useTasks = ({
         description: formData.description,
         updated_at: new Date().toISOString(),
       };
-      console.log(variables, "variablesvariables");
 
       await mutateUpdateTaskStatus({
         variables,
@@ -256,7 +274,7 @@ const useTasks = ({
   const onUpdateTask = useCallback(
     async (id: number) => {
       const formData = getValues();
-
+      console.log(formData, "formData");
       const variables = {
         id,
         title: formData.title,

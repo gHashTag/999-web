@@ -295,6 +295,63 @@ export const GET_USER_TASKS_QUERY = gql`
     }
   }
 `;
+export const GET_RECORDING_ID_TASKS_QUERY = gql`
+  query GetUserTasks($recording_id: String!) {
+    tasksCollection(
+      filter: { and: [{ recording_id: { eq: $recording_id } }] }
+      orderBy: { created_at: DescNullsFirst }
+    ) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          room_id
+          created_at
+          recording_id
+          title
+          description
+          updated_at
+          due_date
+          priority
+          completed_at
+          is_archived
+          status
+          label
+        }
+      }
+    }
+  }
+`;
+
+export const GET_TASKS_BY_ID_QUERY = gql`
+  query GetUserTasks($task_id: UUID!) {
+    tasksCollection(
+      filter: { and: [{ task_id: { eq: $task_id } }] }
+      orderBy: { created_at: DescNullsFirst }
+    ) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          room_id
+          created_at
+          recording_id
+          title
+          description
+          updated_at
+          due_date
+          priority
+          completed_at
+          is_archived
+          status
+          label
+        }
+      }
+    }
+  }
+`;
 
 export const GET_ROOM_TASKS_QUERY = gql`
   query GetRoomTasks($user_id: UUID!, $workspace_id: UUID!) {
