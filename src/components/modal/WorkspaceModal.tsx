@@ -129,6 +129,7 @@ function WorkspaceModal({
               )}
               <Button
                 color="warning"
+                variant="ghost"
                 onClick={() => {
                   isEditing ? onUpdate() : onCreate();
                   onClose();

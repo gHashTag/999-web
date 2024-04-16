@@ -36,8 +36,8 @@ export const setLoading = makeVar<boolean>(false);
 
 export const setOpenModalId = makeVar<number | null>(null);
 
-export const setHeaderName = makeVar<string>("");
+export const setHeaderName = makeVar<string | null>("");
 
-export const setRoomName = makeVar<string>("");
+export const setRoomName = makeVar<string | null>("");
 
 export const setIdTask = makeVar<number | null>(null);

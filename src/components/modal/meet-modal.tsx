@@ -46,7 +46,7 @@ function MeetModal({
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      style={{ marginBottom: 300 }}
+      style={{ marginBottom: 200 }}
     >
       <Button onClick={onOpen}>Create</Button>
       <CustomModalContent>
@@ -109,10 +109,9 @@ function MeetModal({
                 />
               </form>
             </ModalBody>
-            <RightAlignedFooter>
+            <ModalFooter>
               <Button
                 color="warning"
-                variant="ghost"
                 onClick={() => {
                   onCreate();
                   onClose();
@@ -120,7 +119,7 @@ function MeetModal({
               >
                 Create
               </Button>
-            </RightAlignedFooter>
+            </ModalFooter>
           </>
         )}
       </CustomModalContent>

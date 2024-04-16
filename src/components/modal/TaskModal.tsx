@@ -17,13 +17,6 @@ import { Button } from "@/components/ui/button";
 import styled from "styled-components";
 import { cn } from "@/utils/cn";
 import { InputMultiline } from "../ui/input-multiline";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 type Modal = {
   isOpen: boolean;
@@ -42,6 +35,7 @@ type Modal = {
 const CustomModalContent = styled(ModalContent)`
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+  border-radius: 15px;
 `;
 
 function TaskModal({
@@ -56,7 +50,6 @@ function TaskModal({
   setValue,
   isEditing,
 }: Modal) {
-  console.log(handleSubmit, "handleSubmit");
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <Button onClick={onOpen}>

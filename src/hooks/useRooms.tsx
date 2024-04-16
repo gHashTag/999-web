@@ -4,6 +4,9 @@ import { ApolloError, useMutation, useQuery } from "@apollo/client";
 
 import {
   DELETE_ROOM_MUTATION,
+  GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY,
+  GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY,
+  GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY,
   ROOMS_ASSETS_COLLECTION_QUERY,
   ROOMS_BY_ID_COLLECTION_QUERY,
   ROOM_NAME_COLLECTION_QUERY,
@@ -35,18 +38,45 @@ const useRooms = ({ workspace_id, room_id }: UseRoomsProps): UseRoomsReturn => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const { username } = useUser();
+  const { username, user_id } = useUser();
+
+  let queryVariables;
+
+  let passportQuery = ROOMS_BY_ID_COLLECTION_QUERY;
+
+  if (room_id && workspace_id && user_id) {
+    passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY;
+    queryVariables = {
+      user_id,
+      room_id,
+      workspace_id,
+    };
+  }
+
+  if (!room_id && workspace_id && user_id) {
+    passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY;
+    queryVariables = {
+      user_id,
+      workspace_id,
+    };
+  }
+
+  if (!workspace_id && !room_id) {
+    passportQuery = GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY;
+    queryVariables = {
+      user_id,
+    };
+  }
 
   const {
     data: roomsData,
     loading: roomsLoading,
     refetch: refetchRooms,
-  } = useQuery(ROOMS_BY_ID_COLLECTION_QUERY, {
+  } = useQuery(passportQuery, {
     fetchPolicy: "network-only",
-    variables: {
-      room_id,
-    },
+    variables: queryVariables,
   });
+  console.log(roomsData, "roomsData");
 
   const {
     data: assetsData,
@@ -87,7 +117,7 @@ const useRooms = ({ workspace_id, room_id }: UseRoomsProps): UseRoomsReturn => {
       // console.log(roomNameData, "roomNameData");
       const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
         ?.codes;
-      // console.log(codesData, "codesData");
+
       if (typeof codesData === "string") {
         const parsedCodesData = JSON.parse(codesData);
         if (parsedCodesData) {
@@ -111,8 +141,6 @@ const useRooms = ({ workspace_id, room_id }: UseRoomsProps): UseRoomsReturn => {
         } else {
           console.error("codesData is not an array");
         }
-      } else {
-        console.error("codesData is undefined or not a string");
       }
     },
     [roomNameData]

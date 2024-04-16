@@ -40,6 +40,7 @@ const SubCard: React.FC<SubCardProps> = ({
             width={500}
             height={300}
             className="object-contain w-full h-auto"
+            priority={true}
           />
         </div>
         <div className="flex items-center justify-center">

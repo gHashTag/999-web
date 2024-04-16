@@ -188,6 +188,8 @@ const useTasks = ({
         user_id,
       };
 
+      console.log(formDataWithUserId, "formDataWithUserId");
+
       const mutateCreateTaskResult = await mutateCreateTask({
         variables: {
           objects: [formDataWithUserId],
@@ -232,7 +234,6 @@ const useTasks = ({
   const onUpdateTaskStatus = useCallback(
     async (id: number) => {
       const formData = getValues();
-      console.log(formData, "formData");
 
       const variables = {
         id,
@@ -255,7 +256,6 @@ const useTasks = ({
   const onUpdateTask = useCallback(
     async (id: number) => {
       const formData = getValues();
-      console.log(formData, "formData");
 
       const variables = {
         id,

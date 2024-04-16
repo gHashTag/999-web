@@ -3,13 +3,13 @@ import { useRouter } from "next/router";
 // @ts-ignore
 import { useForm } from "react-hook-form";
 import Layout from "@/components/layout";
-import MeetModal from "@/components/ui/meet-modal";
+import MeetModal from "@/components/modal/meet-modal";
 // @ts-ignore
 import { useDisclosure } from "@nextui-org/react";
 import { useToast } from "@/components/ui/use-toast";
 import { createRoom } from "@/utils/edge-functions";
 import { SelectRoom } from "@/components/ui/select-room";
-import { ROOMS_COLLECTION_QUERY } from "@/graphql/query";
+
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { CardRoomT, RoomEdge, RoomT, RoomsCollection } from "@/types";
 import CardRoom from "@/components/ui/card-room";
@@ -132,7 +132,6 @@ const MeetsPage = () => {
     onOpen();
     setOpenModalId(type);
   };
-  console.log(roomsData, "roomsData");
 
   return (
     <Layout loading={loading || roomsLoading || tasksLoading}>

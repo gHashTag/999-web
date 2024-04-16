@@ -249,16 +249,33 @@ interface CodesData {
 
 export interface RoomNode {
   __typename: "rooms";
-  id: string;
-  user_id: string;
-  name: string;
-  description: string;
-  updated_at: string;
+  id: number;
   created_at: string;
-  type: string;
-  enabled: boolean;
+  updated_at?: string | null;
+  workspace_id?: string | null;
+  type?: string | null;
+  id_additional?: string | null;
+  name?: string | null;
+  enabled?: boolean | null;
+  description?: string | null;
+  customer_id?: string | null;
+  app_id?: string | null;
+  recording_info?: Record<string, any> | null;
+  template_id?: string | null;
+  template?: string | null;
+  region?: string | null;
+  customer?: string | null;
+  large_room?: boolean | null;
+  codes?: CodesData;
+  type_additional?: string | null;
+  user_id?: string | null;
   room_id: string;
-  codes: CodesData;
+  lang: string | null;
+  chat_id?: string | null;
+  token?: string | null;
+  username?: string | null;
+  original_name?: string | null;
+  public?: boolean | null;
 }
 
 export interface RoomEdge {

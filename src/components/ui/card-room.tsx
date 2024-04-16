@@ -30,12 +30,22 @@ const CardRoom = ({ room, onClick }: CardProps) => {
               className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
               style={{
                 padding: 10,
-                paddingBottom: 10,
+                paddingBottom: 5,
                 color: "rgb(87 83 78)",
                 textAlign: "center",
               }}
             >
               {room?.type}
+            </div>
+            <div
+              className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
+              style={{
+                color: "rgb(87 83 78)",
+                textAlign: "center",
+                paddingBottom: 30,
+              }}
+            >
+              chat id: {room?.chat_id}
             </div>
           </div>
         </div>
