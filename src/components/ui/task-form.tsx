@@ -3,7 +3,7 @@ import { BaseSyntheticEvent, Fragment, useEffect, useState } from "react";
 import { Label } from "./label";
 import { Input } from "./input";
 import { cn } from "@/utils/cn";
-
+import { useRouter } from "next/router";
 import {
   SubmitHandler,
   FieldValues,
@@ -46,12 +46,13 @@ export function TaskForm({
   setValueTask: UseFormSetValue<FieldValues>;
   onUpdateTask: (id: number) => void;
 }) {
+  const router = useRouter();
   const watchedTitle = watchTask("title", title);
   const watchedDescription = watchTask("description", description);
   const watchedPriority = watchTask("priority", priority);
   const watchedStatus = watchTask("status", status);
 
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(true);
 
   useEffect(() => {
     const subscription = watchTask((value, { name, type }) => {
@@ -124,7 +125,10 @@ export function TaskForm({
             </div>
 
             <ButtonAnimate
-              onClick={() => setTimeout(() => setIsEdit(false), 1000)}
+              onClick={() => {
+                setTimeout(() => setIsEdit(false), 1000);
+                router.back();
+              }}
             >
               Save
             </ButtonAnimate>

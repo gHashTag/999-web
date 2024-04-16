@@ -2,15 +2,12 @@
 import React from "react";
 import Layout from "@/components/layout";
 
-import { useRouter } from "next/router";
-
 import { useTasks } from "@/hooks/useTasks";
 
 import { TaskForm } from "@/components/ui/task-form";
 import { useUser } from "@/hooks/useUser";
 
 const TaskPage = () => {
-  const router = useRouter();
   const {
     tasksData,
     tasksLoading,
