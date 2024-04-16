@@ -2,17 +2,14 @@ import { forwardRef } from "react";
 import { BackgroundGradient } from "./background-gradient";
 
 import { Spacer } from "@nextui-org/react";
+import { RoomNode } from "@/types";
 
 interface CardProps {
-  node: {
-    id: string;
-    title: string;
-    description: string;
-  };
+  room: RoomNode;
   onClick?: () => void;
 }
 
-const CardRoom = forwardRef<HTMLDivElement, CardProps>(({ node, onClick }) => {
+const CardRoom = ({ room, onClick }: CardProps) => {
   return (
     <div onClick={onClick} className="cursor-pointer">
       <BackgroundGradient className="rounded-[222px] sm:p-1">
@@ -26,7 +23,7 @@ const CardRoom = forwardRef<HTMLDivElement, CardProps>(({ node, onClick }) => {
               textAlign: "center",
             }}
           >
-            {node?.title}
+            {room?.name}
           </div>
           <div>
             <div
@@ -38,16 +35,15 @@ const CardRoom = forwardRef<HTMLDivElement, CardProps>(({ node, onClick }) => {
                 textAlign: "center",
               }}
             >
-              {node?.description}
+              {room?.type}
             </div>
           </div>
         </div>
       </BackgroundGradient>
       <Spacer x={40} />
-      <div id={node?.id.toString()} />
     </div>
   );
-});
+};
 
 CardRoom.displayName = "CardRoom";
 

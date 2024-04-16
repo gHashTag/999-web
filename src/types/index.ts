@@ -195,6 +195,54 @@ interface Code {
   updated_at: string;
 }
 
+export interface OptionType {
+  value: string;
+  label: string;
+  color?: string;
+}
+
+export interface RoomT {
+  id: number;
+  created_at: string;
+  updated_at?: string;
+  workspace_id?: string;
+  type?: string;
+  id_additional?: string;
+  name?: string;
+  enabled?: boolean;
+  description?: string;
+  customer_id?: string;
+  app_id?: string;
+  recording_info?: Record<string, any> | null;
+  template_id?: string;
+  template?: string;
+  region?: string;
+  customer?: string;
+  large_room?: boolean;
+  codes?: Record<string, any> | null;
+  type_additional?: string;
+  user_id?: string;
+  room_id: string;
+  lang?: string;
+  chat_id?: string;
+  token?: string;
+  username?: string;
+  original_name?: string;
+  public?: boolean;
+}
+
+export type CardRoomT = {
+  node: RoomT;
+};
+
+export interface ResponseData {
+  data?: any;
+  message?: string;
+  error?: {
+    message: string;
+  };
+}
+
 interface CodesData {
   data: Code[];
 }
@@ -213,7 +261,7 @@ export interface RoomNode {
   codes: CodesData;
 }
 
-interface RoomEdge {
+export interface RoomEdge {
   __typename: "roomsEdge";
   node: RoomNode;
 }
@@ -227,25 +275,7 @@ export interface RoomsData {
   roomsCollection: RoomsCollection;
 }
 
-export interface OptionType {
-  value: string;
-  label: string;
-  color?: string;
-}
-export type CardRoomT = {
-  node: {
-    id: string;
-    name: string;
-    description: string;
-    type: string;
-    room_id: string;
-  };
+export type ArrayInviteT = {
+  text: string;
+  type: string;
 };
-
-export interface ResponseData {
-  data?: any;
-  message?: string;
-  error?: {
-    message: string;
-  };
-}

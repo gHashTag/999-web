@@ -56,6 +56,8 @@ async function createRoom({
     }
 
     const text = await response.text();
+    console.log(text, "text");
+    // setHeaderName(roomName);
 
     try {
       const data = JSON.parse(text);

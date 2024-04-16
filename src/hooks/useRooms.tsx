@@ -13,22 +13,34 @@ import { useUser } from "./useUser";
 import { useToast } from "@/components/ui/use-toast";
 
 import { useRouter } from "next/router";
+import { ArrayInviteT, RoomEdge, RoomsCollection, RoomsData } from "@/types";
 
-const useRooms = () => {
+type UseRoomsProps = {
+  workspace_id: string;
+  room_id?: string;
+};
+
+const useRooms = ({ workspace_id, room_id }: UseRoomsProps): UseRoomsReturn => {
   const [inviteGuestCode, setInviteGuestCode] = useState("");
   const [inviteHostCode, setInviteHostCode] = useState("");
   const [inviteMemberCode, setInviteMemberCode] = useState("");
   const [deleteRoom, { loading: deleteRoomLoading, error: deleteRoomError }] =
     useMutation(DELETE_ROOM_MUTATION);
+
+  if (deleteRoomError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(deleteRoomError, "deleteRoomError");
+  }
+
   const router = useRouter();
   const { toast } = useToast();
 
-  const { username, workspace_id, room_id } = useUser();
+  const { username } = useUser();
 
   const {
     data: roomsData,
     loading: roomsLoading,
-    refetch,
+    refetch: refetchRooms,
   } = useQuery(ROOMS_BY_ID_COLLECTION_QUERY, {
     fetchPolicy: "network-only",
     variables: {
@@ -40,6 +52,7 @@ const useRooms = () => {
     data: assetsData,
     loading: assetsLoading,
     error: assetsError,
+    refetch: assetsRefetch,
   } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
     variables: {
       room_id,
@@ -54,6 +67,7 @@ const useRooms = () => {
     data: roomNameData,
     loading: roomNameLoading,
     error: roomNameError,
+    refetch: roomNameRefetch,
   } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
     variables: {
       room_id,
@@ -134,7 +148,9 @@ const useRooms = () => {
         toast({
           title: "Success! Room deleted",
         });
-        refetch();
+        refetchRooms();
+        assetsRefetch();
+        roomNameRefetch();
       },
     });
 
@@ -145,8 +161,10 @@ const useRooms = () => {
   localStorage.setItem("room_name", room_name);
 
   return {
-    roomsData: roomsData?.roomsCollection?.edges[0]?.node,
+    roomsItem: roomsData?.roomsCollection?.edges[0]?.node,
+    roomsData,
     assetsLoading,
+    refetchRooms,
     handlerDeleteRoom,
     deleteRoomLoading,
     arrayInvite,
@@ -158,6 +176,23 @@ const useRooms = () => {
     inviteHostCode,
     inviteMemberCode,
   };
+};
+
+type UseRoomsReturn = {
+  roomsData: RoomsData;
+  roomsItem: RoomEdge[];
+  assetsLoading: boolean;
+  refetchRooms: () => void;
+  handlerDeleteRoom: () => void;
+  deleteRoomLoading: boolean;
+  arrayInvite: ArrayInviteT[];
+  assetsItems: any;
+  roomsLoading: boolean;
+  roomNameLoading: boolean;
+  inviteToMeet: (type: string) => void;
+  inviteGuestCode: string;
+  inviteHostCode: string;
+  inviteMemberCode: string;
 };
 
 export { useRooms };

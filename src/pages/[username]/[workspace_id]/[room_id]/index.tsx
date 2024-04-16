@@ -19,6 +19,7 @@ import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { AnimatedTooltipCommon } from "@/components/ui/animated-tooltip-common";
 import { useReactiveVar } from "@apollo/client";
 import TaskModal from "@/components/modal/TaskModal";
+import { ArrayInviteT } from "@/types";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -28,9 +29,11 @@ if (!managementToken) {
 
 const RoomPage = () => {
   const router = useRouter();
+  const { username, workspace_id, room_id } = useUser();
   const {
     roomsData,
     assetsLoading,
+    refetchRooms,
     handlerDeleteRoom,
     deleteRoomLoading,
     arrayInvite,
@@ -41,8 +44,7 @@ const RoomPage = () => {
     inviteGuestCode,
     inviteHostCode,
     inviteMemberCode,
-  } = useRooms();
-  const { username, workspace_id, room_id, room_name } = useUser();
+  } = useRooms({ workspace_id, room_id });
 
   const {
     tasksData,
@@ -98,11 +100,20 @@ const RoomPage = () => {
     } else {
       setHeaderName(roomName);
     }
-  }, [router, roomsData, roomName]);
+  }, [router, roomsData, tasksData, passportData, roomName]);
 
   return (
     <>
-      <Layout loading={assetsLoading || passportLoading}>
+      <Layout
+        loading={
+          assetsLoading ||
+          passportLoading ||
+          deleteRoomLoading ||
+          roomNameLoading ||
+          tasksLoading ||
+          roomsLoading
+        }
+      >
         <div
           style={{
             display: "flex",
@@ -127,7 +138,7 @@ const RoomPage = () => {
             alignItems: "center",
           }}
         >
-          {arrayInvite.map((item) => (
+          {arrayInvite.map((item: ArrayInviteT) => (
             <EvervaultCard
               key={item.type}
               text={item.text}

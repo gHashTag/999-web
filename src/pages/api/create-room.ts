@@ -74,7 +74,6 @@ export default async function handler(
       chat_id,
       token,
     } = await req.body;
-    console.log(workspace_id, "workspace_id");
 
     const { data, error: userError } = await supabase
       .from("users")
@@ -93,10 +92,6 @@ export default async function handler(
     const transliterateName = transliterate(name);
 
     const createOrFetchRoom = async () => {
-      const workspace = await getWorkspaceById(workspace_id);
-
-      const workspaceID = workspace && workspace[0].workspace_id;
-
       const roomData = {
         name: `${transliterateName}:${String(uuidv4())}`,
         description: workspace_id,
