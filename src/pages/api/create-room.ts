@@ -94,11 +94,11 @@ export default async function handler(
 
     const createOrFetchRoom = async () => {
       const workspace = await getWorkspaceById(workspace_id);
-      console.log(workspace, "workspace");
+
       const workspaceID = workspace && workspace[0].workspace_id;
-      console.log(workspaceID, "workspaceID");
+
       const roomData = {
-        name: `${transliterateName}`,
+        name: `${transliterateName}:${String(uuidv4())}`,
         description: workspace_id,
         template_id:
           type === "audio-space"
@@ -117,13 +117,14 @@ export default async function handler(
           Authorization: `Bearer ${newToken}`,
         },
       });
-      // console.log(roomResponse, "roomResponse");
+
       if (!roomResponse.ok) {
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
 
       const id = newRoom.id;
+
       const codesResponse = await createCodes(id, newToken as string);
       // console.log(codesResponse, "codesResponse");
 
@@ -154,7 +155,7 @@ export default async function handler(
     };
 
     const rooms = await createOrFetchRoom();
-    // console.log(rooms, "rooms");
+
     const { error } = await supabase.from("rooms").insert({
       ...rooms,
     });

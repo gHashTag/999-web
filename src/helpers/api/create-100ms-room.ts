@@ -1,11 +1,11 @@
-import { __DEV__ } from "@apollo/client/utilities/globals";
+import { __DEV__ } from "@/pages/_app";
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
 }
 
 const SITE_URL = __DEV__
-  ? "http://localhost:3000"
+  ? process.env.NEXT_PUBLIC_LOCAL_URL
   : process.env.NEXT_PUBLIC_SITE_URL;
 
 const headers = {

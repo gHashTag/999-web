@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useUser } from "@/hooks/useUser";
+import { SITE_URL } from "@/pages/_app";
 
 type EvervaultCardProps = {
   text: string;
@@ -90,7 +91,9 @@ export const EvervaultCard = ({
       `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`
     ) {
       if (type === "guest") {
-        handleCopy(`/${user_id}/${workspace_id}/meet/${inviteGuestCode}`);
+        handleCopy(
+          `${SITE_URL}/${user_id}/${workspace_id}/meet/${inviteGuestCode}`
+        );
         inviteToMeet(type);
       } else if (type === "member") {
         inviteToMeet(type);
