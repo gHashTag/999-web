@@ -137,8 +137,6 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
     setOpenModalTaskId(id);
     setIsEditingTask(isEditing);
     router.push(`/0/1/2/3/${id}`);
-    // setOpenModalId(id);
-    // openModal(id);
   };
 
   if (tasksError instanceof ApolloError) {
@@ -337,6 +335,10 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
     onClose();
   }, [onClose]);
 
+  const onHeaderClick = (id: number) => {
+    router.push(`/0/1/2/3/${id}`);
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -371,9 +373,12 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         },
         id: "id",
         header: "id",
-        cell: (info: any) => info.getValue(),
+        cell: ({ row }: any) => (
+          <div onClick={() => onHeaderClick(row.original.node.id)}>
+            {row.getValue("id")}
+          </div>
+        ),
       },
-
       {
         accessorFn: (row: any) => {
           return row.node.title;
@@ -382,7 +387,10 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         header: "Title",
         cell: ({ row }: any) => {
           return (
-            <div className="flex space-x-2">
+            <div
+              className="flex space-x-2"
+              onClick={() => onHeaderClick(row.original.node.id)}
+            >
               <span className="max-w-[500px] truncate font-medium">
                 {row.getValue("title")}
               </span>
@@ -400,7 +408,11 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         },
         id: "description",
         header: "Description",
-        cell: (info: any) => info.getValue(),
+        cell: ({ row }: any) => (
+          <div onClick={() => onHeaderClick(row.original.node.id)}>
+            {row.getValue("description")}
+          </div>
+        ),
       },
       {
         accessorFn: (row: any) => {
@@ -408,9 +420,11 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         },
         id: "is_public",
         header: "Public",
-        cell: (info: any) => {
-          return info.getValue() ? "Yes" : "No";
-        },
+        cell: ({ row }: any) => (
+          <div onClick={() => onHeaderClick(row.original.node.id)}>
+            {row.getValue("is_public") ? "Yes" : "No"}
+          </div>
+        ),
       },
       {
         accessorFn: (row: any) => {
@@ -418,9 +432,12 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         },
         id: "cost",
         header: "Cost",
-        cell: (info: any) => info.getValue(),
+        cell: ({ row }: any) => (
+          <div onClick={() => onHeaderClick(row.original.node.id)}>
+            {row.getValue("cost")}
+          </div>
+        ),
       },
-
       {
         accessorKey: "priority",
         header: ({ column }: any) => {
@@ -438,7 +455,10 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
           }
 
           return (
-            <div className="flex items-center">
+            <div
+              className="flex items-center"
+              onClick={() => onHeaderClick(row.original.node.id)}
+            >
               {priority.icon && (
                 <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
               )}
@@ -473,7 +493,10 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
           }
 
           return (
-            <div className="flex w-[100px] items-center">
+            <div
+              className="flex w-[100px] items-center"
+              onClick={() => onHeaderClick(row.original.node.id)}
+            >
               {status.icon && (
                 <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
               )}

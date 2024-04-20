@@ -52,7 +52,7 @@ export type PassportArray = Passport[];
 
 export type TasksArray = Task[];
 
-type TaskNode = {
+export type TaskNode = {
   __typename: string;
   id: number;
   user_id: string;
