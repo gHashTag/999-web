@@ -5,6 +5,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
 import { useUser } from "@/hooks/useUser";
 
+export const getTitle = (title: string, lang: string) => {
+  if (title === "Fire") {
+    return lang === "ru" ? "Огонь" : "Fire";
+  }
+  if (title === "Water") {
+    return lang === "ru" ? "Вода" : "Water";
+  }
+  if (title === "Earth") {
+    return lang === "ru" ? "Медные трубы" : "Earth";
+  } else return title;
+};
+
 export function CanvasRevealEffectDemo({
   officeData,
   onClick,
@@ -13,29 +25,18 @@ export function CanvasRevealEffectDemo({
   onClick: (workspace_id: string, workspace_name: string) => void;
 }) {
   const { lang } = useUser();
-  const getTitle = (title: string) => {
-    if (title === "Fire") {
-      return lang === "ru" ? "Огонь" : "Fire";
-    }
-    if (title === "Water") {
-      return lang === "ru" ? "Вода" : "Water";
-    }
-    if (title === "Earth") {
-      return lang === "ru" ? "Медные трубы" : "Earth";
-    } else return title;
-  };
 
   return (
     <>
       <div
         className="py-10 flex flex-col lg:flex-row items-center justify-center w-full gap-4 mx-auto px-8"
-        style={{ width: "93%" }}
+        style={{ width: "100%" }}
       >
         {officeData.map(({ node }: any) => (
           <Card
             key={node.id}
             workspace_id={node.workspace_id}
-            title={getTitle(node.title)}
+            title={getTitle(node.title, lang)}
             onClick={onClick}
             icon={<NineNineNineIcon />}
           >

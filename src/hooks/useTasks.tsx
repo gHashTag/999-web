@@ -335,8 +335,10 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
     onClose();
   }, [onClose]);
 
-  const onHeaderClick = (id: number) => {
+  const onEditTask = (id: number) => {
+    console.log("onEditTask");
     router.push(`/0/1/2/3/${id}`);
+    localStorage.setItem("header_name", `Task #${id}`);
   };
 
   const columns = useMemo(
@@ -374,7 +376,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         id: "id",
         header: "id",
         cell: ({ row }: any) => (
-          <div onClick={() => onHeaderClick(row.original.node.id)}>
+          <div onClick={() => onEditTask(row.original.node.id)}>
             {row.getValue("id")}
           </div>
         ),
@@ -389,7 +391,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
           return (
             <div
               className="flex space-x-2"
-              onClick={() => onHeaderClick(row.original.node.id)}
+              onClick={() => onEditTask(row.original.node.id)}
             >
               <span className="max-w-[500px] truncate font-medium">
                 {row.getValue("title")}
@@ -409,7 +411,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         id: "description",
         header: "Description",
         cell: ({ row }: any) => (
-          <div onClick={() => onHeaderClick(row.original.node.id)}>
+          <div onClick={() => onEditTask(row.original.node.id)}>
             {row.getValue("description")}
           </div>
         ),
@@ -421,7 +423,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         id: "is_public",
         header: "Public",
         cell: ({ row }: any) => (
-          <div onClick={() => onHeaderClick(row.original.node.id)}>
+          <div onClick={() => onEditTask(row.original.node.id)}>
             {row.getValue("is_public") ? "Yes" : "No"}
           </div>
         ),
@@ -433,7 +435,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         id: "cost",
         header: "Cost",
         cell: ({ row }: any) => (
-          <div onClick={() => onHeaderClick(row.original.node.id)}>
+          <div onClick={() => onEditTask(row.original.node.id)}>
             {row.getValue("cost")}
           </div>
         ),
@@ -457,7 +459,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
           return (
             <div
               className="flex items-center"
-              onClick={() => onHeaderClick(row.original.node.id)}
+              onClick={() => onEditTask(row.original.node.id)}
             >
               {priority.icon && (
                 <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -495,7 +497,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
           return (
             <div
               className="flex w-[100px] items-center"
-              onClick={() => onHeaderClick(row.original.node.id)}
+              onClick={() => onEditTask(row.original.node.id)}
             >
               {status.icon && (
                 <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -562,7 +564,7 @@ type UseTasksReturn = {
   controlTask: any;
   getValuesTask: any;
   onCreateNewTask: (
-    workspace_id: string,
+    workspace_id?: string,
     room_id?: string,
     recording_id?: string
   ) => void;

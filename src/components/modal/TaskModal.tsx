@@ -63,7 +63,9 @@ function TaskModal({
             </ModalHeader>
             <ModalBody>
               <form onSubmit={handleSubmit(isEditing ? onUpdate : onCreate)}>
-                <Label htmlFor="text">Title</Label>
+                <Label htmlFor="text" style={{ paddingLeft: 5 }}>
+                  Title
+                </Label>
                 <div style={{ padding: 5 }} />
                 <Controller
                   name="title"
@@ -81,7 +83,9 @@ function TaskModal({
                 />
                 <div style={{ padding: 10 }} />
 
-                <Label htmlFor="text">Description</Label>
+                <Label htmlFor="text" style={{ paddingLeft: 5 }}>
+                  Description
+                </Label>
                 <div style={{ padding: 5 }} />
                 <Controller
                   name="description"
@@ -97,7 +101,9 @@ function TaskModal({
                   )}
                 />
                 <div style={{ padding: 10 }} />
-                <Label htmlFor="text">Label</Label>
+                <Label htmlFor="text" style={{ paddingLeft: 5 }}>
+                  Label
+                </Label>
                 <div style={{ padding: 5 }} />
                 <Controller
                   name="label"

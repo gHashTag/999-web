@@ -13,9 +13,11 @@ import { GET_ROOM_ASSETS } from "@/graphql/query";
 import { useTasks } from "@/hooks/useTasks";
 import { useUser } from "@/hooks/useUser";
 import TaskModal from "@/components/modal/TaskModal";
+import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 
 const RecordingPage = () => {
   const router = useRouter();
+  const { username, workspace_id, room_id } = useUser();
   const { recording_id } = router.query;
 
   const {
@@ -66,6 +68,25 @@ const RecordingPage = () => {
   return (
     <>
       <Layout loading={tasksLoading || assetsLoading}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+            marginRight: 20,
+            paddingTop: 30,
+            flexDirection: "column",
+          }}
+        >
+          <BreadcrumbWithCustomSeparator
+            username={username}
+            workspace_id={workspace_id}
+            room_id={room_id}
+            record_id={recording_id as string}
+          />
+          <div style={{ padding: 15 }} />
+        </div>
         {!tasksLoading && assetsData && (
           <div className="flex-col mt-10">
             <TracingBeam className="px-6">

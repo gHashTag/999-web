@@ -14,16 +14,14 @@ import { DataTable } from "@/components/table/data-table";
 
 import { useEffect } from "react";
 import { useWorkspace } from "@/hooks/useWorkspace";
-import {
-  setHeaderName,
-  setIdTask,
-  setVisibleHeader,
-} from "@/apollo/reactive-store";
+import { setIdTask, setVisibleHeader } from "@/apollo/reactive-store";
 
 import { useTasks } from "@/hooks/useTasks";
 import { useUser } from "@/hooks/useUser";
 import TaskModal from "@/components/modal/TaskModal";
 import { Button } from "@/components/ui/moving-border";
+import { TextRevealCard } from "@/components/ui/text-reveal-card";
+import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 
 export type updateUserDataType = {
   user_id: string;
@@ -101,6 +99,7 @@ export default function Office() {
     router.push(`/${username}/${workspace_id}`);
     localStorage.setItem("workspace_id", workspace_id);
     localStorage.setItem("workspace_name", workspace_name);
+    localStorage.setItem("header_name", workspace_name);
   };
 
   const onCreateNewWorkspace = () => {
@@ -113,6 +112,9 @@ export default function Office() {
   return (
     <Layout loading={tasksLoading || workspacesLoading}>
       <main className="flex flex-col items-center justify-between">
+        {/* <TextRevealCard text="Workspaces" revealText="Workspaces" /> */}
+        <BreadcrumbWithCustomSeparator username={username} />
+
         {tasksLoading && workspacesLoading && <Spinner size="lg" />}
 
         {/* <div style={{ position: "absolute", top: 75, right: 70 }}>
@@ -128,7 +130,7 @@ export default function Office() {
           />
         )}
 
-        <div style={{ alignSelf: "flex-end", paddingRight: "70px" }}>
+        <div style={{ alignSelf: "flex-end", paddingRight: "75px" }}>
           <Button onClick={() => onCreateNewTask()}>Create task</Button>
         </div>
         {tasksData && <DataTable data={tasksData} columns={columns} />}

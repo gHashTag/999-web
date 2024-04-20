@@ -2,8 +2,9 @@ import { useUser } from "@/hooks/useUser";
 import { RecordingAsset } from "@/types";
 import { cn } from "@/utils/cn";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
+
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 type HoverEffectProps = {
   items: {
@@ -14,8 +15,14 @@ type HoverEffectProps = {
 
 export const HoverEffect = ({ items, className }: HoverEffectProps) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const router = useRouter();
+  const { username, workspace_id } = useUser();
 
-  const { user_id, workspace_id } = useUser();
+  const goToRecordId = (item: { node: RecordingAsset }) => {
+    router.push(
+      `/${username}/${workspace_id}/${item.node.room_id}/${item.node.recording_id}`
+    );
+  };
 
   return (
     <div
@@ -26,8 +33,8 @@ export const HoverEffect = ({ items, className }: HoverEffectProps) => {
     >
       {items &&
         items.map((item, idx) => (
-          <Link
-            href={`/${user_id}/${workspace_id}/${item.node.room_id}/${item.node.recording_id}`}
+          <div
+            onClick={() => goToRecordId(item)}
             key={item.node.recording_id}
             className="relative group  block p-2 h-full w-full"
             onMouseEnter={() => {
@@ -57,7 +64,7 @@ export const HoverEffect = ({ items, className }: HoverEffectProps) => {
               <CardTitle>{item.node.title}</CardTitle>
               <CardDescription>{item.node.summary_short}</CardDescription>
             </Card>
-          </Link>
+          </div>
         ))}
     </div>
   );

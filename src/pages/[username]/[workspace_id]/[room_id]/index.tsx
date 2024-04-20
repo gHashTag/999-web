@@ -20,6 +20,7 @@ import { AnimatedTooltipCommon } from "@/components/ui/animated-tooltip-common";
 import { useReactiveVar } from "@apollo/client";
 import TaskModal from "@/components/modal/TaskModal";
 import { ArrayInviteT } from "@/types";
+import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -125,6 +126,12 @@ const RoomPage = () => {
             flexDirection: "column",
           }}
         >
+          <BreadcrumbWithCustomSeparator
+            username={username}
+            workspace_id={workspace_id}
+            room_id={room_id}
+          />
+          <div style={{ padding: 15 }} />
           <AnimatedTooltipCommon items={passportData} />
         </div>
         <div

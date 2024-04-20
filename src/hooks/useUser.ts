@@ -3,6 +3,7 @@ const useUser = () => {
   const user_id = localStorage.getItem("user_id") || "";
   const workspace_id = localStorage.getItem("workspace_id") || "";
   const workspace_name = localStorage.getItem("workspace_name") || "";
+  const header_name = localStorage.getItem("header_name") || "";
   const room_id = localStorage.getItem("room_id") || "";
   const room_name = localStorage.getItem("room_name") || "";
   const recording_id = localStorage.getItem("recording_id") || "";
@@ -16,6 +17,7 @@ const useUser = () => {
     user_id,
     workspace_id,
     workspace_name,
+    header_name,
     room_id,
     room_name,
     recording_id,

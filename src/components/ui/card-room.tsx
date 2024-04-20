@@ -13,7 +13,10 @@ const CardRoom = ({ room, onClick }: CardProps) => {
   return (
     <div onClick={onClick} className="cursor-pointer">
       <BackgroundGradient className="rounded-[222px] sm:p-1">
-        <div className="rounded-[17px]" style={{ backgroundColor: "#0c0a09" }}>
+        <div
+          className="rounded-[17px]"
+          style={{ backgroundColor: "var(--main-background)" }}
+        >
           <div
             className="text-2xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl 2xl:text-4xl font-semibold"
             style={{
