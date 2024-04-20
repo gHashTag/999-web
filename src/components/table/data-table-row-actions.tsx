@@ -24,6 +24,7 @@ import { labels } from "../../helpers/data/data";
 import { taskSchema } from "../../helpers/data/schema";
 import { AssignedUser, TaskStatus } from "@/types";
 import { setIdTask } from "@/apollo/reactive-store";
+import { useUser } from "@/hooks/useUser";
 
 export interface RowTaskType {
   __typename: string;
@@ -70,6 +71,7 @@ export function DataTableRowActions<TData>({
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem
           onClick={() => {

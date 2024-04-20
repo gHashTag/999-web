@@ -507,13 +507,19 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
       },
       {
         id: "actions",
-        cell: ({ row }: any) => (
-          <DataTableRowActions
-            row={row}
-            onDelete={onDeleteTask}
-            onClickEdit={onClickEdit}
-          />
-        ),
+        cell: ({ row }: any) => {
+          const { user_id } = useUser();
+          const isOwnerTask = row.original.node.user_id === user_id;
+          return (
+            isOwnerTask && (
+              <DataTableRowActions
+                row={row}
+                onDelete={onDeleteTask}
+                onClickEdit={onClickEdit}
+              />
+            )
+          );
+        },
       },
     ],
     [onClickEdit, onDeleteTask]
