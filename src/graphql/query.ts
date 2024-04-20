@@ -99,6 +99,29 @@ export const GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY = gql`
   }
 `;
 
+export const ROOMS_BY_ID_COLLECTION_QUERY = gql`
+  query RoomsCollection($room_id: String!) {
+    roomsCollection(filter: { room_id: { eq: $room_id } }) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          name
+          description
+          updated_at
+          created_at
+          type
+          enabled
+          description
+          codes
+          room_id
+        }
+      }
+    }
+  }
+`;
+
 export const GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY = gql`
   query RoomsCollection(
     $workspace_id: String!
