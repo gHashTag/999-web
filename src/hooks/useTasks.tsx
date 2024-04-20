@@ -52,9 +52,6 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { getTaskById } = useSupabase();
 
-  const [roomId, setRoomId] = useState<string | null>(null);
-  const [recordingId, setRecordingId] = useState<string | null>(null);
-
   const { username, user_id } = useUser();
 
   const [openModalTaskId, setOpenModalTaskId] = useState<number | null>(null);
@@ -179,7 +176,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
     useMutation(DELETE_TASK_MUTATION);
 
   const onCreateNewTask = (
-    workspace_id: string,
+    workspace_id?: string,
     room_id?: string,
     recording_id?: string
   ) => {
@@ -188,8 +185,9 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
     setValue("label", "");
     setValue("is_public", false);
     setValue("cost", 0);
-    room_id && setRoomId(room_id);
-    recording_id && setRecordingId(recording_id);
+    workspace_id && localStorage.setItem("workspace_id", workspace_id);
+    room_id && localStorage.setItem("room_id", room_id);
+    recording_id && localStorage.setItem("recording_id", recording_id);
     onOpen();
     setIsEditingTask(false);
   };
@@ -216,8 +214,8 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
       const formDataWithUserId = {
         ...formData,
         workspace_id,
-        room_id: roomId,
-        recording_id: recordingId,
+        room_id,
+        recording_id,
         user_id,
       };
 
