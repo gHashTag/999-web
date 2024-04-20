@@ -152,7 +152,7 @@ const MeetsPage = () => {
   };
 
   const goToRoomId = (room: RoomEdge) => {
-    router.push(`/${username}/${workspace_id}/${room.node.room_id}`);
+    router.push(`/${username}/${workspace_id}/${room.node.name}`);
     localStorage.setItem("room_id", room.node.room_id);
     setRoomName(room.node.name);
     room.node.name && setHeaderName(room.node.name);

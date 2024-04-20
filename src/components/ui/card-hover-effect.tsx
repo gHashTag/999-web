@@ -19,6 +19,8 @@ export const HoverEffect = ({ items, className }: HoverEffectProps) => {
   const { username, workspace_id } = useUser();
 
   const goToRecordId = (item: { node: RecordingAsset }) => {
+    localStorage.setItem("recording_id", item.node.recording_id);
+    localStorage.setItem("recording_name", item.node.title);
     router.push(
       `/${username}/${workspace_id}/${item.node.room_id}/${item.node.recording_id}`
     );

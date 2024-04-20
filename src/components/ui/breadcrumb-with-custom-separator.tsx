@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { setLoading } from "@/apollo/reactive-store";
+import { useUser } from "@/hooks/useUser";
 
 export function BreadcrumbWithCustomSeparator({
   username,
@@ -22,6 +23,8 @@ export function BreadcrumbWithCustomSeparator({
   record_id?: string;
 }) {
   const router = useRouter();
+
+  const { workspace_name, room_name, recording_name } = useUser();
 
   const goToHome = () => {
     router.push(`/${username}`);
@@ -59,7 +62,7 @@ export function BreadcrumbWithCustomSeparator({
             </BreadcrumbSeparator>
             <BreadcrumbItem>
               <BreadcrumbLink onClick={goToWorkspaces}>
-                Workspaces
+                {workspace_name}
               </BreadcrumbLink>
             </BreadcrumbItem>
           </>
@@ -70,7 +73,7 @@ export function BreadcrumbWithCustomSeparator({
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbPage onClick={goToRooms}>Room</BreadcrumbPage>
+              <BreadcrumbPage onClick={goToRooms}>{room_name}</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}
@@ -80,7 +83,9 @@ export function BreadcrumbWithCustomSeparator({
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbPage onClick={goToRecords}>Record</BreadcrumbPage>
+              <BreadcrumbPage onClick={goToRecords}>
+                {recording_name}
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}
