@@ -109,7 +109,7 @@ const useTasks = ({
   // }
 
   if (!recording_id && !room_id && !workspace_id) {
-    console.log("0");
+    console.log("1");
     tasksQuery = GET_TASKS_BY_ID_QUERY;
     queryVariables = {
       id: localStorage.getItem("id"),
@@ -117,7 +117,7 @@ const useTasks = ({
   }
 
   if (recording_id && !room_id && !workspace_id) {
-    console.log("6");
+    console.log("5");
     tasksQuery = GET_RECORDING_ID_TASKS_QUERY;
     queryVariables = {
       recording_id,
@@ -195,6 +195,8 @@ const useTasks = ({
     setValue("title", "");
     setValue("description", "");
     setValue("label", "");
+    setValue("is_public", false);
+    setValue("cost", 0);
     setWorkspaceId(workspace_id);
     room_id && setRoomId(room_id);
     recording_id && setRecordingId(recording_id);
@@ -209,6 +211,10 @@ const useTasks = ({
     setValue("title", card?.title);
     setValue("description", card?.description);
     setValue("label", card?.label || "");
+    setValue("priority", card?.priority || "");
+    setValue("status", card?.status || "");
+    setValue("is_public", card?.is_public || false);
+    setValue("cost", card?.cost || 0);
     onOpen();
     setIsEditingTask(true);
   };
@@ -239,6 +245,10 @@ const useTasks = ({
             title: "",
             description: "",
             label: "",
+            priority: "",
+            status: "",
+            is_public: false,
+            cost: 0,
           });
         },
       });
@@ -289,8 +299,7 @@ const useTasks = ({
   const onUpdateTask = useCallback(
     async (id: number) => {
       const formData = getValues();
-      console.log(formData.priority, "formData.priority");
-      console.log(id, "id");
+
       const variables = {
         id,
         title: formData.title,
@@ -298,8 +307,9 @@ const useTasks = ({
         updated_at: new Date().toISOString(),
         priority: formData.priority,
         status: formData.status,
+        is_public: formData.is_public,
+        cost: formData.cost,
       };
-      console.log(variables, "variables");
 
       await mutateUpdateTask({
         variables,
@@ -400,6 +410,25 @@ const useTasks = ({
         header: "Description",
         cell: (info: any) => info.getValue(),
       },
+      {
+        accessorFn: (row: any) => {
+          return row.node.is_public;
+        },
+        id: "is_public",
+        header: "Public",
+        cell: (info: any) => {
+          return info.getValue() ? "Yes" : "No";
+        },
+      },
+      {
+        accessorFn: (row: any) => {
+          return row.node.cost;
+        },
+        id: "cost",
+        header: "Cost",
+        cell: (info: any) => info.getValue(),
+      },
+
       {
         accessorKey: "priority",
         header: ({ column }: any) => {

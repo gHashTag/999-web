@@ -72,6 +72,8 @@ type TaskNode = {
   colors: string[][];
   type: string;
   workspace_id: string;
+  cost: number;
+  is_public: boolean;
 };
 
 export interface Task {

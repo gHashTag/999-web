@@ -85,7 +85,7 @@ export const EvervaultCard = ({
       default:
         targetPath = `/${user_id}/${workspace_id}/meet/${inviteGuestCode}`;
     }
-
+    console.log(SITE_URL, "SITE_URL");
     if (
       router.pathname !==
       `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`

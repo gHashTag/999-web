@@ -70,7 +70,7 @@ function InviteMemberModal({
                   control={control}
                   render={({ field }: any) => (
                     <Input
-                      placeholder="Enter username"
+                      placeholder="Enter telegram username"
                       className="w-full h-15"
                       {...field}
                       onChange={(e) => {

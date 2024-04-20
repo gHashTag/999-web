@@ -357,6 +357,8 @@ export const GET_TASKS_BY_ID_QUERY = gql`
           recording_id
           title
           description
+          is_public
+          cost
           updated_at
           due_date
           priority
@@ -390,6 +392,8 @@ export const GET_ROOM_TASKS_QUERY = gql`
           recording_id
           title
           description
+          is_public
+          cost
           updated_at
           due_date
           priority
@@ -427,6 +431,35 @@ export const GET_RECORDING_TASKS_QUERY = gql`
           title
           description
           recording_id
+          updated_at
+          due_date
+          priority
+          completed_at
+          is_archived
+          status
+          label
+        }
+      }
+    }
+  }
+`;
+
+export const GET_PUBLIC_ROOM_TASKS_QUERY = gql`
+  query GetPublicRoomTasks {
+    tasksCollection(
+      filter: { and: [{ is_public: { eq: true } }] }
+      orderBy: { created_at: DescNullsFirst }
+    ) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          room_id
+          created_at
+          recording_id
+          title
+          description
           updated_at
           due_date
           priority
@@ -519,6 +552,8 @@ export const TASKS_COLLECTION_QUERY = gql`
           created_at
           title
           description
+          is_public
+          cost
           updated_at
           due_date
           priority
@@ -544,6 +579,8 @@ export const CREATE_TASK_MUTATION = gql`
         updated_at
         due_date
         priority
+        cost
+        is_public
         assigned_to
         completed_at
         is_archived
@@ -561,6 +598,8 @@ export const MUTATION_TASK_STATUS_UPDATE = gql`
     $status: BigInt!
     $title: String!
     $description: String!
+    $is_public: Boolean!
+    $cost: BigInt!
     $updated_at: Datetime!
     $order: BigInt!
   ) {
@@ -571,6 +610,8 @@ export const MUTATION_TASK_STATUS_UPDATE = gql`
         updated_at: $updated_at
         title: $title
         description: $description
+        is_public: $is_public
+        cost: $cost
         order: $order
       }
     ) {
@@ -580,6 +621,8 @@ export const MUTATION_TASK_STATUS_UPDATE = gql`
         title
         description
         status
+        is_public
+        cost
         due_date
         assigned_to
         completed_at
@@ -602,6 +645,8 @@ export const MUTATION_TASK_UPDATE = gql`
     $label: String!
     $title: String!
     $description: String!
+    $is_public: Boolean!
+    $cost: BigInt!
     $updated_at: Datetime!
     $order: BigInt!
   ) {
@@ -614,6 +659,8 @@ export const MUTATION_TASK_UPDATE = gql`
         label: $label
         status: $status
         priority: $priority
+        is_public: $is_public
+        cost: $cost
         updated_at: $updated_at
       }
     ) {
@@ -624,6 +671,8 @@ export const MUTATION_TASK_UPDATE = gql`
         description
         status
         due_date
+        is_public
+        cost
         assigned_to
         completed_at
         is_archived

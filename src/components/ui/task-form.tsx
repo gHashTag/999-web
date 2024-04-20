@@ -11,7 +11,7 @@ import {
   UseFormWatch,
   UseFormSetValue,
 } from "react-hook-form";
-
+import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -29,6 +29,8 @@ export function TaskForm({
   description,
   priority,
   status,
+  cost,
+  is_public,
   handleSubmitTask,
   watchTask,
   setValueTask,
@@ -39,6 +41,8 @@ export function TaskForm({
   description: string;
   priority: string;
   status: string;
+  cost: number;
+  is_public: boolean;
   created_at?: string;
   updated_at?: string;
   handleSubmitTask: UseFormHandleSubmit<FieldValues>;
@@ -51,7 +55,8 @@ export function TaskForm({
   const watchedDescription = watchTask("description", description);
   const watchedPriority = watchTask("priority", priority);
   const watchedStatus = watchTask("status", status);
-
+  const watchedCost = watchTask("cost", cost);
+  const watchedPublic = watchTask("is_public", is_public);
   const [isEdit, setIsEdit] = useState(true);
 
   useEffect(() => {
@@ -66,6 +71,7 @@ export function TaskForm({
   ) => {
     onUpdateTask(id);
   };
+
   return (
     <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-transparent dark:bg-transparent">
       <form className="my-8" onSubmit={handleSubmitTask(onSubmitDestination)}>
@@ -108,22 +114,49 @@ export function TaskForm({
                 </SelectTrigger>
                 <SelectContent>
                   {priorities.map(({ value }) => (
-                    <SelectItem value={value}>{value}</SelectItem>
+                    <SelectItem key={value} value={value}>
+                      {value}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="public-task"
+                  checked={watchedPublic}
+                  onCheckedChange={() =>
+                    setValueTask("is_public", !watchedPublic)
+                  }
+                />
+                <Label htmlFor="public-task">Public</Label>
+              </div>
+
               <Select onValueChange={(value) => setValueTask("status", value)}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder={watchedStatus} />
                 </SelectTrigger>
                 <SelectContent>
                   {statuses.map(({ value }) => (
-                    <SelectItem value={value}>{value}</SelectItem>
+                    <SelectItem key={value} value={value}>
+                      {value}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-
+            {watchedPublic && (
+              <LabelInputContainer>
+                <Label htmlFor="cost">Cost, TON</Label>
+                <Input
+                  id="cost"
+                  type="text"
+                  defaultValue="0"
+                  value={watchedCost}
+                  onChange={(e) => setValueTask("cost", e.target.value)}
+                />
+              </LabelInputContainer>
+            )}
+            <div style={{ padding: "10px" }} />
             <ButtonAnimate
               onClick={() => {
                 setTimeout(() => setIsEdit(false), 1000);

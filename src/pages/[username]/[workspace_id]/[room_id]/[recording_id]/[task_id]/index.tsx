@@ -5,7 +5,6 @@ import Layout from "@/components/layout";
 import { useTasks } from "@/hooks/useTasks";
 
 import { TaskForm } from "@/components/ui/task-form";
-import { useUser } from "@/hooks/useUser";
 
 const TaskPage = () => {
   const {
@@ -30,6 +29,8 @@ const TaskPage = () => {
                 description={node.description}
                 priority={node.priority || "low"}
                 status={node.status || "todo"}
+                is_public={node.is_public}
+                cost={node.cost}
                 created_at={node.created_at}
                 handleSubmitTask={handleSubmitTask}
                 watchTask={watchTask}
