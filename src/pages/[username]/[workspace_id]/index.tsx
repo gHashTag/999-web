@@ -21,6 +21,7 @@ import {
   setHeaderName,
   setLoading,
   setRoomName,
+  setWorkspaceId,
 } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
@@ -31,9 +32,8 @@ const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
   const loading = useReactiveVar(setLoading);
-  const { username, user_id, lang, workspace_name } = useUser();
-
-  const workspace_id = router.query.workspace_id as string;
+  const { username, user_id, lang, workspace_id, workspace_name } = useUser();
+  console.log(workspace_id, "workspace_id");
   const {
     tasksData,
     tasksLoading,
@@ -59,18 +59,33 @@ const MeetsPage = () => {
   });
 
   const { roomsData, roomsLoading, refetchRooms } = useRooms({ workspace_id });
+  const [isVisibleMenu, setIsVisibleMenu] = useState(true);
+  const [isVisibleRoom, setIsVisibleRoom] = useState(true);
+  const [isVisibleTask, setIsVisibleTask] = useState(false);
 
   useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
-      workspace_name && setHeaderName(workspace_name);
+      if (workspace_id === "d696abd8-3b7a-46f2-907f-5342a2b533a0") {
+        setIsVisibleMenu(false);
+        setIsVisibleTask(true);
+      } else {
+        setIsVisibleMenu(true);
+      }
+      if (workspace_id === "54dc9d0e-dd96-43e7-bf72-02c2807f8977") {
+        setIsVisibleMenu(false);
+        setIsVisibleRoom(true);
+        setIsVisibleTask(true);
+      } else {
+        setIsVisibleRoom(false);
+      }
     }
 
     router.events.on("routeChangeComplete", (url) => {
       refetchRooms();
     });
-  }, [refetchRooms, refetchTasks, router, username, roomsData, workspace_name]);
+  }, [workspace_id]);
 
   const [openModalId, setOpenModalId] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -134,7 +149,7 @@ const MeetsPage = () => {
   };
 
   return (
-    <Layout loading={loading || roomsLoading || tasksLoading}>
+    <Layout loading={loading || roomsLoading}>
       <>
         {isOpen && (
           <MeetModal
@@ -148,38 +163,47 @@ const MeetsPage = () => {
             setValue={setValue}
           />
         )}
-        <SelectRoom setOpenModalType={setOpenModalType} />
-        <div
-          className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
-          style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
-        >
-          {roomsData?.roomsCollection.edges.map((room: RoomEdge) => (
-            <CardRoom
-              room={room.node}
-              onClick={() => {
-                router.push(
-                  `/${username}/${workspace_id}/${room.node.room_id}`
-                );
-                localStorage.setItem("room_id", room.node.room_id);
-                setRoomName(room.node.name);
-                setHeaderName(room.node.name);
-              }}
-              key={room.node.id}
-            />
-          ))}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            paddingTop: 30,
-            paddingRight: "75px",
-          }}
-        >
-          <Button onClick={() => onCreateNewTask(workspace_id)}>
-            Create task
-          </Button>
-        </div>
+        {isVisibleMenu && (
+          <>
+            <SelectRoom setOpenModalType={setOpenModalType} />
+          </>
+        )}
+        {isVisibleRoom && (
+          <div
+            className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
+            style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
+          >
+            {roomsData?.roomsCollection.edges.map((room: RoomEdge) => (
+              <CardRoom
+                room={room.node}
+                onClick={() => {
+                  router.push(
+                    `/${username}/${workspace_id}/${room.node.room_id}`
+                  );
+                  localStorage.setItem("room_id", room.node.room_id);
+                  setRoomName(room.node.name);
+                  room.node.name && setHeaderName(room.node.name);
+                }}
+                key={room.node.id}
+              />
+            ))}
+          </div>
+        )}
+
+        {!isVisibleTask && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              paddingTop: 30,
+              paddingRight: "75px",
+            }}
+          >
+            <Button onClick={() => onCreateNewTask(workspace_id)}>
+              Create task
+            </Button>
+          </div>
+        )}
       </>
       <div
         style={{

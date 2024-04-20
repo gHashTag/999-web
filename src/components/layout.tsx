@@ -122,11 +122,11 @@ export default function Layout({
   //     router.push("/");
   //   }
   // }, [data]);
-  const headerName = useReactiveVar(setHeaderName);
+  // const headerName = useReactiveVar(setHeaderName);
   const activeMenuButton = useReactiveVar(setActiveRoute);
 
   const activeRoute = router.asPath;
-  const { user_id, photo_url, firstName, lastName } = useUser();
+  const { user_id, photo_url, firstName, lastName, workspace_name } = useUser();
 
   const shortName = `${(firstName && firstName[0]) || ""}${
     (lastName && lastName[0]) || ""
@@ -149,7 +149,7 @@ export default function Layout({
               <div className="relative flex items-center justify-center">
                 <div className="relative  rounded-full flex items-center justify-center text-white font-bold text-4xl">
                   <span className="dark:text-white text-black text-center">
-                    {headerName}
+                    {workspace_name}
                   </span>
                 </div>
               </div>

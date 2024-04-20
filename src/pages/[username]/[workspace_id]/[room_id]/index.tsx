@@ -98,7 +98,7 @@ const RoomPage = () => {
     if (!username) {
       router.push("/");
     } else {
-      setHeaderName(roomName);
+      roomName && setHeaderName(roomName);
     }
   }, [router, roomsData, tasksData, passportData, roomName]);
 

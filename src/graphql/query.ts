@@ -483,6 +483,8 @@ export const GET_PUBLIC_ROOM_TASKS_QUERY = gql`
           recording_id
           title
           description
+          is_public
+          cost
           updated_at
           due_date
           priority

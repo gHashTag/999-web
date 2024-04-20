@@ -2,7 +2,6 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   CREATE_TASK_MUTATION,
   DELETE_TASK_MUTATION,
-  GET_PUBLIC_ROOM_TASKS_QUERY,
   GET_RECORDING_ID_TASKS_QUERY,
   GET_TASKS_BY_ID_QUERY,
   MUTATION_TASK_STATUS_UPDATE,
@@ -44,14 +43,17 @@ type TasksType = {
   id?: string;
 };
 
-const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
-  const { workspace_id } = useUser();
-
+const useTasks = ({
+  workspace_id,
+  room_id,
+  recording_id,
+}: TasksType): UseTasksReturn => {
+  const paramsTasks = { workspace_id, room_id, recording_id };
+  console.log(paramsTasks, "paramsTasks");
   const router = useRouter();
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const { getTaskById } = useSupabase();
-
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [recordingId, setRecordingId] = useState<string | null>(null);
 
@@ -71,7 +73,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
     } else if (!recording_id && room_id && workspace_id) {
       query = GET_RECORDING_TASKS_QUERY;
     } else if (!room_id && !recording_id && workspace_id) {
-      query = GET_PUBLIC_ROOM_TASKS_QUERY;
+      query = GET_ROOM_TASKS_QUERY;
     } else if (!recording_id && !room_id && !workspace_id) {
       query = GET_TASKS_BY_ID_QUERY;
     } else if (recording_id && !room_id && !workspace_id) {
@@ -83,6 +85,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
 
     return query;
   }, [workspace_id, room_id, recording_id]);
+  console.log(tasksQuery, "tasksQuery");
 
   const queryVariables = useMemo(() => {
     let variables = {};
@@ -137,8 +140,6 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
     setOpenModalTaskId(id);
     setIsEditingTask(isEditing);
     router.push(`/0/1/2/3/${id}`);
-    // setOpenModalId(id);
-    // openModal(id);
   };
 
   if (tasksError instanceof ApolloError) {
@@ -190,25 +191,11 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
     setValue("label", "");
     setValue("is_public", false);
     setValue("cost", 0);
+    setWorkspaceId(workspace_id);
     room_id && setRoomId(room_id);
     recording_id && setRecordingId(recording_id);
     onOpen();
     setIsEditingTask(false);
-  };
-
-  const openModal = async (cardId: number) => {
-    setOpenModalId(cardId);
-    const card = await getTaskById(cardId);
-
-    setValue("title", card?.title);
-    setValue("description", card?.description);
-    setValue("label", card?.label || "");
-    setValue("priority", card?.priority || "");
-    setValue("status", card?.status || "");
-    setValue("is_public", card?.is_public || false);
-    setValue("cost", card?.cost || 0);
-    onOpen();
-    setIsEditingTask(true);
   };
 
   const onCreateTask = useCallback(async () => {
@@ -217,7 +204,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
 
       const formDataWithUserId = {
         ...formData,
-        workspace_id,
+        workspace_id: workspaceId,
         room_id: roomId,
         recording_id: recordingId,
         user_id,
