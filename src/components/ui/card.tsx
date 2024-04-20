@@ -1,76 +1,59 @@
-import * as React from "react"
+import { forwardRef } from "react";
+import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable";
+import { BackgroundGradient } from "./background-gradient";
 
-import { cn } from "@/lib/utils"
+import { Spacer } from "@nextui-org/react";
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow",
-      className
-    )}
-    {...props}
-  />
-))
-Card.displayName = "Card"
+interface CardProps {
+  node: {
+    id: string;
+    title: string;
+    description: string;
+  };
+  onClick?: () => void;
+}
 
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
-    {...props}
-  />
-))
-CardHeader.displayName = "CardHeader"
+const Card = forwardRef<HTMLDivElement, CardProps>(({ node, onClick }, ref) => {
+  const { attributes, listeners, setNodeRef, transform } = useSortable({
+    id: node.id,
+  });
 
-const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn("font-semibold leading-none tracking-tight", className)}
-    {...props}
-  />
-))
-CardTitle.displayName = "CardTitle"
+  const style = {
+    opacity: 1,
+    transform: CSS.Transform.toString(transform),
+  };
 
-const CardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
-))
-CardDescription.displayName = "CardDescription"
+  return (
+    <div ref={ref} onClick={onClick}>
+      <BackgroundGradient className="rounded-[22px] sm:p-1">
+        <div className="bg-stone-950 rounded-[17px]">
+          <div
+            className="text-2xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-semibold"
+            style={{ paddingTop: 10, paddingLeft: 10 }}
+          >
+            {node?.title}
+          </div>
+          <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+            <div
+              className="text-1xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
+              style={{
+                padding: 10,
+                paddingBottom: 10,
+                color: "rgb(87 83 78)",
+              }}
+            >
+              {node?.description}
+            </div>
+          </div>
+        </div>
+      </BackgroundGradient>
+      <Spacer x={40} />
+      <div id={node?.id.toString()} />
+    </div>
+  );
+});
 
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
-))
-CardContent.displayName = "CardContent"
+Card.displayName = "Card";
 
-const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
-    {...props}
-  />
-))
-CardFooter.displayName = "CardFooter"
-
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+export default Card;
