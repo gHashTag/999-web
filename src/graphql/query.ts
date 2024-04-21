@@ -43,7 +43,7 @@ export const GET_ROOMS_COLLECTIONS_BY_ROOM_ID_QUERY = gql`
 `;
 
 export const GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY = gql`
-  query RoomsCollection($workspace_id: String!, $user_id: UUID!) {
+  query RoomsCollection($workspace_id: UUID!, $user_id: UUID!) {
     roomsCollection(
       filter: {
         and: [

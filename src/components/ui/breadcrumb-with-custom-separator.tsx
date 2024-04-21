@@ -16,15 +16,17 @@ export function BreadcrumbWithCustomSeparator({
   workspace_id,
   room_id,
   record_id,
+  room_name,
 }: {
   username: string;
   workspace_id?: string;
   room_id?: string;
+  room_name?: string;
   record_id?: string;
 }) {
   const router = useRouter();
 
-  const { workspace_name, room_name, recording_name } = useUser();
+  const { workspace_name, recording_name } = useUser();
 
   const goToHome = () => {
     router.push(`/${username}`);
@@ -67,7 +69,7 @@ export function BreadcrumbWithCustomSeparator({
             </BreadcrumbItem>
           </>
         )}
-        {room_id && (
+        {room_name && (
           <>
             <BreadcrumbSeparator>
               <Slash />

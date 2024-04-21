@@ -7,6 +7,7 @@ import {
   GET_TASKS_BY_ID_QUERY,
   MUTATION_TASK_STATUS_UPDATE,
   MUTATION_TASK_UPDATE,
+  GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY,
 } from "@/graphql/query";
 import { useRouter } from "next/router";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
@@ -19,8 +20,7 @@ import {
   UseFormWatch,
   useForm,
 } from "react-hook-form";
-import { useSupabase } from "./useSupabase";
-import { setOpenModalId } from "@/apollo/reactive-store";
+import { setIsEdit, setOpenModalId } from "@/apollo/reactive-store";
 import { useUser } from "./useUser";
 import { TasksArray } from "@/types";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
@@ -37,16 +37,8 @@ import {
   GET_USER_TASKS_QUERY,
 } from "@/graphql/query";
 
-type TasksType = {
-  workspace_id?: string;
-  room_id?: string;
-  recording_id?: string | string[] | undefined;
-  id?: string;
-};
-
-const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
-  const { username, workspace_id, user_id } = useUser();
-  const {} = useUser();
+const useTasks = (): UseTasksReturn => {
+  const { username, user_id, workspace_id, room_id, recording_id } = useUser();
   const router = useRouter();
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -59,17 +51,21 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
 
   const tasksQuery = useMemo(() => {
     let query = GET_USER_TASKS_QUERY;
-
-    if (recording_id && room_id && workspace_id) {
-      query = GET_ALL_TASKS_QUERY;
-    } else if (!recording_id && room_id && workspace_id) {
-      query = GET_RECORDING_TASKS_QUERY;
-    } else if (!room_id && !recording_id && workspace_id) {
-      query = GET_PUBLIC_ROOM_TASKS_QUERY;
-    } else if (!recording_id && !room_id && !workspace_id) {
+    if (!recording_id && !room_id && !workspace_id) {
+      console.log("query :::1");
       query = GET_TASKS_BY_ID_QUERY;
+    } else if (!room_id && !recording_id && workspace_id) {
+      console.log("query :::2");
+      query = GET_ROOM_TASKS_QUERY;
     } else if (recording_id && !room_id && !workspace_id) {
+      console.log("query :::3");
       query = GET_RECORDING_ID_TASKS_QUERY;
+    } else if (!recording_id && room_id && workspace_id) {
+      console.log("query :::4");
+      query = GET_RECORDING_TASKS_QUERY;
+    } else if (recording_id && room_id && workspace_id) {
+      console.log("query :::5");
+      query = GET_ALL_TASKS_QUERY;
     } else {
       console.log("Workspace ID is undefined");
       // Дополнительная логика для случая, когда workspace_id равен undefined
@@ -81,35 +77,36 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
   const queryVariables = useMemo(() => {
     let variables = {};
     console.log(variables, "variables");
-    if (recording_id && room_id && workspace_id) {
-      console.log("1");
+    if (!recording_id && !room_id && !workspace_id) {
+      console.log("variables :::1");
       variables = {
         user_id,
-        room_id,
-        workspace_id,
-        recording_id,
-      };
-    } else if (!recording_id && room_id && workspace_id) {
-      console.log("2");
-      variables = {
-        user_id,
-        room_id,
-        workspace_id,
+        // id: localStorage.getItem("id"),
       };
     } else if (!room_id && !recording_id && workspace_id) {
-      console.log("3");
+      console.log("variables :::2");
       variables = {
         user_id,
         workspace_id,
       };
-    } else if (!recording_id && !room_id && !workspace_id) {
-      console.log("4");
+    } else if (!recording_id && room_id && workspace_id) {
+      console.log("variables :::3");
       variables = {
-        id: localStorage.getItem("id"),
+        user_id,
+        room_id,
+        workspace_id,
       };
     } else if (recording_id && !room_id && !workspace_id) {
-      console.log("5");
+      console.log("variables :::4");
       variables = {
+        recording_id,
+      };
+    } else if (recording_id && room_id && workspace_id) {
+      console.log("variables :::5");
+      variables = {
+        user_id,
+        room_id,
+        workspace_id,
         recording_id,
       };
     }
@@ -195,10 +192,10 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
 
       const formDataWithUserId = {
         ...formData,
+        user_id,
         workspace_id,
         room_id,
         recording_id,
-        user_id,
       };
 
       const mutateCreateTaskResult = await mutateCreateTask({
@@ -317,6 +314,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
 
   const onEditTask = (id: number) => {
     router.push(`/0/1/2/3/${id}`);
+    setIsEdit(false);
     localStorage.setItem("header_name", `Task #${id}`);
   };
 

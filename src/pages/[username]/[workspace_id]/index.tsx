@@ -17,18 +17,14 @@ import { Button } from "@/components/ui/moving-border";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "../../_app";
 
-import {
-  setHeaderName,
-  setLoading,
-  setRoomName,
-  setWorkspaceId,
-} from "@/apollo/reactive-store";
+import { setLoading } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 import TaskModal from "@/components/modal/TaskModal";
 import { useRooms } from "@/hooks/useRooms";
 import { TextRevealCard } from "@/components/ui/text-reveal-card";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
+import { selectLocalAudioTrackID } from "@100mslive/react-sdk";
 
 const MeetsPage = () => {
   const router = useRouter();
@@ -56,11 +52,9 @@ const MeetsPage = () => {
     openModalTaskId,
     setOpenModalTaskId,
     isEditingTask,
-  } = useTasks({
-    workspace_id,
-  });
+  } = useTasks();
 
-  const { roomsData, roomsLoading, refetchRooms } = useRooms({ workspace_id });
+  const { roomsData, roomsLoading, refetchRooms } = useRooms();
   const [isVisibleMenu, setIsVisibleMenu] = useState(true);
   const [isVisibleRoom, setIsVisibleRoom] = useState(true);
   const [isVisibleTask, setIsVisibleTask] = useState(false);
@@ -81,7 +75,7 @@ const MeetsPage = () => {
         setIsVisibleRoom(true);
         setIsVisibleTask(true);
       } else {
-        setIsVisibleRoom(false);
+        setIsVisibleRoom(true);
       }
     }
 
@@ -113,8 +107,6 @@ const MeetsPage = () => {
 
         if (response) {
           localStorage.setItem("room_name", response.rooms.name);
-          setRoomName(response.rooms.name);
-          setHeaderName(response.rooms.name);
           router.push(`/${username}/${workspace_id}/${response.rooms.room_id}`);
           setLoading(false);
           toast({
@@ -154,8 +146,7 @@ const MeetsPage = () => {
   const goToRoomId = (room: RoomEdge) => {
     router.push(`/${username}/${workspace_id}/${room.node.name}`);
     localStorage.setItem("room_id", room.node.room_id);
-    setRoomName(room.node.name);
-    room.node.name && setHeaderName(room.node.name);
+    room.node.name && localStorage.setItem("room_name", room.node.name);
   };
 
   return (

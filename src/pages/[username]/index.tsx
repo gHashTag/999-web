@@ -60,8 +60,9 @@ export default function Office() {
       router.push("/");
     } else {
       setVisibleHeader(true);
-      //setHeaderName("Workspaces");
-      localStorage.setItem("workspace_name", "Workspaces");
+      localStorage.setItem("workspace_id", "");
+      localStorage.setItem("room_id", "");
+      localStorage.setItem("recording_id", "");
     }
   }, [router, username]);
 
@@ -99,7 +100,6 @@ export default function Office() {
     router.push(`/${username}/${workspace_id}`);
     localStorage.setItem("workspace_id", workspace_id);
     localStorage.setItem("workspace_name", workspace_name);
-    localStorage.setItem("header_name", workspace_name);
   };
 
   const onCreateNewWorkspace = () => {
@@ -130,9 +130,9 @@ export default function Office() {
           />
         )}
 
-        <div style={{ alignSelf: "flex-end", paddingRight: "75px" }}>
+        {/* <div style={{ alignSelf: "flex-end", paddingRight: "75px" }}>
           <Button onClick={() => onCreateNewTask()}>Create task</Button>
-        </div>
+        </div> */}
         {tasksData && <DataTable data={tasksData} columns={columns} />}
 
         <>

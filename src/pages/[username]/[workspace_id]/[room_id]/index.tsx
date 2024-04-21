@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/moving-border";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 import { useRooms } from "@/hooks/useRooms";
-import { setHeaderName, setRoomName } from "@/apollo/reactive-store";
+import { setHeaderName } from "@/apollo/reactive-store";
 import InviteMemberModal from "@/components/modal/InviteMemberModal";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { AnimatedTooltipCommon } from "@/components/ui/animated-tooltip-common";
@@ -30,7 +30,7 @@ if (!managementToken) {
 
 const RoomPage = () => {
   const router = useRouter();
-  const { username, workspace_id, room_id } = useUser();
+  const { username, workspace_id, room_id, room_name } = useUser();
   const {
     roomsData,
     assetsLoading,
@@ -45,7 +45,7 @@ const RoomPage = () => {
     inviteGuestCode,
     inviteHostCode,
     inviteMemberCode,
-  } = useRooms({ workspace_id, room_id });
+  } = useRooms();
 
   const {
     tasksData,
@@ -67,10 +67,7 @@ const RoomPage = () => {
     openModalTaskId,
     setOpenModalTaskId,
     isEditingTask,
-  } = useTasks({
-    workspace_id,
-    room_id,
-  });
+  } = useTasks();
 
   const {
     passportData,
@@ -93,15 +90,14 @@ const RoomPage = () => {
     workspace_id,
   });
 
-  const roomName = useReactiveVar(setRoomName);
-
   useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
-      roomName && setHeaderName(roomName);
+      localStorage.setItem("room_id", "");
+      localStorage.setItem("recording_id", "");
     }
-  }, [router, roomsData, tasksData, passportData, roomName]);
+  }, [router, roomsData, tasksData, passportData]);
 
   return (
     <>
@@ -130,6 +126,7 @@ const RoomPage = () => {
             username={username}
             workspace_id={workspace_id}
             room_id={room_id}
+            room_name={room_name}
           />
           <div style={{ padding: 15 }} />
           <AnimatedTooltipCommon items={passportData} />

@@ -29,6 +29,7 @@ const TaskPage = () => {
               return (
                 <TaskForm
                   key={node.id}
+                  user_id={node.user_id}
                   id={node.id}
                   title={node.title}
                   description={node.description}

@@ -10,6 +10,11 @@ import {
   ROOMS_ASSETS_COLLECTION_QUERY,
   ROOMS_BY_ID_COLLECTION_QUERY,
   ROOM_NAME_COLLECTION_QUERY,
+  GET_RECORDING_ID_TASKS_QUERY,
+  GET_TASKS_BY_ID_QUERY,
+  GET_ALL_TASKS_QUERY,
+  GET_RECORDING_TASKS_QUERY,
+  GET_ROOM_TASKS_QUERY,
 } from "@/graphql/query";
 
 import { useUser } from "./useUser";
@@ -18,12 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
 import { ArrayInviteT, RoomEdge, RoomsCollection, RoomsData } from "@/types";
 
-type UseRoomsProps = {
-  workspace_id: string;
-  room_id?: string;
-};
-
-const useRooms = ({ workspace_id, room_id }: UseRoomsProps): UseRoomsReturn => {
+const useRooms = (): UseRoomsReturn => {
   const [inviteGuestCode, setInviteGuestCode] = useState("");
   const [inviteHostCode, setInviteHostCode] = useState("");
   const [inviteMemberCode, setInviteMemberCode] = useState("");
@@ -38,13 +38,39 @@ const useRooms = ({ workspace_id, room_id }: UseRoomsProps): UseRoomsReturn => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const { username, user_id } = useUser();
+  const { username, user_id, workspace_id, room_id, recording_id } = useUser();
 
   let queryVariables;
 
-  let passportQuery = ROOMS_BY_ID_COLLECTION_QUERY;
+  let passportQuery;
 
-  if (room_id && workspace_id && user_id) {
+  if (!room_id && !recording_id && !workspace_id) {
+    console.log("rooms :::1");
+    passportQuery = ROOMS_BY_ID_COLLECTION_QUERY;
+    queryVariables = {
+      user_id,
+    };
+  }
+
+  if (!room_id && !recording_id && workspace_id) {
+    console.log("rooms :::2");
+    passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY;
+    queryVariables = {
+      user_id,
+      workspace_id,
+    };
+  }
+
+  if (recording_id && !room_id && !workspace_id) {
+    console.log("rooms :::3");
+    passportQuery = GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY;
+    queryVariables = {
+      user_id,
+    };
+  }
+
+  if (!recording_id && room_id && workspace_id) {
+    console.log("rooms :::4");
     passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY;
     queryVariables = {
       user_id,
@@ -53,18 +79,13 @@ const useRooms = ({ workspace_id, room_id }: UseRoomsProps): UseRoomsReturn => {
     };
   }
 
-  if (!room_id && workspace_id && user_id) {
-    passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY;
+  if (recording_id && room_id && workspace_id) {
+    console.log("rooms :::5");
+    passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY;
     queryVariables = {
       user_id,
+      room_id,
       workspace_id,
-    };
-  }
-
-  if (!workspace_id && !room_id) {
-    passportQuery = GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY;
-    queryVariables = {
-      user_id,
     };
   }
 
@@ -185,7 +206,6 @@ const useRooms = ({ workspace_id, room_id }: UseRoomsProps): UseRoomsReturn => {
   };
 
   const room_name = roomNameData?.roomsCollection?.edges[0]?.node?.name;
-  localStorage.setItem("room_name", room_name);
 
   return {
     roomsItem: roomsData?.roomsCollection?.edges[0]?.node,

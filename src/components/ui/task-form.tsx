@@ -22,6 +22,9 @@ import {
 } from "@/components/ui/select";
 import { ButtonAnimate } from "./button-animate";
 import { priorities, statuses } from "@/helpers/data/data";
+import { useReactiveVar } from "@apollo/client";
+import { setIsEdit } from "@/apollo/reactive-store";
+import { useUser } from "@/hooks/useUser";
 
 export function TaskForm({
   id,
@@ -35,6 +38,7 @@ export function TaskForm({
   watchTask,
   setValueTask,
   onUpdateTask,
+  user_id,
 }: {
   id: number;
   title: string;
@@ -49,6 +53,7 @@ export function TaskForm({
   watchTask: UseFormWatch<FieldValues>;
   setValueTask: UseFormSetValue<FieldValues>;
   onUpdateTask: (id: number) => void;
+  user_id: string;
 }) {
   const router = useRouter();
   const watchedTitle = watchTask("title", title);
@@ -57,7 +62,11 @@ export function TaskForm({
   const watchedStatus = watchTask("status", status);
   const watchedCost = watchTask("cost", cost);
   const watchedPublic = watchTask("is_public", is_public);
-  const [isEdit, setIsEdit] = useState(true);
+
+  const isEdit = useReactiveVar(setIsEdit);
+  const { user_id: owner_user_id } = useUser();
+
+  const isOwnerTask = owner_user_id === user_id;
 
   useEffect(() => {
     const subscription = watchTask((value, { name, type }) => {
@@ -187,7 +196,11 @@ export function TaskForm({
               <Badge variant="outline">{status}</Badge>
             </div>
 
-            <ButtonAnimate onClick={() => setIsEdit(true)}>Edit</ButtonAnimate>
+            {isOwnerTask && (
+              <ButtonAnimate onClick={() => setIsEdit(true)}>
+                Edit
+              </ButtonAnimate>
+            )}
             {/* 
             <ButtonAnimate onClick={logout}>Logout</ButtonAnimate> */}
           </div>
