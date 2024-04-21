@@ -18,7 +18,7 @@ import Link from "next/link";
 import cn from "classnames";
 import { useRouter } from "next/router";
 import { SkipNavContent } from "@reach/skip-nav";
-import { NAVIGATION } from "@lib/constants";
+// import { NAVIGATION } from "@lib/constants";
 import styles from "./layout.module.css";
 import Logo from "./icons/icon-logo";
 import MobileMenu from "./mobile-menu";
@@ -27,20 +27,20 @@ import React, { useEffect } from "react";
 
 import DemoButton from "@/components/ui/demo-cta";
 import {
-  NavigationMenu,
-  NavigationMenuItem,
+  // NavigationMenu,
+  // NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+// import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import {
   setActiveRoute,
-  setHeaderName,
-  setVisibleHeader,
+  // setHeaderName,
+  // setVisibleHeader,
 } from "@/apollo/reactive-store";
 import { Spinner } from "@/components/ui/spinner";
-import { cache } from "@/pages/_app";
+// import { cache } from "@/pages/_app";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/hooks/useUser";
 
@@ -126,7 +126,9 @@ export default function Layout({
   const activeMenuButton = useReactiveVar(setActiveRoute);
 
   const activeRoute = router.asPath;
-  const { user_id, photo_url, firstName, lastName } = useUser();
+  const { user_id, photo_url, firstName, lastName, username } = useUser();
+
+  const isAuthorized = !!username;
 
   const shortName = `${(firstName && firstName[0]) || ""}${
     (lastName && lastName[0]) || ""
@@ -140,7 +142,7 @@ export default function Layout({
         {!hideNav && (
           <header className={cn(styles.header)}>
             <div className={styles["header-logos"]}>
-              <MobileMenu key={router.asPath} />
+              {isAuthorized && <MobileMenu key={router.asPath} />}
               <Link href={mainButtonRoute} className={styles.logo}>
                 <Logo />
               </Link>
