@@ -45,14 +45,11 @@ type TasksType = {
 };
 
 const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
-  const { workspace_id } = useUser();
-
+  const { username, workspace_id, user_id } = useUser();
+  const {} = useUser();
   const router = useRouter();
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const { getTaskById } = useSupabase();
-
-  const { username, user_id } = useUser();
 
   const [openModalTaskId, setOpenModalTaskId] = useState<number | null>(null);
   const [isEditing, setIsEditingTask] = useState<boolean>(false);
@@ -192,21 +189,6 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
     setIsEditingTask(false);
   };
 
-  const openModal = async (cardId: number) => {
-    setOpenModalId(cardId);
-    const card = await getTaskById(cardId);
-
-    setValue("title", card?.title);
-    setValue("description", card?.description);
-    setValue("label", card?.label || "");
-    setValue("priority", card?.priority || "");
-    setValue("status", card?.status || "");
-    setValue("is_public", card?.is_public || false);
-    setValue("cost", card?.cost || 0);
-    onOpen();
-    setIsEditingTask(true);
-  };
-
   const onCreateTask = useCallback(async () => {
     try {
       const formData = getValues();
@@ -334,7 +316,6 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
   }, [onClose]);
 
   const onEditTask = (id: number) => {
-    console.log("onEditTask");
     router.push(`/0/1/2/3/${id}`);
     localStorage.setItem("header_name", `Task #${id}`);
   };
@@ -422,7 +403,7 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
         header: "Public",
         cell: ({ row }: any) => (
           <div onClick={() => onEditTask(row.original.node.id)}>
-            {row.getValue("is_public") ? "Yes" : "No"}
+            {row.getValue("is_public") ? "true" : "false"}
           </div>
         ),
       },
@@ -508,7 +489,6 @@ const useTasks = ({ room_id, recording_id }: TasksType): UseTasksReturn => {
       {
         id: "actions",
         cell: ({ row }: any) => {
-          const { user_id } = useUser();
           const isOwnerTask = row.original.node.user_id === user_id;
           return (
             isOwnerTask && (
