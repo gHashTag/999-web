@@ -15,7 +15,7 @@ const TaskPage = () => {
     handleSubmitTask,
     watchTask,
     setValueTask,
-  } = useTasks({});
+  } = useTasks();
   const router = useRouter();
   const { task_id } = router.query;
 

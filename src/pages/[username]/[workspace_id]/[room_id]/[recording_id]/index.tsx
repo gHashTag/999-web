@@ -50,9 +50,7 @@ const RecordingPage = () => {
     openModalTaskId,
     setOpenModalTaskId,
     isEditingTask,
-  } = useTasks({
-    recording_id,
-  });
+  } = useTasks();
 
   function HighlightName({ text }: { text: string }) {
     const [name, ...message] = text.split(":");

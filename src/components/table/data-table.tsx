@@ -69,8 +69,6 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  const { onCreateNewTask } = useTasks({});
-
   return (
     <div
       className="space-y-4"

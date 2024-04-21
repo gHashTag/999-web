@@ -74,17 +74,7 @@ export const EvervaultCard = ({
 
   const handleClick = async () => {
     // Определение targetPath в зависимости от типа
-    let targetPath;
-    switch (type) {
-      case "host":
-        targetPath = `/${user_id}/${workspace_id}/meet/${inviteHostCode}`;
-        break;
-      case "member":
-        targetPath = `/${user_id}/${workspace_id}/meet/${inviteMemberCode}`;
-        break;
-      default:
-        targetPath = `/${user_id}/${workspace_id}/meet/${inviteGuestCode}`;
-    }
+
     console.log(SITE_URL, "SITE_URL");
     if (
       router.pathname !==

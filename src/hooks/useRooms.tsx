@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { ApolloError, useMutation, useQuery } from "@apollo/client";
+import {
+  ApolloError,
+  useMutation,
+  useQuery,
+  useReactiveVar,
+} from "@apollo/client";
 
 import {
   DELETE_ROOM_MUTATION,
@@ -22,11 +27,15 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { useRouter } from "next/router";
 import { ArrayInviteT, RoomEdge, RoomsCollection, RoomsData } from "@/types";
+import { setRoomId } from "@/apollo/reactive-store";
 
 const useRooms = (): UseRoomsReturn => {
   const [inviteGuestCode, setInviteGuestCode] = useState("");
+
   const [inviteHostCode, setInviteHostCode] = useState("");
+
   const [inviteMemberCode, setInviteMemberCode] = useState("");
+
   const [deleteRoom, { loading: deleteRoomLoading, error: deleteRoomError }] =
     useMutation(DELETE_ROOM_MUTATION);
 
@@ -93,6 +102,7 @@ const useRooms = (): UseRoomsReturn => {
     data: roomsData,
     loading: roomsLoading,
     refetch: refetchRooms,
+    // @ts-ignore
   } = useQuery(passportQuery, {
     fetchPolicy: "network-only",
     variables: queryVariables,
@@ -113,6 +123,8 @@ const useRooms = (): UseRoomsReturn => {
     console.log(assetsError, "assetsError");
   }
 
+  const roomId = useReactiveVar(setRoomId);
+
   const {
     data: roomNameData,
     loading: roomNameLoading,
@@ -120,7 +132,7 @@ const useRooms = (): UseRoomsReturn => {
     refetch: roomNameRefetch,
   } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
     variables: {
-      room_id,
+      room_id: roomId,
     },
   });
 

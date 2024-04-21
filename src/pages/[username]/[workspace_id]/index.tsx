@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/moving-border";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "../../_app";
 
-import { setLoading } from "@/apollo/reactive-store";
+import { setLoading, setRoomId } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 import TaskModal from "@/components/modal/TaskModal";
@@ -146,6 +146,7 @@ const MeetsPage = () => {
   const goToRoomId = (room: RoomEdge) => {
     router.push(`/${username}/${workspace_id}/${room.node.name}`);
     localStorage.setItem("room_id", room.node.room_id);
+    setRoomId(room.node.room_id);
     room.node.name && localStorage.setItem("room_name", room.node.name);
   };
 
