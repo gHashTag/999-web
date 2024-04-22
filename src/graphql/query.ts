@@ -520,23 +520,6 @@ export const ROOM_NAME_COLLECTION_QUERY = gql`
   }
 `;
 
-export const ROOMS_ASSETS_COLLECTION_QUERY = gql`
-  query RoomAssetsCollection($room_id: String!) {
-    room_assetsCollection(filter: { room_id: { eq: $room_id } }) {
-      edges {
-        node {
-          id
-          title
-          summary_short
-          recording_id
-          transcription
-          room_id
-        }
-      }
-    }
-  }
-`;
-
 export const DELETE_ROOM_MUTATION = gql`
   mutation DeleteFromroomsCollection($room_id: String!) {
     deleteFromroomsCollection(filter: { room_id: { eq: $room_id } }) {
@@ -722,7 +705,7 @@ export const DELETE_TASK_MUTATION = gql`
   }
 `;
 
-export const GET_ROOM_ASSETS = gql`
+export const GET_ROOM_ASSET = gql`
   query RoomAssetsCollection($recording_id: String!) {
     room_assetsCollection(filter: { recording_id: { eq: $recording_id } }) {
       edges {
@@ -732,6 +715,23 @@ export const GET_ROOM_ASSETS = gql`
           summary_short
           transcription
           recording_id
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ROOMS_ASSETS_COLLECTION = gql`
+  query RoomAssetsCollection($room_id: String!) {
+    room_assetsCollection(filter: { room_id: { eq: $room_id } }) {
+      edges {
+        node {
+          id
+          title
+          summary_short
+          recording_id
+          transcription
+          room_id
         }
       }
     }

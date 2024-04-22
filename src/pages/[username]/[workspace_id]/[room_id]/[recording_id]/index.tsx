@@ -1,34 +1,25 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "@/components/layout";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/pages/_app";
 import { Button } from "@/components/ui/moving-border";
-import { GET_ROOM_ASSETS } from "@/graphql/query";
 
 import { useTasks } from "@/hooks/useTasks";
 import { useUser } from "@/hooks/useUser";
 import TaskModal from "@/components/modal/TaskModal";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
+import { useAssets } from "@/hooks/useAssets";
 
 const RecordingPage = () => {
   const router = useRouter();
   const { username, workspace_id, room_id } = useUser();
   const { recording_id } = router.query;
 
-  const {
-    loading: assetsLoading,
-    error,
-    data: assetsData,
-  } = useQuery(GET_ROOM_ASSETS, {
-    variables: { recording_id },
-  });
-
-  const asset = assetsData?.room_assetsCollection?.edges[0]?.node;
+  const { assetLoading, assetData, asset, assetError } = useAssets();
 
   const {
     tasksData,
@@ -52,6 +43,10 @@ const RecordingPage = () => {
     isEditingTask,
   } = useTasks();
 
+  useEffect(() => {
+    localStorage.setItem("recording_id", recording_id as string);
+  }, [recording_id]);
+
   function HighlightName({ text }: { text: string }) {
     const [name, ...message] = text.split(":");
     const restOfMessage = message.join(":");
@@ -65,7 +60,7 @@ const RecordingPage = () => {
   }
   return (
     <>
-      <Layout loading={tasksLoading || assetsLoading}>
+      <Layout loading={tasksLoading || assetLoading}>
         <div
           style={{
             display: "flex",
@@ -85,7 +80,7 @@ const RecordingPage = () => {
           />
           <div style={{ padding: 15 }} />
         </div>
-        {!tasksLoading && assetsData && (
+        {!tasksLoading && assetData && (
           <div className="flex-col mt-10">
             <TracingBeam className="px-6">
               <div className="max-w-2xl mx-auto antialiased pt-4 relative">

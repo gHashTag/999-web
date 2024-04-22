@@ -21,6 +21,7 @@ import { useReactiveVar } from "@apollo/client";
 import TaskModal from "@/components/modal/TaskModal";
 import { ArrayInviteT } from "@/types";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
+import { useAssets } from "@/hooks/useAssets";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -31,14 +32,12 @@ if (!managementToken) {
 const RoomPage = () => {
   const router = useRouter();
   const { username, workspace_id, room_id, room_name } = useUser();
+  const { assetsLoading, assetItems } = useAssets();
   const {
     roomsData,
-    assetsLoading,
-    refetchRooms,
     handlerDeleteRoom,
     deleteRoomLoading,
     arrayInvite,
-    assetsItems,
     roomsLoading,
     roomNameLoading,
     inviteToMeet,
@@ -91,10 +90,13 @@ const RoomPage = () => {
   });
 
   useEffect(() => {
+    localStorage.setItem("room_id_crutch", room_id);
+  }, []);
+
+  useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
-      setRoomId(room_id);
       localStorage.setItem("room_id", "");
       localStorage.setItem("recording_id", "");
     }
@@ -169,7 +171,7 @@ const RoomPage = () => {
             alignSelf: "center",
           }}
         >
-          <HoverEffect items={assetsItems} />
+          <HoverEffect items={assetItems} />
         </div>
         <div
           style={{
