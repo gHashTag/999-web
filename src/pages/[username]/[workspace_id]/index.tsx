@@ -77,6 +77,10 @@ const MeetsPage = () => {
       } else {
         setIsVisibleRoom(true);
       }
+      localStorage.setItem("room_name", "");
+      localStorage.setItem("room_id", "");
+      localStorage.setItem("recording_id", "");
+      localStorage.setItem("recording_name", "");
     }
 
     router.events.on("routeChangeComplete", (url) => {

@@ -89,16 +89,16 @@ const RoomPage = () => {
     workspace_id,
   });
 
-  useEffect(() => {
-    localStorage.setItem("room_id_crutch", room_id);
-  }, []);
+  // useEffect(() => {
+  //   localStorage.setItem("room_id_crutch", room_id);
+  // }, []);
 
   useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
-      localStorage.setItem("room_id", "");
       localStorage.setItem("recording_id", "");
+      localStorage.setItem("recording_name", "");
     }
   }, [router, roomsData, tasksData, passportData]);
 

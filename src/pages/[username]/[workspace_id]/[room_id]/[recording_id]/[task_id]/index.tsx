@@ -1,11 +1,10 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 import { useTasks } from "@/hooks/useTasks";
 
 import { TaskForm } from "@/components/ui/task-form";
-import { setHeaderName } from "@/apollo/reactive-store";
 
 const TaskPage = () => {
   const {
