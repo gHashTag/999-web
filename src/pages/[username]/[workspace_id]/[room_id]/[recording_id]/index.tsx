@@ -16,7 +16,7 @@ import { useAssets } from "@/hooks/useAssets";
 
 const RecordingPage = () => {
   const router = useRouter();
-  const { username, workspace_id, room_id } = useUser();
+  const { username, workspace_id, room_id, room_name } = useUser();
   const { recording_id } = router.query;
 
   const { assetLoading, assetData, asset, assetError } = useAssets();
@@ -77,6 +77,7 @@ const RecordingPage = () => {
             workspace_id={workspace_id}
             room_id={room_id}
             record_id={recording_id as string}
+            room_name={room_name}
           />
           <div style={{ padding: 15 }} />
         </div>
