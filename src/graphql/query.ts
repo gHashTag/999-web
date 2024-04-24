@@ -264,7 +264,7 @@ export const WORKSPACE_DELETE_MUTATION = gql`
   }
 `;
 
-export const GET_ALL_TASKS_QUERY = gql`
+export const GET_ALL_TASKS = gql`
   query GetRoomTasks {
     tasksCollection(orderBy: { created_at: DescNullsFirst }) {
       edges {
@@ -290,7 +290,7 @@ export const GET_ALL_TASKS_QUERY = gql`
   }
 `;
 
-export const GET_USER_TASKS_QUERY = gql`
+export const GET_TASKS_BY_USER_ID = gql`
   query GetUserTasks($user_id: UUID!) {
     tasksCollection(
       filter: { and: [{ user_id: { eq: $user_id } }] }
@@ -319,7 +319,7 @@ export const GET_USER_TASKS_QUERY = gql`
   }
 `;
 
-export const GET_RECORDING_ID_TASKS_QUERY = gql`
+export const GET_TASKS_BY_RECORDING_ID = gql`
   query GetUserTasks($recording_id: String!) {
     tasksCollection(
       filter: { and: [{ recording_id: { eq: $recording_id } }] }
@@ -348,7 +348,7 @@ export const GET_RECORDING_ID_TASKS_QUERY = gql`
   }
 `;
 
-export const GET_TASKS_BY_ID_QUERY = gql`
+export const GET_TASK_BY_ID = gql`
   query GetUserTasks(
     $id: UUID!
     $user_id: UUID!
@@ -395,7 +395,7 @@ export const GET_TASKS_BY_ID_QUERY = gql`
   }
 `;
 
-export const GET_ROOM_TASKS_QUERY = gql`
+export const GET_TASKS_FOR_WORKSPACE = gql`
   query GetRoomTasks($user_id: UUID!, $workspace_id: UUID!) {
     tasksCollection(
       filter: {
@@ -430,7 +430,7 @@ export const GET_ROOM_TASKS_QUERY = gql`
   }
 `;
 
-export const GET_RECORDING_TASKS_QUERY = gql`
+export const GET_TASKS_FOR_ROOM = gql`
   query GetRoomTasks($user_id: UUID!, $room_id: String!, $workspace_id: UUID!) {
     tasksCollection(
       filter: {

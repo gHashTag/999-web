@@ -2,12 +2,12 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   CREATE_TASK_MUTATION,
   DELETE_TASK_MUTATION,
-  GET_PUBLIC_ROOM_TASKS_QUERY,
-  GET_RECORDING_ID_TASKS_QUERY,
-  GET_TASKS_BY_ID_QUERY,
+  GET_TASKS_BY_RECORDING_ID,
   MUTATION_TASK_STATUS_UPDATE,
   MUTATION_TASK_UPDATE,
-  GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY,
+  GET_TASKS_FOR_WORKSPACE,
+  GET_TASKS_FOR_ROOM,
+  GET_TASKS_BY_USER_ID,
 } from "@/graphql/query";
 import { useRouter } from "next/router";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
@@ -30,13 +30,6 @@ import { priorities, statuses } from "@/helpers/data/data";
 
 import { Badge } from "@/components/ui/badge";
 
-import {
-  GET_ALL_TASKS_QUERY,
-  GET_RECORDING_TASKS_QUERY,
-  GET_ROOM_TASKS_QUERY,
-  GET_USER_TASKS_QUERY,
-} from "@/graphql/query";
-
 const useTasks = (): UseTasksReturn => {
   const { username, user_id, workspace_id, room_id, recording_id } = useUser();
   const router = useRouter();
@@ -50,22 +43,22 @@ const useTasks = (): UseTasksReturn => {
     useForm();
 
   const tasksQuery = useMemo(() => {
-    let query = GET_USER_TASKS_QUERY;
+    let query = GET_TASKS_BY_USER_ID;
     if (!recording_id && !room_id && !workspace_id) {
       console.log("query :::1");
-      query = GET_TASKS_BY_ID_QUERY;
+      query = GET_TASKS_BY_USER_ID;
     } else if (!room_id && !recording_id && workspace_id) {
       console.log("query :::2");
-      query = GET_ROOM_TASKS_QUERY;
-    } else if (recording_id && !room_id && !workspace_id) {
-      console.log("query :::3");
-      query = GET_RECORDING_ID_TASKS_QUERY;
+      query = GET_TASKS_FOR_WORKSPACE;
     } else if (!recording_id && room_id && workspace_id) {
+      console.log("query :::3");
+      query = GET_TASKS_FOR_ROOM;
+    } else if (recording_id && !room_id && !workspace_id) {
       console.log("query :::4");
-      query = GET_RECORDING_TASKS_QUERY;
+      query = GET_TASKS_BY_RECORDING_ID;
     } else if (recording_id && room_id && workspace_id) {
       console.log("query :::5");
-      query = GET_ALL_TASKS_QUERY;
+      query = GET_TASKS_BY_RECORDING_ID;
     } else {
       console.log("Workspace ID is undefined");
       // Дополнительная логика для случая, когда workspace_id равен undefined

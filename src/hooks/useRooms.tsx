@@ -42,9 +42,7 @@ const useRooms = (): UseRoomsReturn => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const { username, user_id, workspace_id, room_id_crutch, recording_id } =
-    useUser();
-  const room_id = room_id_crutch;
+  const { username, user_id, workspace_id, room_id, recording_id } = useUser();
 
   let queryVariables;
 
