@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/moving-border";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 import { useRooms } from "@/hooks/useRooms";
-import { setHeaderName } from "@/apollo/reactive-store";
+import { setHeaderName, setRoomId } from "@/apollo/reactive-store";
 import InviteMemberModal from "@/components/modal/InviteMemberModal";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { AnimatedTooltipCommon } from "@/components/ui/animated-tooltip-common";
@@ -21,6 +21,7 @@ import { useReactiveVar } from "@apollo/client";
 import TaskModal from "@/components/modal/TaskModal";
 import { ArrayInviteT } from "@/types";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
+import { useAssets } from "@/hooks/useAssets";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -31,14 +32,12 @@ if (!managementToken) {
 const RoomPage = () => {
   const router = useRouter();
   const { username, workspace_id, room_id, room_name } = useUser();
+  const { assetsLoading, assetItems } = useAssets();
   const {
     roomsData,
-    assetsLoading,
-    refetchRooms,
     handlerDeleteRoom,
     deleteRoomLoading,
     arrayInvite,
-    assetsItems,
     roomsLoading,
     roomNameLoading,
     inviteToMeet,
@@ -90,13 +89,16 @@ const RoomPage = () => {
     workspace_id,
   });
 
+  // useEffect(() => {
+  //   localStorage.setItem("room_id_crutch", room_id);
+  // }, []);
+
   useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
-      console.log("room_id", room_id);
-      //localStorage.setItem("room_id", room_id);
       localStorage.setItem("recording_id", "");
+      localStorage.setItem("recording_name", "");
     }
   }, [router, roomsData, tasksData, passportData, refetchRooms]);
 
@@ -169,7 +171,7 @@ const RoomPage = () => {
             alignSelf: "center",
           }}
         >
-          <HoverEffect items={assetsItems} />
+          <HoverEffect items={assetItems} />
         </div>
         <div
           style={{

@@ -1,20 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { ApolloError, useMutation, useQuery } from "@apollo/client";
+import {
+  ApolloError,
+  useMutation,
+  useQuery,
+  useReactiveVar,
+} from "@apollo/client";
 
 import {
   DELETE_ROOM_MUTATION,
   GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY,
   GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY,
   GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY,
-  ROOMS_ASSETS_COLLECTION_QUERY,
   ROOMS_BY_ID_COLLECTION_QUERY,
   ROOM_NAME_COLLECTION_QUERY,
-  GET_RECORDING_ID_TASKS_QUERY,
-  GET_TASKS_BY_ID_QUERY,
-  GET_ALL_TASKS_QUERY,
-  GET_RECORDING_TASKS_QUERY,
-  GET_ROOM_TASKS_QUERY,
 } from "@/graphql/query";
 
 import { useUser } from "./useUser";
@@ -22,11 +21,16 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { useRouter } from "next/router";
 import { ArrayInviteT, RoomEdge, RoomsCollection, RoomsData } from "@/types";
+import { setRoomId } from "@/apollo/reactive-store";
+import { useAssets } from "./useAssets";
 
 const useRooms = (): UseRoomsReturn => {
   const [inviteGuestCode, setInviteGuestCode] = useState("");
+
   const [inviteHostCode, setInviteHostCode] = useState("");
+
   const [inviteMemberCode, setInviteMemberCode] = useState("");
+
   const [deleteRoom, { loading: deleteRoomLoading, error: deleteRoomError }] =
     useMutation(DELETE_ROOM_MUTATION);
 
@@ -42,7 +46,7 @@ const useRooms = (): UseRoomsReturn => {
 
   let queryVariables;
 
-  let passportQuery;
+  let passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY;
 
   if (!room_id && !recording_id && !workspace_id) {
     console.log("rooms :::1");
@@ -93,12 +97,13 @@ const useRooms = (): UseRoomsReturn => {
     data: roomsData,
     loading: roomsLoading,
     refetch: refetchRooms,
-    //@ts-ignore
+    // @ts-ignore
   } = useQuery(passportQuery, {
     fetchPolicy: "network-only",
     variables: queryVariables,
   });
 
+  const roomId = useReactiveVar(setRoomId);
   const {
     data: assetsData,
     loading: assetsLoading,
@@ -123,7 +128,7 @@ const useRooms = (): UseRoomsReturn => {
   } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
     fetchPolicy: "network-only",
     variables: {
-      room_id,
+      room_id: roomId,
     },
   });
 
@@ -132,7 +137,7 @@ const useRooms = (): UseRoomsReturn => {
     console.log(roomNameError.message);
   }
 
-  const assetsItems = assetsData?.room_assetsCollection?.edges;
+  const { assetsRefetch } = useAssets();
 
   const inviteToMeet = useCallback(
     async (type: string) => {
@@ -207,17 +212,13 @@ const useRooms = (): UseRoomsReturn => {
     });
   };
 
-  const room_name = roomNameData?.roomsCollection?.edges[0]?.node?.name;
-
   return {
     roomsItem: roomsData?.roomsCollection?.edges[0]?.node,
     roomsData,
-    assetsLoading,
     refetchRooms,
     handlerDeleteRoom,
     deleteRoomLoading,
     arrayInvite,
-    assetsItems,
     roomsLoading,
     roomNameLoading,
     inviteToMeet,
@@ -230,12 +231,12 @@ const useRooms = (): UseRoomsReturn => {
 type UseRoomsReturn = {
   roomsData: RoomsData;
   roomsItem: RoomEdge[];
-  assetsLoading: boolean;
+
   refetchRooms: () => void;
   handlerDeleteRoom: () => void;
   deleteRoomLoading: boolean;
   arrayInvite: ArrayInviteT[];
-  assetsItems: any;
+
   roomsLoading: boolean;
   roomNameLoading: boolean;
   inviteToMeet: (type: string) => void;

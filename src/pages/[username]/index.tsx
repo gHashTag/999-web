@@ -61,8 +61,11 @@ export default function Office() {
     } else {
       setVisibleHeader(true);
       localStorage.setItem("workspace_id", "");
+      localStorage.setItem("workspace_name", "");
+      localStorage.setItem("room_name", "");
       localStorage.setItem("room_id", "");
       localStorage.setItem("recording_id", "");
+      localStorage.setItem("recording_name", "");
     }
   }, [router, username]);
 
@@ -86,7 +89,7 @@ export default function Office() {
     openModalTaskId,
     setOpenModalTaskId,
     isEditingTask,
-  } = useTasks({});
+  } = useTasks();
 
   const id_task = useReactiveVar(setIdTask);
 
