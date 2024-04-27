@@ -106,7 +106,9 @@ const MeetsPage = () => {
         });
 
         if (response) {
+          console.log(response, "response");
           localStorage.setItem("room_name", response.rooms.name);
+          localStorage.setItem("room_id", response.rooms.room_id);
           router.push(`/${username}/${workspace_id}/${response.rooms.room_id}`);
           setLoading(false);
           toast({

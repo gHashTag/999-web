@@ -94,10 +94,11 @@ const RoomPage = () => {
     if (!username) {
       router.push("/");
     } else {
-      localStorage.setItem("room_id", "");
+      console.log("room_id", room_id);
+      //localStorage.setItem("room_id", room_id);
       localStorage.setItem("recording_id", "");
     }
-  }, [router, roomsData, tasksData, passportData]);
+  }, [router, roomsData, tasksData, passportData, refetchRooms]);
 
   return (
     <>

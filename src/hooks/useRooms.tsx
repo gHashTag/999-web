@@ -93,6 +93,7 @@ const useRooms = (): UseRoomsReturn => {
     data: roomsData,
     loading: roomsLoading,
     refetch: refetchRooms,
+    //@ts-ignore
   } = useQuery(passportQuery, {
     fetchPolicy: "network-only",
     variables: queryVariables,
@@ -104,6 +105,7 @@ const useRooms = (): UseRoomsReturn => {
     error: assetsError,
     refetch: assetsRefetch,
   } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
+    fetchPolicy: "network-only",
     variables: {
       room_id,
     },
@@ -119,6 +121,7 @@ const useRooms = (): UseRoomsReturn => {
     error: roomNameError,
     refetch: roomNameRefetch,
   } = useQuery(ROOM_NAME_COLLECTION_QUERY, {
+    fetchPolicy: "network-only",
     variables: {
       room_id,
     },
@@ -199,10 +202,9 @@ const useRooms = (): UseRoomsReturn => {
         refetchRooms();
         assetsRefetch();
         roomNameRefetch();
+        router.push(`/${username}`);
       },
     });
-
-    router.push(`/${username}/${workspace_id}`);
   };
 
   const room_name = roomNameData?.roomsCollection?.edges[0]?.node?.name;
