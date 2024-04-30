@@ -1,15 +1,9 @@
-import { createUser } from "./create-user";
-import { getQuestion } from "./get-question";
-import { resetProgress } from "./reset-progress";
-import { getBiggest } from "./get-biggest";
+import { createUser, getBiggest, getQuestion, resetProgress, trueCounter, updateProgress, updateResult } from "@/utils/supabase";
 import { pathIncrement } from "./path-increment";
-import { updateProgress } from "./update-progress";
-import { trueCounter } from "./true-counter";
 import { getUid } from "./get-uid";
 import { getAiFeedback } from "./get-ai-feedback";
-import { updateResult } from "./update-result";
 import { webhookCallback } from "grammy";
-import { botMother } from "@/utils/telegram/bot";
+import { botMother } from "@utils/telegram/bot-mother";
 
 botMother.command("start", async (ctx: any) => {
   await ctx.replyWithChatAction("typing");
@@ -27,6 +21,7 @@ botMother.command("start", async (ctx: any) => {
 });
 
 botMother.on("message:text", async (ctx: any) => {
+  console.log(ctx)
   await ctx.replyWithChatAction("typing");
   const text = ctx.message.text;
   try {
@@ -38,11 +33,13 @@ botMother.on("message:text", async (ctx: any) => {
 });
 
 botMother.on("callback_query:data", async (ctx: any) => {
+  console.log(ctx)
   await ctx.replyWithChatAction("typing");
   const callbackData = ctx.callbackQuery.data;
   const isHaveAnswer = callbackData.split("_").length === 4;
 
   if (callbackData === "start_test") {
+    console.log("start_test")
     try {
       resetProgress(ctx.callbackQuery.from.username || "");
       const questionContext = {
@@ -51,6 +48,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
       };
 
       const questions = await getQuestion(questionContext);
+      console.log(questions)
       if (questions.length > 0) {
         const {
           topic,
@@ -97,7 +95,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
       } else {
         // Одно из значений некорректно, обрабатываем ошибку.
         console.error(
-          "Одно из значений некорректно(114):",
+          "Одно из значений некорректно(96):",
           lesson,
           subtopic,
           callbackData,
@@ -247,6 +245,8 @@ botMother.on("callback_query:data", async (ctx: any) => {
     }
   }
 });
+
+botMother.start()
 
 export default async function handler(req: any, res: any) {
   const handleUpdate = webhookCallback(botMother, "std/http");

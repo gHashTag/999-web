@@ -1,4 +1,4 @@
-import { supabase } from "../../../utils/supabase";
+import { supabase } from "@utils/supabase";
 
 async function getUid(username: string) {
 
