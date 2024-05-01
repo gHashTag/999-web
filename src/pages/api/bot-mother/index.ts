@@ -1,6 +1,5 @@
-import { createUser, getBiggest, getQuestion, resetProgress, trueCounter, updateProgress, updateResult } from "@/utils/supabase";
+import { createUser, getBiggest, getQuestion, getUid, resetProgress, getCorrects, updateProgress, updateResult } from "@/utils/supabase";
 import { pathIncrement } from "./path-increment";
-import { getUid } from "./get-uid";
 import { getAiFeedback } from "./get-ai-feedback";
 import { webhookCallback } from "grammy";
 import { botMother } from "@utils/telegram/bot-mother";
@@ -21,7 +20,6 @@ botMother.command("start", async (ctx: any) => {
 });
 
 botMother.on("message:text", async (ctx: any) => {
-  console.log(ctx)
   await ctx.replyWithChatAction("typing");
   const text = ctx.message.text;
   try {
@@ -33,13 +31,11 @@ botMother.on("message:text", async (ctx: any) => {
 });
 
 botMother.on("callback_query:data", async (ctx: any) => {
-  console.log(ctx)
   await ctx.replyWithChatAction("typing");
   const callbackData = ctx.callbackQuery.data;
   const isHaveAnswer = callbackData.split("_").length === 4;
 
   if (callbackData === "start_test") {
-    console.log("start_test")
     try {
       resetProgress(ctx.callbackQuery.from.username || "");
       const questionContext = {
@@ -48,7 +44,6 @@ botMother.on("callback_query:data", async (ctx: any) => {
       };
 
       const questions = await getQuestion(questionContext);
-      console.log(questions)
       if (questions.length > 0) {
         const {
           topic,
@@ -118,10 +113,10 @@ botMother.on("callback_query:data", async (ctx: any) => {
         await ctx.reply("Пользователь не найден.");
         return;
       }
-      const trueCount = await trueCounter(user_id);
+      const correctAnswers = await getCorrects(user_id)
       // Формируем сообщение
       const messageText =
-        `<b>Вопрос №${id}</b>\n\n${question}\n\n<b>🎯 Ваш счёт: ${trueCount}XP </b>`;
+        `<b>Вопрос №${id}</b>\n\n${question}\n\n<b>🎯 Ваш счёт: ${correctAnswers}XP </b>`;
 
       // Формируем кнопки
       const inlineKeyboard = [
@@ -187,10 +182,10 @@ botMother.on("callback_query:data", async (ctx: any) => {
           path,
           isSubtopic: biggestSubtopic === Number(subtopic) ? false : true,
         });
-        const trueCount = await trueCounter(user_id);
+        const correctAnswers = await getCorrects(user_id)
 
         if (newPath === "javascript_30_01") {
-          const correctProcent = trueCount / 230 * 100;
+          const correctProcent = correctAnswers / 230 * 100;
           if (correctProcent >= 80) {
             await updateResult({
               user_id,
@@ -198,7 +193,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
               value: true,
             });
             ctx.reply(
-              `<b>🥳 Поздравляем, вы прошли тест! </b>\n\n🎯 Ваш результат: ${trueCount}XP из 230XP.`,
+              `<b>🥳 Поздравляем, вы прошли тест! </b>\n\n🎯 Ваш результат: ${correctAnswers}XP из 230XP.`,
               { parse_mode: "HTML" },
             );
           } else {
@@ -208,7 +203,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
               value: false,
             });
             ctx.reply(
-              `<b>🥲 Вы не прошли тест, но это не помешает вам развиваться! </b>\n\n🎯 Ваш результат: ${trueCount}XP из 230XP.`,
+              `<b>🥲 Вы не прошли тест, но это не помешает вам развиваться! </b>\n\n🎯 Ваш результат: ${correctAnswers}XP из 230XP.`,
               { parse_mode: "HTML" },
             );
           }
@@ -221,7 +216,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
         const { topic, image_lesson_url } = newQuestions[0];
         // Формируем сообщение
         const messageText =
-          `${topic}\n\n<i><u>Теперь мы предлагаем вам закрепить полученные знания.</u></i>\n\n<b>🎯 Ваш счёт: ${trueCount}XP </b>`;
+          `${topic}\n\n<i><u>Теперь мы предлагаем вам закрепить полученные знания.</u></i>\n\n<b>🎯 Ваш счёт: ${correctAnswers}XP </b>`;
 
         // Формируем кнопки
         const inlineKeyboard = [
