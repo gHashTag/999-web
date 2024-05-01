@@ -5,10 +5,10 @@ import { webhookCallback } from "grammy";
 import { botMother } from "@utils/telegram/bot-mother";
 import { checkSubscription } from "./check-subscription";
 
-botMother.command("start", async (ctx: any) => {
+botMother.command("start", async (ctx) => {
   await ctx.replyWithChatAction("typing");
   createUser(ctx);
-  const isSubscription = await checkSubscription(ctx, ctx.from?.id, "-1001988802788")
+  const isSubscription = await checkSubscription(ctx, ctx.from?.id || 0, "-1001988802788")
   if ( isSubscription=== true ) {
   ctx.reply(
     `Hi, ${ctx.update.message?.from.first_name}! 🚀 Давай начнем с тестов – выбери один из них, чтобы проверить свои знания и подготовиться к захватывающему путешествию в мир программирования! 🖥️✨ `,
@@ -21,20 +21,20 @@ botMother.command("start", async (ctx: any) => {
     },
   );
 } else if (isSubscription === false) {
-  const messageText = `Hi, ${ctx.update.message?.from.first_name}! Чтобы пользоваться нашим ботом и проходить тесты, нужно купить подписку📚 \n\nJavaScript Dev предназначен для разработчиков, которые хотят освоить начальные навыки программирования на JavaScript. Включает в себя обучающие материалы, тесты по JavaScript, а также ИИ ассистент. С помощью данного бота вы сможете усовершенствовать свои профессиональные навыки и стать более востребованным специалистом в области веб-разработки.`
-  await ctx.replyWithPhoto("https://bafkreidrc2mpydsdporqn4zdaldny7yl26ebmu4fufssjm7b6dcnlzbrbi.ipfs.nftstorage.link/", {
+  const messageText = `<b>Обучение программированию с ИИ</b>\nПогрузитесь в мир программирования вместе с нашими нейронными помощниками по JavaScript, TypeScript, React & React Native, GraphQL, Apollo и TON`
+  await ctx.replyWithPhoto("https://subscribebot.org/api/v1/snippet/subscription/19957?cache_key=OTk5OTAwX9Ce0LHRg9GH0LXQvdC40LUg0L/RgNC+0LPRgNCw0LzQvNC40YDQvtCy0LDQvdC40Y4g0YEg0JjQmF/Qn9C+0LPRgNGD0LfQuNGC0LXRgdGMINCyINC80LjRgCDQv9GA0L7Qs9GA0LDQvNC80LjRgNC+0LLQsNC90LjRjyDQstC80LXRgdGC0LUg0YEg0L3QsNGI0LjQvNC4INC90LXQudGA0L7QvdC90YvQvNC4INC/0L7QvNC+0YnQvdC40LrQsNC80Lgg0L/QviBKYXZhU2NyaXB0LCBUeXBlU2NyaXB0LCBSZWFjdCAmIFJlYWN0IE5hdGl2ZSwgR3JhcGhRTCwgQXBvbGxvINC4IFRPTl8xNzE0NTQ3MTYw", {
     caption: messageText,
     parse_mode: "HTML",
     reply_markup: {
       inline_keyboard: [
-        [{ text: "Купить подписку", url: "https://t.me/koshey999nft" }]
+        [{ text: "Подписаться", url: "https://t.me/tribute/app?startapp=s5bT" }]
       ]
     }
   });
 }
 });
 
-botMother.on("message:text", async (ctx: any) => {
+botMother.on("message:text", async (ctx) => {
   await ctx.replyWithChatAction("typing");
   const text = ctx.message.text;
   try {
@@ -45,7 +45,7 @@ botMother.on("message:text", async (ctx: any) => {
   }
 });
 
-botMother.on("callback_query:data", async (ctx: any) => {
+botMother.on("callback_query:data", async (ctx) => {
   await ctx.replyWithChatAction("typing");
   const callbackData = ctx.callbackQuery.data;
   const isHaveAnswer = callbackData.split("_").length === 4;
@@ -199,7 +199,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
         });
         const correctAnswers = await getCorrects(user_id)
 
-        // if (newPath === "javascript_30_01") {
+        if (newPath === "javascript_30_01") {
           const correctProcent = correctAnswers * 0.8;
           if (correctProcent >= 80) {
             await updateResult({
@@ -222,7 +222,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
               { parse_mode: "HTML" },
             );
           }
-        // }
+        }
         const [newLanguage, newLesson, newSubtopic] = newPath.split("_");
         const newQuestions = await getQuestion({
           lesson_number: Number(newLesson),
