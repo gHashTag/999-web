@@ -1,7 +1,7 @@
 import { createUser, supabase } from "@/utils/supabase";
 
 import { webhookCallback } from "grammy";
-import { bot } from "@/utils/telegram/bot";
+import { bot } from "@/utils/telegram/bots";
 import { create100MsRoom } from "@/helpers/api/create-100ms-room";
 
 

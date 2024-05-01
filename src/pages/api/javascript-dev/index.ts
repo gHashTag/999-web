@@ -2,10 +2,10 @@ import { createUser, getBiggest, getQuestion, getUid, resetProgress, getCorrects
 import { pathIncrement } from "./path-increment";
 import { getAiFeedback } from "./get-ai-feedback";
 import { webhookCallback } from "grammy";
-import { botMother } from "@utils/telegram/bot-mother";
+import { javaScriptDevBot } from "@/utils/telegram/bots";
 import { checkSubscription } from "./check-subscription";
 
-botMother.command("start", async (ctx) => {
+javaScriptDevBot.command("start", async (ctx) => {
   await ctx.replyWithChatAction("typing");
   createUser(ctx);
   const isSubscription = await checkSubscription(ctx, ctx.from?.id || 0, "-1001988802788")
@@ -34,7 +34,7 @@ botMother.command("start", async (ctx) => {
 }
 });
 
-botMother.on("message:text", async (ctx) => {
+javaScriptDevBot.on("message:text", async (ctx) => {
   await ctx.replyWithChatAction("typing");
   const text = ctx.message.text;
   try {
@@ -45,7 +45,7 @@ botMother.on("message:text", async (ctx) => {
   }
 });
 
-botMother.on("callback_query:data", async (ctx) => {
+javaScriptDevBot.on("callback_query:data", async (ctx) => {
   await ctx.replyWithChatAction("typing");
   const callbackData = ctx.callbackQuery.data;
   const isHaveAnswer = callbackData.split("_").length === 4;
@@ -256,10 +256,10 @@ botMother.on("callback_query:data", async (ctx) => {
   }
 });
 
-botMother.start()
+javaScriptDevBot.start()
 
 export default async function handler(req: any, res: any) {
-  const handleUpdate = webhookCallback(botMother, "std/http");
+  const handleUpdate = webhookCallback(javaScriptDevBot, "std/http");
   if (typeof req.json === "function") {
     try {
       handleUpdate(req, res);

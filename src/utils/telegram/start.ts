@@ -1,4 +1,4 @@
-import { bot } from "./bot";
+import { bot } from "./bots";
 import { logger } from "@/logger";
 
 const WEBAPP_URL = "https://dao999nft.com";
