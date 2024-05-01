@@ -36,6 +36,7 @@ javaScriptDevBot.command("start", async (ctx) => {
 
 javaScriptDevBot.on("message:text", async (ctx) => {
   await ctx.replyWithChatAction("typing");
+  console.log(ctx)
   const text = ctx.message.text;
   try {
     const feedback = await getAiFeedback(text);
