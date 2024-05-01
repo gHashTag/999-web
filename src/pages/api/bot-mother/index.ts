@@ -21,9 +21,16 @@ botMother.command("start", async (ctx: any) => {
     },
   );
 } else if (isSubscription === false) {
-  ctx.reply(
-    `Hi, ${ctx.update.message?.from.first_name}! Чтобы пользоваться нашим ботом и проходить тесты, нужно купить подписку📚 \n\n <b>Для покупки подписки обращаться к @koshey999nft</b>💸`, { parse_mode: "HTML" }
-  )
+  const messageText = `Hi, ${ctx.update.message?.from.first_name}! Чтобы пользоваться нашим ботом и проходить тесты, нужно купить подписку📚 \n\nJavaScript Dev предназначен для разработчиков, которые хотят освоить начальные навыки программирования на JavaScript. Включает в себя обучающие материалы, тесты по JavaScript, а также ИИ ассистент. С помощью данного бота вы сможете усовершенствовать свои профессиональные навыки и стать более востребованным специалистом в области веб-разработки.`
+  await ctx.replyWithPhoto("https://bafkreidrc2mpydsdporqn4zdaldny7yl26ebmu4fufssjm7b6dcnlzbrbi.ipfs.nftstorage.link/", {
+    caption: messageText,
+    parse_mode: "HTML",
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "Купить подписку", url: "https://t.me/koshey999nft" }]
+      ]
+    }
+  });
 }
 });
 
@@ -192,7 +199,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
         });
         const correctAnswers = await getCorrects(user_id)
 
-        if (newPath === "javascript_30_01") {
+        // if (newPath === "javascript_30_01") {
           const correctProcent = correctAnswers * 0.8;
           if (correctProcent >= 80) {
             await updateResult({
@@ -215,7 +222,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
               { parse_mode: "HTML" },
             );
           }
-        }
+        // }
         const [newLanguage, newLesson, newSubtopic] = newPath.split("_");
         const newQuestions = await getQuestion({
           lesson_number: Number(newLesson),
