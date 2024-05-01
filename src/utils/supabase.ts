@@ -242,7 +242,7 @@ export async function updateProgress(
   } else {
     const { error: updateError } = await supabase
       .from("progress")
-      .update({ javascript: isTrue ? progressData[0].javascript + 1 : progressData[0].javascript})
+      .update({ javascript: isTrue ? progressData[0].javascript++ : progressData[0].javascript})
       .eq("user_id", user_id);
 
     if (updateError) throw new Error(updateError.message);

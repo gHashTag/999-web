@@ -3,10 +3,13 @@ import { pathIncrement } from "./path-increment";
 import { getAiFeedback } from "./get-ai-feedback";
 import { webhookCallback } from "grammy";
 import { botMother } from "@utils/telegram/bot-mother";
+import { checkSubscription } from "./check-subscription";
 
 botMother.command("start", async (ctx: any) => {
   await ctx.replyWithChatAction("typing");
   createUser(ctx);
+  const isSubscription = await checkSubscription(ctx, ctx.from?.id, "-1001988802788")
+  if ( isSubscription=== true ) {
   ctx.reply(
     `Hi, ${ctx.update.message?.from.first_name}! 🚀 Давай начнем с тестов – выбери один из них, чтобы проверить свои знания и подготовиться к захватывающему путешествию в мир программирования! 🖥️✨ `,
     {
@@ -17,6 +20,11 @@ botMother.command("start", async (ctx: any) => {
       },
     },
   );
+} else if (isSubscription === false) {
+  ctx.reply(
+    `Hi, ${ctx.update.message?.from.first_name}! Чтобы пользоваться нашим ботом и проходить тесты, нужно купить подписку📚 \n\n <b>Для покупки подписки обращаться к @koshey999nft</b>💸`, { parse_mode: "HTML" }
+  )
+}
 });
 
 botMother.on("message:text", async (ctx: any) => {
@@ -185,7 +193,7 @@ botMother.on("callback_query:data", async (ctx: any) => {
         const correctAnswers = await getCorrects(user_id)
 
         if (newPath === "javascript_30_01") {
-          const correctProcent = correctAnswers / 230 * 100;
+          const correctProcent = correctAnswers * 0.8;
           if (correctProcent >= 80) {
             await updateResult({
               user_id,
