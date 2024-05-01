@@ -4,6 +4,7 @@ import { getAiFeedback } from "./get-ai-feedback";
 import { webhookCallback } from "grammy";
 import { javaScriptDevBot } from "@/utils/telegram/bots";
 import { checkSubscription } from "./check-subscription";
+import { NextApiRequest, NextApiResponse } from "next";
 
 javaScriptDevBot.command("start", async (ctx) => {
   await ctx.replyWithChatAction("typing");
@@ -260,12 +261,18 @@ javaScriptDevBot.on("callback_query:data", async (ctx) => {
 
 javaScriptDevBot.start()
 
-export default async function handler(req: any, res: any) {
-  const handleUpdate = webhookCallback(javaScriptDevBot);
-    try {
-      handleUpdate(req, res);
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    console.log(req.headers)
+      const handleUpdate = webhookCallback(javaScriptDevBot, 'express'); // Используем express в качестве адаптера
+      if (req?.body ){
+      await handleUpdate(req.body, res); // Обрабатываем входящий запрос
+      res.status(200).end(); // Отправляем успешный статус ответа
+    } else {
       res.status(200).end();
-    } catch (err) {
-      console.error(err);
     }
+  } catch (error) {
+      console.error(error);
+      res.status(400).end(); // Отправляем статус ошибки в случае исключения
+  }
 }
