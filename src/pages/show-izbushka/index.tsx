@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { retrieveLaunchParams } from "@tma.js/sdk";
-import { supabase } from "@/utils/supabase";
 import dynamic from "next/dynamic";
 import {
   selectIsConnectedToRoom,
@@ -10,9 +9,8 @@ import {
 } from "@100mslive/react-sdk";
 import { Spinner } from "@/components/ui/spinner";
 
-import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
-
 import { useSupabase } from "@/hooks/useSupabase";
+import { getSelectIzbushkaId } from "@/utils/supabase";
 
 const HMSPrebuilt = dynamic(
   () =>

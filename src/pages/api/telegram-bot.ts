@@ -1,16 +1,13 @@
-import { supabase } from "@/utils/supabase";
+import { createUser, supabase } from "@/utils/supabase";
 
-import { Bot, Context, webhookCallback } from "grammy";
+import { webhookCallback } from "grammy";
 import { bot } from "@/utils/telegram/bot";
 import { create100MsRoom } from "@/helpers/api/create-100ms-room";
-import { createUser } from "@/helpers/api/create-user";
+
 
 import { checkUsernameCodes } from "@/hooks/useSupabase";
 import { transliterate } from "@/helpers/api/transliterate";
 import { getRooms } from "@/hooks/useSupabase";
-import { SupabaseUser } from "@/types";
-
-import { getSelectIzbushkaId } from "@/helpers/api/get-select-izbushka-id";
 
 bot.command("start", async (ctx) => {
   await ctx.replyWithChatAction("typing");
@@ -305,50 +302,3 @@ export default async function handler(req: any, res: any) {
     console.error("Метод json не найден в объекте req");
   }
 }
-
-const checkOrCreateUser = async (req: any) => {
-  if (req.body.message.from) {
-    const { first_name, last_name, username, is_bot, language_code, id } =
-      req.body.message.from;
-    // Проверяем, существует ли уже пользователь с таким telegram_id
-    const { data: existingUser, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("telegram_id", id)
-      .maybeSingle();
-
-    if (error && error.message !== "No rows found") {
-      console.error("Ошибка при проверке существования пользователя:", error);
-      return;
-    }
-
-    // Если пользователь существует, прекращаем выполнение функции
-    if (existingUser) {
-      console.log("Пользователь уже существует:", existingUser);
-      return;
-    }
-
-    // Если пользователя нет, создаем нового
-    const usersData = {
-      first_name,
-      last_name,
-      username,
-      is_bot,
-      language_code,
-      telegram_id: id,
-      email: "",
-      photo_url: "",
-    };
-
-    const { data, error: insertError } = await supabase
-      .from("users")
-      .insert([usersData]);
-
-    if (insertError) {
-      console.error("Ошибка при создании пользователя:", insertError);
-      return;
-    }
-  } else {
-    console.log("Пользователь уже существует");
-  }
-};
