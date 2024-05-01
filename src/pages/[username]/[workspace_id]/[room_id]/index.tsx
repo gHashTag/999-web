@@ -35,6 +35,7 @@ const RoomPage = () => {
   const { assetsLoading, assetItems } = useAssets();
   const {
     roomsData,
+    refetchRooms,
     handlerDeleteRoom,
     deleteRoomLoading,
     arrayInvite,

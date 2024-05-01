@@ -104,21 +104,6 @@ const useRooms = (): UseRoomsReturn => {
   });
 
   const roomId = useReactiveVar(setRoomId);
-  const {
-    data: assetsData,
-    loading: assetsLoading,
-    error: assetsError,
-    refetch: assetsRefetch,
-  } = useQuery(ROOMS_ASSETS_COLLECTION_QUERY, {
-    fetchPolicy: "network-only",
-    variables: {
-      room_id,
-    },
-  });
-  if (assetsError instanceof ApolloError) {
-    // Обработка ошибки ApolloError
-    console.log(assetsError, "assetsError");
-  }
 
   const {
     data: roomNameData,
