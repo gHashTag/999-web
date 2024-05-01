@@ -48,6 +48,7 @@ javaScriptDevBot.on("message:text", async (ctx) => {
 
 javaScriptDevBot.on("callback_query:data", async (ctx) => {
   await ctx.replyWithChatAction("typing");
+  console.log(ctx)
   const callbackData = ctx.callbackQuery.data;
   const isHaveAnswer = callbackData.split("_").length === 4;
 
@@ -260,15 +261,11 @@ javaScriptDevBot.on("callback_query:data", async (ctx) => {
 javaScriptDevBot.start()
 
 export default async function handler(req: any, res: any) {
-  const handleUpdate = webhookCallback(javaScriptDevBot, "std/http");
-  if (typeof req.json === "function") {
+  const handleUpdate = webhookCallback(javaScriptDevBot);
     try {
       handleUpdate(req, res);
       res.status(200).end();
     } catch (err) {
       console.error(err);
     }
-  } else {
-    console.error("Метод json не найден в объекте req");
-  }
 }
