@@ -136,18 +136,41 @@ const RoomPage = () => {
             alignItems: "center",
           }}
         >
-          {arrayInvite.map((item: ArrayInviteT) => (
+          <EvervaultCard
+            key={arrayInvite[0].type}
+            text={arrayInvite[0].text}
+            type={arrayInvite[0].type}
+            inviteToMeet={inviteToMeet}
+            inviteGuestCode={inviteGuestCode}
+            inviteHostCode={inviteHostCode}
+            inviteMemberCode={inviteMemberCode}
+            onOpenModalPassport={onOpenModalPassport}
+            passportData={passportData}
+          />
+          <EvervaultCard
+            key={arrayInvite[1].type}
+            text={arrayInvite[1].text}
+            type={arrayInvite[1].type}
+            inviteToMeet={inviteToMeet}
+            inviteGuestCode={inviteGuestCode}
+            inviteHostCode={inviteHostCode}
+            inviteMemberCode={inviteMemberCode}
+            onOpenModalPassport={onOpenModalPassport}
+            passportData={passportData}
+          />
+          {passportData.length > 0 && (
             <EvervaultCard
-              key={item.type}
-              text={item.text}
-              type={item.type}
+              key={arrayInvite[2].type}
+              text={arrayInvite[2].text}
+              type={arrayInvite[2].type}
               inviteToMeet={inviteToMeet}
               inviteGuestCode={inviteGuestCode}
               inviteHostCode={inviteHostCode}
               inviteMemberCode={inviteMemberCode}
               onOpenModalPassport={onOpenModalPassport}
+              passportData={passportData}
             />
-          ))}
+          )}
         </div>
 
         <div

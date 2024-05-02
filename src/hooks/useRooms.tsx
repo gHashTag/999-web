@@ -141,7 +141,7 @@ const useRooms = (): UseRoomsReturn => {
             }
           );
           if (codeObj) {
-            if (type === "guest") {
+            if (type === "link") {
               setInviteGuestCode(codeObj.code);
             } else if (type === "member") {
               setInviteMemberCode(codeObj.code);
@@ -162,7 +162,7 @@ const useRooms = (): UseRoomsReturn => {
   useEffect(() => {
     inviteToMeet("host");
     inviteToMeet("member");
-    inviteToMeet("guest");
+    inviteToMeet("link");
   }, [roomNameData, inviteToMeet]);
 
   const arrayInvite = [
@@ -175,8 +175,8 @@ const useRooms = (): UseRoomsReturn => {
       type: "member",
     },
     {
-      text: "Invite Guest",
-      type: "guest",
+      text: "Invite Link",
+      type: "link",
     },
   ];
 

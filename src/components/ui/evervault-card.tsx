@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useUser } from "@/hooks/useUser";
 import { SITE_URL } from "@/pages/_app";
+import { PassportArray } from "@/types";
 
 type EvervaultCardProps = {
   text: string;
@@ -18,6 +19,7 @@ type EvervaultCardProps = {
   inviteMemberCode: string;
   inviteGuestCode: string;
   onOpenModalPassport: () => void;
+  passportData: PassportArray;
 };
 
 export const EvervaultCard = ({
@@ -29,6 +31,7 @@ export const EvervaultCard = ({
   inviteMemberCode,
   inviteGuestCode,
   onOpenModalPassport,
+  passportData,
 }: EvervaultCardProps) => {
   const router = useRouter();
   let mouseX = useMotionValue(0);
@@ -80,7 +83,7 @@ export const EvervaultCard = ({
       router.pathname !==
       `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`
     ) {
-      if (type === "guest") {
+      if (type === "link") {
         handleCopy(
           `${SITE_URL}/${user_id}/${workspace_id}/meet/${inviteGuestCode}`
         );
@@ -125,7 +128,6 @@ export const EvervaultCard = ({
               mouseX={mouseX}
               mouseY={mouseY}
               randomString={randomString}
-              onClick={() => inviteToMeet(type)}
             />
             <div className="relative z-10 flex items-center justify-center">
               <div className="relative h-44 w-44  rounded-full flex items-center justify-center text-white font-bold text-4xl">

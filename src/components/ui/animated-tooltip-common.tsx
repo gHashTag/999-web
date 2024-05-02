@@ -1,13 +1,7 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
-import {
-  motion,
-  useTransform,
-  AnimatePresence,
-  useMotionValue,
-  useSpring,
-} from "framer-motion";
+import React from "react";
+import { useMotionValue } from "framer-motion";
 import { PassportArray } from "@/types";
 
 type AnimatedTooltipCommonProps = {
