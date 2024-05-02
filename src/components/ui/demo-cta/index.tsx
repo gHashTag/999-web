@@ -36,6 +36,7 @@ const DemoButton = () => {
     localStorage.setItem("recording_id", "");
     localStorage.setItem("room_id", "");
     localStorage.setItem("workspace_id", "");
+    localStorage.setItem("photo_url", "");
     router.push(`/${user.username}`);
   };
 

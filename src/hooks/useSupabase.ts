@@ -19,7 +19,7 @@ import {
 import { useReactiveVar } from "@apollo/client";
 
 export const checkUsernameCodes = async (
-  username: string
+  username: string,
 ): Promise<{
   isInviterExist: boolean;
   invitation_codes: string;
@@ -85,7 +85,7 @@ export const checkUsername = async (username: string): Promise<boolean> => {
 };
 
 export const checkUsernameAndReturnUser = async (
-  username: string
+  username: string,
 ): Promise<{
   isUserExist: boolean;
   user: SupabaseUser;
@@ -132,7 +132,7 @@ export function useSupabase() {
       if (response.error) {
         console.error(
           "Ошибка при получении информации о пользователе:",
-          response.error
+          response.error,
         );
         return null;
       }
@@ -145,7 +145,7 @@ export function useSupabase() {
   };
 
   const createUserInDatabase = async (
-    newUser: SupabaseUser
+    newUser: SupabaseUser,
   ): Promise<{ user_id: string }> => {
     await supabase.from("users").insert([newUser]);
     const user = await getSupabaseUser(newUser.username || "");
@@ -158,7 +158,7 @@ export function useSupabase() {
     username: string,
     first_name: string,
     last_name: string,
-    photo_url: string
+    photo_url: string,
   ) => {
     setUserId(user_id);
     localStorage.setItem("username", username);
@@ -169,11 +169,11 @@ export function useSupabase() {
   };
 
   const createSupabaseUser = async (
-    user: TUser
+    user: TUser,
   ): Promise<{ user_id: string; username: string } | undefined> => {
     try {
       if (!user.username) {
-        console.error("Username пользователя не найден");
+        console.error("Username not founded");
         return {
           user_id: "",
           username: "",
@@ -206,7 +206,7 @@ export function useSupabase() {
           username,
           first_name,
           last_name || "",
-          photo_url || ""
+          photo_url || "",
         );
         return {
           user_id: userData.user_id,
