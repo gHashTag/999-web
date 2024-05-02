@@ -120,7 +120,10 @@ const RoomPage = () => {
             room_name={room_name}
           />
           <div style={{ padding: 15 }} />
-          <AnimatedTooltipCommon items={passportData} />
+          <AnimatedTooltipCommon
+            items={passportData}
+            onClick={onDeletePassport}
+          />
         </div>
         <div
           style={{

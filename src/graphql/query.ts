@@ -820,6 +820,7 @@ export const GET_ROOM_PASSPORTS_QUERY = gql`
           workspace_id
           room_id
           recording_id
+          passport_id
         }
       }
     }
@@ -849,6 +850,7 @@ export const PASSPORT_COLLECTION_QUERY = gql`
           workspace_id
           room_id
           recording_id
+          passport_id
         }
       }
     }
@@ -864,6 +866,7 @@ export const PASSPORT_CREATE_MUTATION = gql`
         room_id
         recording_id
         photo_url
+        passport_id
       }
     }
   }
@@ -891,6 +894,7 @@ export const PASSPORT_UPDATE_MUTATION = gql`
         workspace_id
         room_id
         recording_id
+        passport_id
       }
     }
   }
@@ -906,6 +910,7 @@ export const PASSPORT_DELETE_MUTATION = gql`
         workspace_id
         room_id
         recording_id
+        passport_id
       }
     }
   }

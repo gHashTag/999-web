@@ -31,6 +31,7 @@ export type WorkspaceArray = Workspace[];
 
 interface PassportNode {
   __typename: string;
+  passport_id: number;
   background: string;
   colors: string[][];
   created_at: string;

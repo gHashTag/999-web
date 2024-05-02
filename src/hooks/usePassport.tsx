@@ -145,6 +145,11 @@ const usePassport = ({
           title: "Passport already exists",
           variant: "destructive",
         });
+        reset({
+          title: "",
+          description: "",
+          label: "",
+        });
         return;
       }
 
@@ -213,14 +218,10 @@ const usePassport = ({
     });
   };
 
-  const onDeletePassport = (id: number) => {
+  const onDeletePassport = (passport_id: number) => {
     mutateDeletePassport({
       variables: {
-        filter: {
-          id: {
-            eq: Number(id),
-          },
-        },
+        passport_id: Number(passport_id),
       },
       onCompleted: () => {
         passportRefetch();
@@ -266,7 +267,7 @@ type UsePassportReturn = {
   onOpenChangeModalPassport: () => void;
   onCreatePassport: () => void;
   onUpdatePassport: () => void;
-  onDeletePassport: (id: number) => void;
+  onDeletePassport: (passport_id: number) => void;
   setValuePassport: (id: string, value: any) => void;
   controlPassport: any;
   handleSubmitPassport: any;
