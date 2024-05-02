@@ -3,6 +3,10 @@ import { useRouter } from "next/router";
 
 const Meets = () => {
   const router = useRouter();
+  console.log(router.query, "router.query");
+  const workspace_id = router.query.workspace_id;
+
+  const roomCode = router.query.slug;
 
   useEffect(() => {
     const setRoute = async () => {
@@ -10,10 +14,10 @@ const Meets = () => {
         if (router.query.slug) {
           router.push(
             {
-              pathname: `/[workspace_id]/meet/[roomId]`,
+              pathname: `/[workspace_id]/[room_id]/meet/[roomCode]`,
               query: {
-                workspace_id: router.query.workspace_id,
-                roomId: router.query.slug,
+                workspace_id,
+                roomCode,
               },
             },
             `/${router.query.workspace_id}/meet/${router.query.slug}`

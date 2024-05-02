@@ -81,11 +81,11 @@ export const EvervaultCard = ({
     console.log(SITE_URL, "SITE_URL");
     if (
       router.pathname !==
-      `/${user_id}/${workspace_id}/${room_id}/${inviteHostCode}`
+      `/${user_id}/${workspace_id}/${room_id}/meet/${inviteHostCode}`
     ) {
-      if (type === "link") {
+      if (type === "guest") {
         handleCopy(
-          `${SITE_URL}/${user_id}/${workspace_id}/meet/${inviteGuestCode}`
+          `${SITE_URL}/${user_id}/${workspace_id}/${room_id}/meet/${inviteGuestCode}`
         );
         inviteToMeet(type);
       } else if (type === "member") {
@@ -99,7 +99,7 @@ export const EvervaultCard = ({
 
   const href =
     type === "host"
-      ? `/${user_id}/${workspace_id}/meet/${inviteHostCode}`
+      ? `/${user_id}/${workspace_id}/${room_id}/meet/${inviteHostCode}`
       : router.asPath;
 
   return (

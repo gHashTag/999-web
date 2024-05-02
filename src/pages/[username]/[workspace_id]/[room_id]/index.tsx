@@ -158,7 +158,7 @@ const RoomPage = () => {
             onOpenModalPassport={onOpenModalPassport}
             passportData={passportData}
           />
-          {passportData.length > 0 && (
+          {passportData && passportData.length > 0 && (
             <EvervaultCard
               key={arrayInvite[2].type}
               text={arrayInvite[2].text}
