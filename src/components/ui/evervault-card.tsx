@@ -77,8 +77,6 @@ export const EvervaultCard = ({
 
   const handleClick = async () => {
     // Определение targetPath в зависимости от типа
-
-    console.log(SITE_URL, "SITE_URL");
     if (
       router.pathname !==
       `/${user_id}/${workspace_id}/${room_id}/meet/${inviteHostCode}`
@@ -96,6 +94,7 @@ export const EvervaultCard = ({
       }
     }
   };
+  console.log(inviteHostCode, "inviteHostCode");
 
   const href =
     type === "host"

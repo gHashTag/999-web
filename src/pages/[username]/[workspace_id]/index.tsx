@@ -25,12 +25,20 @@ import { useRooms } from "@/hooks/useRooms";
 import { TextRevealCard } from "@/components/ui/text-reveal-card";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 import { selectLocalAudioTrackID } from "@100mslive/react-sdk";
+import { usePassport } from "@/hooks/usePassport";
 
 const MeetsPage = () => {
   const router = useRouter();
   const { toast } = useToast();
   const loading = useReactiveVar(setLoading);
+  const room_id = useReactiveVar(setRoomId);
   const { username, user_id, lang, workspace_id, workspace_name } = useUser();
+
+  const { createPassport } = usePassport({
+    user_id,
+    workspace_id,
+    room_id,
+  });
 
   const {
     tasksData,
@@ -110,9 +118,11 @@ const MeetsPage = () => {
         });
 
         if (response) {
-          console.log(response, "response");
           localStorage.setItem("room_name", response.rooms.name);
-          localStorage.setItem("room_id", response.rooms.room_id);
+          const room_id = response.rooms.room_id;
+          setRoomId(room_id);
+          localStorage.setItem("room_id", room_id);
+          createPassport(room_id);
           router.push(`/${username}/${workspace_id}/${response.rooms.room_id}`);
           setLoading(false);
           toast({

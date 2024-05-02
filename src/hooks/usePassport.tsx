@@ -15,21 +15,20 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useUser } from "./useUser";
 import { PassportArray } from "@/types";
-import { checkUsername, checkUsernameAndReturnUser } from "./useSupabase";
-import { useWorkspace } from "./useWorkspace";
+import { checkUsernameAndReturnUser } from "./useSupabase";
 
 type passportType = {
-  room_id: string;
-  workspace_id: string;
-  recording_id?: string;
   user_id?: string;
+  workspace_id: string;
+  room_id?: string;
+  recording_id?: string;
 };
 
 const usePassport = ({
-  room_id,
-  workspace_id,
-  recording_id,
   user_id,
+  workspace_id,
+  room_id,
+  recording_id,
 }: passportType): UsePassportReturn => {
   const { username } = useUser();
   const { toast } = useToast();
@@ -200,6 +199,48 @@ const usePassport = ({
     }
   };
 
+  const createPassport = async (id: string) => {
+    try {
+      const { isUserExist, user } = await checkUsernameAndReturnUser(username);
+      console.log("createPassport");
+      if (isUserExist) {
+        await mutateCreatePassport({
+          variables: {
+            objects: {
+              user_id: user.user_id,
+              workspace_id,
+              room_id: id,
+              recording_id,
+              photo_url: user.photo_url,
+              username: user.username,
+            },
+          },
+          onCompleted: () => {
+            passportRefetch();
+          },
+        });
+      } else {
+        toast({
+          title: "Member not found",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.log(error, "error");
+      toast({
+        title: "Error creating passport",
+        variant: "destructive",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(mutateCreatePassportError, null, 2)}
+            </code>
+          </pre>
+        ),
+      });
+    }
+  };
+
   const onUpdatePassport = () => {
     const formData = getValues();
 
@@ -244,6 +285,7 @@ const usePassport = ({
     onOpenModalPassport: onOpen,
     onOpenChangeModalPassport: onOpenChange,
     onCreatePassport,
+    createPassport,
     onDeletePassport,
     onUpdatePassport,
     setValuePassport: setValue,
@@ -266,6 +308,7 @@ type UsePassportReturn = {
   onOpenModalPassport: () => void;
   onOpenChangeModalPassport: () => void;
   onCreatePassport: () => void;
+  createPassport: (id: string) => void;
   onUpdatePassport: () => void;
   onDeletePassport: (passport_id: number) => void;
   setValuePassport: (id: string, value: any) => void;

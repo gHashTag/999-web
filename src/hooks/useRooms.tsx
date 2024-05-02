@@ -20,7 +20,7 @@ import { useUser } from "./useUser";
 import { useToast } from "@/components/ui/use-toast";
 
 import { useRouter } from "next/router";
-import { ArrayInviteT, RoomEdge, RoomsCollection, RoomsData } from "@/types";
+import { ArrayInviteT, RoomEdge, RoomsData } from "@/types";
 import { setRoomId } from "@/apollo/reactive-store";
 import { useAssets } from "./useAssets";
 
@@ -126,20 +126,18 @@ const useRooms = (): UseRoomsReturn => {
 
   const inviteToMeet = useCallback(
     async (type: string) => {
-      // Убедитесь, что codesData действительно указывает на массив
-      // console.log(roomNameData, "roomNameData");
       const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
         ?.codes;
-
+      console.log(codesData, "codesData");
       if (typeof codesData === "string") {
         const parsedCodesData = JSON.parse(codesData);
         if (parsedCodesData) {
-          // Проверка, что codesData действительно массив
           const codeObj = parsedCodesData.data.find(
             (codeObj: { role: string; code: string }) => {
               return codeObj.role === type;
             }
           );
+          console.log(codeObj, "codeObj");
           if (codeObj) {
             if (type === "guest") {
               console.log(codeObj.code, "codeObj.code");

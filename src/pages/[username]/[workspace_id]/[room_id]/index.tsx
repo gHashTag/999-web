@@ -31,7 +31,7 @@ if (!managementToken) {
 
 const RoomPage = () => {
   const router = useRouter();
-  const { username, workspace_id, room_id, room_name } = useUser();
+  const { username, user_id, workspace_id, room_id, room_name } = useUser();
   const { assetsLoading, assetItems } = useAssets();
   const {
     roomsData,
@@ -121,7 +121,7 @@ const RoomPage = () => {
           />
           <div style={{ padding: 15 }} />
           <AnimatedTooltipCommon
-            items={passportData}
+            items={passportData && passportData.slice(1)}
             onClick={onDeletePassport}
           />
         </div>
@@ -158,7 +158,7 @@ const RoomPage = () => {
             onOpenModalPassport={onOpenModalPassport}
             passportData={passportData}
           />
-          {passportData && passportData.length > 0 && (
+          {passportData && passportData.length > 1 && (
             <EvervaultCard
               key={arrayInvite[2].type}
               text={arrayInvite[2].text}

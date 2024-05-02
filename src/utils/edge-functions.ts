@@ -1,3 +1,4 @@
+import { usePassport } from "@/hooks/usePassport";
 import { headers } from "./headers";
 import { __DEV__, SITE_URL } from "@/pages/_app";
 
@@ -56,8 +57,6 @@ async function createRoom({
     }
 
     const text = await response.text();
-    console.log(text, "text");
-    // setHeaderName(roomName);
 
     try {
       const data = JSON.parse(text);

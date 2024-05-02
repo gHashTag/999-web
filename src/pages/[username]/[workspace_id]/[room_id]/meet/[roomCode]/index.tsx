@@ -47,6 +47,8 @@ const Rooms = () => {
     if (passportData && passportData.length === 0) {
       router.push("/");
     } else {
+      localStorage.setItem("room_id", room_id);
+      localStorage.setItem("workspace_id", workspace_id);
       setIsPassport(true);
       const fetchToken = async () => {
         try {
@@ -60,7 +62,7 @@ const Rooms = () => {
             throw new Error("roomCode is not a string");
           }
         } catch (error) {
-          console.error("Ошибка при получении токена: ", error);
+          console.error("Error receiving token: ", error);
         }
       };
       fetchToken();
@@ -73,7 +75,7 @@ const Rooms = () => {
         try {
           await hmsActions.leave();
         } catch (error) {
-          console.error("Ошибка при попытке покинуть комнату: ", error);
+          console.error("Error leaving the room: ", error);
         }
       }
     };
