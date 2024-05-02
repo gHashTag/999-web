@@ -90,10 +90,6 @@ const RoomPage = () => {
     workspace_id,
   });
 
-  // useEffect(() => {
-  //   localStorage.setItem("room_id_crutch", room_id);
-  // }, []);
-
   useEffect(() => {
     if (!username) {
       router.push("/");
@@ -105,16 +101,7 @@ const RoomPage = () => {
 
   return (
     <>
-      <Layout
-        loading={
-          assetsLoading ||
-          passportLoading ||
-          deleteRoomLoading ||
-          roomNameLoading ||
-          tasksLoading ||
-          roomsLoading
-        }
-      >
+      <Layout loading={false}>
         <div
           style={{
             display: "flex",

@@ -136,8 +136,21 @@ const usePassport = ({
         formData.username
       );
 
+      console.log(passportNode, "passportNode");
+      const checkIfPassportExists = passportNode.some(
+        (passport: any) => passport.node.username === formData.username
+      );
+
+      if (checkIfPassportExists) {
+        toast({
+          title: "Passport already exists",
+          variant: "destructive",
+        });
+        return;
+      }
+
       if (isUserExist) {
-        const mutateCreatePassportResult = await mutateCreatePassport({
+        await mutateCreatePassport({
           variables: {
             objects: {
               user_id: user.user_id,
