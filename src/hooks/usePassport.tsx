@@ -136,7 +136,6 @@ const usePassport = ({
         formData.username
       );
 
-      console.log(passportNode, "passportNode");
       const checkIfPassportExists = passportNode.some(
         (passport: any) => passport.node.username === formData.username
       );

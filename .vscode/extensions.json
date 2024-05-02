@@ -1,3 +1,5 @@
 {
-  "recommendations": ["wallabyjs.console-ninja"]
+  "recommendations": [
+    "denoland.vscode-deno"
+  ]
 }
