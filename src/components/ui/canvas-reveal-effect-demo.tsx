@@ -13,7 +13,7 @@ export const getTitle = (title: string, lang: string) => {
     return lang === "ru" ? "Вода" : "Water";
   }
   if (title === "Earth") {
-    return lang === "ru" ? "Медные трубы" : "Earth";
+    return lang === "ru" ? "Медные трубы" : "Copper pipes";
   } else return title;
 };
 
@@ -22,7 +22,7 @@ export function CanvasRevealEffectDemo({
   onClick,
 }: {
   officeData: any;
-  onClick: (workspace_id: string, workspace_name: string) => void;
+  onClick: (type: string, workspace_id: string, workspace_name: string) => void;
 }) {
   const { lang } = useUser();
 
@@ -36,6 +36,7 @@ export function CanvasRevealEffectDemo({
           <Card
             key={node.id}
             workspace_id={node.workspace_id}
+            type={node.type}
             title={getTitle(node.title, lang)}
             onClick={onClick}
             icon={<NineNineNineIcon />}
@@ -56,20 +57,22 @@ export function CanvasRevealEffectDemo({
 const Card = ({
   title,
   workspace_id,
+  type,
   icon,
   children,
   onClick,
 }: {
   title: string;
   workspace_id: string;
+  type: string;
   icon: React.ReactNode;
   children?: React.ReactNode;
-  onClick: (workspace_id: string, workspace_name: string) => void;
+  onClick: (type: string, workspace_id: string, workspace_name: string) => void;
 }) => {
   const [hovered, setHovered] = React.useState(false);
   return (
     <div
-      onClick={() => onClick(workspace_id, title)}
+      onClick={() => onClick(type, workspace_id, title)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="border border-black/[0.2] group/canvas-card flex items-center justify-center dark:border-white/[0.2]  max-w-sm w-full mx-auto p-4 relative h-[23rem] relative"

@@ -21,7 +21,7 @@ if (!process.env.NEXT_PUBLIC_100MS) {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<ResponseData>,
 ) {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: { ...headers } });
@@ -68,10 +68,9 @@ export default async function handler(
       const roomData = {
         name: `${name}:${uuidv4()}:${lang}`,
         description: name,
-        template_id:
-          type === "audio-space"
-            ? "65e84b5148b3dd31b94ff005"
-            : "65efdfab48b3dd31b94ff0dc",
+        template_id: type === "audio-space"
+          ? "65e84b5148b3dd31b94ff005"
+          : "65efdfab48b3dd31b94ff0dc",
         enabled: true,
       };
 
@@ -147,7 +146,7 @@ export async function createCodes(room_id: string, token: string) {
           "Content-Type": "application/json",
         },
         method: "POST",
-      }
+      },
     );
 
     if (!response.ok) {

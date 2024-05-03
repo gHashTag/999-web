@@ -1,7 +1,10 @@
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { useUser } from "./useUser";
 
-import { GET_ROOM_ASSET, GET_ROOMS_ASSETS_COLLECTION } from "@/graphql/query";
+import {
+  GET_ROOM_ASSET,
+  GET_ROOMS_ASSETS_COLLECTION,
+} from "@/graphql/query.rooms";
 import { setRoomId } from "@/apollo/reactive-store";
 
 const useAssets = () => {

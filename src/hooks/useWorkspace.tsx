@@ -5,7 +5,7 @@ import {
   WORKSPACE_DELETE_MUTATION,
   WORKSPACE_UPDATE_MUTATION,
   WORKSPACES_COLLECTION_QUERY,
-} from "@/graphql/query";
+} from "@/graphql/query.workspaces";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useDisclosure } from "@nextui-org/react";
 import { useCallback, useState } from "react";

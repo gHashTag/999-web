@@ -8,7 +8,7 @@ import {
   GET_TASKS_FOR_WORKSPACE,
   GET_TASKS_FOR_ROOM,
   GET_TASKS_BY_USER_ID,
-} from "@/graphql/query";
+} from "@/graphql/query.tasks";
 import { useRouter } from "next/router";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useDisclosure } from "@nextui-org/react";

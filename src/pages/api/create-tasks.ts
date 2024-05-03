@@ -25,13 +25,12 @@ async function sendTasksToTelegram(
   tasks: Task[],
   summary_short: string,
   lang: string,
-  token: string
+  token: string,
 ) {
   const newTasks = tasks.map((task) => {
-    const assignee =
-      task.assignee.username === null
-        ? ""
-        : `${task.assignee.first_name} ${task.assignee.last_name} (@${task.assignee.username})`;
+    const assignee = task.assignee.username === null
+      ? ""
+      : `${task.assignee.first_name} ${task.assignee.last_name} (@${task.assignee.username})`;
 
     return {
       title: task.title,
@@ -53,7 +52,7 @@ async function sendTasksToTelegram(
   for (const task of newTasks) {
     const translatedTask = await translateText(
       `${task.title}\n${task.description}`,
-      lang
+      lang,
     );
     await bot.api.sendMessage(chat_id, `${translatedTask}\n${task.assignee}`);
   }
@@ -89,7 +88,7 @@ const getPreparedUsers = (usersFromSupabase: any) => {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<ResponseData>,
 ) {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: { ...headers } });
@@ -140,18 +139,19 @@ export default async function handler(
             format: string;
             bullets: string[];
             paragraph: string;
-          }) => section.title === "Short Summary"
+          }) => section.title === "Short Summary",
         );
         // console.log(summarySection, "summarySection");
         const summary_short = summarySection ? summarySection.paragraph : "";
 
         // console.log(summary_short, "summary_short");
 
-        const getTitleWithEmojiSystemPrompt = `create a very short title with an emoji at the beginning of this text`;
+        const getTitleWithEmojiSystemPrompt =
+          `create a very short title with an emoji at the beginning of this text`;
 
         const titleWithEmoji = await createChatCompletion(
           summary_short,
-          getTitleWithEmojiSystemPrompt
+          getTitleWithEmojiSystemPrompt,
         );
         // console.log(titleWithEmoji, "titleWithEmoji");
 
@@ -169,15 +169,16 @@ export default async function handler(
 
         if (errorInsertRoomAsset) {
           throw new Error(
-            `Asset creation failed: ${errorInsertRoomAsset.message}`
+            `Asset creation failed: ${errorInsertRoomAsset.message}`,
           );
         }
 
-        const systemPrompt = `Answer with emoticons. You are an AI assistant working at dao999nft. Your goal is to extract all tasks from the text, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, assign them to executors using the colon sign: assignee, title,  description (Example: <b>Nikita Zhilin</b>: 💻 Develop functional requirements) If no tasks are detected, add one task indicating that no tasks were found. Provide your response as a JSON object`;
+        const systemPrompt =
+          `Answer with emoticons. You are an AI assistant working at dao999nft. Your goal is to extract all tasks from the text, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, the maximum number of tasks, assign them to executors using the colon sign: assignee, title,  description (Example: <b>Nikita Zhilin</b>: 💻 Develop functional requirements) If no tasks are detected, add one task indicating that no tasks were found. Provide your response as a JSON object`;
 
         const preparedTasks = await createChatCompletionJson(
           transcription,
-          systemPrompt
+          systemPrompt,
         );
         // console.log("preparedTasks", preparedTasks);
 
@@ -185,11 +186,15 @@ export default async function handler(
 
         const preparedUsers = getPreparedUsers(users);
         // console.log(preparedUsers, "preparedUsers");
-        const prompt = `add the 'user_id' from of ${JSON.stringify(
-          preparedUsers
-        )} to the objects of the ${JSON.stringify(
-          preparedTasks
-        )} array. (Example: [{
+        const prompt = `add the 'user_id' from of ${
+          JSON.stringify(
+            preparedUsers,
+          )
+        } to the objects of the ${
+          JSON.stringify(
+            preparedTasks,
+          )
+        } array. (Example: [{
           assignee: {
             user_id: "1a1e4c75-830c-4fe8-a312-c901c8aa144b",
             first_name: "Andrey",
@@ -250,8 +255,9 @@ export default async function handler(
               ]);
               // console.log(taskData, "taskData");
 
-              if (taskData.error?.message)
+              if (taskData.error?.message) {
                 console.log("Error:", taskData.error.message);
+              }
             }
 
             if (chat_id) {
@@ -260,7 +266,7 @@ export default async function handler(
                 newTasks,
                 summary_short,
                 lang,
-                token
+                token,
               ).catch(console.error);
             }
           }

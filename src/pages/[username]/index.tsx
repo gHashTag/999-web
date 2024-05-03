@@ -99,10 +99,15 @@ export default function Office() {
     }
   }, [id_task, setOpenModalTaskId]);
 
-  const goToOffice = (workspace_id: string, workspace_name: string) => {
+  const goToOffice = (
+    type: string,
+    workspace_id: string,
+    workspace_name: string
+  ) => {
     router.push(`/${username}/${workspace_id}`);
     localStorage.setItem("workspace_id", workspace_id);
     localStorage.setItem("workspace_name", workspace_name);
+    localStorage.setItem("type", type);
   };
 
   const onCreateNewWorkspace = () => {
@@ -127,8 +132,8 @@ export default function Office() {
         {!tasksLoading && (
           <CanvasRevealEffectDemo
             officeData={welcomeMenu || []}
-            onClick={(workspace_id, workspace_name) =>
-              goToOffice(workspace_id, workspace_name)
+            onClick={(type, workspace_id, workspace_name) =>
+              goToOffice(type, workspace_id, workspace_name)
             }
           />
         )}

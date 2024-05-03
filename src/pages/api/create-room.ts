@@ -44,14 +44,14 @@ const createToken100ms = () => {
         } else {
           resolve(token);
         }
-      }
+      },
     );
   });
 };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<ResponseData>,
 ) {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: { ...headers } });
@@ -95,10 +95,9 @@ export default async function handler(
       const roomData = {
         name: `${transliterateName}:${String(uuidv4())}`,
         description: workspace_id,
-        template_id:
-          type === "audio-space"
-            ? "65e84b5148b3dd31b94ff005"
-            : "65efdfab48b3dd31b94ff0dc",
+        template_id: type === "audio-space"
+          ? "65e84b5148b3dd31b94ff005"
+          : "65efdfab48b3dd31b94ff0dc",
         enabled: true,
       };
 
@@ -117,9 +116,7 @@ export default async function handler(
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-
       const id = newRoom.id;
-
       const codesResponse = await createCodes(id, newToken as string);
       // console.log(codesResponse, "codesResponse");
 
@@ -176,7 +173,7 @@ export async function createCodes(room_id: string, token: string) {
           "Content-Type": "application/json",
         },
         method: "POST",
-      }
+      },
     );
 
     if (!response.ok) {

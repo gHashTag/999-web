@@ -8,7 +8,7 @@ import {
   PASSPORT_CREATE_MUTATION,
   PASSPORT_DELETE_MUTATION,
   PASSPORT_UPDATE_MUTATION,
-} from "@/graphql/query";
+} from "@/graphql/query.passport";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useDisclosure } from "@nextui-org/react";
 import { useCallback, useState } from "react";
@@ -19,8 +19,8 @@ import { checkUsernameAndReturnUser } from "./useSupabase";
 
 type passportType = {
   user_id?: string;
-  workspace_id: string;
-  room_id?: string;
+  workspace_id?: string;
+  room_id?: string | null | undefined;
   recording_id?: string;
 };
 
@@ -48,6 +48,7 @@ const usePassport = ({
   let queryVariables;
 
   if (recording_id && room_id && workspace_id && user_id) {
+    console.log("usePassport 4");
     passportQuery = PASSPORT_COLLECTION_QUERY;
     queryVariables = {
       user_id,
@@ -58,6 +59,7 @@ const usePassport = ({
   }
 
   if (!recording_id) {
+    console.log("usePassport 3");
     passportQuery = GET_ROOM_PASSPORTS_QUERY;
     queryVariables = {
       user_id,
@@ -67,6 +69,7 @@ const usePassport = ({
   }
 
   if (!room_id && !recording_id) {
+    console.log("usePassport 2");
     passportQuery = GET_WORKSPACE_PASSPORTS_QUERY;
     queryVariables = {
       user_id,
@@ -75,6 +78,7 @@ const usePassport = ({
   }
 
   if (!recording_id && !room_id && !workspace_id) {
+    console.log("usePassport 1");
     passportQuery = GET_USER_PASSPORTS_QUERY;
     queryVariables = {
       user_id,
@@ -199,7 +203,11 @@ const usePassport = ({
     }
   };
 
-  const createPassport = async (id: string) => {
+  const createPassport = async (
+    workspace_id: string,
+    room_id: string,
+    is_owner: boolean
+  ) => {
     try {
       const { isUserExist, user } = await checkUsernameAndReturnUser(username);
       console.log("createPassport");
@@ -209,10 +217,11 @@ const usePassport = ({
             objects: {
               user_id: user.user_id,
               workspace_id,
-              room_id: id,
+              room_id,
               recording_id,
               photo_url: user.photo_url,
               username: user.username,
+              is_owner,
             },
           },
           onCompleted: () => {
@@ -308,7 +317,11 @@ type UsePassportReturn = {
   onOpenModalPassport: () => void;
   onOpenChangeModalPassport: () => void;
   onCreatePassport: () => void;
-  createPassport: (id: string) => void;
+  createPassport: (
+    workspace_id: string,
+    room_id: string,
+    is_owner: boolean
+  ) => void;
   onUpdatePassport: () => void;
   onDeletePassport: (passport_id: number) => void;
   setValuePassport: (id: string, value: any) => void;

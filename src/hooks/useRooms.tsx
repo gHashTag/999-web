@@ -14,7 +14,7 @@ import {
   GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY,
   ROOMS_BY_ID_COLLECTION_QUERY,
   ROOM_NAME_COLLECTION_QUERY,
-} from "@/graphql/query";
+} from "@/graphql/query.rooms";
 
 import { useUser } from "./useUser";
 import { useToast } from "@/components/ui/use-toast";

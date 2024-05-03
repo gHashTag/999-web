@@ -22,10 +22,14 @@ import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 import TaskModal from "@/components/modal/TaskModal";
 import { useRooms } from "@/hooks/useRooms";
-import { TextRevealCard } from "@/components/ui/text-reveal-card";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
-import { selectLocalAudioTrackID } from "@100mslive/react-sdk";
 import { usePassport } from "@/hooks/usePassport";
+
+type PassportType = {
+  user_id?: string;
+  workspace_id?: string;
+  room_id?: string | null | undefined;
+};
 
 const MeetsPage = () => {
   const router = useRouter();
@@ -34,11 +38,20 @@ const MeetsPage = () => {
   const room_id = useReactiveVar(setRoomId);
   const { username, user_id, lang, workspace_id, workspace_name } = useUser();
 
-  const { createPassport } = usePassport({
-    user_id,
-    workspace_id,
-    room_id,
-  });
+  console.log(workspace_name, "workspace_name");
+  const passportObj: PassportType =
+    workspace_name === "Вода" || "Water"
+      ? {
+          user_id,
+        }
+      : {
+          user_id,
+          workspace_id,
+          room_id,
+        };
+
+  const { passportData, createPassport } = usePassport(passportObj);
+  console.log(passportData, "passportData");
 
   const {
     tasksData,
@@ -120,9 +133,11 @@ const MeetsPage = () => {
         if (response) {
           localStorage.setItem("room_name", response.rooms.name);
           const room_id = response.rooms.room_id;
+
           setRoomId(room_id);
           localStorage.setItem("room_id", room_id);
-          createPassport(room_id);
+
+          createPassport(workspace_id, room_id, true);
           router.push(`/${username}/${workspace_id}/${response.rooms.room_id}`);
           setLoading(false);
           toast({
@@ -191,7 +206,7 @@ const MeetsPage = () => {
           <SelectRoom setOpenModalType={setOpenModalType} />
         </>
       )}
-      {isVisibleRoom && (
+      {!isVisibleRoom ? (
         <div
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
           style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
@@ -204,6 +219,17 @@ const MeetsPage = () => {
             />
           ))}
         </div>
+      ) : (
+        <>
+          {passportData &&
+            passportData.map((room) => (
+              <CardRoom
+                room={room.node}
+                onClick={() => goToRoomId(room)}
+                key={room.node.id}
+              />
+            ))}
+        </>
       )}
 
       {!isVisibleTask && (
@@ -226,7 +252,9 @@ const MeetsPage = () => {
           paddingBottom: 200,
         }}
       >
-        {tasksData && <DataTable data={tasksData} columns={columns} />}
+        {!isVisibleTask && tasksData && (
+          <DataTable data={tasksData} columns={columns} />
+        )}
       </div>
       {isOpenModalTask && (
         <TaskModal
