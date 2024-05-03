@@ -28,7 +28,8 @@ import { usePassport } from "@/hooks/usePassport";
 type PassportType = {
   user_id?: string;
   workspace_id?: string;
-  room_id?: string | null | undefined;
+  room_id?: string;
+  is_owner: boolean;
 };
 
 const MeetsPage = () => {
@@ -38,20 +39,27 @@ const MeetsPage = () => {
   const room_id = useReactiveVar(setRoomId);
   const { username, user_id, lang, workspace_id, workspace_name } = useUser();
 
-  console.log(workspace_name, "workspace_name");
   const passportObj: PassportType =
     workspace_name === "Вода" || "Water"
       ? {
           user_id,
+          is_owner: false,
         }
       : {
           user_id,
           workspace_id,
           room_id,
+          is_owner: true,
         };
 
   const { passportData, createPassport } = usePassport(passportObj);
   console.log(passportData, "passportData");
+
+  const commonRooms =
+    passportData &&
+    passportData.map((item) =>
+      item.node.workspaces.roomsCollection.edges.map((edge) => edge.node)
+    )[0];
 
   const {
     tasksData,
@@ -79,19 +87,22 @@ const MeetsPage = () => {
   const [isVisibleMenu, setIsVisibleMenu] = useState(true);
   const [isVisibleRoom, setIsVisibleRoom] = useState(true);
   const [isVisibleTask, setIsVisibleTask] = useState(false);
-
+  const [type, setType] = useState("Fire");
+  console.log(roomsData, "roomsData");
   useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
       setLoading(false);
+
       if (workspace_id === "d696abd8-3b7a-46f2-907f-5342a2b533a0") {
+        // "Earth"
+        setType("Earth");
         setIsVisibleMenu(false);
         setIsVisibleTask(true);
-      } else {
-        setIsVisibleMenu(true);
-      }
-      if (workspace_id === "54dc9d0e-dd96-43e7-bf72-02c2807f8977") {
+      } else if (workspace_id === "54dc9d0e-dd96-43e7-bf72-02c2807f8977") {
+        // "Water",
+        setType("Water");
         setIsVisibleMenu(false);
         setIsVisibleRoom(true);
         setIsVisibleTask(true);
@@ -181,6 +192,19 @@ const MeetsPage = () => {
     room.node.name && localStorage.setItem("room_name", room.node.name);
   };
 
+  const goToMeet = (room: RoomT) => {
+    if (room.codes) {
+      const codes = JSON.parse(room.codes);
+      const memberCode = codes.data[0].code;
+      console.log(memberCode, "memberCode");
+      router.push(
+        `/${room.username}/${room.workspace_id}/${room.room_id}/meet/${memberCode}`
+      );
+    } else {
+      console.log("No codes available");
+    }
+  };
+
   return (
     <Layout loading={loading || roomsLoading}>
       <div className="flex flex-col items-center justify-between">
@@ -206,7 +230,7 @@ const MeetsPage = () => {
           <SelectRoom setOpenModalType={setOpenModalType} />
         </>
       )}
-      {!isVisibleRoom ? (
+      {isVisibleRoom && (
         <div
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
           style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
@@ -219,17 +243,24 @@ const MeetsPage = () => {
             />
           ))}
         </div>
-      ) : (
-        <>
-          {/* {passportData &&
-            passportData.map((room) => (
-              <CardRoom
-                room={room.node}
-                onClick={() => goToRoomId(room)}
-                key={room.node.id}
-              />
-            ))} */}
-        </>
+      )}
+
+      {type === "Water" && (
+        <div
+          className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
+          style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
+        >
+          {commonRooms &&
+            commonRooms.map((room, index) => {
+              return (
+                <CardRoom
+                  key={index}
+                  room={room}
+                  onClick={() => goToMeet(room)}
+                />
+              );
+            })}
+        </div>
       )}
 
       {!isVisibleTask && (

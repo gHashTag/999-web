@@ -93,9 +93,13 @@ export const PASSPORT_COLLECTION_QUERY = gql`
           roomsCollection {
             edges {
               node {
+                user_id
+                workspace_id
+                room_id
                 name
                 chat_id
                 type
+                codes
               }
             }
           }

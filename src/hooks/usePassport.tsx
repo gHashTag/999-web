@@ -22,6 +22,7 @@ type passportType = {
   workspace_id?: string;
   room_id?: string | null | undefined;
   recording_id?: string;
+  is_owner: boolean;
 };
 
 const usePassport = ({
@@ -29,7 +30,13 @@ const usePassport = ({
   workspace_id,
   room_id,
   recording_id,
+  is_owner,
 }: passportType): UsePassportReturn => {
+  console.log(user_id, "user_id");
+  console.log(workspace_id, "workspace_id");
+  console.log(room_id, "room_id");
+  console.log(recording_id, "recording_id");
+  console.log(is_owner, "is_owner");
   const { username } = useUser();
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -47,7 +54,7 @@ const usePassport = ({
 
   let queryVariables;
 
-  if (recording_id && room_id && workspace_id && user_id) {
+  if (recording_id && room_id && workspace_id && user_id && is_owner) {
     console.log("usePassport 4");
     passportQuery = PASSPORT_COLLECTION_QUERY;
     queryVariables = {
@@ -58,7 +65,7 @@ const usePassport = ({
     };
   }
 
-  if (!recording_id) {
+  if (!recording_id && is_owner) {
     console.log("usePassport 3");
     passportQuery = GET_ROOM_PASSPORTS_QUERY;
     queryVariables = {
@@ -68,7 +75,7 @@ const usePassport = ({
     };
   }
 
-  if (!room_id && !recording_id) {
+  if (!room_id && !recording_id && is_owner) {
     console.log("usePassport 2");
     passportQuery = GET_WORKSPACE_PASSPORTS_QUERY;
     queryVariables = {
@@ -77,11 +84,20 @@ const usePassport = ({
     };
   }
 
-  if (!recording_id && !room_id && !workspace_id) {
+  if (!recording_id && !room_id && !workspace_id && is_owner) {
     console.log("usePassport 1");
     passportQuery = GET_USER_PASSPORTS_QUERY;
     queryVariables = {
       user_id,
+    };
+  }
+
+  if (!recording_id && !room_id && !workspace_id && !is_owner) {
+    console.log("usePassport 0");
+    passportQuery = PASSPORT_COLLECTION_QUERY;
+    queryVariables = {
+      user_id,
+      is_owner,
     };
   }
 

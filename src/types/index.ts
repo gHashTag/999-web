@@ -43,6 +43,11 @@ interface PassportNode {
   workspace_id: string;
   photo_url: string;
   username: string;
+  is_owner: boolean;
+  workspaces: {
+    __typename: string;
+    roomsCollection: RoomsCollection;
+  };
 }
 export type Passport = {
   __typename: string;
@@ -222,7 +227,7 @@ export interface RoomT {
   region?: string;
   customer?: string;
   large_room?: boolean;
-  codes?: Record<string, any> | null;
+  codes?: string;
   type_additional?: string;
   user_id?: string;
   room_id: string;
