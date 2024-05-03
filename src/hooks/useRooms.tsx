@@ -58,8 +58,6 @@ const useRooms = (): UseRoomsReturn => {
 
   if (!room_id && !recording_id && workspace_id) {
     console.log("rooms :::2");
-    console.log(user_id, "user_id :::2");
-    console.log(workspace_id, "workspace_id :::2");
     passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY;
     queryVariables = {
       user_id,

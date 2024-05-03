@@ -209,38 +209,8 @@ export interface OptionType {
   color?: string;
 }
 
-export interface RoomT {
-  id: number;
-  created_at: string;
-  updated_at?: string;
-  workspace_id?: string;
-  type?: string;
-  id_additional?: string;
-  name?: string;
-  enabled?: boolean;
-  description?: string;
-  customer_id?: string;
-  app_id?: string;
-  recording_info?: Record<string, any> | null;
-  template_id?: string;
-  template?: string;
-  region?: string;
-  customer?: string;
-  large_room?: boolean;
-  codes?: string;
-  type_additional?: string;
-  user_id?: string;
-  room_id: string;
-  lang?: string;
-  chat_id?: string;
-  token?: string;
-  username?: string;
-  original_name?: string;
-  public?: boolean;
-}
-
 export type CardRoomT = {
-  node: RoomT;
+  node: RoomNode;
 };
 
 export interface ResponseData {
@@ -274,7 +244,7 @@ export interface RoomNode {
   region?: string | null;
   customer?: string | null;
   large_room?: boolean | null;
-  codes?: CodesData;
+  codes?: string;
   type_additional?: string | null;
   user_id?: string | null;
   room_id: string;
