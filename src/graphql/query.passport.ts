@@ -93,6 +93,7 @@ export const PASSPORT_COLLECTION_QUERY = gql`
           roomsCollection {
             edges {
               node {
+                username
                 user_id
                 workspace_id
                 room_id

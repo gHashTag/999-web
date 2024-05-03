@@ -128,7 +128,7 @@ const useRooms = (): UseRoomsReturn => {
     async (type: string) => {
       const codesData = await roomNameData?.roomsCollection?.edges[0]?.node
         ?.codes;
-      console.log(codesData, "codesData");
+
       if (typeof codesData === "string") {
         const parsedCodesData = JSON.parse(codesData);
         if (parsedCodesData) {

@@ -32,11 +32,11 @@ const usePassport = ({
   recording_id,
   is_owner,
 }: passportType): UsePassportReturn => {
-  console.log(user_id, "user_id");
-  console.log(workspace_id, "workspace_id");
-  console.log(room_id, "room_id");
-  console.log(recording_id, "recording_id");
-  console.log(is_owner, "is_owner");
+  // console.log(user_id, "user_id");
+  // console.log(workspace_id, "workspace_id");
+  // console.log(room_id, "room_id");
+  // console.log(recording_id, "recording_id");
+  // console.log(is_owner, "is_owner");
   const { username } = useUser();
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();

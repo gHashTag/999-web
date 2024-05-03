@@ -53,7 +53,6 @@ const MeetsPage = () => {
         };
 
   const { passportData, createPassport } = usePassport(passportObj);
-  console.log(passportData, "passportData");
 
   const commonRooms =
     passportData &&
@@ -196,12 +195,11 @@ const MeetsPage = () => {
     if (room.codes) {
       const codes = JSON.parse(room.codes);
       const memberCode = codes.data[0].code;
-
       router.push(
         `/${room.username}/${room.workspace_id}/${room.room_id}/meet/${memberCode}`
       );
     } else {
-      console.log("No codes available");
+      console.error("No codes available");
     }
   };
 
