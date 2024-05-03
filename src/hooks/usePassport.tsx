@@ -22,7 +22,7 @@ type passportType = {
   workspace_id?: string;
   room_id?: string | null | undefined;
   recording_id?: string;
-  is_owner: boolean;
+  is_owner?: boolean;
 };
 
 const usePassport = ({
