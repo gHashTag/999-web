@@ -221,14 +221,14 @@ const MeetsPage = () => {
         </div>
       ) : (
         <>
-          {passportData &&
+          {/* {passportData &&
             passportData.map((room) => (
               <CardRoom
                 room={room.node}
                 onClick={() => goToRoomId(room)}
                 key={room.node.id}
               />
-            ))}
+            ))} */}
         </>
       )}
 
