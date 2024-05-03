@@ -83,35 +83,36 @@ const MeetsPage = () => {
   } = useTasks();
 
   const { roomsData, roomsLoading, refetchRooms } = useRooms();
-  const [isVisibleMenu, setIsVisibleMenu] = useState(true);
-  const [isVisibleRoom, setIsVisibleRoom] = useState(true);
   const [isVisibleTask, setIsVisibleTask] = useState(false);
   const [type, setType] = useState("Fire");
 
   useEffect(() => {
+    console.log(type, "type");
+    console.log(workspace_id, "workspace_id");
     if (!username) {
       router.push("/");
     } else {
       setLoading(false);
 
       if (workspace_id === "d696abd8-3b7a-46f2-907f-5342a2b533a0") {
+        console.log("Earth");
         // "Earth"
         setType("Earth");
-        setIsVisibleMenu(false);
+        // setIsVisibleMenu(false);
         setIsVisibleTask(true);
       } else if (workspace_id === "54dc9d0e-dd96-43e7-bf72-02c2807f8977") {
         // "Water",
+        console.log("Water");
         setType("Water");
-        setIsVisibleMenu(false);
-        setIsVisibleRoom(true);
         setIsVisibleTask(true);
       } else {
-        setIsVisibleRoom(true);
+        // "Fire"
+        console.log("Fire");
+        localStorage.setItem("room_name", "");
+        localStorage.setItem("room_id", "");
+        localStorage.setItem("recording_id", "");
+        localStorage.setItem("recording_name", "");
       }
-      localStorage.setItem("room_name", "");
-      localStorage.setItem("room_id", "");
-      localStorage.setItem("recording_id", "");
-      localStorage.setItem("recording_name", "");
     }
 
     router.events.on("routeChangeComplete", (url) => {
@@ -195,6 +196,8 @@ const MeetsPage = () => {
     if (room.codes) {
       const codes = JSON.parse(room.codes);
       const memberCode = codes.data[0].code;
+      console.log(workspace_id, "workspace_id:::::");
+      localStorage.setItem("workspace_id", workspace_id);
       router.push(
         `/${room.username}/${room.workspace_id}/${room.room_id}/meet/${memberCode}`
       );
@@ -223,24 +226,23 @@ const MeetsPage = () => {
           setValue={setValue}
         />
       )}
-      {isVisibleMenu && (
+      {type === "Fire" && (
         <>
           <SelectRoom setOpenModalType={setOpenModalType} />
+
+          <div
+            className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
+            style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
+          >
+            {roomsData?.roomsCollection.edges.map((room: RoomEdge) => (
+              <CardRoom
+                room={room.node}
+                onClick={() => goToRoomId(room)}
+                key={room.node.id}
+              />
+            ))}
+          </div>
         </>
-      )}
-      {isVisibleRoom && (
-        <div
-          className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
-          style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
-        >
-          {roomsData?.roomsCollection.edges.map((room: RoomEdge) => (
-            <CardRoom
-              room={room.node}
-              onClick={() => goToRoomId(room)}
-              key={room.node.id}
-            />
-          ))}
-        </div>
       )}
 
       {type === "Water" && (

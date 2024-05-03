@@ -3,7 +3,7 @@ export interface ISvgIcon {
 }
 
 const LandingIcons: ISvgIcon = {
-  "Audio Spaces": (
+  "Audio Space": (
     <svg
       width="44"
       height="44"
@@ -25,7 +25,7 @@ const LandingIcons: ISvgIcon = {
       />
     </svg>
   ),
-  "Video Meeting": (
+  "Video Space": (
     <svg
       width="44"
       height="44"

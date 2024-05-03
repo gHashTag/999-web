@@ -3,13 +3,13 @@ import SubCard from "@/components/ui/LandingCards/SubCard";
 
 const cardsCreateRoom = [
   {
-    title: "Video Meeting",
+    title: "Video Space",
     img: "Video Meeting.png",
-    onClickType: "meets",
+    onClickType: "video-space",
     isDisabled: false,
   },
   {
-    title: "Audio Spaces",
+    title: "Audio Space",
     img: "Audio Spaces.png",
     onClickType: "audio-space",
     isDisabled: false,

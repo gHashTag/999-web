@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 const Meets = () => {
   const router = useRouter();
-  console.log(router.query, "router.query");
+
   const workspace_id = router.query.workspace_id;
 
   const roomCode = router.query.slug;
