@@ -13,13 +13,13 @@ import { Button } from "@/components/ui/moving-border";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
 import { useRooms } from "@/hooks/useRooms";
-import { setHeaderName, setRoomId } from "@/apollo/reactive-store";
+
 import InviteMemberModal from "@/components/modal/InviteMemberModal";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { AnimatedTooltipCommon } from "@/components/ui/animated-tooltip-common";
-import { useReactiveVar } from "@apollo/client";
+
 import TaskModal from "@/components/modal/TaskModal";
-import { ArrayInviteT } from "@/types";
+
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 import { useAssets } from "@/hooks/useAssets";
 

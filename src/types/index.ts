@@ -29,14 +29,6 @@ export type Workspace = {
 
 export type WorkspaceArray = Workspace[];
 
-export type RoomInfoT = {
-  __typename: string;
-  chat_id: string;
-  name: string;
-  type: string;
-  codes: string;
-};
-
 export interface PassportNode {
   __typename: string;
   passport_id: number;
@@ -61,6 +53,16 @@ export type Passport = {
 };
 
 export type PassportArray = Passport[];
+
+export interface AssigneeNode {
+  user_id: string;
+  username: string;
+  photo_url: string;
+}
+
+export type AssigneeArray = {
+  node: AssigneeNode;
+};
 
 export type TasksArray = Task[];
 
@@ -231,15 +233,23 @@ interface CodesData {
   data: Code[];
 }
 
+export type RoomInfoT = {
+  __typename: string;
+  chat_id: string;
+  name: string;
+  type: string;
+  codes: string;
+};
+
 export interface RoomNode {
   __typename: "rooms";
   id: number;
   created_at: string;
   updated_at?: string | null;
   workspace_id?: string | null;
-  type?: string | null;
+  type: string;
   id_additional?: string | null;
-  name?: string | null;
+  name: string;
   enabled?: boolean | null;
   description?: string | null;
   customer_id?: string | null;
@@ -250,12 +260,12 @@ export interface RoomNode {
   region?: string | null;
   customer?: string | null;
   large_room?: boolean | null;
-  codes?: string;
+  codes: string;
   type_additional?: string | null;
   user_id?: string | null;
   room_id: string;
   lang: string | null;
-  chat_id?: string | null;
+  chat_id: string;
   token?: string | null;
   username?: string | null;
   original_name?: string | null;

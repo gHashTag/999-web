@@ -63,9 +63,6 @@ const MeetsPage = () => {
 
   const {
     tasksData,
-    tasksLoading,
-    tasksError,
-    refetchTasks,
     isOpenModalTask,
     onOpenModalTask,
     onOpenChangeModalTask,
@@ -76,10 +73,8 @@ const MeetsPage = () => {
     controlTask,
     handleSubmitTask,
     getValuesTask,
-    onCreateNewTask,
     columns,
     openModalTaskId,
-    setOpenModalTaskId,
     isEditingTask,
   } = useTasks();
 
@@ -207,7 +202,7 @@ const MeetsPage = () => {
       console.error("No codes available");
     }
   };
-  console.log(passportData, "passportData");
+
   return (
     <Layout loading={loading || roomsLoading}>
       <div className="flex flex-col items-center justify-between">
@@ -263,21 +258,6 @@ const MeetsPage = () => {
                 />
               );
             })}
-        </div>
-      )}
-
-      {!isVisibleTask && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            paddingTop: 30,
-            paddingRight: "75px",
-          }}
-        >
-          <Button onClick={() => onCreateNewTask(workspace_id)}>
-            Create task
-          </Button>
         </div>
       )}
 

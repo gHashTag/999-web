@@ -25,6 +25,9 @@ import { priorities, statuses } from "@/helpers/data/data";
 import { useReactiveVar } from "@apollo/client";
 import { setIsEdit } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
+import { AnimatedTooltipCommon } from "./animated-tooltip-common";
+import { AssigneeArray } from "@/types";
+import { usePassport } from "@/hooks/usePassport";
 
 export function TaskForm({
   id,
@@ -65,6 +68,7 @@ export function TaskForm({
 
   const isEdit = useReactiveVar(setIsEdit);
   const { user_id: owner_user_id } = useUser();
+  const { onOpenModalPassport } = usePassport({});
 
   const isOwnerTask = owner_user_id === user_id;
 
@@ -79,6 +83,42 @@ export function TaskForm({
     data: FieldValues
   ) => {
     onUpdateTask(id);
+  };
+
+  const assigneeData: AssigneeArray[] = [
+    {
+      node: {
+        user_id: "ffefa06b-aee1-40c4-ad9e-d765b9925ef6",
+        username: "playom",
+        photo_url:
+          "https://t.me/i/userpic/320/wZkuwwzkJSSWfV8E14wTQWqKz2SewAT5xNyHL2YbD5k.jpg",
+      },
+    },
+    {
+      node: {
+        user_id: "ec0c948a-2b96-4ccd-942f-0a991d78a94f",
+        username: "koshey999nft",
+        photo_url:
+          "https://t.me/i/userpic/320/tR0QjJduOxMDGPYL3G5eItFtmnJq4LRa1WPzaQwiBbg.jpg",
+      },
+    },
+    {
+      node: {
+        user_id: "d1b1080c-d3b5-4108-a77b-404177f7f396",
+        username: "reactotron",
+        photo_url:
+          "https://t.me/i/userpic/320/_vxoj_n4Oe7NSlsleXSnJaSPc7FPd-RCcVpUA-FlSyA.jpg",
+      },
+    },
+  ];
+
+  const onDeleteAssignee = () => {
+    console.log("onDeleteAssignee");
+  };
+
+  const handleClickPlus = () => {
+    console.log("handleClickPlus");
+    onOpenModalPassport();
   };
 
   return (
@@ -165,6 +205,11 @@ export function TaskForm({
                 />
               </LabelInputContainer>
             )}
+            <AnimatedTooltipCommon
+              assigneeItems={assigneeData}
+              onAssigneeClick={onDeleteAssignee}
+              handleClickPlus={handleClickPlus}
+            />
             <div style={{ padding: "10px" }} />
             <ButtonAnimate
               onClick={() => {

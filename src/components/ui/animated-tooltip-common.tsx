@@ -2,16 +2,22 @@
 import Image from "next/image";
 import React from "react";
 import { useMotionValue } from "framer-motion";
-import { PassportArray } from "@/types";
+import { PassportArray, AssigneeArray } from "@/types";
 
 type AnimatedTooltipCommonProps = {
-  items: PassportArray;
-  onClick: (passport_id: number) => void;
+  passportItems?: PassportArray;
+  assigneeItems?: AssigneeArray[];
+  onAssigneeClick?: (user_id: string) => void;
+  onClick?: (passport_id: number) => void;
+  handleClickPlus: () => void;
 };
 
 export const AnimatedTooltipCommon = ({
-  items,
+  passportItems,
+  assigneeItems,
   onClick,
+  onAssigneeClick,
+  handleClickPlus,
 }: AnimatedTooltipCommonProps) => {
   const x = useMotionValue(0);
 
@@ -19,6 +25,14 @@ export const AnimatedTooltipCommon = ({
     const halfWidth = event.target.offsetWidth / 2;
     x.set(event.nativeEvent.offsetX - halfWidth); // set the x value, which is then used in transform and rotate
   };
+
+  const handleClick = (item: any) => {
+    onAssigneeClick
+      ? onAssigneeClick(item.node.user_id)
+      : onClick && onClick(item.node.passport_id);
+  };
+
+  const items = passportItems || assigneeItems;
 
   return (
     <div
@@ -30,14 +44,21 @@ export const AnimatedTooltipCommon = ({
         width: "100%",
       }}
     >
+      <div
+        className="-mr-4 relative group rounded-full"
+        style={{
+          right: 8,
+        }}
+        onClick={() => handleClickPlus()}
+      >
+        <img src="/icon-plus.svg" height={50} width={50} alt="plus" />
+      </div>
       {items &&
         items.map((item, idx) => (
           <div
             className="-mr-4 relative group rounded-full"
             key={item.node.user_id}
-            onClick={() => {
-              onClick(item.node.passport_id);
-            }}
+            onClick={() => handleClick(item)}
           >
             <Image
               onMouseMove={handleMouseMove}
