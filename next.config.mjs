@@ -17,6 +17,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "t.me",
       "dmrooqbmxdhdyblqzswu.supabase.co",
+      "app.delabwallet.com",
     ],
   },
   // typescript: {

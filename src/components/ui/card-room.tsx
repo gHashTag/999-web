@@ -2,10 +2,10 @@ import { forwardRef } from "react";
 import { BackgroundGradient } from "./background-gradient";
 
 import { Spacer } from "@nextui-org/react";
-import { RoomNode } from "@/types";
+import { RoomInfoT } from "@/types";
 
 interface CardProps {
-  room: RoomNode;
+  room: RoomInfoT;
   onClick?: () => void;
 }
 

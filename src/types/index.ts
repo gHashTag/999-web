@@ -29,7 +29,15 @@ export type Workspace = {
 
 export type WorkspaceArray = Workspace[];
 
-interface PassportNode {
+export type RoomInfoT = {
+  __typename: string;
+  chat_id: string;
+  name: string;
+  type: string;
+  codes: string;
+};
+
+export interface PassportNode {
   __typename: string;
   passport_id: number;
   background: string;
@@ -44,10 +52,8 @@ interface PassportNode {
   photo_url: string;
   username: string;
   is_owner: boolean;
-  workspaces: {
-    __typename: string;
-    roomsCollection: RoomsCollection;
-  };
+  room_id: string;
+  rooms: RoomInfoT;
 }
 export type Passport = {
   __typename: string;
@@ -254,6 +260,7 @@ export interface RoomNode {
   username?: string | null;
   original_name?: string | null;
   public?: boolean | null;
+  rooms?: RoomInfoT;
 }
 
 export interface RoomEdge {

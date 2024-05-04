@@ -117,7 +117,7 @@ const usePassport = ({
   });
 
   const passportNode = passportData?.user_passportCollection?.edges;
-
+  console.log(passportNode, "passportNode");
   const [mutateCreatePassport, { error: mutateCreatePassportError }] =
     useMutation(PASSPORT_CREATE_MUTATION);
 

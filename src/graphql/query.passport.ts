@@ -67,7 +67,7 @@ export const GET_ROOM_PASSPORTS_QUERY = gql`
 `;
 
 export const PASSPORT_COLLECTION_QUERY = gql`
-  query GetPassports($user_id: UUID!, $room_id: String!, $recording_id: String, $workspace_id: UUID!, $is_owner: Boolean!) {
+query GetPassports($user_id: UUID!, $room_id: String!, $recording_id: String, $workspace_id: UUID!, $is_owner: Boolean!) {
   user_passportCollection(
     filter: {
       and: [
@@ -89,21 +89,12 @@ export const PASSPORT_COLLECTION_QUERY = gql`
         recording_id
         photo_url
         is_owner
-        workspaces {
-          roomsCollection {
-            edges {
-              node {
-                username
-                user_id
-                workspace_id
-                room_id
-                name
-                chat_id
-                type
-                codes
-              }
-            }
-          }
+        room_id
+        rooms {
+          name
+          chat_id
+          type
+          codes
         }
       }
     }

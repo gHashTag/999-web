@@ -11,7 +11,14 @@ import { createRoom } from "@/utils/edge-functions";
 import { SelectRoom } from "@/components/ui/select-room";
 
 import { useQuery, useReactiveVar } from "@apollo/client";
-import { CardRoomT, RoomEdge, RoomNode, RoomsCollection } from "@/types";
+import {
+  CardRoomT,
+  PassportNode,
+  RoomEdge,
+  RoomInfoT,
+  RoomNode,
+  RoomsCollection,
+} from "@/types";
 import CardRoom from "@/components/ui/card-room";
 import { Button } from "@/components/ui/moving-border";
 import { DataTable } from "@/components/table/data-table";
@@ -53,12 +60,6 @@ const MeetsPage = () => {
         };
 
   const { passportData, createPassport } = usePassport(passportObj);
-
-  const commonRooms =
-    passportData &&
-    passportData.map((item) =>
-      item.node.workspaces.roomsCollection.edges.map((edge) => edge.node)
-    )[0];
 
   const {
     tasksData,
@@ -192,20 +193,21 @@ const MeetsPage = () => {
     room.node.name && localStorage.setItem("room_name", room.node.name);
   };
 
-  const goToMeet = (room: RoomNode) => {
-    if (room.codes) {
-      const codes = JSON.parse(room.codes);
+  const goToMeet = (node: PassportNode) => {
+    console.log(node, "node");
+    if (node.rooms.codes) {
+      const codes = JSON.parse(node.rooms.codes);
       const memberCode = codes.data[0].code;
 
       localStorage.setItem("workspace_id", workspace_id);
       router.push(
-        `/${room.username}/${room.workspace_id}/${room.room_id}/meet/${memberCode}`
+        `/${node.username}/${node.workspace_id}/${node.room_id}/meet/${memberCode}`
       );
     } else {
       console.error("No codes available");
     }
   };
-
+  console.log(passportData, "passportData");
   return (
     <Layout loading={loading || roomsLoading}>
       <div className="flex flex-col items-center justify-between">
@@ -250,13 +252,14 @@ const MeetsPage = () => {
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
           style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
         >
-          {commonRooms &&
-            commonRooms.map((room, index) => {
+          {passportData &&
+            passportData.map(({ node }, index) => {
+              console.log(node, "node");
               return (
                 <CardRoom
                   key={index}
-                  room={room}
-                  onClick={() => goToMeet(room)}
+                  room={node.rooms}
+                  onClick={() => goToMeet(node)}
                 />
               );
             })}
