@@ -16,6 +16,7 @@ const nextConfig = {
       "images.unsplash.com",
       "lh3.googleusercontent.com",
       "t.me",
+      "dmrooqbmxdhdyblqzswu.supabase.co",
     ],
   },
   // typescript: {

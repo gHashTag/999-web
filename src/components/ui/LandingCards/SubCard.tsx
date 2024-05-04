@@ -35,7 +35,7 @@ const SubCard: React.FC<SubCardProps> = ({
           }}
         >
           <Image
-            src={`/images/${img}`}
+            src={img}
             alt={title ?? "landing-card"}
             width={500}
             height={300}
