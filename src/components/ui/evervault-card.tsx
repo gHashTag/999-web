@@ -1,5 +1,5 @@
 import { useMotionValue } from "framer-motion";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useMotionTemplate, motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 import { useCopyToClipboard } from "usehooks-ts";
@@ -75,8 +75,7 @@ export const EvervaultCard = ({
       });
   };
 
-  const handleClick = async () => {
-    // Определение targetPath в зависимости от типа
+  const handleClick = useCallback(async () => {
     if (
       router.pathname !==
       `/${user_id}/${workspace_id}/${room_id}/meet/${inviteHostCode}`
@@ -93,8 +92,18 @@ export const EvervaultCard = ({
         inviteToMeet(type);
       }
     }
-  };
-  console.log(inviteHostCode, "inviteHostCode");
+  }, [
+    inviteGuestCode,
+    inviteHostCode,
+    inviteMemberCode,
+    inviteToMeet,
+    onOpenModalPassport,
+    passportData,
+    room_id,
+    type,
+    user_id,
+    workspace_id,
+  ]);
 
   const href =
     type === "host"

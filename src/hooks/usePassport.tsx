@@ -30,13 +30,13 @@ const usePassport = ({
   workspace_id,
   room_id,
   recording_id,
-  is_owner,
+  is_owner = true,
 }: passportType): UsePassportReturn => {
-  // console.log(user_id, "user_id");
-  // console.log(workspace_id, "workspace_id");
-  // console.log(room_id, "room_id");
-  // console.log(recording_id, "recording_id");
-  // console.log(is_owner, "is_owner");
+  console.log(user_id, "user_id");
+  console.log(workspace_id, "workspace_id");
+  console.log(room_id, "room_id");
+  console.log(recording_id, "recording_id");
+  console.log(is_owner, "is_owner");
   const { username } = useUser();
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -105,6 +105,8 @@ const usePassport = ({
   //   passportQuery = GET_ALL_PASSPORTS_QUERY;
   // }
 
+  console.log(queryVariables, "queryVariables");
+
   const {
     data: passportData,
     loading: passportLoading,
@@ -151,10 +153,11 @@ const usePassport = ({
   const onCreatePassport = async () => {
     try {
       const formData = getValues();
+      console.log(formData.username, "formData.username");
       const { isUserExist, user } = await checkUsernameAndReturnUser(
         formData.username
       );
-
+      console.log(passportNode, "passportNode");
       const checkIfPassportExists = passportNode.some(
         (passport: any) => passport.node.username === formData.username
       );

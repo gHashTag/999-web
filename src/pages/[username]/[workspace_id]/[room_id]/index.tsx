@@ -210,6 +210,8 @@ const RoomPage = () => {
           }}
         >
           <div style={{ padding: "20px" }} />
+          <ButtonAnimate onClick={handlerDeleteRoom}>Edit room</ButtonAnimate>
+          <div style={{ padding: "10px" }} />
           <ButtonAnimate onClick={handlerDeleteRoom}>Delete room</ButtonAnimate>
           <div style={{ padding: "100px" }} />
         </div>

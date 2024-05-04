@@ -69,7 +69,7 @@ const useTasks = (): UseTasksReturn => {
 
   const queryVariables = useMemo(() => {
     let variables = {};
-    console.log(variables, "variables");
+
     if (!recording_id && !room_id && !workspace_id) {
       console.log("variables :::1");
       variables = {

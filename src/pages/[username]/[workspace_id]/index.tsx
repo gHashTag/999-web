@@ -196,7 +196,7 @@ const MeetsPage = () => {
     if (room.codes) {
       const codes = JSON.parse(room.codes);
       const memberCode = codes.data[0].code;
-      console.log(workspace_id, "workspace_id:::::");
+
       localStorage.setItem("workspace_id", workspace_id);
       router.push(
         `/${room.username}/${room.workspace_id}/${room.room_id}/meet/${memberCode}`

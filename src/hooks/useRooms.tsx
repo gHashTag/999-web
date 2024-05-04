@@ -43,13 +43,18 @@ const useRooms = (): UseRoomsReturn => {
   const { toast } = useToast();
 
   const { username, user_id, workspace_id, room_id, recording_id } = useUser();
+  // console.log("username", username);
+  // console.log("user_id", user_id);
+  // console.log("workspace_id", workspace_id);
+  // console.log("room_id", room_id);
+  // console.log("recording_id", recording_id);
 
   let queryVariables;
-
+  // console.log(queryVariables, "queryVariables");
   let passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY;
 
   if (!room_id && !recording_id && !workspace_id) {
-    console.log("rooms :::1");
+    // console.log("rooms :::1");
     passportQuery = ROOMS_BY_ID_COLLECTION_QUERY;
     queryVariables = {
       user_id,
@@ -57,7 +62,7 @@ const useRooms = (): UseRoomsReturn => {
   }
 
   if (!room_id && !recording_id && workspace_id) {
-    console.log("rooms :::2");
+    // console.log("rooms :::2");
     passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY;
     queryVariables = {
       user_id,
@@ -66,7 +71,7 @@ const useRooms = (): UseRoomsReturn => {
   }
 
   if (recording_id && !room_id && !workspace_id) {
-    console.log("rooms :::3");
+    // console.log("rooms :::3");
     passportQuery = GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY;
     queryVariables = {
       user_id,
@@ -74,7 +79,7 @@ const useRooms = (): UseRoomsReturn => {
   }
 
   if (!recording_id && room_id && workspace_id) {
-    console.log("rooms :::4");
+    // console.log("rooms :::4");
     passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY;
     queryVariables = {
       user_id,
@@ -84,7 +89,7 @@ const useRooms = (): UseRoomsReturn => {
   }
 
   if (recording_id && room_id && workspace_id) {
-    console.log("rooms :::5");
+    // console.log("rooms :::5");
     passportQuery = GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY;
     queryVariables = {
       user_id,
@@ -137,10 +142,9 @@ const useRooms = (): UseRoomsReturn => {
               return codeObj.role === type;
             }
           );
-          console.log(codeObj, "codeObj");
+
           if (codeObj) {
             if (type === "guest") {
-              console.log(codeObj.code, "codeObj.code");
               setInviteGuestCode(codeObj.code);
             } else if (type === "member") {
               setInviteMemberCode(codeObj.code);
