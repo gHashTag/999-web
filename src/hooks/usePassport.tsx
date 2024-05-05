@@ -1,9 +1,7 @@
 import { useToast } from "@/components/ui/use-toast";
 import {
-  GET_ALL_PASSPORTS_QUERY,
-  GET_ROOM_PASSPORTS_QUERY,
-  GET_USER_PASSPORTS_QUERY,
-  GET_WORKSPACE_PASSPORTS_QUERY,
+  PASSPORT_COLLECTION_BY_TASK_ID_QUERY,
+  PASSPORT_COLLECTION_IS_NOT_OWNER_QUERY,
   PASSPORT_COLLECTION_QUERY,
   PASSPORT_CREATE_MUTATION,
   PASSPORT_DELETE_MUTATION,
@@ -14,31 +12,37 @@ import { useDisclosure } from "@nextui-org/react";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useUser } from "./useUser";
-import { PassportArray } from "@/types";
+import { Passport, PassportNode } from "@/types";
 import { checkUsernameAndReturnUser } from "./useSupabase";
+import { useTasks } from "./useTasks";
 
 type passportType = {
   user_id?: string;
   workspace_id?: string;
   room_id?: string | null | undefined;
   recording_id?: string;
-  is_owner?: boolean;
+  task_id?: number;
+  type?: string;
 };
 
 const usePassport = ({
-  user_id,
   workspace_id,
   room_id,
   recording_id,
-  is_owner = true,
+  task_id,
+  type,
 }: passportType): UsePassportReturn => {
+  const { username, user_id, is_owner } = useUser();
+  console.log(username, "username");
   console.log(user_id, "user_id");
   console.log(workspace_id, "workspace_id");
   console.log(room_id, "room_id");
   console.log(recording_id, "recording_id");
   console.log(is_owner, "is_owner");
-  const { username } = useUser();
+  console.log(task_id, "task_id");
+  console.log(type, "type");
   const { toast } = useToast();
+  const { refetchTasks } = useTasks();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
 
@@ -54,50 +58,81 @@ const usePassport = ({
 
   let queryVariables;
 
-  if (recording_id && room_id && workspace_id && user_id && is_owner) {
-    console.log("usePassport 4");
-    passportQuery = PASSPORT_COLLECTION_QUERY;
+  if (user_id && workspace_id && room_id && recording_id) {
+    console.log("usePassport 5");
     queryVariables = {
       user_id,
-      room_id,
       workspace_id,
+      room_id,
       recording_id,
+      is_owner,
+      type,
     };
   }
 
-  if (!recording_id && is_owner) {
-    console.log("usePassport 3");
-    passportQuery = GET_ROOM_PASSPORTS_QUERY;
+  if (user_id && is_owner && workspace_id && room_id && !recording_id) {
+    console.log("usePassport 4");
     queryVariables = {
       user_id,
+      workspace_id,
       room_id,
-      workspace_id,
+      is_owner,
+      type,
     };
   }
 
-  if (!room_id && !recording_id && is_owner) {
+  if (user_id && is_owner && workspace_id && !room_id && !recording_id) {
+    console.log("usePassport 3");
+    queryVariables = {
+      user_id,
+      workspace_id,
+      is_owner,
+      type,
+      task_id,
+    };
+  }
+
+  if (user_id && is_owner && !workspace_id && !room_id && !recording_id) {
     console.log("usePassport 2");
-    passportQuery = GET_WORKSPACE_PASSPORTS_QUERY;
-    queryVariables = {
-      user_id,
-      workspace_id,
-    };
-  }
-
-  if (!recording_id && !room_id && !workspace_id && is_owner) {
-    console.log("usePassport 1");
-    passportQuery = GET_USER_PASSPORTS_QUERY;
-    queryVariables = {
-      user_id,
-    };
-  }
-
-  if (!recording_id && !room_id && !workspace_id && !is_owner) {
-    console.log("usePassport 0");
-    passportQuery = PASSPORT_COLLECTION_QUERY;
     queryVariables = {
       user_id,
       is_owner,
+      type,
+    };
+  }
+
+  if (
+    user_id &&
+    is_owner &&
+    !workspace_id &&
+    !room_id &&
+    !recording_id &&
+    !is_owner
+  ) {
+    console.log("usePassport 1");
+    queryVariables = {
+      user_id,
+      type,
+    };
+  }
+
+  if (!is_owner && type === "room") {
+    console.log("usePassport 0");
+    passportQuery = PASSPORT_COLLECTION_IS_NOT_OWNER_QUERY;
+    queryVariables = {
+      workspace_id,
+      room_id,
+      is_owner,
+      type: "room",
+    };
+  }
+
+  if (!is_owner && type === "task") {
+    passportQuery = PASSPORT_COLLECTION_BY_TASK_ID_QUERY;
+    console.log("usePassport task");
+    console.log(task_id, "task_id");
+    queryVariables = {
+      task_id,
     };
   }
 
@@ -139,11 +174,7 @@ const usePassport = ({
   }
 
   const [mutateDeletePassport, { error: mutateDeletePassportError }] =
-    useMutation(PASSPORT_DELETE_MUTATION, {
-      variables: {
-        username,
-      },
-    });
+    useMutation(PASSPORT_DELETE_MUTATION);
 
   if (mutateDeletePassportError instanceof ApolloError) {
     // Обработка ошибки ApolloError
@@ -151,17 +182,23 @@ const usePassport = ({
   }
 
   const onCreatePassport = async () => {
+    console.log("onCreatePassport");
+    console.log(type, "type");
     try {
       const formData = getValues();
-      console.log(formData.username, "formData.username");
+
       const { isUserExist, user } = await checkUsernameAndReturnUser(
         formData.username
       );
+      console.log(passportNode, "passportNode :::::");
 
-      const checkIfPassportExists = passportNode.some(
-        (passport: any) => passport.node.username === formData.username
-      );
-
+      const checkIfPassportExists =
+        (passportNode &&
+          passportNode.some((passport: any) => {
+            return passport.node.username === formData.username;
+          })) ||
+        false;
+      console.log(checkIfPassportExists, "checkIfPassportExists");
       if (checkIfPassportExists) {
         toast({
           title: "Passport already exists",
@@ -174,25 +211,30 @@ const usePassport = ({
         });
         return;
       }
+      const variables = {
+        objects: {
+          user_id: user.user_id,
+          workspace_id: formData.workspace_id,
+          room_id: formData.room_id,
+          recording_id: formData.recording_id,
+          photo_url: user.photo_url,
+          username: user.username,
+          task_id: Number(task_id),
+          type,
+        },
+      };
+      console.log(variables, "variables");
 
       if (isUserExist) {
         await mutateCreatePassport({
-          variables: {
-            objects: {
-              user_id: user.user_id,
-              workspace_id: formData.workspace_id,
-              room_id: formData.room_id,
-              recording_id: formData.recording_id,
-              photo_url: user.photo_url,
-              username: user.username,
-            },
-          },
+          variables,
           onCompleted: () => {
             toast({
               title: "Passport created",
               description: "Passport created successfully",
             });
             passportRefetch();
+            refetchTasks();
             reset({
               title: "",
               description: "",
@@ -211,13 +253,6 @@ const usePassport = ({
       toast({
         title: "Error creating passport",
         variant: "destructive",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              {JSON.stringify(mutateCreatePassportError, null, 2)}
-            </code>
-          </pre>
-        ),
       });
     }
   };
@@ -227,9 +262,10 @@ const usePassport = ({
     room_id: string,
     is_owner: boolean
   ) => {
+    console.log("createPassport");
     try {
       const { isUserExist, user } = await checkUsernameAndReturnUser(username);
-      console.log("createPassport");
+
       if (isUserExist) {
         await mutateCreatePassport({
           variables: {
@@ -241,6 +277,7 @@ const usePassport = ({
               photo_url: user.photo_url,
               username: user.username,
               is_owner,
+              type: "room",
             },
           },
           onCompleted: () => {
@@ -287,13 +324,28 @@ const usePassport = ({
     });
   };
 
-  const onDeletePassport = (passport_id: number) => {
+  const onDeletePassportTask = (passport_id: number) => {
     mutateDeletePassport({
       variables: {
         passport_id: Number(passport_id),
       },
       onCompleted: () => {
         passportRefetch();
+        refetchTasks();
+        // updateTask(task_id, newAssignee);
+      },
+    });
+    closeModal();
+  };
+
+  const onDeletePassportRoom = (task_id: number) => {
+    mutateDeletePassport({
+      variables: {
+        passport_id: Number(task_id),
+      },
+      onCompleted: () => {
+        passportRefetch();
+        refetchTasks();
       },
     });
     closeModal();
@@ -304,17 +356,22 @@ const usePassport = ({
     onClose();
   }, [onClose]);
 
+  const onOpenModalPassport = () => {
+    onOpen();
+  };
+
   return {
     passportData: passportNode,
     passportLoading,
     passportError,
     passportRefetch,
     isOpenModalPassport: isOpen,
-    onOpenModalPassport: onOpen,
+    onOpenModalPassport,
     onOpenChangeModalPassport: onOpenChange,
     onCreatePassport,
     createPassport,
-    onDeletePassport,
+    onDeletePassportTask,
+    onDeletePassportRoom,
     onUpdatePassport,
     setValuePassport: setValue,
     controlPassport: control,
@@ -328,13 +385,15 @@ const usePassport = ({
 };
 
 type UsePassportReturn = {
-  passportData: PassportArray;
+  passportData: Passport[];
   passportLoading: boolean;
   passportError: any;
   passportRefetch: () => void;
   isOpenModalPassport: boolean;
   onOpenModalPassport: () => void;
   onOpenChangeModalPassport: () => void;
+  onDeletePassportTask: (passport_id: number) => void;
+  onDeletePassportRoom: (id: number) => void;
   onCreatePassport: () => void;
   createPassport: (
     workspace_id: string,
@@ -342,7 +401,6 @@ type UsePassportReturn = {
     is_owner: boolean
   ) => void;
   onUpdatePassport: () => void;
-  onDeletePassport: (passport_id: number) => void;
   setValuePassport: (id: string, value: any) => void;
   controlPassport: any;
   handleSubmitPassport: any;

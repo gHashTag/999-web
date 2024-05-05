@@ -22,7 +22,7 @@ import {
 } from "react-hook-form";
 import { setIsEdit, setOpenModalId } from "@/apollo/reactive-store";
 import { useUser } from "./useUser";
-import { TasksArray } from "@/types";
+import { AssigneeNode, PassportNode, TasksArray } from "@/types";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
@@ -120,7 +120,7 @@ const useTasks = (): UseTasksReturn => {
   const onClickEdit = (isEditing: boolean, id: number) => {
     setOpenModalTaskId(id);
     setIsEditingTask(isEditing);
-    router.push(`/0/1/2/3/${id}`);
+    router.push(`/${username}/${workspace_id}/${room_id}/0/${id}`);
   };
 
   if (tasksError instanceof ApolloError) {
@@ -281,6 +281,34 @@ const useTasks = (): UseTasksReturn => {
     [mutateUpdateTaskStatus, openModalTaskId, refetchTasks, getValues]
   );
 
+  const updateTask = useCallback(
+    async (task_id: number, assigned_to: AssigneeNode[]) => {
+      const formData = getValues();
+
+      const variables = {
+        id: task_id,
+        title: formData.title,
+        description: formData.description,
+        updated_at: new Date().toISOString(),
+        priority: formData.priority,
+        status: formData.status,
+        is_public: formData.is_public,
+        cost: formData.cost,
+        assigned_to: JSON.stringify(assigned_to),
+      };
+
+      console.log(variables, "variables");
+
+      await mutateUpdateTask({
+        variables,
+        onCompleted: () => {
+          refetchTasks();
+        },
+      });
+    },
+    [mutateUpdateTaskStatus, openModalTaskId, refetchTasks, getValues]
+  );
+
   const onDeleteTask = useCallback(
     (id: number) => {
       deleteTask({
@@ -306,9 +334,9 @@ const useTasks = (): UseTasksReturn => {
   }, [onClose]);
 
   const onEditTask = (id: number) => {
-    router.push(`/0/1/2/3/${id}`);
     setIsEdit(false);
     localStorage.setItem("header_name", `Task #${id}`);
+    router.push(`/${username}/${workspace_id}/${room_id}/0/${id}`);
   };
 
   const columns = useMemo(
@@ -478,6 +506,21 @@ const useTasks = (): UseTasksReturn => {
         },
       },
       {
+        accessorFn: (row: any) => {
+          return row.node.cost;
+        },
+        id: "assignee",
+        header: "Assignee",
+        cell: ({ row }: any) => {
+          console.log(row, "row");
+          return (
+            <div onClick={() => onEditTask(row.original.node.id)}>
+              {row.getValue("assignee")}
+            </div>
+          );
+        },
+      },
+      {
         id: "actions",
         cell: ({ row }: any) => {
           const isOwnerTask = row.original.node.user_id === user_id;
@@ -507,6 +550,7 @@ const useTasks = (): UseTasksReturn => {
     onCreateTask,
     onDeleteTask,
     onUpdateTask,
+    updateTask,
     onUpdateTaskStatus,
     setValueTask: setValue,
     openModalTaskId,
@@ -532,6 +576,7 @@ type UseTasksReturn = {
   onOpenChangeModalTask: () => void;
   onCreateTask: () => void;
   onUpdateTask: (id: number) => void;
+  updateTask: (task_id: number, assigned_to: PassportNode[]) => void;
   onUpdateTaskStatus: (id: number) => void;
   onDeleteTask: (id: number) => void;
   openModalTaskId: number | null;

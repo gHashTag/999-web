@@ -20,6 +20,7 @@ export const GET_ALL_TASKS = gql`
           is_archived
           status
           label
+          assigned_to
         }
       }
     }
@@ -65,6 +66,7 @@ export const TASKS_COLLECTION_QUERY = gql`
           is_archived
           status
           label
+          assigned_to
         }
       }
     }
@@ -153,6 +155,7 @@ export const MUTATION_TASK_UPDATE = gql`
     $cost: BigInt!
     $updated_at: Datetime!
     $order: BigInt!
+    $assigned_to: String!
   ) {
     updatetasksCollection(
       filter: { id: { eq: $id } }
@@ -166,6 +169,7 @@ export const MUTATION_TASK_UPDATE = gql`
         is_public: $is_public
         cost: $cost
         updated_at: $updated_at
+        assigned_to: $assigned_to
       }
     ) {
       records {
@@ -185,6 +189,7 @@ export const MUTATION_TASK_UPDATE = gql`
         label
         priority
         order
+        assigned_to
       }
     }
   }
@@ -343,6 +348,7 @@ export const GET_TASKS_FOR_ROOM = gql`
           is_archived
           status
           label
+          assigned_to
         }
       }
     }

@@ -108,6 +108,30 @@ export const checkUsernameAndReturnUser = async (
   };
 };
 
+export const checkAndReturnUser = async (
+  username: string,
+): Promise<{
+  isUserExist: boolean;
+  user: SupabaseUser;
+}> => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+
+  if (error) {
+    console.log(error, "error checkUsername");
+    return {
+      isUserExist: false,
+      user: {} as SupabaseUser,
+    };
+  }
+  return {
+    isUserExist: data ? data.length > 0 : false,
+    user: data[0],
+  };
+};
+
 export function useSupabase() {
   const userSupabase = useReactiveVar(setUserSupabase);
   const inviter = useReactiveVar(setInviteCode);

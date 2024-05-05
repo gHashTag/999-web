@@ -31,6 +31,7 @@ type WorkspaceModalType = {
   handleSubmit: any;
   getValues: any;
   setValue: any;
+  type: string;
 };
 
 const CustomModalContent = styled(ModalContent)`
@@ -49,6 +50,7 @@ function InviteMemberModal({
   handleSubmit,
   setValue,
   isEditing,
+  type,
 }: WorkspaceModalType) {
   const { user_id, workspace_id, room_id, recording_id } = useUser();
 
@@ -68,20 +70,23 @@ function InviteMemberModal({
                 <Controller
                   name="username"
                   control={control}
-                  render={({ field }: any) => (
-                    <Input
-                      placeholder="Enter telegram username"
-                      className="w-full h-15"
-                      {...field}
-                      onChange={(e) => {
-                        setValue("username", e.target.value);
-                        setValue("user_id", user_id);
-                        setValue("workspace_id", workspace_id);
-                        setValue("room_id", room_id);
-                        setValue("recording_id", recording_id);
-                      }}
-                    />
-                  )}
+                  render={({ field }: any) => {
+                    return (
+                      <Input
+                        placeholder="Enter telegram username"
+                        className="w-full h-15"
+                        value={field.value}
+                        {...field}
+                        onChange={(e) => {
+                          setValue("username", e.target.value);
+                          setValue("user_id", user_id);
+                          setValue("workspace_id", workspace_id);
+                          setValue("room_id", room_id);
+                          setValue("recording_id", recording_id);
+                        }}
+                      />
+                    );
+                  }}
                 />
 
                 <div style={{ padding: 10 }} />

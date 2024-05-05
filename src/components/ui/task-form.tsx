@@ -25,9 +25,10 @@ import { priorities, statuses } from "@/helpers/data/data";
 import { useReactiveVar } from "@apollo/client";
 import { setIsEdit } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
-import { AnimatedTooltipCommon } from "./animated-tooltip-common";
-import { AssigneeArray } from "@/types";
+import { AnimatedTooltipTasks } from "./animated-tooltip-tasks";
 import { usePassport } from "@/hooks/usePassport";
+import InviteMemberModal from "../modal/InviteMemberModal";
+import { Passport } from "@/types";
 
 export function TaskForm({
   id,
@@ -59,6 +60,8 @@ export function TaskForm({
   user_id: string;
 }) {
   const router = useRouter();
+  const task_id: number = Number(router.query.task_id as string);
+
   const watchedTitle = watchTask("title", title);
   const watchedDescription = watchTask("description", description);
   const watchedPriority = watchTask("priority", priority);
@@ -67,17 +70,40 @@ export function TaskForm({
   const watchedPublic = watchTask("is_public", is_public);
 
   const isEdit = useReactiveVar(setIsEdit);
-  const { user_id: owner_user_id } = useUser();
-  const { onOpenModalPassport } = usePassport({});
+  const { user_id: owner_user_id, workspace_id, room_id } = useUser();
 
   const isOwnerTask = owner_user_id === user_id;
 
   useEffect(() => {
+    localStorage.setItem("is_owner", "false");
     const subscription = watchTask((value, { name, type }) => {
       console.log("Watch update:", value, name);
     });
     return () => subscription.unsubscribe();
   }, [watchTask]);
+
+  const {
+    passportData,
+    passportLoading,
+    passportError,
+    isOpenModalPassport,
+    onOpenModalPassport,
+    onOpenChangeModalPassport,
+    onCreatePassport,
+    onDeletePassportTask,
+    onUpdatePassport,
+    setValuePassport,
+    controlPassport,
+    handleSubmitPassport,
+    getValuesPassport,
+    openModalPassportId,
+    isEditingPassport,
+  } = usePassport({
+    workspace_id,
+    room_id,
+    task_id: Number(task_id) as number,
+    type: "task",
+  });
 
   const onSubmitDestination: SubmitHandler<FieldValues> = (
     data: FieldValues
@@ -85,39 +111,11 @@ export function TaskForm({
     onUpdateTask(id);
   };
 
-  const assigneeData: AssigneeArray[] = [
-    {
-      node: {
-        user_id: "ffefa06b-aee1-40c4-ad9e-d765b9925ef6",
-        username: "playom",
-        photo_url:
-          "https://t.me/i/userpic/320/wZkuwwzkJSSWfV8E14wTQWqKz2SewAT5xNyHL2YbD5k.jpg",
-      },
-    },
-    {
-      node: {
-        user_id: "ec0c948a-2b96-4ccd-942f-0a991d78a94f",
-        username: "koshey999nft",
-        photo_url:
-          "https://t.me/i/userpic/320/tR0QjJduOxMDGPYL3G5eItFtmnJq4LRa1WPzaQwiBbg.jpg",
-      },
-    },
-    {
-      node: {
-        user_id: "d1b1080c-d3b5-4108-a77b-404177f7f396",
-        username: "reactotron",
-        photo_url:
-          "https://t.me/i/userpic/320/_vxoj_n4Oe7NSlsleXSnJaSPc7FPd-RCcVpUA-FlSyA.jpg",
-      },
-    },
-  ];
-
-  const onDeleteAssignee = () => {
-    console.log("onDeleteAssignee");
+  const onDeleteAssignee = (item: Passport) => {
+    onDeletePassportTask(item.node.passport_id);
   };
 
-  const handleClickPlus = () => {
-    console.log("handleClickPlus");
+  const handleClickPlus = async () => {
     onOpenModalPassport();
   };
 
@@ -132,7 +130,6 @@ export function TaskForm({
                 <Input
                   id="title"
                   type="text"
-                  defaultValue=""
                   value={watchedTitle}
                   onChange={(e) => setValueTask("title", e.target.value)}
                 />
@@ -144,7 +141,6 @@ export function TaskForm({
                 <Input
                   id="description"
                   type="text"
-                  defaultValue=""
                   value={watchedDescription}
                   onChange={(e) => setValueTask("description", e.target.value)}
                 />
@@ -205,15 +201,35 @@ export function TaskForm({
                 />
               </LabelInputContainer>
             )}
-            <AnimatedTooltipCommon
-              assigneeItems={assigneeData}
-              onAssigneeClick={onDeleteAssignee}
+            <AnimatedTooltipTasks
+              assigneeItems={passportData}
+              onClick={onDeleteAssignee}
               handleClickPlus={handleClickPlus}
             />
+            {isOpenModalPassport && (
+              <InviteMemberModal
+                isOpen={isOpenModalPassport}
+                onOpen={onOpenModalPassport}
+                onOpenChange={onOpenChangeModalPassport}
+                onCreate={onCreatePassport}
+                onDelete={() =>
+                  openModalPassportId &&
+                  onDeletePassportTask(openModalPassportId)
+                }
+                onUpdate={onUpdatePassport}
+                control={controlPassport}
+                handleSubmit={handleSubmitPassport}
+                getValues={getValuesPassport}
+                setValue={setValuePassport}
+                isEditing={isEditingPassport}
+                type="task"
+              />
+            )}
             <div style={{ padding: "10px" }} />
             <ButtonAnimate
               onClick={() => {
-                setTimeout(() => setIsEdit(false), 1000);
+                console.log("click");
+                setTimeout(() => setIsEdit(isEdit), 1000);
                 router.back();
               }}
             >
@@ -242,9 +258,17 @@ export function TaskForm({
             </div>
 
             {isOwnerTask && (
-              <ButtonAnimate onClick={() => setIsEdit(true)}>
-                Edit
-              </ButtonAnimate>
+              <>
+                <AnimatedTooltipTasks
+                  assigneeItems={JSON.parse(assigned_to)}
+                  onClick={onDeleteAssignee}
+                  handleClickPlus={handleClickPlus}
+                />
+                <div style={{ padding: "10px" }} />
+                <ButtonAnimate onClick={() => setIsEdit(true)}>
+                  Edit
+                </ButtonAnimate>
+              </>
             )}
             {/* 
             <ButtonAnimate onClick={logout}>Logout</ButtonAnimate> */}

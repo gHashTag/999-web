@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useUser } from "@/hooks/useUser";
 import { SITE_URL } from "@/pages/_app";
-import { PassportArray } from "@/types";
+import { AssigneeNode, PassportArray } from "@/types";
 
 type EvervaultCardProps = {
   text: string;
@@ -19,7 +19,7 @@ type EvervaultCardProps = {
   inviteMemberCode: string;
   inviteGuestCode: string;
   onOpenModalPassport: () => void;
-  passportData: PassportArray;
+  passportData: AssigneeNode[];
 };
 
 export const EvervaultCard = ({

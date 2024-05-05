@@ -38,7 +38,7 @@ export interface RowTaskType {
       updated_at?: string;
       due_date?: string;
       priority?: number;
-      assigned_to?: AssignedUser[];
+      assigned_to?: string;
       label?: string[];
       completed_at?: string;
       is_archived?: boolean;

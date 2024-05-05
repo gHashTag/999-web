@@ -45,23 +45,15 @@ export interface PassportNode {
   username: string;
   is_owner: boolean;
   room_id: string;
+  assigned_to: Passport[];
   rooms: RoomInfoT;
 }
-export type Passport = {
-  __typename: string;
-  node: PassportNode;
-};
 
 export type PassportArray = Passport[];
 
-export interface AssigneeNode {
-  user_id: string;
-  username: string;
-  photo_url: string;
-}
-
-export type AssigneeArray = {
-  node: AssigneeNode;
+export type Passport = {
+  __typename: string;
+  node: PassportNode;
 };
 
 export type TasksArray = Task[];
@@ -76,7 +68,7 @@ export type TaskNode = {
   updated_at?: string;
   due_date?: string;
   priority?: string;
-  assigned_to?: AssignedUser[];
+  assigned_to?: string;
   label?: string[];
   completed_at?: string;
   is_archived?: boolean;

@@ -15,8 +15,8 @@ import { useTasks } from "@/hooks/useTasks";
 import { useRooms } from "@/hooks/useRooms";
 
 import InviteMemberModal from "@/components/modal/InviteMemberModal";
-import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
-import { AnimatedTooltipCommon } from "@/components/ui/animated-tooltip-common";
+
+import { AnimatedTooltipRooms } from "@/components/ui/animated-tooltip-rooms";
 
 import TaskModal from "@/components/modal/TaskModal";
 
@@ -77,7 +77,8 @@ const RoomPage = () => {
     onOpenModalPassport,
     onOpenChangeModalPassport,
     onCreatePassport,
-    onDeletePassport,
+    onDeletePassportRoom,
+    onDeletePassportTask,
     onUpdatePassport,
     setValuePassport,
     controlPassport,
@@ -88,6 +89,7 @@ const RoomPage = () => {
   } = usePassport({
     room_id,
     workspace_id,
+    type: "room",
   });
 
   useEffect(() => {
@@ -98,6 +100,11 @@ const RoomPage = () => {
       localStorage.setItem("recording_name", "");
     }
   }, [router, roomsData, tasksData, passportData, refetchRooms]);
+  console.log(passportData, "passportData");
+
+  const handleClickPlus = async () => {
+    onOpenModalPassport();
+  };
 
   return (
     <>
@@ -120,9 +127,10 @@ const RoomPage = () => {
             room_name={room_name}
           />
           <div style={{ padding: 15 }} />
-          <AnimatedTooltipCommon
-            items={passportData && passportData.slice(1)}
-            onClick={onDeletePassport}
+          <AnimatedTooltipRooms
+            assigneeItems={passportData}
+            onClick={onDeletePassportRoom}
+            handleClickPlus={handleClickPlus}
           />
         </div>
         <div
@@ -222,7 +230,7 @@ const RoomPage = () => {
             onOpenChange={onOpenChangeModalPassport}
             onCreate={onCreatePassport}
             onDelete={() =>
-              openModalPassportId && onDeletePassport(openModalPassportId)
+              openModalPassportId && onDeletePassportRoom(openModalPassportId)
             }
             onUpdate={onUpdatePassport}
             control={controlPassport}
@@ -230,6 +238,7 @@ const RoomPage = () => {
             getValues={getValuesPassport}
             setValue={setValuePassport}
             isEditing={isEditingPassport}
+            type="room"
           />
         )}
         {isOpenModalTask && (
