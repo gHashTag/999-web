@@ -1,5 +1,5 @@
 "use client";
-import { BaseSyntheticEvent, Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { Label } from "./label";
 import { Input } from "./input";
 import { cn } from "@/utils/cn";
@@ -260,7 +260,7 @@ export function TaskForm({
             {isOwnerTask && (
               <>
                 <AnimatedTooltipTasks
-                  assigneeItems={JSON.parse(assigned_to)}
+                  assigneeItems={passportData}
                   onClick={onDeleteAssignee}
                   handleClickPlus={handleClickPlus}
                 />
