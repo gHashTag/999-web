@@ -22,7 +22,7 @@ import {
 } from "react-hook-form";
 import { setIsEdit, setOpenModalId } from "@/apollo/reactive-store";
 import { useUser } from "./useUser";
-import { AssigneeNode, PassportNode, TasksArray } from "@/types";
+import { PassportNode, TasksArray } from "@/types";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
@@ -282,7 +282,7 @@ const useTasks = (): UseTasksReturn => {
   );
 
   const updateTask = useCallback(
-    async (task_id: number, assigned_to: AssigneeNode[]) => {
+    async (task_id: number, assigned_to: PassportNode[]) => {
       const formData = getValues();
 
       const variables = {
