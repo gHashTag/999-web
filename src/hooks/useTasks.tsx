@@ -29,6 +29,7 @@ import { DataTableColumnHeader } from "@/components/table/data-table-column-head
 import { priorities, statuses } from "@/helpers/data/data";
 
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 const useTasks = (): UseTasksReturn => {
   const { username, user_id, workspace_id, room_id, recording_id } = useUser();
@@ -513,10 +514,29 @@ const useTasks = (): UseTasksReturn => {
         id: "assignee",
         header: "Assignee",
         cell: ({ row }: any) => {
-          console.log(row, "row");
+          const assigned_to = JSON.parse(row.original.node.assigned_to);
+          console.log(assigned_to, "assigned_to");
           return (
-            <div onClick={() => onEditTask(row.original.node.id)}>
-              {row.getValue("assignee")}
+            <div style={{ position: "relative" }}>
+              <div style={{ display: "flex" }}>
+                {assigned_to &&
+                  assigned_to.map((item: any, index: number) => (
+                    <Avatar
+                      className="h-8 w-8"
+                      style={{ transform: "scaleX(-1)" }}
+                    >
+                      <AvatarImage
+                        src={item.photo_url || ""}
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          zIndex: index,
+                        }}
+                      />
+                    </Avatar>
+                  ))}
+              </div>
             </div>
           );
         },

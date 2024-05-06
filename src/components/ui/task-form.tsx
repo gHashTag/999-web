@@ -115,8 +115,6 @@ export function TaskForm({
   };
 
   const onDeleteAssignee = ({ node }: Passport) => {
-    console.log(node, "item");
-    console.log(user_id, "user_id");
     node.passport_id &&
       node.user_id &&
       onDeletePassportTask(node.passport_id, node.user_id);
