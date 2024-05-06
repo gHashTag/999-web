@@ -109,10 +109,11 @@ const MeetsPage = () => {
         // "Water",
         console.log("Water");
         setType("Water");
-        setIsVisibleTask(true);
+        setIsVisibleTask(false);
       } else {
         // "Fire"
         console.log("Fire");
+        setIsVisibleTask(true);
         localStorage.setItem("room_name", "");
         localStorage.setItem("room_id", "");
         localStorage.setItem("recording_id", "");
@@ -149,6 +150,7 @@ const MeetsPage = () => {
       console.error("No codes available");
     }
   };
+  console.log(tasksData, "tasksData");
 
   return (
     <Layout loading={loading || roomsLoading}>

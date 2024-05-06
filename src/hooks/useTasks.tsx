@@ -37,7 +37,7 @@ const useTasks = (): UseTasksReturn => {
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
-  const [openModalTaskId, setOpenModalTaskId] = useState<number | null>(null);
+  const [openModalTaskId, setOpenModalTaskId] = useState<string>("");
   const [isEditing, setIsEditingTask] = useState<boolean>(false);
 
   const { control, handleSubmit, getValues, setValue, reset, watch } =
@@ -118,7 +118,7 @@ const useTasks = (): UseTasksReturn => {
     skip: !queryVariables,
   });
 
-  const onClickEdit = (isEditing: boolean, id: number) => {
+  const onClickEdit = (isEditing: boolean, id: string) => {
     setOpenModalTaskId(id);
     setIsEditingTask(isEditing);
     router.push(
@@ -241,7 +241,7 @@ const useTasks = (): UseTasksReturn => {
   ]);
 
   const onUpdateTaskStatus = useCallback(
-    async (id: number) => {
+    async (id: string) => {
       const formData = getValues();
 
       const variables = {
@@ -262,7 +262,7 @@ const useTasks = (): UseTasksReturn => {
   );
 
   const onUpdateTask = useCallback(
-    async (id: number) => {
+    async (id: string) => {
       const formData = getValues();
 
       const variables = {
@@ -287,7 +287,7 @@ const useTasks = (): UseTasksReturn => {
   );
 
   const updateTask = useCallback(
-    async (task_id: number, assigned_to: AssignedTo[]) => {
+    async (task_id: string, assigned_to: AssignedTo[]) => {
       const formData = getValues();
       const variables = {
         id: task_id,
@@ -312,7 +312,7 @@ const useTasks = (): UseTasksReturn => {
   );
 
   const onDeleteTask = useCallback(
-    (id: number) => {
+    (id: string) => {
       deleteTask({
         variables: {
           filter: {
@@ -335,7 +335,7 @@ const useTasks = (): UseTasksReturn => {
     onClose();
   }, [onClose]);
 
-  const onEditTask = (id: number) => {
+  const onEditTask = (id: string) => {
     setIsEdit(false);
     localStorage.setItem("header_name", `Task #${id}`);
     router.push(`/${username}/${workspace_id}/${room_id}/0/${id}`);
@@ -598,12 +598,12 @@ type UseTasksReturn = {
   onOpenModalTask: () => void;
   onOpenChangeModalTask: () => void;
   onCreateTask: () => void;
-  onUpdateTask: (id: number) => void;
-  updateTask: (task_id: number, assigned_to: PassportNode[]) => void;
-  onUpdateTaskStatus: (id: number) => void;
-  onDeleteTask: (id: number) => void;
-  openModalTaskId: number | null;
-  setOpenModalTaskId: (id: number | null) => void;
+  onUpdateTask: (id: string) => void;
+  updateTask: (task_id: string, assigned_to: PassportNode[]) => void;
+  onUpdateTaskStatus: (id: string) => void;
+  onDeleteTask: (id: string) => void;
+  openModalTaskId: string;
+  setOpenModalTaskId: (id: string) => void;
   controlTask: any;
   getValuesTask: any;
   onCreateNewTask: (

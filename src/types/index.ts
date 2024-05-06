@@ -1,4 +1,5 @@
 import { OpenloginUserInfo } from "@toruslabs/openlogin-utils";
+import { Sticker } from "grammy/types";
 
 // Определение типа статуса задачи
 export type TaskStatus = "todo" | "in_progress" | "done" | "archived";
@@ -63,7 +64,7 @@ export type TasksArray = Task[];
 
 export type TaskNode = {
   __typename: string;
-  id: number;
+  id: string;
   user_id: string;
   created_at: string;
   title: string;
@@ -71,7 +72,7 @@ export type TaskNode = {
   updated_at?: string;
   due_date?: string;
   priority?: string;
-  assigned_to?: AssignedTo[];
+  assigned_to?: string;
   label?: string[];
   completed_at?: string;
   is_archived?: boolean;
@@ -81,7 +82,7 @@ export type TaskNode = {
   colors: string[][];
   type: string;
   workspace_id: string;
-  cost: number;
+  cost: string;
   is_public: boolean;
 };
 
@@ -266,6 +267,34 @@ export interface RoomNode {
   original_name?: string | null;
   public?: boolean | null;
   rooms?: RoomInfoT;
+}
+
+export type TaskNodeType = {
+  id: string;
+  user_id: string;
+  workspace_id: string;
+  room_id: string;
+  recording_id: string;
+  created_at: string;
+  title: string;
+  description: string;
+  is_public: boolean;
+  cost: string;
+  updated_at: string;
+  due_date: string | null;
+  priority: string;
+  completed_at: string | null;
+  is_archived: boolean;
+  status: string;
+  label: string;
+  assigned_to: string;
+};
+
+export interface RowTaskType {
+  __typename: string;
+  original: {
+    node: TaskNodeType;
+  };
 }
 
 export interface RoomEdge {

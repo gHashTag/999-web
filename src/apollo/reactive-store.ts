@@ -40,7 +40,7 @@ export const setWorkspaceId = makeVar<string>("");
 
 export const setHeaderName = makeVar<string>("");
 
-export const setIdTask = makeVar<number | null>(null);
+export const setIdTask = makeVar<string>("");
 
 export const setIsEdit = makeVar<boolean>(true);
 

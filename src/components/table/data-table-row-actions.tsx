@@ -20,38 +20,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { labels } from "../../helpers/data/data";
-import { taskSchema } from "../../helpers/data/schema";
-import { AssignedUser, TaskStatus } from "@/types";
+import { RowTaskType } from "@/types";
 import { setIdTask } from "@/apollo/reactive-store";
-import { useUser } from "@/hooks/useUser";
-
-export interface RowTaskType {
-  __typename: string;
-  original: {
-    node: {
-      id: number;
-      user_id: string;
-      created_at?: string;
-      title: string;
-      description: string;
-      updated_at?: string;
-      due_date?: string;
-      priority?: number;
-      assigned_to?: string;
-      label?: string[];
-      completed_at?: string;
-      is_archived?: boolean;
-      status: TaskStatus;
-      order: number;
-    };
-  };
-}
 
 interface DataTableRowActionsProps {
   row: RowTaskType;
-  onDelete: (id: number) => void;
-  onClickEdit: (isEditing: boolean, id: number) => void;
+  onDelete: (id: string) => void;
+  onClickEdit: (isEditing: boolean, id: string) => void;
 }
 
 export function DataTableRowActions<TData>({

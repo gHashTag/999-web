@@ -4,10 +4,8 @@ import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 import { useTasks } from "@/hooks/useTasks";
 import { TaskForm } from "@/components/ui/task-form";
-import { useUser } from "@/hooks/useUser";
 
 const TaskPage = () => {
-  const { workspace_id, room_id } = useUser();
   const {
     tasksData,
     tasksLoading,
@@ -17,7 +15,7 @@ const TaskPage = () => {
     setValueTask,
   } = useTasks();
   const router = useRouter();
-  const { task_id } = router.query;
+  const { task_id } = router.query as { task_id: string };
 
   useEffect(() => {
     localStorage.setItem("is_owner", "false");
@@ -26,8 +24,8 @@ const TaskPage = () => {
   return (
     <>
       <Layout loading={tasksLoading}>
-        {!tasksLoading &&
-          tasksData // @ts-ignore FIX ME
+        {tasksData &&
+          tasksData
             .filter(({ node }) => node.id === task_id)
             .map(({ node }) => {
               return (

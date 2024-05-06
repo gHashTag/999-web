@@ -141,7 +141,7 @@ export default function Office() {
         {/* <div style={{ alignSelf: "flex-end", paddingRight: "75px" }}>
           <Button onClick={() => onCreateNewTask()}>Create task</Button>
         </div> */}
-        {tasksData && <DataTable data={tasksData} columns={columns} />}
+        {/* {tasksData && <DataTable data={tasksData} columns={columns} />} */}
 
         <>
           {isOpenModalWorkspace && (

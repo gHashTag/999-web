@@ -21,7 +21,7 @@ type passportType = {
   workspace_id?: string;
   room_id?: string | null | undefined;
   recording_id?: string;
-  task_id?: number;
+  task_id?: string;
   type?: string;
   assigned_to?: AssignedTo[];
 };
@@ -219,10 +219,11 @@ const usePassport = ({
           recording_id: formData.recording_id,
           photo_url: user.photo_url,
           username: user.username,
-          task_id: Number(task_id),
+          task_id,
           type,
         },
       };
+      console.log(variables, "variables");
 
       const assignedArray: PassportNode[] = [
         {
@@ -231,6 +232,7 @@ const usePassport = ({
           photo_url: user.photo_url,
         },
       ];
+      console.log(assignedArray, "assignedArray");
 
       assigned_to && assignedArray.push(...assigned_to);
 

@@ -45,25 +45,25 @@ export function TaskForm({
   user_id,
   assigned_to,
 }: {
-  id: number;
+  id: string;
   title: string;
   description: string;
   priority: string;
   status: string;
-  cost: number;
+  cost: string;
   is_public: boolean;
   created_at?: string;
   updated_at?: string;
   handleSubmitTask: UseFormHandleSubmit<FieldValues>;
   watchTask: UseFormWatch<FieldValues>;
   setValueTask: UseFormSetValue<FieldValues>;
-  onUpdateTask: (id: number) => void;
+  onUpdateTask: (id: string) => void;
   user_id: string;
-  assigned_to: string;
+  assigned_to: string | undefined;
 }) {
   const router = useRouter();
-  const task_id: number = Number(router.query.task_id as string);
-  const assignedTo = JSON.parse(assigned_to);
+  const task_id: string = router.query.task_id as string;
+  const assignedTo = JSON.parse(assigned_to || "[]");
   const watchedTitle = watchTask("title", title);
   const watchedDescription = watchTask("description", description);
   const watchedPriority = watchTask("priority", priority);
@@ -103,7 +103,7 @@ export function TaskForm({
   } = usePassport({
     workspace_id,
     room_id,
-    task_id: Number(task_id) as number,
+    task_id,
     type: "task",
     assigned_to: assignedTo,
   });
