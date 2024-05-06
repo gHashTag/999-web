@@ -22,6 +22,7 @@ import TaskModal from "@/components/modal/TaskModal";
 
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 import { useAssets } from "@/hooks/useAssets";
+import MeetModal from "@/components/modal/meet-modal";
 
 const managementToken = process.env.NEXT_PUBLIC_MANAGEMENT_TOKEN;
 
@@ -46,6 +47,9 @@ const RoomPage = () => {
     inviteGuestCode,
     inviteHostCode,
     inviteMemberCode,
+    isOpenMeet,
+    onOpenMeet,
+    onOpenChangeMeet,
   } = useRooms();
 
   const {
@@ -105,6 +109,10 @@ const RoomPage = () => {
   const handleClickPlus = async () => {
     onOpenModalPassport();
   };
+
+  function onCreateMeet(): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <>
@@ -256,6 +264,18 @@ const RoomPage = () => {
             isEditing={isEditingTask}
           />
         )}
+        {/* {isOpenMeet && (
+        <MeetModal
+          isOpen={isOpenMeet}
+          onOpen={onOpenMeet}
+          onOpenChange={onOpenChangeMeet}
+          onCreate={onCreateMeet}
+          control={control}
+          handleSubmit={handleSubmit}
+          getValues={getValues}
+          setValue={setValue}
+        />
+      )} */}
       </Layout>
     </>
   );

@@ -4,22 +4,13 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import Layout from "@/components/layout";
 import MeetModal from "@/components/modal/meet-modal";
-// @ts-ignore
-import { useDisclosure } from "@nextui-org/react";
+
 import { useToast } from "@/components/ui/use-toast";
-import { createRoom } from "@/utils/edge-functions";
+
 import { SelectRoom } from "@/components/ui/select-room";
 
-import { useQuery, useReactiveVar } from "@apollo/client";
-import {
-  CardRoomT,
-  Passport,
-  PassportNode,
-  RoomEdge,
-  RoomInfoT,
-  RoomNode,
-  RoomsCollection,
-} from "@/types";
+import { useReactiveVar } from "@apollo/client";
+import { Passport, RoomEdge } from "@/types";
 import CardRoom from "@/components/ui/card-room";
 import { Button } from "@/components/ui/moving-border";
 import { DataTable } from "@/components/table/data-table";
@@ -46,7 +37,7 @@ const MeetsPage = () => {
   const { toast } = useToast();
   const loading = useReactiveVar(setLoading);
   const room_id = useReactiveVar(setRoomId);
-  const { username, user_id, lang, workspace_id, workspace_name } = useUser();
+  const { username, user_id, workspace_id, workspace_name } = useUser();
 
   const passportObj: PassportType =
     workspace_name === "Вода" || "Water"
@@ -62,7 +53,7 @@ const MeetsPage = () => {
           is_owner: true,
         };
 
-  const { passportData, createPassport } = usePassport(passportObj);
+  const { passportData } = usePassport(passportObj);
 
   const {
     tasksData,
@@ -81,7 +72,20 @@ const MeetsPage = () => {
     isEditingTask,
   } = useTasks();
 
-  const { roomsData, roomsLoading, refetchRooms } = useRooms();
+  const {
+    roomsData,
+    roomsLoading,
+    refetchRooms,
+    isOpenMeet,
+    onOpenMeet,
+    onOpenChangeMeet,
+    setOpenModalId,
+    controlRoom,
+    handleSubmitRoom,
+    getValuesRoom,
+    setValueRoom,
+    onCreateMeet,
+  } = useRooms();
   const [isVisibleTask, setIsVisibleTask] = useState(false);
   const [type, setType] = useState("Fire");
 
@@ -117,68 +121,8 @@ const MeetsPage = () => {
     });
   }, [workspace_id]);
 
-  const [openModalId, setOpenModalId] = useState("");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { control, handleSubmit, getValues, setValue, reset } = useForm();
-
-  const onCreateMeet = async () => {
-    setLoading(true);
-    const formData = getValues();
-
-    try {
-      if (username && user_id) {
-        const response = await createRoom({
-          user_id,
-          username,
-          workspace_id,
-          name: formData.name,
-          type: openModalId,
-          token: formData.token,
-          chat_id: formData.chat_id,
-          lang,
-        });
-
-        if (response) {
-          localStorage.setItem("room_name", response.rooms.name);
-          const room_id = response.rooms.room_id;
-
-          setRoomId(room_id);
-          localStorage.setItem("room_id", room_id);
-
-          createPassport(workspace_id, room_id, true);
-          router.push(`/${username}/${workspace_id}/${response.rooms.room_id}`);
-          setLoading(false);
-          toast({
-            title: "Success",
-            description: `${response.rooms.name} created`,
-          });
-        }
-      } else {
-        console.log("Username not a found");
-      }
-    } catch (error) {
-      if (error) {
-        toast({
-          title: "Error creating room",
-          variant: "destructive",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">
-                {JSON.stringify(error, null, 2)}
-              </code>
-            </pre>
-          ),
-        });
-      } else {
-        reset({
-          title: "",
-        });
-      }
-    }
-  };
-
   const setOpenModalType = async (type: string) => {
-    onOpen();
+    onOpenMeet();
     setOpenModalId(type);
   };
 
@@ -212,18 +156,7 @@ const MeetsPage = () => {
           workspace_id={workspace_id}
         />
       </div>
-      {isOpen && (
-        <MeetModal
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onOpenChange={onOpenChange}
-          onCreate={onCreateMeet}
-          control={control}
-          handleSubmit={handleSubmit}
-          getValues={getValues}
-          setValue={setValue}
-        />
-      )}
+
       {type === "Fire" && (
         <>
           <SelectRoom setOpenModalType={setOpenModalType} />
@@ -289,6 +222,18 @@ const MeetsPage = () => {
           getValues={getValuesTask}
           setValue={setValueTask}
           isEditing={isEditingTask}
+        />
+      )}
+      {isOpenMeet && (
+        <MeetModal
+          isOpen={isOpenMeet}
+          onOpen={onOpenMeet}
+          onOpenChange={onOpenChangeMeet}
+          onCreate={onCreateMeet}
+          control={controlRoom}
+          handleSubmit={handleSubmitRoom}
+          getValues={getValuesRoom}
+          setValue={setValueRoom}
         />
       )}
     </Layout>

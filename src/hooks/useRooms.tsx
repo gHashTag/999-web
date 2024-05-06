@@ -6,7 +6,7 @@ import {
   useQuery,
   useReactiveVar,
 } from "@apollo/client";
-
+import { createRoom } from "@/utils/edge-functions";
 import {
   DELETE_ROOM_MUTATION,
   GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY,
@@ -18,17 +18,23 @@ import {
 
 import { useUser } from "./useUser";
 import { useToast } from "@/components/ui/use-toast";
-
+// @ts-ignore
+import { useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { ArrayInviteT, RoomEdge, RoomsData } from "@/types";
-import { setRoomId } from "@/apollo/reactive-store";
+import { setLoading, setRoomId } from "@/apollo/reactive-store";
 import { useAssets } from "./useAssets";
+import { Control, FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { usePassport } from "./usePassport";
 
 const useRooms = (): UseRoomsReturn => {
+  const { createPassport } = usePassport({});
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { control, handleSubmit, getValues, setValue, reset } = useForm();
   const [inviteGuestCode, setInviteGuestCode] = useState("");
 
   const [inviteHostCode, setInviteHostCode] = useState("");
-
+  const [openModalId, setOpenModalId] = useState("");
   const [inviteMemberCode, setInviteMemberCode] = useState("");
 
   const [deleteRoom, { loading: deleteRoomLoading, error: deleteRoomError }] =
@@ -42,7 +48,8 @@ const useRooms = (): UseRoomsReturn => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const { username, user_id, workspace_id, room_id, recording_id } = useUser();
+  const { username, user_id, workspace_id, room_id, recording_id, lang } =
+    useUser();
   // console.log("username", username);
   // console.log("user_id", user_id);
   // console.log("workspace_id", workspace_id);
@@ -204,6 +211,62 @@ const useRooms = (): UseRoomsReturn => {
     console.log("handlerEditRoom");
   };
 
+  const onCreateMeet = async () => {
+    setLoading(true);
+    const formData = getValues();
+
+    try {
+      if (username && user_id) {
+        const response = await createRoom({
+          user_id,
+          username,
+          workspace_id,
+          name: formData.name,
+          type: openModalId,
+          token: formData.token,
+          chat_id: formData.chat_id,
+          lang,
+        });
+
+        if (response) {
+          localStorage.setItem("room_name", response.rooms.name);
+          const room_id = response.rooms.room_id;
+
+          setRoomId(room_id);
+          localStorage.setItem("room_id", room_id);
+
+          createPassport(workspace_id, room_id, true);
+          router.push(`/${username}/${workspace_id}/${response.rooms.room_id}`);
+          setLoading(false);
+          toast({
+            title: "Success",
+            description: `${response.rooms.name} created`,
+          });
+        }
+      } else {
+        console.log("Username not a found");
+      }
+    } catch (error) {
+      if (error) {
+        toast({
+          title: "Error creating room",
+          variant: "destructive",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">
+                {JSON.stringify(error, null, 2)}
+              </code>
+            </pre>
+          ),
+        });
+      } else {
+        reset({
+          title: "",
+        });
+      }
+    }
+  };
+
   return {
     roomsItem: roomsData?.roomsCollection?.edges[0]?.node,
     roomsData,
@@ -218,6 +281,17 @@ const useRooms = (): UseRoomsReturn => {
     inviteGuestCode,
     inviteHostCode,
     inviteMemberCode,
+    isOpenMeet: isOpen,
+    onOpenMeet: onOpen,
+    onOpenChangeMeet: onOpenChange,
+
+    reset,
+    setOpenModalId,
+    controlRoom: control,
+    handleSubmitRoom: handleSubmit,
+    getValuesRoom: getValues,
+    setValueRoom: setValue,
+    onCreateMeet,
   };
 };
 
@@ -237,6 +311,16 @@ type UseRoomsReturn = {
   inviteGuestCode: string;
   inviteHostCode: string;
   inviteMemberCode: string;
+  isOpenMeet: boolean;
+  onOpenMeet: () => void;
+  onOpenChangeMeet: () => void;
+  controlRoom: Control<FieldValues, any>;
+  handleSubmitRoom: FieldValues;
+  getValuesRoom: () => FieldValues;
+  setValueRoom: (name: string, value: any) => void;
+  reset: () => void;
+  setOpenModalId: (openModalId: string) => void;
+  onCreateMeet: () => void;
 };
 
 export { useRooms };
