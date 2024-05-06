@@ -229,6 +229,7 @@ export const GET_TASKS_BY_RECORDING_ID = gql`
           is_archived
           status
           label
+          assigned_to
         }
       }
     }
@@ -276,46 +277,48 @@ export const GET_TASK_BY_ID = gql`
           is_archived
           status
           label
+          assigned_to
         }
       }
     }
   }
 `;
 
-export const GET_TASKS_FOR_WORKSPACE = gql`
-  query GetRoomTasks($user_id: UUID!, $workspace_id: UUID!) {
-    tasksCollection(
-      filter: {
-        and: [
-          { workspace_id: { eq: $workspace_id }, user_id: { eq: $user_id } }
-        ]
-      }
-      orderBy: { created_at: DescNullsFirst }
-    ) {
-      edges {
-        node {
-          id
-          user_id
-          workspace_id
-          room_id
-          created_at
-          recording_id
-          title
-          description
-          is_public
-          cost
-          updated_at
-          due_date
-          priority
-          completed_at
-          is_archived
-          status
-          label
-        }
-      }
-    }
-  }
-`;
+// export const GET_TASKS_FOR_WORKSPACE = gql`
+//   query GetRoomTasks($user_id: UUID!, $workspace_id: UUID!) {
+//     tasksCollection(
+//       filter: {
+//         and: [
+//           { workspace_id: { eq: $workspace_id }, user_id: { eq: $user_id } }
+//         ]
+//       }
+//       orderBy: { created_at: DescNullsFirst }
+//     ) {
+//       edges {
+//         node {
+//           id
+//           user_id
+//           workspace_id
+//           room_id
+//           created_at
+//           recording_id
+//           title
+//           description
+//           is_public
+//           cost
+//           updated_at
+//           due_date
+//           priority
+//           completed_at
+//           is_archived
+//           status
+//           label
+//           assigned_to
+//         }
+//       }
+//     }
+//   }
+// `;
 
 export const GET_TASKS_FOR_ROOM = gql`
   query GetRoomTasks($user_id: UUID!, $room_id: Number!, $workspace_id: UUID!) {
@@ -409,6 +412,7 @@ export const GET_TASKS_BY_USER_ID = gql`
           is_archived
           status
           label
+          assigned_to
         }
       }
     }

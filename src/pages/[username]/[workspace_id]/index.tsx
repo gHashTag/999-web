@@ -13,6 +13,7 @@ import { SelectRoom } from "@/components/ui/select-room";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import {
   CardRoomT,
+  Passport,
   PassportNode,
   RoomEdge,
   RoomInfoT,
@@ -37,6 +38,7 @@ type PassportType = {
   workspace_id?: string;
   room_id?: string;
   is_owner: boolean;
+  type?: string;
 };
 
 const MeetsPage = () => {
@@ -51,6 +53,7 @@ const MeetsPage = () => {
       ? {
           user_id,
           is_owner: false,
+          type: "room",
         }
       : {
           user_id,
@@ -83,8 +86,6 @@ const MeetsPage = () => {
   const [type, setType] = useState("Fire");
 
   useEffect(() => {
-    console.log(type, "type");
-    console.log(workspace_id, "workspace_id");
     if (!username) {
       router.push("/");
     } else {
@@ -188,12 +189,10 @@ const MeetsPage = () => {
     room.node.name && localStorage.setItem("room_name", room.node.name);
   };
 
-  const goToMeet = (node: PassportNode) => {
-    console.log(node, "node");
-    if (node.rooms.codes) {
+  const goToMeet = ({ node }: Passport) => {
+    if (node?.rooms?.codes) {
       const codes = JSON.parse(node.rooms.codes);
       const memberCode = codes.data[0].code;
-
       localStorage.setItem("workspace_id", workspace_id);
       router.push(
         `/${node.username}/${node.workspace_id}/${node.room_id}/meet/${memberCode}`
@@ -202,6 +201,8 @@ const MeetsPage = () => {
       console.error("No codes available");
     }
   };
+
+  console.log(passportData, "passportData");
 
   return (
     <Layout loading={loading || roomsLoading}>
@@ -236,6 +237,8 @@ const MeetsPage = () => {
                 room={room.node}
                 onClick={() => goToRoomId(room)}
                 key={room.node.id}
+                room_id={room.node.room_id}
+                username={room.node.username}
               />
             ))}
           </div>
@@ -248,13 +251,16 @@ const MeetsPage = () => {
           style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
         >
           {passportData &&
-            passportData.map(({ node }, index) => {
-              console.log(node, "node");
+            passportData.map((item: Passport, index) => {
+              console.log(item, "item");
               return (
                 <CardRoom
                   key={index}
-                  room={node.rooms}
-                  onClick={() => goToMeet(node)}
+                  room={item.node.rooms}
+                  room_id={item.node.room_id}
+                  username={item.node.username}
+                  onClick={() => goToMeet(item)}
+                  is_owner={item.node.is_owner}
                 />
               );
             })}

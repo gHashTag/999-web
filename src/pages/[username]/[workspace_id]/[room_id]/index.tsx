@@ -37,6 +37,7 @@ const RoomPage = () => {
     roomsData,
     refetchRooms,
     handlerDeleteRoom,
+    handlerEditRoom,
     deleteRoomLoading,
     arrayInvite,
     roomsLoading,
@@ -100,7 +101,6 @@ const RoomPage = () => {
       localStorage.setItem("recording_name", "");
     }
   }, [router, roomsData, tasksData, passportData, refetchRooms]);
-  console.log(passportData, "passportData");
 
   const handleClickPlus = async () => {
     onOpenModalPassport();
@@ -218,7 +218,7 @@ const RoomPage = () => {
           }}
         >
           <div style={{ padding: "20px" }} />
-          <ButtonAnimate onClick={handlerDeleteRoom}>Edit room</ButtonAnimate>
+          <ButtonAnimate onClick={handlerEditRoom}>Edit room</ButtonAnimate>
           <div style={{ padding: "10px" }} />
           <ButtonAnimate onClick={handlerDeleteRoom}>Delete room</ButtonAnimate>
           <div style={{ padding: "100px" }} />

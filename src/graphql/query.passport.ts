@@ -92,6 +92,12 @@ query GetPassports($user_id: UUID!, $room_id: String!, $recording_id: String, $w
         is_owner
         room_id
         type
+        rooms {
+          name
+          chat_id
+          type
+          codes
+        }
       }
     }
   }

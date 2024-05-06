@@ -5,11 +5,20 @@ import { Spacer } from "@nextui-org/react";
 import { RoomInfoT } from "@/types";
 
 interface CardProps {
-  room: RoomInfoT;
+  room: RoomInfoT | undefined;
+  room_id: string | undefined;
+  username: string | undefined;
+  is_owner?: boolean | undefined;
   onClick?: () => void;
 }
 
-const CardRoom = ({ room, onClick }: CardProps) => {
+const CardRoom = ({
+  room,
+  room_id,
+  username,
+  is_owner,
+  onClick,
+}: CardProps) => {
   return (
     <div onClick={onClick} className="cursor-pointer">
       <BackgroundGradient className="rounded-[222px] sm:p-1">
@@ -49,6 +58,9 @@ const CardRoom = ({ room, onClick }: CardProps) => {
               }}
             >
               chat id: {room?.chat_id}
+              {room_id && <div>room_id: {room_id}</div>}
+              {username && <div>username: {username}</div>}
+              <div>is_owner: {JSON.stringify(is_owner)}</div>
             </div>
           </div>
         </div>

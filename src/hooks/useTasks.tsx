@@ -8,6 +8,7 @@ import {
   GET_TASKS_FOR_WORKSPACE,
   GET_TASKS_FOR_ROOM,
   GET_TASKS_BY_USER_ID,
+  TASKS_COLLECTION_QUERY,
 } from "@/graphql/query.tasks";
 import { useRouter } from "next/router";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
@@ -46,19 +47,19 @@ const useTasks = (): UseTasksReturn => {
   const tasksQuery = useMemo(() => {
     let query = GET_TASKS_BY_USER_ID;
     if (!recording_id && !room_id && !workspace_id) {
-      console.log("query :::1");
-      query = GET_TASKS_BY_USER_ID;
+      console.log("tasksQuery :::1");
+      query = TASKS_COLLECTION_QUERY;
     } else if (!room_id && !recording_id && workspace_id) {
-      console.log("query :::2");
-      query = GET_TASKS_FOR_WORKSPACE;
+      console.log("tasksQuery :::2");
+      query = TASKS_COLLECTION_QUERY;
     } else if (!recording_id && room_id && workspace_id) {
-      console.log("query :::3");
-      query = GET_TASKS_FOR_ROOM;
+      console.log("tasksQuery :::3");
+      query = TASKS_COLLECTION_QUERY;
     } else if (recording_id && !room_id && !workspace_id) {
-      console.log("query :::4");
+      console.log("tasksQuery :::4");
       query = GET_TASKS_BY_RECORDING_ID;
     } else if (recording_id && room_id && workspace_id) {
-      console.log("query :::5");
+      console.log("tasksQuery :::5");
       query = GET_TASKS_BY_RECORDING_ID;
     } else {
       console.log("Workspace ID is undefined");
@@ -514,8 +515,9 @@ const useTasks = (): UseTasksReturn => {
         id: "assignee",
         header: "Assignee",
         cell: ({ row }: any) => {
-          const assigned_to = JSON.parse(row.original.node.assigned_to);
-          console.log(assigned_to, "assigned_to");
+          const assigned_to = JSON.parse(
+            row?.original?.node?.assigned_to || "[]"
+          );
           return (
             <div style={{ position: "relative" }}>
               <div style={{ display: "flex" }}>

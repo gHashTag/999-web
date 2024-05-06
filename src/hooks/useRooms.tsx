@@ -200,11 +200,16 @@ const useRooms = (): UseRoomsReturn => {
     });
   };
 
+  const handlerEditRoom = () => {
+    console.log("handlerEditRoom");
+  };
+
   return {
     roomsItem: roomsData?.roomsCollection?.edges[0]?.node,
     roomsData,
     refetchRooms,
     handlerDeleteRoom,
+    handlerEditRoom,
     deleteRoomLoading,
     arrayInvite,
     roomsLoading,
@@ -222,6 +227,7 @@ type UseRoomsReturn = {
 
   refetchRooms: () => void;
   handlerDeleteRoom: () => void;
+  handlerEditRoom: () => void;
   deleteRoomLoading: boolean;
   arrayInvite: ArrayInviteT[];
 

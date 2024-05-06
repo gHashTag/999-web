@@ -262,7 +262,7 @@ export interface RoomNode {
   lang: string | null;
   chat_id: string;
   token?: string | null;
-  username?: string | null;
+  username: string;
   original_name?: string | null;
   public?: boolean | null;
   rooms?: RoomInfoT;
