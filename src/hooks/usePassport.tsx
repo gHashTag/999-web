@@ -125,7 +125,6 @@ const usePassport = ({
       room_id,
       is_owner,
       type: "room",
-      user_id,
     };
   }
 
@@ -187,10 +186,12 @@ const usePassport = ({
 
     try {
       const formData = getValues();
+      console.log(formData, "formData");
 
       const { isUserExist, user } = await checkUsernameAndReturnUser(
         formData.username
       );
+      console.log(isUserExist, "isUserExist");
 
       const checkIfPassportExists =
         (passportNode &&

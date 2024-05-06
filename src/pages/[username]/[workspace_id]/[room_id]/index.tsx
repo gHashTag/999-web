@@ -118,6 +118,7 @@ const RoomPage = () => {
   const handleClickPlus = async () => {
     onOpenModalPassport();
   };
+  console.log(passportData, "passportData");
 
   return (
     <>
