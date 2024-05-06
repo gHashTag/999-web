@@ -34,7 +34,6 @@ type PassportType = {
 
 const MeetsPage = () => {
   const router = useRouter();
-  const { toast } = useToast();
   const loading = useReactiveVar(setLoading);
   const room_id = useReactiveVar(setRoomId);
   const { username, user_id, workspace_id, workspace_name } = useUser();
@@ -78,13 +77,17 @@ const MeetsPage = () => {
     refetchRooms,
     isOpenMeet,
     onOpenMeet,
-    onOpenChangeMeet,
-    setOpenModalId,
+    onOpenChangeRoom,
+    setOpenModalRoomId,
     controlRoom,
     handleSubmitRoom,
     getValuesRoom,
     setValueRoom,
-    onCreateMeet,
+    onCreateRoom,
+    isEditingRoom,
+    openModalRoomId,
+    onDeleteRoom,
+    onUpdateRoom,
   } = useRooms();
   const [isVisibleTask, setIsVisibleTask] = useState(false);
   const [type, setType] = useState("Fire");
@@ -123,7 +126,7 @@ const MeetsPage = () => {
 
   const setOpenModalType = async (type: string) => {
     onOpenMeet();
-    setOpenModalId(type);
+    setOpenModalRoomId(type);
   };
 
   const goToRoomId = (room: RoomEdge) => {
@@ -145,8 +148,6 @@ const MeetsPage = () => {
       console.error("No codes available");
     }
   };
-
-  console.log(tasksData, "tasksData");
 
   return (
     <Layout loading={loading || roomsLoading}>
@@ -228,12 +229,15 @@ const MeetsPage = () => {
         <MeetModal
           isOpen={isOpenMeet}
           onOpen={onOpenMeet}
-          onOpenChange={onOpenChangeMeet}
-          onCreate={onCreateMeet}
+          onOpenChange={onOpenChangeRoom}
           control={controlRoom}
           handleSubmit={handleSubmitRoom}
           getValues={getValuesRoom}
           setValue={setValueRoom}
+          isEditing={isEditingRoom}
+          onCreate={onCreateRoom}
+          onDelete={onDeleteRoom}
+          onUpdate={() => openModalRoomId && onUpdateRoom(openModalRoomId)}
         />
       )}
     </Layout>

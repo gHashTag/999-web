@@ -25,6 +25,7 @@ export const GET_ROOMS_COLLECTIONS_BY_ROOM_ID_QUERY = gql`
           enabled
           description
           codes
+          token
           room_id
           chat_id
         }
@@ -57,6 +58,7 @@ export const GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_QUERY = gql`
           enabled
           description
           codes
+          token
           room_id
           chat_id
         }
@@ -81,6 +83,7 @@ export const GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY = gql`
           type
           enabled
           description
+          token
           codes
           room_id
           chat_id
@@ -102,6 +105,7 @@ export const ROOMS_BY_ID_COLLECTION_QUERY = gql`
           description
           updated_at
           created_at
+          token
           type
           enabled
           description
@@ -140,6 +144,7 @@ export const GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY = gql`
           created_at
           type
           enabled
+          token
           description
           codes
           room_id
@@ -210,6 +215,25 @@ export const ROOM_NAME_COLLECTION_QUERY = gql`
           codes
           room_id
         }
+      }
+    }
+  }
+`;
+
+export const UPDATE_ROOM_MUTATION = gql`
+    mutation UpdateRoomsCollection($id: Int!, $name: String!, $chat_id: String!, $token: String!) {
+    updateroomsCollection(
+      filter: { id: { eq: $id } }
+      set: {
+      name: $name,
+      chat_id: $chat_id,
+      token: $token
+    }) {
+      records {
+        id
+        name
+        chat_id
+        token
       }
     }
   }

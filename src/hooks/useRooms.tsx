@@ -14,6 +14,7 @@ import {
   GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY,
   ROOMS_BY_ID_COLLECTION_QUERY,
   ROOM_NAME_COLLECTION_QUERY,
+  UPDATE_ROOM_MUTATION,
 } from "@/graphql/query.rooms";
 
 import { useUser } from "./useUser";
@@ -21,24 +22,34 @@ import { useToast } from "@/components/ui/use-toast";
 // @ts-ignore
 import { useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/router";
-import { ArrayInviteT, RoomEdge, RoomsData } from "@/types";
+import { ArrayInviteT, RoomEdge, RoomNode, RoomsData } from "@/types";
 import { setLoading, setRoomId } from "@/apollo/reactive-store";
 import { useAssets } from "./useAssets";
-import { Control, FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import {
+  Control,
+  FieldValues,
+  SubmitHandler,
+  UseFormWatch,
+  useForm,
+} from "react-hook-form";
 import { usePassport } from "./usePassport";
 
 const useRooms = (): UseRoomsReturn => {
   const { createPassport } = usePassport({});
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { control, handleSubmit, getValues, setValue, reset } = useForm();
+  const { control, handleSubmit, getValues, setValue, reset, watch } =
+    useForm();
   const [inviteGuestCode, setInviteGuestCode] = useState("");
-
+  const [isEditing, setIsEditing] = useState(false);
   const [inviteHostCode, setInviteHostCode] = useState("");
-  const [openModalId, setOpenModalId] = useState("");
+  const [openModalRoomId, setOpenModalRoomId] = useState("");
   const [inviteMemberCode, setInviteMemberCode] = useState("");
 
   const [deleteRoom, { loading: deleteRoomLoading, error: deleteRoomError }] =
     useMutation(DELETE_ROOM_MUTATION);
+
+  const [updateRoom, { loading: updateRoomLoading, error: updateRoomError }] =
+    useMutation(UPDATE_ROOM_MUTATION);
 
   if (deleteRoomError instanceof ApolloError) {
     // Обработка ошибки ApolloError
@@ -190,28 +201,12 @@ const useRooms = (): UseRoomsReturn => {
     },
   ];
 
-  const handlerDeleteRoom = () => {
-    deleteRoom({
-      variables: {
-        room_id,
-      },
-      onCompleted: (data) => {
-        toast({
-          title: "Success! Room deleted",
-        });
-        refetchRooms();
-        assetsRefetch();
-        roomNameRefetch();
-        router.push(`/${username}`);
-      },
-    });
-  };
-
   const handlerEditRoom = () => {
-    console.log("handlerEditRoom");
+    setIsEditing(true);
+    onOpen();
   };
 
-  const onCreateMeet = async () => {
+  const onCreateRoom = async () => {
     setLoading(true);
     const formData = getValues();
 
@@ -222,7 +217,7 @@ const useRooms = (): UseRoomsReturn => {
           username,
           workspace_id,
           name: formData.name,
-          type: openModalId,
+          type: openModalRoomId,
           token: formData.token,
           chat_id: formData.chat_id,
           lang,
@@ -267,11 +262,47 @@ const useRooms = (): UseRoomsReturn => {
     }
   };
 
+  const onUpdateRoom = () => {
+    const values = getValues();
+    updateRoom({
+      variables: {
+        id: values.id,
+        name: values.name,
+        chat_id: values.chat_id,
+        token: values.token,
+      },
+      onCompleted: (data) => {
+        toast({
+          title: "Success! Room updated",
+        });
+        refetchRooms();
+        assetsRefetch();
+        roomNameRefetch();
+      },
+    });
+  };
+
+  const onDeleteRoom = () => {
+    deleteRoom({
+      variables: {
+        room_id,
+      },
+      onCompleted: (data) => {
+        toast({
+          title: "Success! Room deleted",
+        });
+        refetchRooms();
+        assetsRefetch();
+        roomNameRefetch();
+        router.push(`/${username}`);
+      },
+    });
+  };
+
   return {
     roomsItem: roomsData?.roomsCollection?.edges[0]?.node,
     roomsData,
     refetchRooms,
-    handlerDeleteRoom,
     handlerEditRoom,
     deleteRoomLoading,
     arrayInvite,
@@ -283,24 +314,29 @@ const useRooms = (): UseRoomsReturn => {
     inviteMemberCode,
     isOpenMeet: isOpen,
     onOpenMeet: onOpen,
-    onOpenChangeMeet: onOpenChange,
-
+    onOpenChangeRoom: onOpenChange,
+    openModalRoomId,
     reset,
-    setOpenModalId,
+    setOpenModalRoomId,
     controlRoom: control,
     handleSubmitRoom: handleSubmit,
     getValuesRoom: getValues,
     setValueRoom: setValue,
-    onCreateMeet,
+    onCreateRoom,
+    onUpdateRoom,
+    onDeleteRoom,
+    setIsEditingRoom: setIsEditing,
+    isEditingRoom: isEditing,
+    watchRoom: watch,
   };
 };
 
 type UseRoomsReturn = {
   roomsData: RoomsData;
-  roomsItem: RoomEdge[];
-
+  roomsItem: RoomNode;
+  watchRoom: UseFormWatch<FieldValues>;
   refetchRooms: () => void;
-  handlerDeleteRoom: () => void;
+
   handlerEditRoom: () => void;
   deleteRoomLoading: boolean;
   arrayInvite: ArrayInviteT[];
@@ -313,14 +349,19 @@ type UseRoomsReturn = {
   inviteMemberCode: string;
   isOpenMeet: boolean;
   onOpenMeet: () => void;
-  onOpenChangeMeet: () => void;
+  onOpenChangeRoom: () => void;
   controlRoom: Control<FieldValues, any>;
   handleSubmitRoom: FieldValues;
   getValuesRoom: () => FieldValues;
   setValueRoom: (name: string, value: any) => void;
   reset: () => void;
-  setOpenModalId: (openModalId: string) => void;
-  onCreateMeet: () => void;
+  openModalRoomId: string;
+  setOpenModalRoomId: (openModalRoomId: string) => void;
+  onCreateRoom: () => void;
+  onUpdateRoom: () => void;
+  onDeleteRoom: () => void;
+  setIsEditingRoom: (isEditing: boolean) => void;
+  isEditingRoom: boolean;
 };
 
 export { useRooms };

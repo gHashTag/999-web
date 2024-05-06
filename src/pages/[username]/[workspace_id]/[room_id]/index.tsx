@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import Layout from "@/components/layout";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
@@ -35,9 +35,8 @@ const RoomPage = () => {
   const { username, user_id, workspace_id, room_id, room_name } = useUser();
   const { assetsLoading, assetItems } = useAssets();
   const {
-    roomsData,
+    roomsItem,
     refetchRooms,
-    handlerDeleteRoom,
     handlerEditRoom,
     deleteRoomLoading,
     arrayInvite,
@@ -49,7 +48,17 @@ const RoomPage = () => {
     inviteMemberCode,
     isOpenMeet,
     onOpenMeet,
-    onOpenChangeMeet,
+    onOpenChangeRoom,
+    controlRoom,
+    handleSubmitRoom,
+    getValuesRoom,
+    setValueRoom,
+    isEditingRoom,
+    onCreateRoom,
+    onUpdateRoom,
+    onDeleteRoom,
+    openModalRoomId,
+    watchRoom,
   } = useRooms();
 
   const {
@@ -104,19 +113,15 @@ const RoomPage = () => {
       localStorage.setItem("recording_id", "");
       localStorage.setItem("recording_name", "");
     }
-  }, [router, roomsData, tasksData, passportData, refetchRooms]);
+  }, [router, roomsItem, tasksData, passportData, refetchRooms]);
 
   const handleClickPlus = async () => {
     onOpenModalPassport();
   };
 
-  function onCreateMeet(): void {
-    throw new Error("Function not implemented.");
-  }
-
   return (
     <>
-      <Layout loading={false}>
+      <Layout loading={roomsLoading}>
         <div
           style={{
             display: "flex",
@@ -228,8 +233,6 @@ const RoomPage = () => {
           <div style={{ padding: "20px" }} />
           <ButtonAnimate onClick={handlerEditRoom}>Edit room</ButtonAnimate>
           <div style={{ padding: "10px" }} />
-          <ButtonAnimate onClick={handlerDeleteRoom}>Delete room</ButtonAnimate>
-          <div style={{ padding: "100px" }} />
         </div>
         {isOpenModalPassport && (
           <InviteMemberModal
@@ -264,18 +267,23 @@ const RoomPage = () => {
             isEditing={isEditingTask}
           />
         )}
-        {/* {isOpenMeet && (
-        <MeetModal
-          isOpen={isOpenMeet}
-          onOpen={onOpenMeet}
-          onOpenChange={onOpenChangeMeet}
-          onCreate={onCreateMeet}
-          control={control}
-          handleSubmit={handleSubmit}
-          getValues={getValues}
-          setValue={setValue}
-        />
-      )} */}
+        {isOpenMeet && (
+          <MeetModal
+            watchRoom={watchRoom}
+            isOpen={isOpenMeet}
+            onOpen={onOpenMeet}
+            onOpenChange={onOpenChangeRoom}
+            control={controlRoom}
+            handleSubmit={handleSubmitRoom}
+            getValues={getValuesRoom}
+            setValue={setValueRoom}
+            isEditing={isEditingRoom}
+            onCreate={onCreateRoom}
+            onDelete={onDeleteRoom}
+            onUpdate={onUpdateRoom}
+            roomsItem={roomsItem}
+          />
+        )}
       </Layout>
     </>
   );

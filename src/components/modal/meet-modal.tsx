@@ -5,22 +5,13 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/react";
-import { Controller } from "react-hook-form";
+import { Controller, FieldValues, UseFormWatch } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import styled from "styled-components";
-
-type Modal = {
-  isOpen: boolean;
-  onOpen: () => void;
-  onOpenChange: () => void;
-  onCreate: () => void;
-  control: any;
-  handleSubmit: any;
-  getValues: any;
-  setValue: any;
-};
+import { useEffect } from "react";
+import { RoomEdge, RoomNode } from "@/types";
 
 const RightAlignedFooter = styled(ModalFooter)`
   display: flex;
@@ -33,6 +24,22 @@ const CustomModalContent = styled(ModalContent)`
   border-radius: 15px;
 `;
 
+type Modal = {
+  isOpen: boolean;
+  onOpen: () => void;
+  onOpenChange: () => void;
+  onCreate: () => void;
+  onUpdate: () => void;
+  onDelete: () => void;
+  control: any;
+  handleSubmit: any;
+  getValues: any;
+  setValue: any;
+  isEditing: boolean;
+  watchRoom: UseFormWatch<FieldValues>;
+  roomsItem: RoomNode;
+};
+
 function MeetModal({
   isOpen,
   onOpen,
@@ -41,7 +48,24 @@ function MeetModal({
   handleSubmit,
   setValue,
   onCreate,
+  onUpdate,
+  onDelete,
+  isEditing,
+  watchRoom,
+  roomsItem,
 }: Modal) {
+  useEffect(() => {
+    const subscription = watchRoom((value: any, { name, type }: any) => {
+      console.log("Watch update:", value, name);
+    });
+    if (isEditing) {
+      setValue("id", roomsItem.id);
+      setValue("name", roomsItem.name);
+      setValue("token", roomsItem.token);
+      setValue("chat_id", roomsItem.chat_id);
+    }
+    return () => subscription.unsubscribe();
+  }, [watchRoom]);
   return (
     <Modal
       isOpen={isOpen}
@@ -53,10 +77,10 @@ function MeetModal({
         {(onClose) => (
           <>
             <ModalHeader>
-              <span>Create</span>
+              <span> {isEditing ? "Edit Meet" : "Create Meet"}</span>
             </ModalHeader>
             <ModalBody>
-              <form onSubmit={handleSubmit(onCreate)}>
+              <form onSubmit={handleSubmit(isEditing ? onUpdate : onCreate)}>
                 <Label htmlFor="text">Title</Label>
                 <div style={{ padding: 5 }} />
                 <Controller
@@ -110,14 +134,20 @@ function MeetModal({
               </form>
             </ModalBody>
             <ModalFooter>
+              {isEditing && (
+                // @ts-ignore
+                <Button color="warning" variant="ghost" onClick={onDelete}>
+                  Delete
+                </Button>
+              )}
               <Button
                 color="warning"
                 onClick={() => {
-                  onCreate();
+                  isEditing ? onUpdate() : onCreate();
                   onClose();
                 }}
               >
-                Create
+                {isEditing ? "Save" : "Create"}
               </Button>
             </ModalFooter>
           </>
