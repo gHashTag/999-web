@@ -28,7 +28,7 @@ import { useUser } from "@/hooks/useUser";
 import { AnimatedTooltipTasks } from "./animated-tooltip-tasks";
 import { usePassport } from "@/hooks/usePassport";
 import InviteMemberModal from "../modal/InviteMemberModal";
-import { Passport } from "@/types";
+import { AssignedTo, Passport } from "@/types";
 
 export function TaskForm({
   id,
@@ -43,6 +43,7 @@ export function TaskForm({
   setValueTask,
   onUpdateTask,
   user_id,
+  assigned_to,
 }: {
   id: number;
   title: string;
@@ -58,10 +59,12 @@ export function TaskForm({
   setValueTask: UseFormSetValue<FieldValues>;
   onUpdateTask: (id: number) => void;
   user_id: string;
+  assigned_to: string;
 }) {
+  console.log(assigned_to, "assigned_to -----");
   const router = useRouter();
   const task_id: number = Number(router.query.task_id as string);
-
+  const assignedTo = JSON.parse(assigned_to);
   const watchedTitle = watchTask("title", title);
   const watchedDescription = watchTask("description", description);
   const watchedPriority = watchTask("priority", priority);
@@ -103,6 +106,7 @@ export function TaskForm({
     room_id,
     task_id: Number(task_id) as number,
     type: "task",
+    assigned_to: assignedTo,
   });
 
   const onSubmitDestination: SubmitHandler<FieldValues> = (

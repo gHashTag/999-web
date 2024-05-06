@@ -22,7 +22,7 @@ import {
 } from "react-hook-form";
 import { setIsEdit, setOpenModalId } from "@/apollo/reactive-store";
 import { useUser } from "./useUser";
-import { PassportNode, TasksArray } from "@/types";
+import { AssignedTo, PassportNode, TasksArray } from "@/types";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
@@ -120,7 +120,11 @@ const useTasks = (): UseTasksReturn => {
   const onClickEdit = (isEditing: boolean, id: number) => {
     setOpenModalTaskId(id);
     setIsEditingTask(isEditing);
-    router.push(`/${username}/${workspace_id}/${room_id}/0/${id}`);
+    router.push(
+      `/${username}/${workspace_id ? workspace_id : 0}/${
+        room_id ? room_id : 0
+      }/0/${id}`
+    );
   };
 
   if (tasksError instanceof ApolloError) {
@@ -282,9 +286,8 @@ const useTasks = (): UseTasksReturn => {
   );
 
   const updateTask = useCallback(
-    async (task_id: number, assigned_to: PassportNode[]) => {
+    async (task_id: number, assigned_to: AssignedTo[]) => {
       const formData = getValues();
-
       const variables = {
         id: task_id,
         title: formData.title,
@@ -296,8 +299,6 @@ const useTasks = (): UseTasksReturn => {
         cost: formData.cost,
         assigned_to: JSON.stringify(assigned_to),
       };
-
-      console.log(variables, "variables");
 
       await mutateUpdateTask({
         variables,

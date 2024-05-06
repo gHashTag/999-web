@@ -12,7 +12,7 @@ import { useDisclosure } from "@nextui-org/react";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useUser } from "./useUser";
-import { Passport, PassportNode } from "@/types";
+import { AssignedTo, Passport, PassportNode } from "@/types";
 import { checkUsernameAndReturnUser } from "./useSupabase";
 import { useTasks } from "./useTasks";
 
@@ -23,6 +23,7 @@ type passportType = {
   recording_id?: string;
   task_id?: number;
   type?: string;
+  assigned_to?: AssignedTo[];
 };
 
 const usePassport = ({
@@ -31,6 +32,7 @@ const usePassport = ({
   recording_id,
   task_id,
   type,
+  assigned_to,
 }: passportType): UsePassportReturn => {
   const { username, user_id, is_owner } = useUser();
   console.log(username, "username");
@@ -42,10 +44,9 @@ const usePassport = ({
   console.log(task_id, "task_id");
   console.log(type, "type");
   const { toast } = useToast();
-  const { refetchTasks } = useTasks();
+  const { updateTask, refetchTasks } = useTasks();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const { control, handleSubmit, getValues, setValue, reset } = useForm();
-
   const [openModalPassportId, setOpenModalPassportId] = useState<number | null>(
     null
   );
@@ -224,7 +225,19 @@ const usePassport = ({
         },
       };
       console.log(variables, "variables");
+      const assignedArray: PassportNode[] = [
+        {
+          user_id: user.user_id,
+          username: user.username,
+          photo_url: user.photo_url,
+        },
+      ];
 
+      console.log(assigned_to, "assigned_to");
+
+      assigned_to && assignedArray.push(...assigned_to);
+      console.log(assignedArray, "assignedArray");
+      console.log(task_id, "task_id");
       if (isUserExist) {
         await mutateCreatePassport({
           variables,
@@ -233,6 +246,8 @@ const usePassport = ({
               title: "Passport created",
               description: "Passport created successfully",
             });
+            // create assigned_to
+            task_id && assignedArray && updateTask(task_id, assignedArray);
             passportRefetch();
             refetchTasks();
             reset({
@@ -332,6 +347,7 @@ const usePassport = ({
       onCompleted: () => {
         passportRefetch();
         refetchTasks();
+        // delete assigned_to
         // updateTask(task_id, newAssignee);
       },
     });

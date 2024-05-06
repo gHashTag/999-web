@@ -29,24 +29,27 @@ export type Workspace = {
 
 export type WorkspaceArray = Workspace[];
 
-export interface PassportNode {
-  __typename: string;
-  passport_id: number;
-  background: string;
-  colors: string[][];
-  created_at: string;
-  id: string;
-  title: string;
-  type: string;
-  updated_at: string;
-  user_id: string;
-  workspace_id: string;
-  photo_url: string;
-  username: string;
-  is_owner: boolean;
-  room_id: string;
-  assigned_to: Passport[];
-  rooms: RoomInfoT;
+export type AssignedTo = {
+  user_id: string | undefined;
+  username: string | undefined;
+  photo_url: string | undefined;
+  passport_id?: string | undefined;
+};
+
+export interface PassportNode extends AssignedTo {
+  __typename?: string;
+  background?: string;
+  colors?: string[][];
+  created_at?: string;
+  id?: string;
+  title?: string;
+  type?: string;
+  updated_at?: string;
+  workspace_id?: string;
+  is_owner?: boolean;
+  room_id?: string;
+  assigned_to?: Passport[];
+  rooms?: RoomInfoT;
 }
 
 export type PassportArray = Passport[];
@@ -68,7 +71,7 @@ export type TaskNode = {
   updated_at?: string;
   due_date?: string;
   priority?: string;
-  assigned_to?: string;
+  assigned_to?: AssignedTo[];
   label?: string[];
   completed_at?: string;
   is_archived?: boolean;
