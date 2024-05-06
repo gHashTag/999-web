@@ -5,10 +5,10 @@ import {
   GET_TASKS_BY_RECORDING_ID,
   MUTATION_TASK_STATUS_UPDATE,
   MUTATION_TASK_UPDATE,
-  GET_TASKS_FOR_WORKSPACE,
   GET_TASKS_FOR_ROOM,
   GET_TASKS_BY_USER_ID,
   TASKS_COLLECTION_QUERY,
+  GET_PUBLIC_ROOM_TASKS_QUERY,
 } from "@/graphql/query.tasks";
 import { useRouter } from "next/router";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
@@ -51,7 +51,7 @@ const useTasks = (): UseTasksReturn => {
       query = TASKS_COLLECTION_QUERY;
     } else if (!room_id && !recording_id && workspace_id) {
       console.log("tasksQuery :::2");
-      query = TASKS_COLLECTION_QUERY;
+      query = GET_PUBLIC_ROOM_TASKS_QUERY;
     } else if (!recording_id && room_id && workspace_id) {
       console.log("tasksQuery :::3");
       query = TASKS_COLLECTION_QUERY;

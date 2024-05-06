@@ -202,7 +202,7 @@ const MeetsPage = () => {
     }
   };
 
-  console.log(passportData, "passportData");
+  console.log(tasksData, "tasksData");
 
   return (
     <Layout loading={loading || roomsLoading}>
@@ -272,7 +272,7 @@ const MeetsPage = () => {
           paddingBottom: 200,
         }}
       >
-        {!isVisibleTask && tasksData && (
+        {isVisibleTask && tasksData && (
           <DataTable data={tasksData} columns={columns} />
         )}
       </div>

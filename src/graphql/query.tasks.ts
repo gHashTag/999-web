@@ -383,6 +383,7 @@ export const GET_PUBLIC_ROOM_TASKS_QUERY = gql`
           is_archived
           status
           label
+          assigned_to
         }
       }
     }
