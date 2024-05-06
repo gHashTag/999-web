@@ -61,7 +61,6 @@ export function TaskForm({
   user_id: string;
   assigned_to: string;
 }) {
-  console.log(assigned_to, "assigned_to -----");
   const router = useRouter();
   const task_id: number = Number(router.query.task_id as string);
   const assignedTo = JSON.parse(assigned_to);
@@ -115,8 +114,12 @@ export function TaskForm({
     onUpdateTask(id);
   };
 
-  const onDeleteAssignee = (item: Passport) => {
-    onDeletePassportTask(item.node.passport_id);
+  const onDeleteAssignee = ({ node }: Passport) => {
+    console.log(node, "item");
+    console.log(user_id, "user_id");
+    node.passport_id &&
+      node.user_id &&
+      onDeletePassportTask(node.passport_id, node.user_id);
   };
 
   const handleClickPlus = async () => {
@@ -218,7 +221,7 @@ export function TaskForm({
                 onCreate={onCreatePassport}
                 onDelete={() =>
                   openModalPassportId &&
-                  onDeletePassportTask(openModalPassportId)
+                  onDeletePassportTask(openModalPassportId, user_id)
                 }
                 onUpdate={onUpdatePassport}
                 control={controlPassport}
@@ -232,7 +235,6 @@ export function TaskForm({
             <div style={{ padding: "10px" }} />
             <ButtonAnimate
               onClick={() => {
-                console.log("click");
                 setTimeout(() => setIsEdit(isEdit), 1000);
                 router.back();
               }}

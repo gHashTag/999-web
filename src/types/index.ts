@@ -33,7 +33,7 @@ export type AssignedTo = {
   user_id: string | undefined;
   username: string | undefined;
   photo_url: string | undefined;
-  passport_id?: string | undefined;
+  passport_id?: number;
 };
 
 export interface PassportNode extends AssignedTo {

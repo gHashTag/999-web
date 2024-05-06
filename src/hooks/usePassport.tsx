@@ -35,14 +35,14 @@ const usePassport = ({
   assigned_to,
 }: passportType): UsePassportReturn => {
   const { username, user_id, is_owner } = useUser();
-  console.log(username, "username");
-  console.log(user_id, "user_id");
-  console.log(workspace_id, "workspace_id");
-  console.log(room_id, "room_id");
-  console.log(recording_id, "recording_id");
-  console.log(is_owner, "is_owner");
-  console.log(task_id, "task_id");
-  console.log(type, "type");
+  // console.log(username, "username");
+  // console.log(user_id, "user_id");
+  // console.log(workspace_id, "workspace_id");
+  // console.log(room_id, "room_id");
+  // console.log(recording_id, "recording_id");
+  // console.log(is_owner, "is_owner");
+  // console.log(task_id, "task_id");
+  // console.log(type, "type");
   const { toast } = useToast();
   const { updateTask, refetchTasks } = useTasks();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -184,14 +184,13 @@ const usePassport = ({
 
   const onCreatePassport = async () => {
     console.log("onCreatePassport");
-    console.log(type, "type");
+
     try {
       const formData = getValues();
 
       const { isUserExist, user } = await checkUsernameAndReturnUser(
         formData.username
       );
-      console.log(passportNode, "passportNode :::::");
 
       const checkIfPassportExists =
         (passportNode &&
@@ -199,7 +198,7 @@ const usePassport = ({
             return passport.node.username === formData.username;
           })) ||
         false;
-      console.log(checkIfPassportExists, "checkIfPassportExists");
+
       if (checkIfPassportExists) {
         toast({
           title: "Passport already exists",
@@ -224,7 +223,7 @@ const usePassport = ({
           type,
         },
       };
-      console.log(variables, "variables");
+
       const assignedArray: PassportNode[] = [
         {
           user_id: user.user_id,
@@ -233,11 +232,8 @@ const usePassport = ({
         },
       ];
 
-      console.log(assigned_to, "assigned_to");
-
       assigned_to && assignedArray.push(...assigned_to);
-      console.log(assignedArray, "assignedArray");
-      console.log(task_id, "task_id");
+
       if (isUserExist) {
         await mutateCreatePassport({
           variables,
@@ -339,16 +335,20 @@ const usePassport = ({
     });
   };
 
-  const onDeletePassportTask = (passport_id: number) => {
+  const onDeletePassportTask = (passport_id: number, user_id: string) => {
+    const newAssignee =
+      assigned_to && assigned_to.filter((item) => item.user_id !== user_id);
+
     mutateDeletePassport({
       variables: {
         passport_id: Number(passport_id),
       },
+
       onCompleted: () => {
         passportRefetch();
         refetchTasks();
         // delete assigned_to
-        // updateTask(task_id, newAssignee);
+        task_id && newAssignee && updateTask(task_id, newAssignee);
       },
     });
     closeModal();
@@ -408,7 +408,7 @@ type UsePassportReturn = {
   isOpenModalPassport: boolean;
   onOpenModalPassport: () => void;
   onOpenChangeModalPassport: () => void;
-  onDeletePassportTask: (passport_id: number) => void;
+  onDeletePassportTask: (passport_id: number, user_id: string) => void;
   onDeletePassportRoom: (id: number) => void;
   onCreatePassport: () => void;
   createPassport: (
