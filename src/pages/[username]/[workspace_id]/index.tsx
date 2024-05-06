@@ -88,6 +88,7 @@ const MeetsPage = () => {
     openModalRoomId,
     onDeleteRoom,
     onUpdateRoom,
+    watchRoom,
   } = useRooms();
   const [isVisibleTask, setIsVisibleTask] = useState(false);
   const [type, setType] = useState("Fire");
@@ -237,7 +238,8 @@ const MeetsPage = () => {
           isEditing={isEditingRoom}
           onCreate={onCreateRoom}
           onDelete={onDeleteRoom}
-          onUpdate={() => openModalRoomId && onUpdateRoom(openModalRoomId)}
+          onUpdate={onUpdateRoom}
+          watchRoom={watchRoom}
         />
       )}
     </Layout>

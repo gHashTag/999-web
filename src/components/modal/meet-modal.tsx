@@ -37,7 +37,7 @@ type Modal = {
   setValue: any;
   isEditing: boolean;
   watchRoom: UseFormWatch<FieldValues>;
-  roomsItem: RoomNode;
+  roomsItem?: RoomNode;
 };
 
 function MeetModal({
@@ -58,7 +58,7 @@ function MeetModal({
     const subscription = watchRoom((value: any, { name, type }: any) => {
       console.log("Watch update:", value, name);
     });
-    if (isEditing) {
+    if (isEditing && roomsItem) {
       setValue("id", roomsItem.id);
       setValue("name", roomsItem.name);
       setValue("token", roomsItem.token);
