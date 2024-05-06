@@ -5,7 +5,6 @@ import {
   GET_TASKS_BY_RECORDING_ID,
   MUTATION_TASK_STATUS_UPDATE,
   MUTATION_TASK_UPDATE,
-  GET_TASKS_FOR_ROOM,
   GET_TASKS_BY_USER_ID,
   TASKS_COLLECTION_QUERY,
   GET_PUBLIC_ROOM_TASKS_QUERY,
@@ -524,6 +523,7 @@ const useTasks = (): UseTasksReturn => {
                 {assigned_to &&
                   assigned_to.map((item: any, index: number) => (
                     <Avatar
+                      key={index}
                       className="h-8 w-8"
                       style={{ transform: "scaleX(-1)" }}
                     >
