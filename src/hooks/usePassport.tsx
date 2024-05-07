@@ -34,7 +34,7 @@ const usePassport = ({
   type,
   assigned_to,
 }: passportType): UsePassportReturn => {
-  const { username, user_id, is_owner } = useUser();
+  const { username, user_id, is_owner, workspace_type } = useUser();
   console.log(username, "username");
   console.log(user_id, "user_id");
   console.log(workspace_id, "workspace_id");
@@ -43,6 +43,7 @@ const usePassport = ({
   console.log(is_owner, "is_owner");
   console.log(task_id, "task_id");
   console.log(type, "type");
+  console.log(workspace_type, "workspace_type");
   const { toast } = useToast();
   const { updateTask, refetchTasks } = useTasks();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -117,11 +118,22 @@ const usePassport = ({
     };
   }
 
-  if (!is_owner && type === "room") {
-    console.log("usePassport 0");
+  if (!is_owner && type === "room" && workspace_type === "Water") {
+    console.log("usePassport Water");
     passportQuery = PASSPORT_COLLECTION_IS_NOT_OWNER_QUERY;
     queryVariables = {
       user_id,
+      is_owner,
+      type: "room",
+    };
+  }
+
+  if (!is_owner && type === "room" && workspace_type === "Fire") {
+    console.log("usePassport Fire");
+    passportQuery = PASSPORT_COLLECTION_IS_NOT_OWNER_QUERY;
+    queryVariables = {
+      workspace_id,
+      room_id,
       is_owner,
       type: "room",
     };

@@ -36,7 +36,8 @@ const MeetsPage = () => {
   const router = useRouter();
   const loading = useReactiveVar(setLoading);
   const room_id = useReactiveVar(setRoomId);
-  const { username, user_id, workspace_id, workspace_name } = useUser();
+  const { username, user_id, workspace_id, workspace_name, workspace_type } =
+    useUser();
 
   const passportObj: PassportType =
     workspace_name === "Вода" || "Water"
@@ -91,7 +92,7 @@ const MeetsPage = () => {
     watchRoom,
   } = useRooms();
   const [isVisibleTask, setIsVisibleTask] = useState(false);
-  const [type, setType] = useState("Fire");
+  // const [workspaceType, setWorkspaceType] = useState("Fire");
 
   useEffect(() => {
     if (!username) {
@@ -102,7 +103,7 @@ const MeetsPage = () => {
       if (workspace_id === "d696abd8-3b7a-46f2-907f-5342a2b533a0") {
         console.log("Earth");
         // "Earth"
-        setType("Earth");
+        localStorage.setItem("workspace_type", "Earth");
         // setIsVisibleMenu(false);
         setIsVisibleTask(true);
         localStorage.setItem("is_owner", "true");
@@ -110,11 +111,12 @@ const MeetsPage = () => {
         // "Water",
         localStorage.setItem("is_owner", "false");
         console.log("Water");
-        setType("Water");
+        localStorage.setItem("workspace_type", "Water");
         setIsVisibleTask(false);
       } else {
         // "Fire"
         console.log("Fire");
+        localStorage.setItem("workspace_type", "Fire");
         localStorage.setItem("is_owner", "true");
         setIsVisibleTask(true);
         localStorage.setItem("room_name", "");
@@ -165,7 +167,7 @@ const MeetsPage = () => {
         />
       </div>
 
-      {type === "Fire" && (
+      {workspace_type === "Fire" && (
         <>
           <SelectRoom setOpenModalType={setOpenModalType} />
 
@@ -186,7 +188,7 @@ const MeetsPage = () => {
         </>
       )}
 
-      {type === "Water" && (
+      {workspace_type === "Water" && (
         <div
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-1"
           style={{ paddingLeft: 80, paddingRight: 80, paddingTop: 50 }}
