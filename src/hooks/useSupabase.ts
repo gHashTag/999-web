@@ -17,6 +17,7 @@ import {
   setVisibleHeader,
 } from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 export const checkUsernameCodes = async (
   username: string,
@@ -164,6 +165,7 @@ export function useSupabase() {
       return response.data;
     } catch (error) {
       // console.error("Ошибка при получении информации о пользователе:", error);
+      captureExceptionSentry("Error getting user info", "useSupabase");
       return null;
     }
   };
@@ -238,7 +240,7 @@ export function useSupabase() {
         };
       }
     } catch (error) {
-      console.error("Ошибка при получении информации о пользователе:", error);
+      captureExceptionSentry("Error creating user", "useSupabase");
       return {
         user_id: "",
         username: "",
@@ -253,7 +255,7 @@ export function useSupabase() {
 
       data && setAssets(data);
     } catch (error) {
-      // console.log("error", error);
+      captureExceptionSentry("Error fetching assets", "useSupabase");
     }
   };
 
@@ -267,7 +269,7 @@ export function useSupabase() {
       if (error) console.error("Error fetching assets:", error);
       return data;
     } catch (error) {
-      // console.log("error", error);
+      captureExceptionSentry("Error fetching assets", "useSupabase");
     }
   };
 
@@ -282,7 +284,7 @@ export function useSupabase() {
       if (error) console.error("Error fetching assets:", error);
       return data;
     } catch (error) {
-      // console.log("error", error);
+      captureExceptionSentry("Error fetching task", "useSupabase");
     }
   };
 

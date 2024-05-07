@@ -10,6 +10,7 @@ import { usePassport } from "@/hooks/usePassport";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { useUser } from "@/hooks/useUser";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 const HMSPrebuilt = dynamic(
   () =>
@@ -62,7 +63,7 @@ const Rooms = () => {
             throw new Error("roomCode is not a string");
           }
         } catch (error) {
-          console.error("Error receiving token: ", error);
+          captureExceptionSentry("Error receiving token", "MeetsPage");
         }
       };
       fetchToken();
@@ -75,7 +76,7 @@ const Rooms = () => {
         try {
           await hmsActions.leave();
         } catch (error) {
-          console.error("Error leaving the room: ", error);
+          captureExceptionSentry("Error leaving the room", "MeetsPage");
         }
       }
     };

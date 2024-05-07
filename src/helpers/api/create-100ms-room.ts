@@ -1,4 +1,5 @@
 import { __DEV__ } from "@/pages/_app";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
@@ -56,7 +57,7 @@ async function create100MsRoom({
     const data = JSON.parse(text);
     return data;
   } catch (error) {
-    console.error("Error parsing JSON:", error);
+    captureExceptionSentry("Error parsing JSON", "create100MsRoom");
     throw new Error("Error parsing JSON response from server");
   }
 }

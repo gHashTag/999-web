@@ -12,6 +12,7 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useUser } from "./useUser";
 import { WorkspaceArray } from "@/types";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 const useWorkspace = (): UseWorkspaceReturn => {
   const { user_id, username } = useUser();
@@ -158,7 +159,7 @@ const useWorkspace = (): UseWorkspaceReturn => {
         },
       });
     } catch (error) {
-      console.log(error, "error");
+      captureExceptionSentry("Error creating workspace", "useWorkspace");
       toast({
         title: "Error creating workspace:",
         variant: "destructive",

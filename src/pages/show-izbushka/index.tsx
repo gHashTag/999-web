@@ -11,6 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { useSupabase } from "@/hooks/useSupabase";
 import { getSelectIzbushkaId } from "@/utils/supabase";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 const HMSPrebuilt = dynamic(
   () =>
@@ -115,7 +116,7 @@ const ShowIzbushka = () => {
           throw new Error("roomCode is not a string");
         }
       } catch (error) {
-        console.error("Ошибка при получении токена: ", error);
+        captureExceptionSentry("Error getting token", "ShowIzbushka");
       }
     };
 
@@ -137,7 +138,7 @@ const ShowIzbushka = () => {
         try {
           await hmsActions.leave();
         } catch (error) {
-          console.error("Ошибка при попытке покинуть комнату: ", error);
+          captureExceptionSentry("Error leaving the room", "ShowIzbushka");
         }
       }
     };

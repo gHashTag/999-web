@@ -33,6 +33,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { usePassport } from "./usePassport";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 const useRooms = (): UseRoomsReturn => {
   const { createPassport } = usePassport({});
@@ -244,6 +245,7 @@ const useRooms = (): UseRoomsReturn => {
         console.log("Username not a found");
       }
     } catch (error) {
+      captureExceptionSentry("Error creating room", "useRooms");
       if (error) {
         toast({
           title: "Error creating room",

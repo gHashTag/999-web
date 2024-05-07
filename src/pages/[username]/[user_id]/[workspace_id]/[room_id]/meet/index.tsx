@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 const Meets = () => {
   const router = useRouter();
@@ -24,7 +25,7 @@ const Meets = () => {
           );
         }
       } catch (error) {
-        console.error("Error", error);
+        captureExceptionSentry("Error", "MeetsPage");
       }
     };
 

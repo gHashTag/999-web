@@ -15,6 +15,7 @@ import { useUser } from "./useUser";
 import { AssignedTo, Passport, PassportNode } from "@/types";
 import { checkUsernameAndReturnUser } from "./useSupabase";
 import { useTasks } from "./useTasks";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 type passportType = {
   user_id?: string;
@@ -289,7 +290,7 @@ const usePassport = ({
         });
       }
     } catch (error) {
-      console.log(error, "error");
+      captureExceptionSentry("Error creating passport", "usePassport");
       toast({
         title: "Error creating passport",
         variant: "destructive",
@@ -331,7 +332,7 @@ const usePassport = ({
         });
       }
     } catch (error) {
-      console.log(error, "error");
+      captureExceptionSentry("Error creating passport", "usePassport");
       toast({
         title: "Error creating passport",
         variant: "destructive",

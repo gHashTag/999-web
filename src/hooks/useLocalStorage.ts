@@ -9,7 +9,6 @@ const useLocalStorage = (key: string, initialValue: any) => {
       // otherwise initialize it with the passed initialValue
       return value ? JSON.parse(value) : initialValue;
     } catch (error) {
-      console.log(error);
       return initialValue;
     }
   });

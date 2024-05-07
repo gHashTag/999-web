@@ -24,6 +24,7 @@ import { useRooms } from "@/hooks/useRooms";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 import { usePassport } from "@/hooks/usePassport";
 import { getAssignedTasks } from "@/utils/supabase";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 type PassportType = {
   user_id?: string;
@@ -104,9 +105,9 @@ const MeetsPage = () => {
       setLoading(false);
 
       if (workspace_id === "d696abd8-3b7a-46f2-907f-5342a2b533a0") {
-        // console.log("Earth");
-        // "Earth"
-        localStorage.setItem("workspace_type", "Earth");
+        // console.log("");
+        // ""
+        localStorage.setItem("workspace_type", "");
         // setIsVisibleMenu(false);
         // setIsVisibleTask(true);
         localStorage.setItem("is_owner", "true");
@@ -227,7 +228,7 @@ const MeetsPage = () => {
           <DataTable data={assignedTasks} columns={columns} />
         )}
 
-        {workspace_type === "Earth" && tasksData && (
+        {workspace_type === "" && tasksData && (
           <DataTable data={tasksData} columns={columns} />
         )}
       </div>

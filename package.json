@@ -49,6 +49,7 @@
     "@react-stately/overlays": "^3.6.5",
     "@react-three/drei": "^9.102.6",
     "@react-three/fiber": "^8.16.0",
+    "@sentry/react": "^7.113.0",
     "@supabase/supabase-js": "^2.40.0",
     "@tanstack/react-table": "^8.15.3",
     "@tma.js/sdk": "^1.5.1",

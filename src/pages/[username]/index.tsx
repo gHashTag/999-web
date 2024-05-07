@@ -14,6 +14,7 @@ import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { Spinner } from "@/components/ui/spinner";
 import { setHeaderName } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 const QUERY = gql`
   query GetUserByEmail($username: String!) {
@@ -130,6 +131,7 @@ export default function Wallet() {
         }
       }
     } catch (error) {
+      captureExceptionSentry("Error updating user", "[username]");
       toast({
         variant: "destructive",
         title: "Closed access",

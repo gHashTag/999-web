@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useUser } from "@/hooks/useUser";
 import { SITE_URL } from "@/pages/_app";
 import { Passport } from "@/types";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 type EvervaultCardProps = {
   text: string;
@@ -59,14 +60,13 @@ export const EvervaultCard = ({
   const handleCopy = (text: string) => {
     copy(text)
       .then(() => {
-        // console.log("Copied!", { text });
         toast({
           title: "Copied!",
           description: `${text} copied`,
         });
       })
       .catch((error) => {
-        console.error("Failed to copy!", error);
+        captureExceptionSentry("handleCopy", "EvervaultCard");
         toast({
           title: "Error",
           variant: "destructive",

@@ -32,6 +32,7 @@ import { priorities, statuses } from "@/helpers/data/data";
 
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { captureExceptionSentry } from "@/utils/sentry";
 
 const useTasks = (): UseTasksReturn => {
   const {
@@ -238,6 +239,7 @@ const useTasks = (): UseTasksReturn => {
         },
       });
     } catch (error) {
+      captureExceptionSentry("Error creating task", "useTasks");
       toast({
         title: "Error creating task:",
         variant: "destructive",
