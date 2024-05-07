@@ -231,7 +231,9 @@ const useRooms = (): UseRoomsReturn => {
           localStorage.setItem("room_id", room_id);
 
           createPassport(workspace_id, room_id, true);
-          router.push(`/${username}/${workspace_id}/${response.rooms.room_id}`);
+          router.push(
+            `/${username}/${user_id}/${workspace_id}/${response.rooms.room_id}`
+          );
           setLoading(false);
           toast({
             title: "Success",
@@ -294,7 +296,7 @@ const useRooms = (): UseRoomsReturn => {
         refetchRooms();
         assetsRefetch();
         roomNameRefetch();
-        router.push(`/${username}`);
+        router.push(`/${username}/${user_id}/${workspace_id}`);
       },
     });
   };

@@ -8,6 +8,7 @@ import { SubmitHandler, FieldValues } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { Button } from "./button";
 import { ButtonAnimate } from "./button-animate";
+import { useUser } from "@/hooks/useUser";
 
 export function SignupFormDemo({
   first_name,
@@ -40,6 +41,7 @@ export function SignupFormDemo({
       company: company,
     },
   });
+  const { is_owner } = useUser();
   const watchedDesignation = watch("designation", designation);
   const watchedFirstName = watch("first_name", first_name);
   const watchedLastName = watch("last_name", last_name);
@@ -148,7 +150,11 @@ export function SignupFormDemo({
                 ))}
             </p>
             <div style={{ padding: "15px" }} />
-            <ButtonAnimate onClick={() => setIsEdit(true)}>Edit</ButtonAnimate>
+            {is_owner && (
+              <ButtonAnimate onClick={() => setIsEdit(true)}>
+                Edit
+              </ButtonAnimate>
+            )}
             {/* <div style={{ padding: "10px" }} />
             <ButtonAnimate onClick={logout}>Logout</ButtonAnimate> */}
           </div>

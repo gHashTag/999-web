@@ -14,7 +14,7 @@ import { Passport, RoomEdge } from "@/types";
 import CardRoom from "@/components/ui/card-room";
 import { Button } from "@/components/ui/moving-border";
 import { DataTable } from "@/components/table/data-table";
-import { __DEV__ } from "../../_app";
+import { __DEV__ } from "../../../_app";
 
 import { setLoading, setRoomId } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
@@ -132,7 +132,7 @@ const MeetsPage = () => {
   };
 
   const goToRoomId = (room: RoomEdge) => {
-    router.push(`/${username}/${workspace_id}/${room.node.name}`);
+    router.push(`/${username}/${user_id}/${workspace_id}/${room.node.name}`);
     localStorage.setItem("room_id", room.node.room_id);
     setRoomId(room.node.room_id);
     room.node.name && localStorage.setItem("room_name", room.node.name);
@@ -144,13 +144,12 @@ const MeetsPage = () => {
       const memberCode = codes.data[0].code;
       localStorage.setItem("workspace_id", workspace_id);
       router.push(
-        `/${node.username}/${node.workspace_id}/${node.room_id}/meet/${memberCode}`
+        `/${node.username}/${user_id}/${node.workspace_id}/${node.room_id}/meet/${memberCode}`
       );
     } else {
       console.error("No codes available");
     }
   };
-  console.log(tasksData, "tasksData");
 
   return (
     <Layout loading={loading || roomsLoading}>

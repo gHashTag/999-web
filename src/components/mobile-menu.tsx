@@ -16,11 +16,13 @@ import { useButton } from "@react-aria/button";
 import styles from "./mobile-menu.module.css";
 import { useReactiveVar } from "@apollo/client";
 import { setUserId } from "@/apollo/reactive-store";
+import { useUser } from "@/hooks/useUser";
 
 function ModalDialog(
   props: Parameters<typeof useOverlay>[0] &
     Parameters<typeof useDialog>[0] & { closeMenu: () => void }
 ) {
+  const { username } = useUser();
   const router = useRouter();
   const user_id = localStorage.getItem("user_id");
   const activeRoute = router.asPath;
@@ -44,10 +46,12 @@ function ModalDialog(
         >
           <Link
             href={{
-              pathname: `/${user_id}`,
+              pathname: `/${username}/${user_id}`,
             }}
             className={cn(styles["nav-item"], {
-              [styles["nav-active"]]: activeRoute.startsWith(`/${user_id}`),
+              [styles["nav-active"]]: activeRoute.startsWith(
+                `/${username}/${user_id}`
+              ),
             })}
             onClick={() => {
               props.closeMenu();
@@ -57,10 +61,10 @@ function ModalDialog(
           </Link>
           <Link
             href={{
-              pathname: `/wallet`,
+              pathname: `/${username}`,
             }}
             className={cn(styles["nav-item"], {
-              [styles["nav-active"]]: activeRoute.startsWith(`/wallet`),
+              [styles["nav-active"]]: activeRoute.startsWith(`/${username}`),
             })}
             onClick={() => {
               props.closeMenu();

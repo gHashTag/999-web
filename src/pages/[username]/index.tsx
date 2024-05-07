@@ -1,27 +1,71 @@
 "use client";
+import { useEffect } from "react";
+
+import { TonConnectButton } from "@tonconnect/ui-react";
 import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 
-import { useReactiveVar } from "@apollo/client";
+import { FieldValues } from "react-hook-form";
+import { gql, useQuery, useMutation, ApolloError } from "@apollo/client";
 
+import { useToast } from "@/components/ui/use-toast";
+import { SignupFormDemo } from "@/components/ui/signup-form";
+import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { Spinner } from "@/components/ui/spinner";
-
-import { CanvasRevealEffectDemo } from "@/components/ui/canvas-reveal-effect-demo";
-
-import WorkspaceModal from "@/components/modal/WorkspaceModal";
-
-import { DataTable } from "@/components/table/data-table";
-
-import { useEffect } from "react";
-import { useWorkspace } from "@/hooks/useWorkspace";
-import { setIdTask, setVisibleHeader } from "@/apollo/reactive-store";
-
-import { useTasks } from "@/hooks/useTasks";
+import { setHeaderName } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
-import TaskModal from "@/components/modal/TaskModal";
-import { Button } from "@/components/ui/moving-border";
-import { TextRevealCard } from "@/components/ui/text-reveal-card";
-import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
+
+const QUERY = gql`
+  query GetUserByEmail($username: String!) {
+    usersCollection(filter: { username: { eq: $username } }) {
+      edges {
+        node {
+          user_id
+          first_name
+          last_name
+          username
+          photo_url
+          designation
+          company
+          position
+        }
+      }
+    }
+  }
+`;
+
+const MUTATION = gql`
+  mutation UpdateUser(
+    $user_id: UUID
+    $first_name: String!
+    $last_name: String!
+    $designation: String!
+    $company: String!
+    $position: String!
+  ) {
+    updateusersCollection(
+      filter: { user_id: { eq: $user_id } }
+      set: {
+        first_name: $first_name
+        last_name: $last_name
+        designation: $designation
+        company: $company
+        position: $position
+      }
+    ) {
+      records {
+        id
+        first_name
+        last_name
+        username
+        photo_url
+        user_id
+        company
+        position
+      }
+    }
+  }
+`;
 
 export type updateUserDataType = {
   user_id: string;
@@ -30,155 +74,115 @@ export type updateUserDataType = {
   designation: string;
 };
 
-export default function Office() {
+export default function Wallet() {
   const router = useRouter();
-
-  const { username, user_id } = useUser();
-
-  const {
-    workspacesData,
-    workspacesLoading,
-    workspacesError,
-    isOpenModalWorkspace,
-    onOpenModalWorkspace,
-    onOpenChangeModalWorkspace,
-    onCreateWorkspace,
-    onDeleteWorkspace,
-    onUpdateWorkspace,
-    setValueWorkspace,
-    controlWorkspace,
-    handleSubmitWorkspace,
-    getValuesWorkspace,
-    openModalWorkspaceId,
-    isEditingWorkspace,
-    setIsEditingWorkspace,
-    welcomeMenu,
-  } = useWorkspace();
+  const { username } = useUser();
 
   useEffect(() => {
     if (!username) {
       router.push("/");
     } else {
-      setVisibleHeader(true);
-      localStorage.setItem("workspace_id", "");
-      localStorage.setItem("workspace_name", "");
-      localStorage.setItem("room_name", "");
-      localStorage.setItem("room_id", "");
-      localStorage.setItem("recording_id", "");
-      localStorage.setItem("recording_name", "");
+      localStorage.setItem("is_owner", "true");
+      setHeaderName("Wallet");
     }
   }, [router, username]);
 
-  const {
-    tasksData,
-    tasksLoading,
-    tasksError,
-    refetchTasks,
-    isOpenModalTask,
-    onOpenModalTask,
-    onOpenChangeModalTask,
-    onCreateTask,
-    onDeleteTask,
-    onUpdateTask,
-    setValueTask,
-    controlTask,
-    handleSubmitTask,
-    getValuesTask: getValues,
-    onCreateNewTask,
-    columns,
-    openModalTaskId,
-    setOpenModalTaskId,
-    isEditingTask,
-  } = useTasks();
+  const { toast } = useToast();
 
-  const id_task = useReactiveVar(setIdTask);
+  const [mutateUser, { loading: mutationLoading, error: mutationError }] =
+    useMutation(MUTATION);
 
-  useEffect(() => {
-    if (id_task) {
-      setOpenModalTaskId(id_task);
+  if (mutationError instanceof ApolloError) {
+    // Обработка ошибки ApolloError
+    console.log(mutationError.message);
+  }
+
+  const { loading, error, data, refetch } = useQuery(QUERY, {
+    variables: {
+      username,
+    },
+  });
+
+  if (error) return <p>Error : {error.message}</p>;
+
+  const userNode = data?.usersCollection?.edges[0]?.node;
+
+  const handleFormData = (data: FieldValues) => {
+    try {
+      if (data) {
+        const variables = {
+          user_id: userNode.user_id,
+          first_name: data?.first_name,
+          last_name: data?.last_name,
+          designation: data?.designation,
+          company: data?.company,
+          position: data?.position,
+          username: username,
+        };
+
+        if (variables.first_name && variables.last_name) {
+          mutateUser({
+            variables,
+            onCompleted: () => {
+              refetch();
+            },
+          });
+        }
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Closed access",
+        description: JSON.stringify(error),
+      });
     }
-  }, [id_task, setOpenModalTaskId]);
-
-  const goToOffice = (
-    type: string,
-    workspace_id: string,
-    workspace_name: string
-  ) => {
-    router.push(`/${username}/${workspace_id}`);
-    localStorage.setItem("workspace_id", workspace_id);
-    localStorage.setItem("workspace_name", workspace_name);
-    localStorage.setItem("type", type);
-  };
-
-  const onCreateNewWorkspace = () => {
-    setValueWorkspace("title", "");
-    setValueWorkspace("description", "");
-    onOpenModalWorkspace();
-    setIsEditingWorkspace(false);
   };
 
   return (
-    <Layout loading={tasksLoading || workspacesLoading}>
-      <main className="flex flex-col items-center justify-between">
-        {/* <TextRevealCard text="Workspaces" revealText="Workspaces" /> */}
-        <BreadcrumbWithCustomSeparator username={username} />
+    <Layout loading={loading}>
+      <main className="flex flex-col items-center justify-between p-14">
+        <div style={{ padding: "10px" }} />
 
-        {tasksLoading && workspacesLoading && <Spinner size="lg" />}
+        {loading && <Spinner size="lg" />}
 
-        {/* <div style={{ position: "absolute", top: 75, right: 70 }}>
-          <Button onClick={onCreateNewWorkspace}>Create workspace</Button>
-        </div> */}
+        {!loading && userNode && (
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flex: 1,
+                marginRight: 20,
+                flexDirection: "column",
+              }}
+            >
+              <AnimatedTooltip
+                items={[
+                  {
+                    id: 1,
+                    name: `${userNode?.username}`,
+                    designation: userNode?.position,
+                    image: userNode?.photo_url,
+                  },
+                ]}
+              />
+              <div style={{ padding: "10px" }} />
+              <TonConnectButton style={{ marginLeft: 12 }} />
+            </div>
 
-        {!tasksLoading && (
-          <CanvasRevealEffectDemo
-            officeData={welcomeMenu || []}
-            onClick={(type, workspace_id, workspace_name) =>
-              goToOffice(type, workspace_id, workspace_name)
-            }
-          />
+            <SignupFormDemo
+              first_name={userNode.first_name}
+              last_name={userNode.last_name}
+              position={userNode.position}
+              company={userNode.company}
+              designation={userNode.designation}
+              // logout={logout}
+              onSubmit={handleFormData}
+            />
+          </>
         )}
-
-        {/* <div style={{ alignSelf: "flex-end", paddingRight: "75px" }}>
-          <Button onClick={() => onCreateNewTask()}>Create task</Button>
-        </div> */}
-        {/* {tasksData && <DataTable data={tasksData} columns={columns} />} */}
-
-        <>
-          {isOpenModalWorkspace && (
-            <WorkspaceModal
-              isOpen={isOpenModalWorkspace}
-              onOpen={onOpenModalWorkspace}
-              onOpenChange={onOpenChangeModalWorkspace}
-              onCreate={onCreateWorkspace}
-              onDelete={() =>
-                openModalWorkspaceId && onDeleteWorkspace(openModalWorkspaceId)
-              }
-              onUpdate={onUpdateWorkspace}
-              control={controlWorkspace}
-              handleSubmit={handleSubmitWorkspace}
-              getValues={getValuesWorkspace}
-              setValue={setValueWorkspace}
-              isEditing={isEditingWorkspace}
-            />
-          )}
-
-          {isOpenModalTask && (
-            <TaskModal
-              isOpen={isOpenModalTask}
-              onOpen={onOpenModalTask}
-              onOpenChange={onOpenChangeModalTask}
-              onCreate={onCreateTask}
-              onDelete={() => openModalTaskId && onDeleteTask(openModalTaskId)}
-              onUpdate={() => openModalTaskId && onUpdateTask(openModalTaskId)}
-              control={controlTask}
-              handleSubmit={handleSubmitTask}
-              getValues={getValues}
-              setValue={setValueTask}
-              isEditing={isEditingTask}
-            />
-          )}
-        </>
-        <div style={{ padding: "100px" }} />
+        <div style={{ padding: "20px" }} />
       </main>
     </Layout>
   );

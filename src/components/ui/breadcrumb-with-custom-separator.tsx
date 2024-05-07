@@ -26,25 +26,27 @@ export function BreadcrumbWithCustomSeparator({
 }) {
   const router = useRouter();
 
-  const { workspace_name, recording_name } = useUser();
+  const { user_id, workspace_name, recording_name } = useUser();
 
   const goToHome = () => {
-    router.push(`/${username}`);
+    router.push(`/${username}/${user_id}`);
     setLoading(true);
   };
 
   const goToWorkspaces = () => {
-    router.push(`/${username}/${workspace_id}`);
+    router.push(`/${username}/${user_id}/${workspace_id}`);
     setLoading(true);
   };
 
   const goToRooms = () => {
-    router.push(`/${username}/${workspace_id}/${room_id}`);
+    router.push(`/${username}/${user_id}/${workspace_id}/${room_id}`);
     setLoading(true);
   };
 
   const goToRecords = () => {
-    router.push(`/${username}/${workspace_id}/${room_id}/${record_id}`);
+    router.push(
+      `/${username}/${user_id}/${workspace_id}/${room_id}/${record_id}`
+    );
     setLoading(true);
   };
 

@@ -338,7 +338,7 @@ const useTasks = (): UseTasksReturn => {
   const onEditTask = (id: string) => {
     setIsEdit(false);
     localStorage.setItem("header_name", `Task #${id}`);
-    router.push(`/${username}/${workspace_id}/${room_id}/0/${id}`);
+    router.push(`/${username}/${user_id}/${workspace_id}/${room_id}/0/${id}`);
   };
 
   const columns = useMemo(

@@ -134,7 +134,7 @@ export default function Layout({
     (lastName && lastName[0]) || ""
   }`;
 
-  const mainButtonRoute = activeRoute !== "/" ? `/${user_id}` : "/";
+  const mainButtonRoute = activeRoute !== "/" ? `/${username}/${user_id}` : "/";
 
   return (
     <>

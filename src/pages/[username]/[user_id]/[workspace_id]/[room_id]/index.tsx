@@ -119,11 +119,10 @@ const RoomPage = () => {
   const handleClickPlus = async () => {
     onOpenModalPassport();
   };
-  console.log(passportData, "passportData");
 
   return (
     <>
-      <Layout loading={roomsLoading}>
+      <Layout loading={false}>
         <div
           style={{
             display: "flex",

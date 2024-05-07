@@ -34,6 +34,7 @@ import {
 import Captcha, { useCaptcha } from "./captcha";
 
 import { useSupabase } from "@/hooks/useSupabase";
+import { useUser } from "@/hooks/useUser";
 
 type FormState = "default" | "loading" | "error";
 
@@ -62,10 +63,11 @@ export default function Form({ sharePage }: Props) {
 
   const { checkUsername } = useSupabase();
   const inputRef = useRef(null);
+  const { username, user_id } = useUser();
 
   useEffect(() => {
     if (workspace_id) {
-      router.push(`/${workspace_id}/wallet`);
+      router.push(`/${username}/${user_id}`);
     }
     if (inputRef.current) {
       (inputRef.current as any)?.focus();
