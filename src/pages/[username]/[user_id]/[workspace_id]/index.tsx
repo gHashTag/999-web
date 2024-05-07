@@ -104,7 +104,7 @@ const MeetsPage = () => {
       setLoading(false);
 
       if (workspace_id === "d696abd8-3b7a-46f2-907f-5342a2b533a0") {
-        console.log("Earth");
+        // console.log("Earth");
         // "Earth"
         localStorage.setItem("workspace_type", "Earth");
         // setIsVisibleMenu(false);
@@ -120,7 +120,7 @@ const MeetsPage = () => {
         // setIsVisibleTask(false);
       } else {
         // "Fire"
-        console.log("Fire");
+        // console.log("Fire");
         localStorage.setItem("workspace_type", "Fire");
 
         localStorage.setItem("is_owner", "true");
