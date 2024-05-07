@@ -131,7 +131,7 @@ export default async function handler(
     // @ts-ignore
     return res.status(200).json({ rooms });
   } catch (error: any) {
-    console.log("error", error);
+    console.log("createOrFetchRoom error", error);
     return res.status(500).json({ message: error.message });
   }
 }

@@ -68,7 +68,6 @@ const MeetsPage = () => {
     getValuesTask,
     columns,
     openModalTaskId,
-    isEditingTask,
   } = useTasks();
 
   const {
@@ -244,7 +243,6 @@ const MeetsPage = () => {
           handleSubmit={handleSubmitTask}
           getValues={getValuesTask}
           setValue={setValueTask}
-          isEditing={isEditingTask}
         />
       )}
       {isOpenMeet && (

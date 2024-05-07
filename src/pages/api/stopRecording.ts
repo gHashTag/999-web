@@ -30,8 +30,6 @@ export default async function handler(
     roomId: roomId as string,
   });
 
-  console.log("recording", recording);
-
   const { msg } = recording;
 
   if (msg === "Stopped") {

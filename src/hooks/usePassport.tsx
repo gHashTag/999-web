@@ -60,7 +60,7 @@ const usePassport = ({
   let queryVariables;
 
   if (user_id && workspace_id && room_id && recording_id) {
-    console.log("usePassport 5");
+    // console.log("usePassport 5");
     queryVariables = {
       user_id,
       workspace_id,
@@ -72,7 +72,7 @@ const usePassport = ({
   }
 
   if (user_id && is_owner && workspace_id && room_id && !recording_id) {
-    console.log("usePassport 4");
+    // console.log("usePassport 4");
     queryVariables = {
       user_id,
       workspace_id,
@@ -91,7 +91,7 @@ const usePassport = ({
     !room_id &&
     !recording_id
   ) {
-    console.log("usePassport 3");
+    // console.log("usePassport 3");
     queryVariables = {
       user_id,
       workspace_id,
@@ -102,7 +102,7 @@ const usePassport = ({
   }
 
   if (user_id && is_owner && !workspace_id && !room_id && !recording_id) {
-    console.log("usePassport 2");
+    // console.log("usePassport 2");
     queryVariables = {
       user_id,
       is_owner,
@@ -118,7 +118,7 @@ const usePassport = ({
     !recording_id &&
     !is_owner
   ) {
-    console.log("usePassport 1");
+    // console.log("usePassport 1");
     queryVariables = {
       user_id,
       type,
@@ -126,7 +126,7 @@ const usePassport = ({
   }
 
   if (!is_owner && type === "room" && workspace_type === "Water") {
-    console.log("usePassport Water");
+    // console.log("usePassport Water");
     passportQuery = PASSPORT_COLLECTION_IS_NOT_OWNER_QUERY;
     queryVariables = {
       user_id,
@@ -136,7 +136,7 @@ const usePassport = ({
   }
 
   if (!is_owner && type === "room" && workspace_type === "Fire") {
-    console.log("usePassport Fire");
+    // console.log("usePassport Fire");
     passportQuery = PASSPORT_COLLECTION_IS_NOT_OWNER_QUERY;
     queryVariables = {
       workspace_id,
@@ -148,7 +148,7 @@ const usePassport = ({
 
   if (!is_owner && type === "task") {
     passportQuery = PASSPORT_COLLECTION_BY_TASK_ID_QUERY;
-    console.log("usePassport task");
+    // console.log("usePassport task");
     queryVariables = {
       task_id,
     };

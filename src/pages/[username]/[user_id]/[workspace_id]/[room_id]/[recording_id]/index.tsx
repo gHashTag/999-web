@@ -19,7 +19,7 @@ const RecordingPage = () => {
   const { username, workspace_id, room_id, room_name } = useUser();
   const { recording_id } = router.query;
 
-  const { assetLoading, assetData, asset, assetError } = useAssets();
+  const { assetData, assetLoading, assetError } = useAssets();
 
   const {
     tasksData,
@@ -40,7 +40,6 @@ const RecordingPage = () => {
     columns,
     openModalTaskId,
     setOpenModalTaskId,
-    isEditingTask,
   } = useTasks();
 
   useEffect(() => {
@@ -58,6 +57,7 @@ const RecordingPage = () => {
       </span>
     );
   }
+  const asset = assetData?.room_assetsCollection?.edges[0]?.node;
   return (
     <>
       <Layout loading={tasksLoading || assetLoading}>
@@ -81,7 +81,7 @@ const RecordingPage = () => {
           />
           <div style={{ padding: 15 }} />
         </div>
-        {!tasksLoading && assetData && (
+        {asset && (
           <div className="flex-col mt-10">
             <TracingBeam className="px-6">
               <div className="max-w-2xl mx-auto antialiased pt-4 relative">
@@ -134,7 +134,6 @@ const RecordingPage = () => {
             handleSubmit={handleSubmitTask}
             getValues={getValuesTask}
             setValue={setValueTask}
-            isEditing={isEditingTask}
           />
         )}
         <div style={{ padding: "100px" }} />

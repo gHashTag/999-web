@@ -35,7 +35,6 @@ const useAssets = () => {
     assetData,
     assetLoading,
     assetError,
-    asset: assetsData?.room_assetsCollection?.edges[0]?.node,
     assetItems: assetsData?.room_assetsCollection?.edges,
     assetsData,
     assetsLoading,

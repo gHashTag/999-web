@@ -88,7 +88,6 @@ export default function Office() {
     columns,
     openModalTaskId,
     setOpenModalTaskId,
-    isEditingTask,
   } = useTasks();
 
   const id_task = useReactiveVar(setIdTask);
@@ -174,7 +173,6 @@ export default function Office() {
               handleSubmit={handleSubmitTask}
               getValues={getValues}
               setValue={setValueTask}
-              isEditing={isEditingTask}
             />
           )}
         </>

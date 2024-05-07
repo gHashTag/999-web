@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import styled from "styled-components";
 import { cn } from "@/utils/cn";
 import { InputMultiline } from "../ui/input-multiline";
+import { useReactiveVar } from "@apollo/client";
+import { setEditTask } from "@/apollo/reactive-store";
 
 type Modal = {
   isOpen: boolean;
@@ -25,7 +27,6 @@ type Modal = {
   onCreate: () => void;
   onUpdate: () => void;
   onDelete: () => void;
-  isEditing: boolean;
   control: any;
   handleSubmit: any;
   getValues: any;
@@ -48,21 +49,23 @@ function TaskModal({
   control,
   handleSubmit,
   setValue,
-  isEditing,
 }: Modal) {
+  const isEditingTask = useReactiveVar(setEditTask);
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <Button onClick={onOpen}>
-        {isEditing ? "Edit Task" : "Create Task"}
+        {isEditingTask ? "Edit Task" : "Create Task"}
       </Button>
       <CustomModalContent>
         {(onClose: any) => (
           <>
             <ModalHeader>
-              <span>{isEditing ? "Edit task" : "Create task"}</span>
+              <span>{isEditingTask ? "Edit task" : "Create task"}</span>
             </ModalHeader>
             <ModalBody>
-              <form onSubmit={handleSubmit(isEditing ? onUpdate : onCreate)}>
+              <form
+                onSubmit={handleSubmit(isEditingTask ? onUpdate : onCreate)}
+              >
                 <Label htmlFor="text" style={{ paddingLeft: 5 }}>
                   Title
                 </Label>
@@ -134,7 +137,7 @@ function TaskModal({
                   <SelectItem value="high">High</SelectItem>
                 </SelectContent>
               </Select> */}
-              {isEditing && (
+              {isEditingTask && (
                 // @ts-ignore
                 <Button color="warning" variant="ghost" onClick={onDelete}>
                   Delete
@@ -143,11 +146,11 @@ function TaskModal({
               <Button
                 color="warning"
                 onClick={() => {
-                  isEditing ? onUpdate() : onCreate();
+                  isEditingTask ? onUpdate() : onCreate();
                   onClose();
                 }}
               >
-                {isEditing ? "Save" : "Create"}
+                {isEditingTask ? "Save" : "Create"}
               </Button>
             </ModalFooter>
           </>

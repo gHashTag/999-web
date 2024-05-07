@@ -22,7 +22,7 @@ import {
   UseFormWatch,
   useForm,
 } from "react-hook-form";
-import { setIsEdit, setOpenModalId } from "@/apollo/reactive-store";
+import { setEditTask, setOpenModalId } from "@/apollo/reactive-store";
 import { useUser } from "./useUser";
 import { AssignedTo, PassportNode, TasksArray } from "@/types";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
@@ -47,20 +47,19 @@ const useTasks = (): UseTasksReturn => {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
   const [openModalTaskId, setOpenModalTaskId] = useState<string>("");
-  const [isEditing, setIsEditingTask] = useState<boolean>(false);
 
   const { control, handleSubmit, getValues, setValue, reset, watch } =
     useForm();
 
-  let queryVariables;
+  let queryVariables = {};
   let query = GET_TASKS_BY_USER_ID;
 
-  console.log(workspace_type, "workspace_type");
-  console.log(user_id, "user_id");
-  console.log(workspace_id, "workspace_id");
+  // console.log(workspace_type, "workspace_type");
+  // console.log(user_id, "user_id");
+  // console.log(workspace_id, "workspace_id");
 
   if (!recording_id && !room_id && !workspace_id) {
-    console.log("tasksQuery :::1");
+    // console.log("tasksQuery :::1");
     query = TASKS_COLLECTION_QUERY;
     queryVariables = {
       user_id,
@@ -72,7 +71,7 @@ const useTasks = (): UseTasksReturn => {
     workspace_id &&
     workspace_type === "Fire"
   ) {
-    console.log("tasksQuery :::2");
+    // console.log("tasksQuery :::2");
     query = TASKS_COLLECTION_QUERY;
     queryVariables = {
       workspace_id,
@@ -84,7 +83,7 @@ const useTasks = (): UseTasksReturn => {
     workspace_id &&
     workspace_type === "Water"
   ) {
-    console.log("tasksQuery Water");
+    // console.log("tasksQuery Water");
     query = GET_TASKS_BY_NOT_EQ_USER_ID;
     queryVariables = {
       user_id,
@@ -95,10 +94,10 @@ const useTasks = (): UseTasksReturn => {
     workspace_id &&
     workspace_type === "Earth"
   ) {
-    console.log("tasksQuery Earth");
+    // console.log("tasksQuery Earth");
     query = GET_PUBLIC_ROOM_TASKS_QUERY;
   } else if (!recording_id && room_id && workspace_id) {
-    console.log("tasksQuery :::3");
+    // console.log("tasksQuery :::3");
     query = TASKS_COLLECTION_QUERY;
     queryVariables = {
       user_id,
@@ -106,13 +105,13 @@ const useTasks = (): UseTasksReturn => {
       workspace_id,
     };
   } else if (recording_id && !room_id && !workspace_id) {
-    console.log("tasksQuery :::4");
+    // console.log("tasksQuery :::4");
     query = GET_TASKS_BY_RECORDING_ID;
     queryVariables = {
       recording_id,
     };
   } else if (recording_id && room_id && workspace_id) {
-    console.log("tasksQuery :::5");
+    // console.log("tasksQuery :::5");
     query = GET_TASKS_BY_RECORDING_ID;
     queryVariables = {
       user_id,
@@ -124,7 +123,7 @@ const useTasks = (): UseTasksReturn => {
     console.log("Workspace ID is undefined");
     // Дополнительная логика для случая, когда workspace_id равен undefined
   }
-  console.log(queryVariables, "queryVariables");
+
   const {
     data: tasksData,
     loading: tasksLoading,
@@ -143,7 +142,7 @@ const useTasks = (): UseTasksReturn => {
     room_id: string
   ) => {
     setOpenModalTaskId(id);
-    setIsEditingTask(isEditing);
+    setEditTask(true);
     localStorage.setItem("workspace_id", workspace_id);
     localStorage.setItem("room_id", room_id);
     router.push(`/${username}/${user_id}/${workspace_id}/${room_id}/0/${id}`);
@@ -202,7 +201,7 @@ const useTasks = (): UseTasksReturn => {
     room_id && localStorage.setItem("room_id", room_id);
     recording_id && localStorage.setItem("recording_id", recording_id);
     onOpen();
-    setIsEditingTask(false);
+    setEditTask(false);
   };
 
   const onCreateTask = useCallback(async () => {
@@ -357,7 +356,7 @@ const useTasks = (): UseTasksReturn => {
   }, [onClose]);
 
   const onEditTask = (id: string) => {
-    setIsEdit(false);
+    setEditTask(true);
     localStorage.setItem("header_name", `Task #${id}`);
     router.push(`/${username}/${user_id}/${workspace_id}/0/0/${id}`);
   };
@@ -604,7 +603,7 @@ const useTasks = (): UseTasksReturn => {
     getValuesTask: getValues,
     onCreateNewTask,
     columns,
-    isEditingTask: isEditing,
+
     resetTask: reset,
     watchTask: watch,
   };
@@ -633,7 +632,6 @@ type UseTasksReturn = {
     recording_id?: string
   ) => void;
   columns: any;
-  isEditingTask: boolean;
   resetTask: any;
   handleSubmitTask: UseFormHandleSubmit<FieldValues, undefined>;
   watchTask: UseFormWatch<FieldValues>;

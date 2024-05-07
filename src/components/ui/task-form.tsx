@@ -23,7 +23,7 @@ import {
 import { ButtonAnimate } from "./button-animate";
 import { priorities, statuses } from "@/helpers/data/data";
 import { useReactiveVar } from "@apollo/client";
-import { setIsEdit } from "@/apollo/reactive-store";
+import { setEditTask } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";
 import { AnimatedTooltipTasks } from "./animated-tooltip-tasks";
 import { usePassport } from "@/hooks/usePassport";
@@ -71,7 +71,7 @@ export function TaskForm({
   const watchedCost = watchTask("cost", cost);
   const watchedPublic = watchTask("is_public", is_public);
 
-  const isEdit = useReactiveVar(setIsEdit);
+  const isEditTask = useReactiveVar(setEditTask);
   const { user_id: owner_user_id, workspace_id, room_id } = useUser();
 
   const isOwnerTask = owner_user_id === user_id;
@@ -126,7 +126,7 @@ export function TaskForm({
   return (
     <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-transparent dark:bg-transparent">
       <form className="my-8" onSubmit={handleSubmitTask(onSubmitDestination)}>
-        {isEdit ? (
+        {isEditTask ? (
           <div className="ounded-md border border-input bg-transparent px-6 py-6 rounded-md">
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
               <LabelInputContainer>
@@ -233,7 +233,7 @@ export function TaskForm({
             <div style={{ padding: "10px" }} />
             <ButtonAnimate
               onClick={() => {
-                setTimeout(() => setIsEdit(isEdit), 1000);
+                setTimeout(() => setEditTask(false), 1000);
                 router.back();
               }}
             >
@@ -269,7 +269,7 @@ export function TaskForm({
                   handleClickPlus={handleClickPlus}
                 />
                 <div style={{ padding: "10px" }} />
-                <ButtonAnimate onClick={() => setIsEdit(true)}>
+                <ButtonAnimate onClick={() => setEditTask(true)}>
                   Edit
                 </ButtonAnimate>
               </>

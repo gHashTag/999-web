@@ -42,6 +42,6 @@ export const setHeaderName = makeVar<string>("");
 
 export const setIdTask = makeVar<string>("");
 
-export const setIsEdit = makeVar<boolean>(true);
+export const setEditTask = makeVar<boolean>(false);
 
 export const setRoomId = makeVar<string>("");

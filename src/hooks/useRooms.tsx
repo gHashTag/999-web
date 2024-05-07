@@ -277,6 +277,8 @@ const useRooms = (): UseRoomsReturn => {
         toast({
           title: "Success! Room updated",
         });
+
+        localStorage.setItem("room_name", values.name);
         refetchRooms();
         assetsRefetch();
         roomNameRefetch();

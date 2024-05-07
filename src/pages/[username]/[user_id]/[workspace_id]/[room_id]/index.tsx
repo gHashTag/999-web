@@ -91,8 +91,6 @@ const RoomPage = () => {
     onCreateNewTask,
     columns,
     openModalTaskId,
-    setOpenModalTaskId,
-    isEditingTask,
   } = useTasks();
 
   const {
@@ -120,7 +118,7 @@ const RoomPage = () => {
   const handleClickPlus = async () => {
     onOpenModalPassport();
   };
-  console.log(passportData, "passportData");
+
   return (
     <>
       <Layout loading={false}>
@@ -266,7 +264,6 @@ const RoomPage = () => {
             handleSubmit={handleSubmitTask}
             getValues={getValuesTask}
             setValue={setValueTask}
-            isEditing={isEditingTask}
           />
         )}
         {isOpenMeet && (

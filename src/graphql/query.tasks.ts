@@ -214,7 +214,12 @@ export const DELETE_TASK_MUTATION = gql`
 export const GET_TASKS_BY_RECORDING_ID = gql`
   query GetUserTasks($recording_id: String!) {
     tasksCollection(
-      filter: { and: [{ recording_id: { eq: $recording_id } }] }
+      filter: { and: [{  id: { eq: $id }
+            user_id: { eq: $user_id }
+            workspace_id: { eq: $workspace_id }
+            room_id: { eq: $room_id }
+            recording_id: { eq: $recording_id } 
+            }] }
       orderBy: { created_at: DescNullsFirst }
     ) {
       edges {
