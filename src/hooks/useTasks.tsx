@@ -8,6 +8,7 @@ import {
   GET_TASKS_BY_USER_ID,
   TASKS_COLLECTION_QUERY,
   GET_PUBLIC_ROOM_TASKS_QUERY,
+  GET_ROOM_TASKS_WORKSPACE_ID_QUERY,
 } from "@/graphql/query.tasks";
 import { useRouter } from "next/router";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
@@ -43,76 +44,59 @@ const useTasks = (): UseTasksReturn => {
   const { control, handleSubmit, getValues, setValue, reset, watch } =
     useForm();
 
-  const tasksQuery = useMemo(() => {
-    let query = GET_TASKS_BY_USER_ID;
-    if (!recording_id && !room_id && !workspace_id) {
-      console.log("tasksQuery :::1");
-      query = TASKS_COLLECTION_QUERY;
-    } else if (!room_id && !recording_id && workspace_id) {
-      console.log("tasksQuery :::2");
-      query = GET_PUBLIC_ROOM_TASKS_QUERY;
-    } else if (!recording_id && room_id && workspace_id) {
-      console.log("tasksQuery :::3");
-      query = TASKS_COLLECTION_QUERY;
-    } else if (recording_id && !room_id && !workspace_id) {
-      console.log("tasksQuery :::4");
-      query = GET_TASKS_BY_RECORDING_ID;
-    } else if (recording_id && room_id && workspace_id) {
-      console.log("tasksQuery :::5");
-      query = GET_TASKS_BY_RECORDING_ID;
-    } else {
-      console.log("Workspace ID is undefined");
-      // Дополнительная логика для случая, когда workspace_id равен undefined
-    }
+  let queryVariables = {};
+  let query = GET_TASKS_BY_USER_ID;
+  console.log(queryVariables, "queryVariables");
 
-    return query;
-  }, [workspace_id, room_id, recording_id]);
-
-  const queryVariables = useMemo(() => {
-    let variables = {};
-
-    if (!recording_id && !room_id && !workspace_id) {
-      console.log("variables :::1");
-      variables = {
-        user_id,
-        // id: localStorage.getItem("id"),
-      };
-    } else if (!room_id && !recording_id && workspace_id) {
-      console.log("variables :::2");
-      variables = {
-        user_id,
-        workspace_id,
-      };
-    } else if (!recording_id && room_id && workspace_id) {
-      console.log("variables :::3");
-      variables = {
-        user_id,
-        room_id,
-        workspace_id,
-      };
-    } else if (recording_id && !room_id && !workspace_id) {
-      console.log("variables :::4");
-      variables = {
-        recording_id,
-      };
-    } else if (recording_id && room_id && workspace_id) {
-      console.log("variables :::5");
-      variables = {
-        user_id,
-        room_id,
-        workspace_id,
-        recording_id,
-      };
-    }
-    return variables;
-  }, [workspace_id, room_id, recording_id]);
+  if (!recording_id && !room_id && !workspace_id) {
+    console.log("tasksQuery :::1");
+    query = TASKS_COLLECTION_QUERY;
+    queryVariables = {
+      user_id,
+      // id: localStorage.getItem("id"),
+    };
+  } else if (!room_id && !recording_id && workspace_id) {
+    console.log("tasksQuery :::2===");
+    query = TASKS_COLLECTION_QUERY;
+    queryVariables = {
+      workspace_id,
+    };
+    console.log(queryVariables, "queryVariables====");
+    query = GET_ROOM_TASKS_WORKSPACE_ID_QUERY;
+  } else if (!recording_id && room_id && workspace_id) {
+    console.log("tasksQuery :::3");
+    query = TASKS_COLLECTION_QUERY;
+    queryVariables = {
+      user_id,
+      room_id,
+      workspace_id,
+    };
+  } else if (recording_id && !room_id && !workspace_id) {
+    console.log("tasksQuery :::4");
+    query = GET_TASKS_BY_RECORDING_ID;
+    queryVariables = {
+      recording_id,
+    };
+  } else if (recording_id && room_id && workspace_id) {
+    console.log("tasksQuery :::5");
+    query = GET_TASKS_BY_RECORDING_ID;
+    queryVariables = {
+      user_id,
+      room_id,
+      workspace_id,
+      recording_id,
+    };
+  } else {
+    console.log("Workspace ID is undefined");
+    // Дополнительная логика для случая, когда workspace_id равен undefined
+  }
 
   const {
     data: tasksData,
     loading: tasksLoading,
     error: tasksError,
     refetch: refetchTasks,
-  } = useQuery(tasksQuery, {
+  } = useQuery(query, {
     fetchPolicy: "network-only",
     variables: queryVariables,
     skip: !queryVariables,

@@ -32,7 +32,19 @@ if (!managementToken) {
 
 const RoomPage = () => {
   const router = useRouter();
-  const { username, user_id, workspace_id, room_id, room_name } = useUser();
+  const { username, workspace_id, workspace_type, room_id, room_name } =
+    useUser();
+
+  useEffect(() => {
+    if (!username) {
+      router.push("/");
+    } else {
+      localStorage.setItem("is_owner", "false");
+      localStorage.setItem("recording_id", "");
+      localStorage.setItem("recording_name", "");
+    }
+  }, [router, workspace_type, workspace_id]);
+
   const { assetsLoading, assetItems } = useAssets();
   const {
     roomsItem,
@@ -102,19 +114,8 @@ const RoomPage = () => {
     isEditingPassport,
   } = usePassport({
     room_id,
-    workspace_id,
     type: "room",
   });
-
-  useEffect(() => {
-    if (!username) {
-      router.push("/");
-    } else {
-      localStorage.setItem("is_owner", "false");
-      localStorage.setItem("recording_id", "");
-      localStorage.setItem("recording_name", "");
-    }
-  }, [router, roomsItem, tasksData, passportData, refetchRooms]);
 
   const handleClickPlus = async () => {
     onOpenModalPassport();

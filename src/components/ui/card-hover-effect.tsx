@@ -16,13 +16,13 @@ type HoverEffectProps = {
 export const HoverEffect = ({ items, className }: HoverEffectProps) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const router = useRouter();
-  const { username, workspace_id } = useUser();
+  const { username, user_id, workspace_id } = useUser();
 
   const goToRecordId = (item: { node: RecordingAsset }) => {
     localStorage.setItem("recording_id", item.node.recording_id);
     localStorage.setItem("recording_name", item.node.title);
     router.push(
-      `/${username}/${workspace_id}/${item.node.room_id}/${item.node.recording_id}`
+      `/${username}/${user_id}/${workspace_id}/${item.node.room_id}/${item.node.recording_id}`
     );
   };
 

@@ -39,8 +39,9 @@ const MeetsPage = () => {
   const { username, user_id, workspace_id, workspace_name, workspace_type } =
     useUser();
 
+  console.log(workspace_type, "workspace_type");
   const passportObj: PassportType =
-    workspace_name === "Вода" || "Water"
+    workspace_type === "Water"
       ? {
           user_id,
           is_owner: false,
@@ -48,11 +49,10 @@ const MeetsPage = () => {
         }
       : {
           user_id,
-          workspace_id,
-          room_id,
           is_owner: true,
+          type: "room",
         };
-
+  console.log(passportObj, "passportObj");
   const { passportData } = usePassport(passportObj);
 
   const {
@@ -117,6 +117,7 @@ const MeetsPage = () => {
         // "Fire"
         console.log("Fire");
         localStorage.setItem("workspace_type", "Fire");
+
         localStorage.setItem("is_owner", "true");
         setIsVisibleTask(true);
         localStorage.setItem("room_name", "");

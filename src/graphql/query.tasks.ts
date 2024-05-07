@@ -358,10 +358,49 @@ export const GET_TASKS_FOR_ROOM = gql`
   }
 `;
 
+export const GET_ROOM_TASKS_WORKSPACE_ID_QUERY = gql`
+  query GetPublicRoomTasks($workspace_id: UUID!) {
+    tasksCollection(
+      filter: { and: [
+        { 
+          workspace_id: { eq: $workspace_id }
+        }
+      ] }
+      orderBy: { created_at: DescNullsFirst }
+    ) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          room_id
+          created_at
+          recording_id
+          title
+          description
+          is_public
+          cost
+          updated_at
+          due_date
+          priority
+          completed_at
+          is_archived
+          status
+          label
+          assigned_to
+        }
+      }
+    }
+  }
+`;
+
 export const GET_PUBLIC_ROOM_TASKS_QUERY = gql`
   query GetPublicRoomTasks {
     tasksCollection(
-      filter: { and: [{ is_public: { eq: true } }] }
+      filter: { and: [
+        { is_public: { eq: true } 
+        }
+      ] }
       orderBy: { created_at: DescNullsFirst }
     ) {
       edges {

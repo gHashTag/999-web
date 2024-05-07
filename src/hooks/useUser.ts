@@ -3,6 +3,8 @@ const useUser = () => {
   const user_id = localStorage.getItem("user_id") || "";
   const workspace_id = localStorage.getItem("workspace_id") || "";
   const workspace_name = localStorage.getItem("workspace_name") || "";
+  const workspace_type = localStorage.getItem("workspace_type");
+
   const header_name = localStorage.getItem("header_name") || "";
   const room_id = localStorage.getItem("room_id") || "";
   const room_name = localStorage.getItem("room_name") || "";
@@ -13,7 +15,7 @@ const useUser = () => {
   const lastName = localStorage.getItem("last_name");
   const lang = navigator.language.substring(0, 2);
   const owner = localStorage.getItem("is_owner");
-  const workspace_type = localStorage.getItem("workspace_type");
+
   const is_owner = owner === "false" ? false : true;
 
   return {

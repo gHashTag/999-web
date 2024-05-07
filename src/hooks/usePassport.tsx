@@ -18,7 +18,6 @@ import { useTasks } from "./useTasks";
 
 type passportType = {
   user_id?: string;
-  workspace_id?: string;
   room_id?: string | null | undefined;
   recording_id?: string;
   task_id?: string;
@@ -27,23 +26,23 @@ type passportType = {
 };
 
 const usePassport = ({
-  workspace_id,
   room_id,
   recording_id,
   task_id,
   type,
   assigned_to,
 }: passportType): UsePassportReturn => {
-  const { username, user_id, is_owner, workspace_type } = useUser();
-  console.log(username, "username");
-  console.log(user_id, "user_id");
-  console.log(workspace_id, "workspace_id");
-  console.log(room_id, "room_id");
-  console.log(recording_id, "recording_id");
-  console.log(is_owner, "is_owner");
-  console.log(task_id, "task_id");
-  console.log(type, "type");
-  console.log(workspace_type, "workspace_type");
+  const { username, user_id, is_owner, workspace_id, workspace_type } =
+    useUser();
+  // console.log(username, "username");
+  // console.log(user_id, "user_id");
+  // console.log(workspace_id, "workspace_id");
+  // console.log(room_id, "room_id");
+  // console.log(recording_id, "recording_id");
+  // console.log(is_owner, "is_owner");
+  // console.log(task_id, "task_id");
+  // console.log(type, "type");
+  // console.log(workspace_type, "workspace_type");
   const { toast } = useToast();
   const { updateTask, refetchTasks } = useTasks();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -83,7 +82,15 @@ const usePassport = ({
     };
   }
 
-  if (user_id && is_owner && workspace_id && !room_id && !recording_id) {
+  if (
+    user_id &&
+    is_owner &&
+    workspace_id &&
+    type &&
+    task_id &&
+    !room_id &&
+    !recording_id
+  ) {
     console.log("usePassport 3");
     queryVariables = {
       user_id,
@@ -151,7 +158,7 @@ const usePassport = ({
   //   passportQuery = GET_ALL_PASSPORTS_QUERY;
   // }
 
-  console.log(queryVariables, "queryVariables");
+  // console.log(queryVariables, "queryVariables");
 
   const {
     data: passportData,
@@ -193,16 +200,24 @@ const usePassport = ({
   }
 
   const onCreatePassport = async () => {
-    console.log("onCreatePassport");
-
     try {
       const formData = getValues();
-      console.log(formData, "formData");
+      if (username === formData.username) {
+        toast({
+          title: "Passport already exists",
+          variant: "destructive",
+        });
+        reset({
+          title: "",
+          description: "",
+          label: "",
+        });
+        return;
+      }
 
       const { isUserExist, user } = await checkUsernameAndReturnUser(
         formData.username
       );
-      console.log(isUserExist, "isUserExist");
 
       const checkIfPassportExists =
         (passportNode &&
@@ -235,7 +250,7 @@ const usePassport = ({
           type,
         },
       };
-      console.log(variables, "variables");
+      // console.log(variables, "variables");
 
       const assignedArray: PassportNode[] = [
         {
@@ -244,7 +259,7 @@ const usePassport = ({
           photo_url: user.photo_url,
         },
       ];
-      console.log(assignedArray, "assignedArray");
+      // console.log(assignedArray, "assignedArray");
 
       assigned_to && assignedArray.push(...assigned_to);
 

@@ -101,7 +101,6 @@ export function TaskForm({
     openModalPassportId,
     isEditingPassport,
   } = usePassport({
-    workspace_id,
     room_id,
     task_id,
     type: "task",
