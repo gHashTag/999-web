@@ -93,9 +93,9 @@ const useTasks = (): UseTasksReturn => {
     !room_id &&
     !recording_id &&
     workspace_id &&
-    workspace_type === "Earth"
+    workspace_type === "Copper pipes"
   ) {
-    // console.log("tasksQuery Earth");
+    // console.log("tasksQuery Copper pipes");
     query = GET_PUBLIC_ROOM_TASKS_QUERY;
   } else if (!recording_id && room_id && workspace_id) {
     // console.log("tasksQuery :::3");

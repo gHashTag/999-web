@@ -12,7 +12,7 @@ export const getTitle = (title: string, lang: string) => {
   if (title === "Water") {
     return lang === "ru" ? "Вода" : "Water";
   }
-  if (title === "Earth") {
+  if (title === "Copper pipes") {
     return lang === "ru" ? "Медные трубы" : "Copper pipes";
   } else return title;
 };

@@ -87,7 +87,7 @@ const useWorkspace = (): UseWorkspaceReturn => {
         ],
         created_at: "2024-04-10T15:39:50.949122+00:00",
         id: "4",
-        title: "Earth",
+        title: "Copper pipes",
         type: "earth",
         updated_at: "2024-04-10T15:39:50.949122+00:00",
         user_id: "ec0c948a-2b96-4ccd-942f-0a991d78a94f",

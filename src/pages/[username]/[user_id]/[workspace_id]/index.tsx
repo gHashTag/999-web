@@ -106,8 +106,8 @@ const MeetsPage = () => {
 
       if (workspace_id === "d696abd8-3b7a-46f2-907f-5342a2b533a0") {
         // console.log("");
-        // ""
-        localStorage.setItem("workspace_type", "");
+        // "Copper pipes"
+        localStorage.setItem("workspace_type", "Copper pipes");
         // setIsVisibleMenu(false);
         // setIsVisibleTask(true);
         localStorage.setItem("is_owner", "true");
@@ -228,7 +228,7 @@ const MeetsPage = () => {
           <DataTable data={assignedTasks} columns={columns} />
         )}
 
-        {workspace_type === "" && tasksData && (
+        {workspace_type === "Copper pipes" && tasksData && (
           <DataTable data={tasksData} columns={columns} />
         )}
       </div>
