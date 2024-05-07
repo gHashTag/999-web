@@ -53,7 +53,7 @@ export default function Hero() {
       >
         Avatars
       </h1>
-
+      <div style={{ height: 20 }}></div>
       <div
         className={cn(
           styleUtils.appear,

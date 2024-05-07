@@ -24,11 +24,18 @@ import LearnMore from "./learn-more";
 import { useReactiveVar } from "@apollo/client";
 import { setLoggedIn, setVisibleHeader } from "@/apollo/reactive-store";
 import { Globe } from "./ui/globe";
+import { useUser } from "@/hooks/useUser";
+import { useRouter } from "next/navigation";
 
 export default function Conf() {
   const loggedIn = useReactiveVar(setLoggedIn);
+  const { username, user_id } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
+    if (username) {
+      router.push(`/${username}/${user_id}`);
+    }
     if (!loggedIn) {
       setVisibleHeader(false);
     }

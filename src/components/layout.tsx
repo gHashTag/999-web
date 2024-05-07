@@ -195,7 +195,7 @@ export default function Layout({
             </div>
             {activeRoute !== "/" && (
               <div className={styles["header-logos"]}>
-                <Link href={`/wallet`} className={styles.logo}>
+                <Link href={`/${username}`} className={styles.logo}>
                   <Avatar>
                     <AvatarImage src={photo_url || ""} />
                     <AvatarFallback>{shortName}</AvatarFallback>

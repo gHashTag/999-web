@@ -15,6 +15,7 @@ import { usePathname } from "next/navigation";
 import DropdownMenuApp from "./dropdown";
 import useDeviceDetect from "@/hooks/useDeviceDetect";
 import { ADAPTER_EVENTS } from "@web3auth/base";
+import { useUser } from "@/hooks/useUser";
 
 // import { getPublicCompressed } from '@toruslabs/eccrypto'
 
@@ -22,6 +23,7 @@ export default function Header() {
   const { isMobile } = useDeviceDetect();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const pathname = usePathname();
+  const { username } = useUser();
 
   const isTabActive = (path: string) => {
     return pathname === path;
@@ -69,7 +71,7 @@ export default function Header() {
         <NavbarItem isActive={isTabActive("/wallet")}>
           <Link
             color={isTabActive("/wallet") ? "primary" : "foreground"}
-            href="/wallet"
+            href={`/${username}`}
           >
             Wallet
           </Link>
