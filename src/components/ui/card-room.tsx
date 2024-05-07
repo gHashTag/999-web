@@ -58,9 +58,9 @@ const CardRoom = ({
               }}
             >
               chat id: {room?.chat_id}
-              {room_id && <div>room_id: {room_id}</div>}
-              {username && <div>username: {username}</div>}
-              <div>is_owner: {JSON.stringify(is_owner)}</div>
+              {/* {room_id && <div>room_id: {room_id}</div>} */}
+              {/* {username && <div>username: {username}</div>}
+              <div>is_owner: {JSON.stringify(is_owner)}</div> */}
             </div>
           </div>
         </div>

@@ -122,7 +122,7 @@ const useTasks = (): UseTasksReturn => {
     setOpenModalTaskId(id);
     setIsEditingTask(isEditing);
     router.push(
-      `/${username}/${workspace_id ? workspace_id : 0}/${
+      `/${username}/${user_id}/${workspace_id ? workspace_id : 0}/${
         room_id ? room_id : 0
       }/0/${id}`
     );

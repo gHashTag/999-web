@@ -206,6 +206,7 @@ export function TaskForm({
                 />
               </LabelInputContainer>
             )}
+            <div style={{ padding: "10px" }} />
             <AnimatedTooltipTasks
               assigneeItems={passportData}
               onClick={onDeleteAssignee}
