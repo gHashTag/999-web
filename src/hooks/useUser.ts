@@ -13,7 +13,7 @@ const useUser = () => {
   const lastName = localStorage.getItem("last_name");
   const lang = navigator.language.substring(0, 2);
   const owner = localStorage.getItem("is_owner");
-
+  console.log(owner, "owner");
   const is_owner = owner === "false" ? false : true;
 
   return {

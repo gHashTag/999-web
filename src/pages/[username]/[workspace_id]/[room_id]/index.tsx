@@ -110,6 +110,7 @@ const RoomPage = () => {
     if (!username) {
       router.push("/");
     } else {
+      localStorage.setItem("is_owner", "false");
       localStorage.setItem("recording_id", "");
       localStorage.setItem("recording_name", "");
     }
