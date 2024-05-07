@@ -358,7 +358,8 @@ const useTasks = (): UseTasksReturn => {
   }, [onClose]);
 
   const onEditTask = (id: string) => {
-    setEditTask(true);
+    // const isOwner = task_user_id === user_id;
+    setEditTask(false);
     localStorage.setItem("header_name", `Task #${id}`);
     router.push(`/${username}/${user_id}/${workspace_id}/0/0/${id}`);
   };

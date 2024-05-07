@@ -55,7 +55,7 @@ export const AnimatedTooltipTasks = ({
           <div
             className="-mr-4 relative group rounded-full"
             key={item.node.photo_url}
-            onClick={() => handleClick(item)}
+            onClick={() => isVisiblePlus && handleClick(item)}
           >
             <Image
               onMouseMove={handleMouseMove}

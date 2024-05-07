@@ -72,6 +72,7 @@ export function TaskForm({
   const watchedPublic = watchTask("is_public", is_public);
 
   const isEditTask = useReactiveVar(setEditTask);
+
   const { user_id: owner_user_id, workspace_id, room_id } = useUser();
 
   const isOwnerTask = owner_user_id === user_id;
@@ -267,6 +268,7 @@ export function TaskForm({
                   assigneeItems={passportData}
                   onClick={onDeleteAssignee}
                   handleClickPlus={handleClickPlus}
+                  isVisiblePlus={isEditTask}
                 />
                 <div style={{ padding: "10px" }} />
                 <ButtonAnimate onClick={() => setEditTask(true)}>
