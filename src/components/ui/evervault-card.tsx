@@ -82,7 +82,7 @@ export const EvervaultCard = ({
     ) {
       if (type === "guest") {
         handleCopy(
-          `${SITE_URL}/${username}/${user_id}/${workspace_id}/${room_id}/meet/${inviteGuestCode}`
+          `${SITE_URL}/${username}/${user_id}/${workspace_id}/${room_id}/meet/${inviteMemberCode}`
         );
         inviteToMeet(type);
       } else if (type === "member") {
