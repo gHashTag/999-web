@@ -121,8 +121,7 @@ const usePassport = ({
     console.log("usePassport 0");
     passportQuery = PASSPORT_COLLECTION_IS_NOT_OWNER_QUERY;
     queryVariables = {
-      workspace_id,
-      room_id,
+      user_id,
       is_owner,
       type: "room",
     };

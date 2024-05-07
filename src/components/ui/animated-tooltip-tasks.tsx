@@ -19,14 +19,13 @@ export const AnimatedTooltipTasks = ({
   isVisiblePlus = true,
 }: AnimatedTooltipTasksProps) => {
   const x = useMotionValue(0);
-  console.log(assigneeItems, "assigneeItems");
+
   const handleMouseMove = (event: any) => {
     const halfWidth = event.target.offsetWidth / 2;
     x.set(event.nativeEvent.offsetX - halfWidth); // set the x value, which is then used in transform and rotate
   };
 
   const handleClick = (item: Passport) => {
-    console.log(item, "item");
     onClick(item);
   };
 

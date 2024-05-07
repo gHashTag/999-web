@@ -105,14 +105,17 @@ const MeetsPage = () => {
         setType("Earth");
         // setIsVisibleMenu(false);
         setIsVisibleTask(true);
+        localStorage.setItem("is_owner", "true");
       } else if (workspace_id === "54dc9d0e-dd96-43e7-bf72-02c2807f8977") {
         // "Water",
+        localStorage.setItem("is_owner", "false");
         console.log("Water");
         setType("Water");
         setIsVisibleTask(false);
       } else {
         // "Fire"
         console.log("Fire");
+        localStorage.setItem("is_owner", "true");
         setIsVisibleTask(true);
         localStorage.setItem("room_name", "");
         localStorage.setItem("room_id", "");
@@ -132,6 +135,8 @@ const MeetsPage = () => {
   };
 
   const goToRoomId = (room: RoomEdge) => {
+    console.log("goToRoomId");
+    // localStorage.setItem("is_owner", "false");
     router.push(`/${username}/${user_id}/${workspace_id}/${room.node.name}`);
     localStorage.setItem("room_id", room.node.room_id);
     setRoomId(room.node.room_id);
@@ -188,7 +193,6 @@ const MeetsPage = () => {
         >
           {passportData &&
             passportData.map((item: Passport, index) => {
-              console.log(item, "item");
               return (
                 <CardRoom
                   key={index}
