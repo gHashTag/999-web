@@ -165,7 +165,7 @@ const MeetsPage = () => {
   };
 
   return (
-    <Layout loading={loading || roomsLoading}>
+    <Layout loading={roomsLoading}>
       <div className="flex flex-col items-center justify-between">
         <BreadcrumbWithCustomSeparator
           username={username}
