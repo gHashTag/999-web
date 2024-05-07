@@ -1,4 +1,6 @@
 "use client";
+import { Task, TaskNode } from "@/types";
+import { da } from "@faker-js/faker";
 import { createClient } from "@supabase/supabase-js";
 
 interface QuestionContext {
@@ -28,7 +30,7 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
 );
 
 export async function getWorkspaceById(workspace_id: string) {
@@ -77,7 +79,7 @@ export async function createUser(ctx: any) {
   }
 
   if (existingUser) {
-    return
+    return;
   }
   // Если пользователя нет, создаем нового
   const usersData = {
@@ -103,14 +105,14 @@ export async function createUser(ctx: any) {
   return data;
 }
 
-export async function createRoom (username: string) {
+export async function createRoom(username: string) {
   const { data, error } = await supabase
     .from("rooms")
     .select("*")
     .eq("username", username);
 
   return data;
-};
+}
 
 export const getSelectIzbushkaId = async (selectIzbushka: string) => {
   const { data: selectIzbushkaData, error: selectIzbushkaError } =
@@ -118,8 +120,9 @@ export const getSelectIzbushkaId = async (selectIzbushka: string) => {
   return { selectIzbushkaData, selectIzbushkaError };
 };
 
-export async function getBiggest(lesson_number: number): Promise<number | null> {
-
+export async function getBiggest(
+  lesson_number: number,
+): Promise<number | null> {
   const { data, error } = await supabase
     .from("javascript")
     .select("subtopic")
@@ -136,7 +139,7 @@ export async function getBiggest(lesson_number: number): Promise<number | null> 
 }
 
 export async function getQuestion(ctx: QuestionContext) {
-  console.log(ctx)
+  console.log(ctx);
   // Проверяем, предоставлены ли lesson_number и subtopic
   if (ctx.lesson_number == null || ctx.subtopic == null) {
     console.error("getQuestion требует lesson_number и subtopic");
@@ -152,7 +155,7 @@ export async function getQuestion(ctx: QuestionContext) {
     .eq("subtopic", subtopic);
 
   if (error) {
-    console.log(error, "error supabase getQuestion")
+    console.log(error, "error supabase getQuestion");
     throw new Error(error.message);
   }
 
@@ -204,7 +207,6 @@ export async function resetProgress(
 }
 
 export async function getCorrects(user_id: string): Promise<number> {
-
   // Запрос к базе данных для получения данных пользователя
   const { data, error } = await supabase
     .from("progress")
@@ -221,7 +223,7 @@ export async function getCorrects(user_id: string): Promise<number> {
     throw new Error("User not found");
   }
   // Подсчет количества true значений
-  const correctAnswers = data.javascript
+  const correctAnswers = data.javascript;
 
   return correctAnswers;
 }
@@ -245,7 +247,11 @@ export async function updateProgress(
   } else {
     const { error: updateError } = await supabase
       .from("progress")
-      .update({ javascript: isTrue ? progressData[0].javascript+1 : progressData[0].javascript})
+      .update({
+        javascript: isTrue
+          ? progressData[0].javascript + 1
+          : progressData[0].javascript,
+      })
       .eq("user_id", user_id);
 
     if (updateError) throw new Error(updateError.message);
@@ -268,7 +274,6 @@ export async function updateResult(
 }
 
 export async function getUid(username: string) {
-
   // Запрос к таблице users для получения user_id по username
   const { data, error } = await supabase
     .from("users")
@@ -288,6 +293,35 @@ export async function getUid(username: string) {
 
   // Возвращаем user_id
   return data.user_id;
+}
+
+export async function getAssignedTasks(user_id: string): Promise<Task[]> {
+  const { data, error } = await supabase
+    .from("tasks")
+    .select("*")
+    .neq("user_id", user_id)
+    .neq("assigned_to", null)
+    .contains(
+      "assigned_to",
+      JSON.stringify([{ user_id }]),
+    );
+
+  if (error) {
+    console.error("Ошибка при получении getAssignedTasks:", error.message);
+    throw new Error(error.message);
+  }
+
+  const nodeArray = data.map((value) => {
+    return {
+      "__typename": "tasks",
+      node: {
+        ...value,
+        assigned_to: JSON.stringify(value.assigned_to),
+      },
+    };
+  });
+
+  return nodeArray;
 }
 
 export { supabase };

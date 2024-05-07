@@ -48,7 +48,7 @@ const Rooms = () => {
       router.push("/");
     } else {
       localStorage.setItem("room_id", room_id);
-      localStorage.setItem("workspace_id", workspace_id);
+      // localStorage.setItem("workspace_id", workspace_id);
       setIsPassport(true);
       const fetchToken = async () => {
         try {

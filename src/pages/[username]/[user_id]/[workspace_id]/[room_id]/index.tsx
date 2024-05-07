@@ -120,7 +120,7 @@ const RoomPage = () => {
   const handleClickPlus = async () => {
     onOpenModalPassport();
   };
-
+  console.log(passportData, "passportData");
   return (
     <>
       <Layout loading={false}>
@@ -181,7 +181,7 @@ const RoomPage = () => {
             onOpenModalPassport={onOpenModalPassport}
             passportData={passportData}
           />
-          {passportData && passportData.length > 1 && (
+          {passportData && passportData.length > 0 && (
             <EvervaultCard
               key={arrayInvite[2].type}
               text={arrayInvite[2].text}

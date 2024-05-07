@@ -10,7 +10,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { SelectRoom } from "@/components/ui/select-room";
 
 import { useReactiveVar } from "@apollo/client";
-import { Passport, RoomEdge } from "@/types";
+import { Passport, RoomEdge, Task, TaskNode } from "@/types";
 import CardRoom from "@/components/ui/card-room";
 import { Button } from "@/components/ui/moving-border";
 import { DataTable } from "@/components/table/data-table";
@@ -23,6 +23,7 @@ import TaskModal from "@/components/modal/TaskModal";
 import { useRooms } from "@/hooks/useRooms";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 import { usePassport } from "@/hooks/usePassport";
+import { getAssignedTasks } from "@/utils/supabase";
 
 type PassportType = {
   user_id?: string;
@@ -36,10 +37,8 @@ const MeetsPage = () => {
   const router = useRouter();
   const loading = useReactiveVar(setLoading);
   const room_id = useReactiveVar(setRoomId);
-  const { username, user_id, workspace_id, workspace_name, workspace_type } =
-    useUser();
+  const { username, user_id, workspace_id, workspace_type } = useUser();
 
-  console.log(workspace_type, "workspace_type");
   const passportObj: PassportType =
     workspace_type === "Water"
       ? {
@@ -52,7 +51,7 @@ const MeetsPage = () => {
           is_owner: true,
           type: "room",
         };
-  console.log(passportObj, "passportObj");
+
   const { passportData } = usePassport(passportObj);
 
   const {
@@ -91,8 +90,13 @@ const MeetsPage = () => {
     onUpdateRoom,
     watchRoom,
   } = useRooms();
-  const [isVisibleTask, setIsVisibleTask] = useState(false);
-  // const [workspaceType, setWorkspaceType] = useState("Fire");
+  const [assignedTasks, setAssignedTasks] = useState<Task[]>();
+
+  const assigned = async () => {
+    const result = await getAssignedTasks(user_id);
+    setAssignedTasks(result);
+    return result;
+  };
 
   useEffect(() => {
     if (!username) {
@@ -105,21 +109,23 @@ const MeetsPage = () => {
         // "Earth"
         localStorage.setItem("workspace_type", "Earth");
         // setIsVisibleMenu(false);
-        setIsVisibleTask(true);
+        // setIsVisibleTask(true);
         localStorage.setItem("is_owner", "true");
       } else if (workspace_id === "54dc9d0e-dd96-43e7-bf72-02c2807f8977") {
         // "Water",
+        assigned();
         localStorage.setItem("is_owner", "false");
+        localStorage.setItem("room_id", "");
         console.log("Water");
         localStorage.setItem("workspace_type", "Water");
-        setIsVisibleTask(false);
+        // setIsVisibleTask(false);
       } else {
         // "Fire"
         console.log("Fire");
         localStorage.setItem("workspace_type", "Fire");
 
         localStorage.setItem("is_owner", "true");
-        setIsVisibleTask(true);
+        // setIsVisibleTask(true);
         localStorage.setItem("room_name", "");
         localStorage.setItem("room_id", "");
         localStorage.setItem("recording_id", "");
@@ -138,7 +144,6 @@ const MeetsPage = () => {
   };
 
   const goToRoomId = (room: RoomEdge) => {
-    console.log("goToRoomId");
     // localStorage.setItem("is_owner", "false");
     router.push(`/${username}/${user_id}/${workspace_id}/${room.node.name}`);
     localStorage.setItem("room_id", room.node.room_id);
@@ -215,7 +220,15 @@ const MeetsPage = () => {
           paddingBottom: 200,
         }}
       >
-        {isVisibleTask && tasksData && (
+        {workspace_type === "Fire" && tasksData && (
+          <DataTable data={tasksData} columns={columns} />
+        )}
+
+        {workspace_type === "Water" && assignedTasks && (
+          <DataTable data={assignedTasks} columns={columns} />
+        )}
+
+        {workspace_type === "Earth" && tasksData && (
           <DataTable data={tasksData} columns={columns} />
         )}
       </div>

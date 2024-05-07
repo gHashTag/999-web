@@ -26,7 +26,12 @@ import { setIdTask } from "@/apollo/reactive-store";
 interface DataTableRowActionsProps {
   row: RowTaskType;
   onDelete: (id: string) => void;
-  onClickEdit: (isEditing: boolean, id: string) => void;
+  onClickEdit: (
+    isEditing: boolean,
+    id: string,
+    workspace_id: string,
+    room_id: string
+  ) => void;
 }
 
 export function DataTableRowActions<TData>({
@@ -52,7 +57,12 @@ export function DataTableRowActions<TData>({
           onClick={() => {
             localStorage.setItem("id", row.original.node.id.toString());
             setIdTask(row.original.node.id);
-            onClickEdit(true, row.original.node.id);
+            onClickEdit(
+              true,
+              row.original.node.id,
+              row.original.node.workspace_id,
+              row.original.node.room_id
+            );
           }}
         >
           Edit

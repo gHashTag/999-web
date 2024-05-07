@@ -54,7 +54,6 @@ export const TASKS_COLLECTION_QUERY = gql`
           workspace_id
           room_id
           recording_id
-          created_at
           title
           description
           is_public
@@ -85,6 +84,9 @@ export const CREATE_TASK_MUTATION = gql`
         updated_at
         due_date
         priority
+        workspace_id
+        room_id
+        recording_id
         cost
         is_public
         assigned_to
@@ -123,6 +125,9 @@ export const MUTATION_TASK_STATUS_UPDATE = gql`
     ) {
       records {
         id
+        workspace_id
+        room_id
+        recording_id
         user_id
         title
         description
@@ -433,6 +438,36 @@ export const GET_TASKS_BY_USER_ID = gql`
   query GetUserTasks($user_id: UUID!) {
     tasksCollection(
       filter: { and: [{ user_id: { eq: $user_id } }] }
+      orderBy: { created_at: DescNullsFirst }
+    ) {
+      edges {
+        node {
+          id
+          user_id
+          workspace_id
+          room_id
+          created_at
+          recording_id
+          title
+          description
+          updated_at
+          due_date
+          priority
+          completed_at
+          is_archived
+          status
+          label
+          assigned_to
+        }
+      }
+    }
+  }
+`;
+
+export const GET_TASKS_BY_NOT_EQ_USER_ID = gql`
+  query GetUserTasks($user_id: UUID!) {
+    tasksCollection(
+      filter: { and: [{ user_id: { neq: $user_id } }] }
       orderBy: { created_at: DescNullsFirst }
     ) {
       edges {

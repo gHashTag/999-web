@@ -9,6 +9,7 @@ import {
   TASKS_COLLECTION_QUERY,
   GET_PUBLIC_ROOM_TASKS_QUERY,
   GET_ROOM_TASKS_WORKSPACE_ID_QUERY,
+  GET_TASKS_BY_NOT_EQ_USER_ID,
 } from "@/graphql/query.tasks";
 import { useRouter } from "next/router";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
@@ -33,7 +34,14 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 const useTasks = (): UseTasksReturn => {
-  const { username, user_id, workspace_id, room_id, recording_id } = useUser();
+  const {
+    username,
+    user_id,
+    workspace_id,
+    workspace_type,
+    room_id,
+    recording_id,
+  } = useUser();
   const router = useRouter();
   const { toast } = useToast();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -44,9 +52,12 @@ const useTasks = (): UseTasksReturn => {
   const { control, handleSubmit, getValues, setValue, reset, watch } =
     useForm();
 
-  let queryVariables = {};
+  let queryVariables;
   let query = GET_TASKS_BY_USER_ID;
-  console.log(queryVariables, "queryVariables");
+
+  console.log(workspace_type, "workspace_type");
+  console.log(user_id, "user_id");
+  console.log(workspace_id, "workspace_id");
 
   if (!recording_id && !room_id && !workspace_id) {
     console.log("tasksQuery :::1");
@@ -55,14 +66,37 @@ const useTasks = (): UseTasksReturn => {
       user_id,
       // id: localStorage.getItem("id"),
     };
-  } else if (!room_id && !recording_id && workspace_id) {
-    console.log("tasksQuery :::2===");
+  } else if (
+    !room_id &&
+    !recording_id &&
+    workspace_id &&
+    workspace_type === "Fire"
+  ) {
+    console.log("tasksQuery :::2");
     query = TASKS_COLLECTION_QUERY;
     queryVariables = {
       workspace_id,
+      user_id,
     };
-    console.log(queryVariables, "queryVariables====");
-    query = GET_ROOM_TASKS_WORKSPACE_ID_QUERY;
+  } else if (
+    !room_id &&
+    !recording_id &&
+    workspace_id &&
+    workspace_type === "Water"
+  ) {
+    console.log("tasksQuery Water");
+    query = GET_TASKS_BY_NOT_EQ_USER_ID;
+    queryVariables = {
+      user_id,
+    };
+  } else if (
+    !room_id &&
+    !recording_id &&
+    workspace_id &&
+    workspace_type === "Earth"
+  ) {
+    console.log("tasksQuery Earth");
+    query = GET_PUBLIC_ROOM_TASKS_QUERY;
   } else if (!recording_id && room_id && workspace_id) {
     console.log("tasksQuery :::3");
     query = TASKS_COLLECTION_QUERY;
@@ -90,7 +124,7 @@ const useTasks = (): UseTasksReturn => {
     console.log("Workspace ID is undefined");
     // Дополнительная логика для случая, когда workspace_id равен undefined
   }
-
+  console.log(queryVariables, "queryVariables");
   const {
     data: tasksData,
     loading: tasksLoading,
@@ -102,14 +136,17 @@ const useTasks = (): UseTasksReturn => {
     skip: !queryVariables,
   });
 
-  const onClickEdit = (isEditing: boolean, id: string) => {
+  const onClickEdit = (
+    isEditing: boolean,
+    id: string,
+    workspace_id: string,
+    room_id: string
+  ) => {
     setOpenModalTaskId(id);
     setIsEditingTask(isEditing);
-    router.push(
-      `/${username}/${user_id}/${workspace_id ? workspace_id : 0}/${
-        room_id ? room_id : 0
-      }/0/${id}`
-    );
+    localStorage.setItem("workspace_id", workspace_id);
+    localStorage.setItem("room_id", room_id);
+    router.push(`/${username}/${user_id}/${workspace_id}/${room_id}/0/${id}`);
   };
 
   if (tasksError instanceof ApolloError) {
@@ -322,7 +359,7 @@ const useTasks = (): UseTasksReturn => {
   const onEditTask = (id: string) => {
     setIsEdit(false);
     localStorage.setItem("header_name", `Task #${id}`);
-    router.push(`/${username}/${user_id}/${workspace_id}/${room_id}/0/${id}`);
+    router.push(`/${username}/${user_id}/${workspace_id}/0/0/${id}`);
   };
 
   const columns = useMemo(
