@@ -73,6 +73,7 @@ export default async function handler(
           : "65efdfab48b3dd31b94ff0dc",
         enabled: true,
       };
+      console.log(roomData, "roomData");
 
       const newToken = process.env.NEXT_PUBLIC_100MS;
 
@@ -84,6 +85,7 @@ export default async function handler(
           Authorization: `Bearer ${newToken}`,
         },
       });
+      console.log(roomResponse, "roomResponse");
 
       if (!roomResponse.ok) {
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
