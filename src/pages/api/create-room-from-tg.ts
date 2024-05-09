@@ -120,13 +120,13 @@ export default async function handler(
           username,
           workspace_id: workspaceData[0].id,
         };
-        console.log(rooms, "rooms");
-        delete rooms.id;
 
+        delete rooms.id;
+        console.log(rooms, "rooms");
         return rooms;
       }
     };
-    console.log(rooms, "rooms");
+
     const rooms = await createOrFetchRoom();
 
     const { error } = await supabase
