@@ -41,7 +41,7 @@ export default async function handler(
     const { data: dataRooms, error: errorRooms } = await supabase
       .from("rooms")
       .select("*")
-      .eq("user_id", user_id)
+      .eq("username", username)
       .order("id", { ascending: false });
 
     console.log(dataRooms, "dataRooms");
