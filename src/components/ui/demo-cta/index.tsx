@@ -44,7 +44,7 @@ const DemoButton = () => {
     <>
       {visible && (
         <TLoginButton
-          botName={`${__DEV__ ? "vasilev_dmitrii_bot" : "dao999nft_dev_bot"}`}
+          botName={`${__DEV__ ? "vasilev_dmitrii_bot" : "ai_koshey_bot"}`}
           buttonSize={TLoginButtonSize.Large}
           lang="en"
           usePic={true}
