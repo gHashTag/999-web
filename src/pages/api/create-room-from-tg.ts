@@ -89,9 +89,11 @@ export default async function handler(
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
+      console.log(newRoom, "newRoom");
 
       const id = newRoom.id;
       const codesResponse = await createCodes(id, newToken as string);
+      console.log(codesResponse, "codesResponse");
 
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
@@ -124,7 +126,7 @@ export default async function handler(
         return rooms;
       }
     };
-
+    console.log(rooms, "rooms");
     const rooms = await createOrFetchRoom();
 
     const { error } = await supabase
