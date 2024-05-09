@@ -100,31 +100,24 @@ export default async function handler(
       }
       const codes = await codesResponse.json();
 
-      const { data: workspaceData, error: workspaceError } = await supabase
-        .from("workspaces")
-        .select("*")
-        .eq("user_id", user_id);
+      const rooms = {
+        ...newRoom,
+        codes,
+        type,
+        name,
+        updated_at: new Date(),
+        user_id,
+        room_id: id,
+        lang,
+        token,
+        chat_id,
+        username,
+        workspace_id: lastElement?.workspace_id,
+      };
 
-      if (workspaceData && workspaceData.length > 0) {
-        const rooms = {
-          ...newRoom,
-          codes,
-          type,
-          name,
-          updated_at: new Date(),
-          user_id,
-          room_id: id,
-          lang,
-          token,
-          chat_id,
-          username,
-          workspace_id: workspaceData[0].id,
-        };
-
-        delete rooms.id;
-        console.log(rooms, "rooms");
-        return rooms;
-      }
+      delete rooms.id;
+      console.log(rooms, "rooms");
+      return rooms;
     };
 
     const rooms = await createOrFetchRoom();
