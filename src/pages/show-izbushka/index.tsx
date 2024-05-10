@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+
 import { retrieveLaunchParams } from "@tma.js/sdk";
 import dynamic from "next/dynamic";
 import {
@@ -9,8 +9,7 @@ import {
 } from "@100mslive/react-sdk";
 import { Spinner } from "@/components/ui/spinner";
 
-import { useSupabase } from "@/hooks/useSupabase";
-import { getSelectIzbushkaId } from "@/utils/supabase";
+import { getRooms, getSelectIzbushkaId, getUser } from "@/utils/supabase";
 import { captureExceptionSentry } from "@/utils/sentry";
 
 const HMSPrebuilt = dynamic(
@@ -26,7 +25,6 @@ const HMSPrebuilt = dynamic(
 
 const ShowIzbushka = () => {
   const { initData } = retrieveLaunchParams();
-  const { getUser, getRooms } = useSupabase();
 
   const hmsActions = useHMSActions();
   const [token, setToken] = useState<string | undefined>(undefined);

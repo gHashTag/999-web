@@ -13,9 +13,10 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useUser } from "./useUser";
 import { AssignedTo, Passport, PassportNode } from "@/types";
-import { checkUsernameAndReturnUser } from "./useSupabase";
+
 import { useTasks } from "./useTasks";
 import { captureExceptionSentry } from "@/utils/sentry";
+import { checkUsernameAndReturnUser } from "@/utils/supabase";
 
 type passportType = {
   user_id?: string;

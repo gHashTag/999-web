@@ -33,7 +33,6 @@ import {
 
 import Captcha, { useCaptcha } from "./captcha";
 
-import { useSupabase } from "@/hooks/useSupabase";
 import { useUser } from "@/hooks/useUser";
 import { checkUsername } from "@/utils/supabase";
 

@@ -1,4 +1,3 @@
-// hooks/useSupabase.ts
 import { useEffect, useState } from "react";
 import {
   Board,

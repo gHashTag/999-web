@@ -1,11 +1,8 @@
-import { ArrowRightIcon } from "@100mslive/react-icons";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 
 import IconLogo from "@/components/icons/icon-logo";
-import { useSupabase } from "@/hooks/useSupabase";
-import { openWeb3ModalVar, openIntroModalVar } from "@/apollo/reactive-store";
 
 import { useToast } from "@/components/ui/use-toast";
 
