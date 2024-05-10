@@ -44,7 +44,7 @@ export interface PassportNode extends AssignedTo {
   created_at?: string;
   id?: string;
   title?: string;
-  type?: string;
+  type?: "room" | "workspace" | "task";
   updated_at?: string;
   workspace_id?: string;
   is_owner?: boolean;

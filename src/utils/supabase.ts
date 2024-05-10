@@ -3,7 +3,7 @@ import { SupabaseUser, Task } from "@/types";
 
 import { createClient } from "@supabase/supabase-js";
 import { captureExceptionSentry } from "./sentry";
-import { CreateUserT } from "@/pages/api/create-user";
+import { PassportNode } from "@/pages/api/create-user";
 
 interface QuestionContext {
   lesson_number?: number;
@@ -78,6 +78,16 @@ export async function setRoom(user_id: string) {
     console.error(error, "setRoom error:::");
   }
   return lastElement;
+}
+
+export async function setMyPassport(passport: PassportNode) {
+  const { data, error } = await supabase.from("user_passport").insert([
+    passport,
+  ]).select();
+
+  if (error) console.log(error, "setMyPassport error:::");
+  const passport_id = data && data[0].passport_id;
+  return passport_id;
 }
 
 type CreateUserReturn = {

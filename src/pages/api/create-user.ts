@@ -5,6 +5,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
   checkUsernameCodes,
   createUser,
+  setMyPassport,
   setMyWorkspace,
 } from "@/utils/supabase";
 
@@ -29,7 +30,9 @@ export type CreateUserT = {
 };
 
 type ResponseData = {
-  rooms?: RoomNode;
+  passport_id?: string;
+  workspace_id?: string;
+  rooms_id?: string;
   message?: string;
 };
 
@@ -75,7 +78,6 @@ export default async function handler(
       // console.log(newUser, "newUser");
 
       const { user_id } = await createUser(newUser);
-
       // create workspace
       const workspace_id = await setMyWorkspace(user_id);
 
@@ -90,7 +92,24 @@ export default async function handler(
         token: tokenAiKoshey,
       });
 
-      return res.status(200).json({ rooms });
+      const passport = {
+        user_id,
+        workspace_id,
+        room_id: rooms.room_id,
+        username: req.body.username,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        type: "room",
+      };
+
+      const passport_id = await setMyPassport(passport);
+
+      return res.status(200).json({
+        passport_id,
+        workspace_id,
+        rooms_id: rooms.room_id,
+        message: `User created successfully`,
+      });
     } else {
       return res.status(500).json({ message: "User not found" });
     }
