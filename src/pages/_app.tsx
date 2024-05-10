@@ -34,6 +34,14 @@ import { corsHeaders } from "@/helpers/corsHeaders";
 
 export var __DEV__ = process.env.NODE_ENV !== "production";
 
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
+}
+
+export const SITE_URL = __DEV__
+  ? process.env.NEXT_PUBLIC_LOCAL_URL
+  : process.env.NEXT_PUBLIC_SITE_URL;
+
 if (!process.env.NEXT_PUBLIC_SITE_URL) {
   throw new Error("NEXT_PUBLIC_SITE_URL is not set");
 }
@@ -41,10 +49,6 @@ if (!process.env.NEXT_PUBLIC_SITE_URL) {
 if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
   throw new Error("NEXT_PUBLIC_SENTRY_DSN is not set");
 }
-
-export const SITE_URL = __DEV__
-  ? process.env.NEXT_PUBLIC_LOCAL_URL
-  : process.env.NEXT_PUBLIC_SITE_URL;
 
 if (__DEV__) {
   // Adds messages only in a dev environment

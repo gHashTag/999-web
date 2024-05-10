@@ -1,4 +1,4 @@
-import { bot } from "./bots";
+import { botAiKoshey } from "./bots";
 import { logger } from "@/logger";
 
 const WEBAPP_URL = "https://dao999nft.com";
@@ -6,7 +6,7 @@ const WEBAPP_URL = "https://dao999nft.com";
 const handleGracefulShutdown = async () => {
   logger.info("shutdown");
 
-  await bot.stop();
+  await botAiKoshey.stop();
 
   process.exit();
 };
@@ -18,8 +18,8 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export const startTelegramBotInDev = async () => {
-  if (!bot.isInited()) {
-    bot
+  if (!botAiKoshey.isInited()) {
+    botAiKoshey
       .start({
         onStart: ({ username }) => {
           logger.info({

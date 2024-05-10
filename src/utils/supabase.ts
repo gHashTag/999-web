@@ -1,7 +1,9 @@
 "use client";
-import { Task, TaskNode } from "@/types";
-import { da } from "@faker-js/faker";
+import { SupabaseUser, Task } from "@/types";
+
 import { createClient } from "@supabase/supabase-js";
+import { captureExceptionSentry } from "./sentry";
+import { CreateUserT } from "@/pages/api/create-user";
 
 interface QuestionContext {
   lesson_number?: number;
@@ -57,52 +59,112 @@ export async function setMyWorkspace(user_id: string) {
       title: "Fire",
       user_id: user_id,
     },
-  ]);
-  console.log(error, "setMyWorkspace error:::");
-  return data;
+  ]).select();
+
+  if (error) console.log(error, "setMyWorkspace error:::");
+  const workspace_id = data && data[0].workspace_id;
+  return workspace_id;
 }
 
-export async function createUser(ctx: any) {
-  const { first_name, last_name, username, is_bot, language_code, id } =
-    ctx.update.message.from;
+export async function setRoom(user_id: string) {
+  const { data: dataRooms, error } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("user_id", user_id)
+    .order("id", { ascending: false });
 
-  // Проверяем, существует ли уже пользователь с таким telegram_id
+  const lastElement = dataRooms && dataRooms[0];
+  if (error) {
+    console.error(error, "setRoom error:::");
+  }
+  return lastElement;
+}
+
+type CreateUserReturn = {
+  userData: SupabaseUser[];
+  user_id: string;
+  isUserExist: boolean;
+  error: any;
+};
+
+type InviteT = {
+  username: string;
+  first_name: string;
+  last_name: string;
+  is_bot: boolean;
+  language_code: string;
+  inviter: string;
+  invitation_codes: string;
+  telegram_id: number;
+  email: string;
+  photo_url: string;
+};
+
+export async function createUser(
+  usersData: InviteT,
+): Promise<CreateUserReturn> {
+  const {
+    telegram_id,
+  } = usersData;
+
+  // We check whether a user with the same telegram_id already exists
   const { data: existingUser, error } = await supabase
     .from("users")
     .select("*")
-    .eq("telegram_id", id)
+    .eq("telegram_id", telegram_id)
     .maybeSingle();
 
-  if (error && error.message !== "No rows found") {
-    console.error("Ошибка при проверке существования пользователя:", error);
-    return;
+  if (error) {
+    console.error("Error checking user existence:", error);
+    return {
+      userData: [],
+      user_id: "",
+      isUserExist: false,
+      error: error,
+    };
   }
 
   if (existingUser) {
-    return;
+    console.log("User already exists", existingUser);
+    return {
+      userData: [existingUser],
+      user_id: existingUser.user_id,
+      isUserExist: true,
+      error: null,
+    };
   }
-  // Если пользователя нет, создаем нового
-  const usersData = {
-    first_name,
-    last_name,
-    username,
-    is_bot,
-    language_code,
-    telegram_id: id,
-    email: "",
-    photo_url: "",
-  };
 
   const { data, error: insertError } = await supabase
     .from("users")
-    .insert([usersData]);
+    .insert([usersData])
+    .select();
 
   if (insertError) {
-    console.error("Ошибка при создании пользователя:", insertError);
-    return;
+    console.error("Error creating user:", insertError);
+    return {
+      userData: [],
+      user_id: "",
+      isUserExist: false,
+      error: insertError,
+    };
   }
 
-  return data;
+  if (!data || data.length === 0) {
+    console.error("User data was not returned after insertion");
+    return {
+      userData: [],
+      user_id: "",
+      isUserExist: false,
+      error: "User data was not returned after insertion",
+    };
+  }
+
+  return {
+    userData: data,
+    user_id: data[0].user_id,
+    isUserExist: data.length > 0,
+    error: insertError,
+  };
 }
 
 export async function createRoom(username: string) {
@@ -323,5 +385,165 @@ export async function getAssignedTasks(user_id: string): Promise<Task[]> {
 
   return nodeArray;
 }
+
+export const checkUsernameCodes = async (
+  user_id: string,
+): Promise<{
+  isInviterExist: boolean;
+  invitation_codes: string;
+  inviter_user_id: string;
+  error?: boolean;
+}> => {
+  try {
+    // console.log(user_id, "user_id");
+    const { data: userData, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("user_id", user_id);
+
+    // console.log(userData, "userData");
+    if (userError) console.log(userError, "userError");
+
+    const { data: rooms, error: roomsError } = await supabase
+      .from("rooms")
+      .select("*")
+      .eq("user_id", user_id);
+
+    // console.log(rooms, "rooms");
+    if (roomsError) console.log(roomsError, "roomsError");
+
+    const invitation_codes = rooms && rooms[0]?.codes;
+    // console.log(invitation_codes, "invitation_codes");
+
+    if (userError) {
+      return {
+        isInviterExist: false,
+        invitation_codes: "",
+        error: true,
+        inviter_user_id: "",
+      };
+    }
+
+    return {
+      isInviterExist: userData.length > 0 ? true : false,
+      invitation_codes,
+      inviter_user_id: userData[0].user_id,
+    };
+  } catch (error) {
+    return {
+      isInviterExist: false,
+      invitation_codes: "",
+      error: true,
+      inviter_user_id: "",
+    };
+  }
+};
+
+export const getRooms = async (username: string) => {
+  const { data, error } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("username", username);
+
+  return data;
+};
+
+export const getUser = async (username: string) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+
+  return data;
+};
+
+export const checkUsername = async (username: string): Promise<boolean> => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+  if (error) {
+    console.log(error, "error checkUsername");
+    return false;
+  }
+  return data ? data.length > 0 : false;
+};
+
+export const checkUsernameAndReturnUser = async (
+  username: string,
+): Promise<{
+  isUserExist: boolean;
+  user: SupabaseUser;
+}> => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+
+  if (error) {
+    console.log(error, "error checkUsername");
+    return {
+      isUserExist: false,
+      user: {} as SupabaseUser,
+    };
+  }
+  return {
+    isUserExist: data ? data.length > 0 : false,
+    user: data[0],
+  };
+};
+
+export const checkAndReturnUser = async (
+  username: string,
+): Promise<{
+  isUserExist: boolean;
+  user: SupabaseUser;
+}> => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username);
+
+  if (error) {
+    console.log(error, "error checkUsername");
+    return {
+      isUserExist: false,
+      user: {} as SupabaseUser,
+    };
+  }
+  return {
+    isUserExist: data ? data.length > 0 : false,
+    user: data[0],
+  };
+};
+
+export const getSupabaseUserByUsername = async (username: string) => {
+  try {
+    const response = await supabase
+      .from("users")
+      .select("*")
+      .eq("username", username)
+      .single();
+
+    if (response.error && response.error.code === "PGRST116") {
+      console.error("getSupabaseUser: Пользователь не найден");
+      return null;
+    }
+
+    if (response.error) {
+      console.error(
+        "Ошибка при получении информации о пользователе:",
+        response.error,
+      );
+      return null;
+    }
+
+    return response.data;
+  } catch (error) {
+    // console.error("Ошибка при получении информации о пользователе:", error);
+    captureExceptionSentry("Error getting user info", "useSupabase");
+    return null;
+  }
+};
 
 export { supabase };

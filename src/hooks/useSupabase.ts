@@ -8,7 +8,11 @@ import {
   TasksArray,
   TUser,
 } from "@/types";
-import { setMyWorkspace, supabase } from "@/utils/supabase";
+import {
+  getSupabaseUserByUsername,
+  setMyWorkspace,
+  supabase,
+} from "@/utils/supabase";
 
 import {
   setInviteCode,
@@ -19,120 +23,6 @@ import {
 import { useReactiveVar } from "@apollo/client";
 import { captureExceptionSentry } from "@/utils/sentry";
 
-export const checkUsernameCodes = async (
-  username: string,
-): Promise<{
-  isInviterExist: boolean;
-  invitation_codes: string;
-  inviter_user_id: string;
-  error?: boolean;
-}> => {
-  const { data: userData, error: userError } = await supabase
-    .from("users")
-    .select("*")
-    .eq("username", username);
-
-  const { data: rooms, error: roomsError } = await supabase
-    .from("rooms")
-    .select("*")
-    .eq("username", username);
-
-  const invitation_codes = rooms && rooms[0].codes;
-
-  if (userError) {
-    return {
-      isInviterExist: false,
-      invitation_codes: "",
-      error: true,
-      inviter_user_id: "",
-    };
-  }
-
-  return {
-    isInviterExist: userData.length > 0 ? true : false,
-    invitation_codes,
-    inviter_user_id: userData[0].user_id,
-  };
-};
-
-export const getRooms = async (username: string) => {
-  const { data, error } = await supabase
-    .from("rooms")
-    .select("*")
-    .eq("username", username);
-
-  return data;
-};
-
-export const getUser = async (username: string) => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("username", username);
-
-  return data;
-};
-
-export const checkUsername = async (username: string): Promise<boolean> => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("username", username);
-  if (error) {
-    console.log(error, "error checkUsername");
-    return false;
-  }
-  return data ? data.length > 0 : false;
-};
-
-export const checkUsernameAndReturnUser = async (
-  username: string,
-): Promise<{
-  isUserExist: boolean;
-  user: SupabaseUser;
-}> => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("username", username);
-
-  if (error) {
-    console.log(error, "error checkUsername");
-    return {
-      isUserExist: false,
-      user: {} as SupabaseUser,
-    };
-  }
-  return {
-    isUserExist: data ? data.length > 0 : false,
-    user: data[0],
-  };
-};
-
-export const checkAndReturnUser = async (
-  username: string,
-): Promise<{
-  isUserExist: boolean;
-  user: SupabaseUser;
-}> => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("username", username);
-
-  if (error) {
-    console.log(error, "error checkUsername");
-    return {
-      isUserExist: false,
-      user: {} as SupabaseUser,
-    };
-  }
-  return {
-    isUserExist: data ? data.length > 0 : false,
-    user: data[0],
-  };
-};
-
 export function useSupabase() {
   const userSupabase = useReactiveVar(setUserSupabase);
   const inviter = useReactiveVar(setInviteCode);
@@ -141,40 +31,11 @@ export function useSupabase() {
   const [assets, setAssets] = useState<RecordingAsset[]>([]);
   const [userId, setUserId] = useState<string>("");
 
-  const getSupabaseUser = async (username: string) => {
-    try {
-      const response = await supabase
-        .from("users")
-        .select("*")
-        .eq("username", username)
-        .single();
-
-      if (response.error && response.error.code === "PGRST116") {
-        console.error("getSupabaseUser: Пользователь не найден");
-        return null;
-      }
-
-      if (response.error) {
-        console.error(
-          "Ошибка при получении информации о пользователе:",
-          response.error,
-        );
-        return null;
-      }
-
-      return response.data;
-    } catch (error) {
-      // console.error("Ошибка при получении информации о пользователе:", error);
-      captureExceptionSentry("Error getting user info", "useSupabase");
-      return null;
-    }
-  };
-
   const createUserInDatabase = async (
     newUser: SupabaseUser,
   ): Promise<{ user_id: string }> => {
     await supabase.from("users").insert([newUser]);
-    const user = await getSupabaseUser(newUser.username || "");
+    const user = await getSupabaseUserByUsername(newUser.username || "");
     console.log(user, "user");
     return user;
   };
@@ -207,7 +68,7 @@ export function useSupabase() {
       }
 
       const { username, first_name, last_name, photo_url } = user;
-      const userData = await getSupabaseUser(inviter);
+      const userData = await getSupabaseUserByUsername(inviter);
 
       if (userData) {
         const newUser = {
@@ -315,10 +176,6 @@ export function useSupabase() {
 
   return {
     user_id: userId,
-    getUser,
-    getRooms,
-    checkUsername,
-    getSupabaseUser,
     getAssetById,
     assets,
     tasks,
@@ -330,7 +187,6 @@ export function useSupabase() {
     userSupabase,
     setUserSupabase,
     setUserInfo,
-    checkUsernameCodes,
     getTaskById,
   };
 }

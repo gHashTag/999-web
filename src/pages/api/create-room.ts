@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import { __DEV__ } from "../_app";
 import { transliterate } from "@/helpers/api/transliterate";
+import { createCodes } from "./create-room-from-tg";
 
 type ResponseData = {
   rooms?: RoomNode;
@@ -160,29 +161,5 @@ export default async function handler(
   } catch (error: any) {
     console.log("error", error);
     return res.status(500).json({ message: error.message });
-  }
-}
-
-export async function createCodes(room_id: string, token: string) {
-  try {
-    const response = await fetch(
-      `https://api.100ms.live/v2/room-codes/room/${room_id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return response;
-  } catch (error) {
-    console.error("Error creating codes:", error);
-    throw error;
   }
 }

@@ -36,7 +36,6 @@ export default async function handler(
   try {
     const { id, name, type, username, user_id, lang, chat_id, token } =
       await req.body;
-    console.log(req.body, "req.body");
 
     const { data: dataRooms, error: errorRooms } = await supabase
       .from("rooms")
@@ -44,11 +43,9 @@ export default async function handler(
       .eq("username", username)
       .order("id", { ascending: false });
 
-    console.log(dataRooms, "dataRooms");
     const lastElement = dataRooms && dataRooms[0];
-    console.log(lastElement, "lastElement");
+
     const translateName = transliterate(lastElement?.name);
-    console.log(translateName, "translateName");
 
     const { data, error: userError } = await supabase
       .from("users")
@@ -73,7 +70,6 @@ export default async function handler(
           : "65efdfab48b3dd31b94ff0dc",
         enabled: true,
       };
-      console.log(roomData, "roomData");
 
       const newToken = process.env.NEXT_PUBLIC_100MS;
 
@@ -85,17 +81,14 @@ export default async function handler(
           Authorization: `Bearer ${newToken}`,
         },
       });
-      console.log(roomResponse, "roomResponse");
 
       if (!roomResponse.ok) {
         throw new Error(`Failed to create room: ${roomResponse.statusText}`);
       }
       const newRoom = await roomResponse.json();
-      console.log(newRoom, "newRoom");
 
       const id = newRoom.id;
       const codesResponse = await createCodes(id, newToken as string);
-      console.log(codesResponse, "codesResponse");
 
       if (!codesResponse?.ok) {
         throw new Error(`Failed to create codes: ${codesResponse.statusText}`);
@@ -118,7 +111,7 @@ export default async function handler(
       };
 
       delete rooms.id;
-      console.log(rooms, "rooms");
+
       return rooms;
     };
 
@@ -136,7 +129,6 @@ export default async function handler(
     // @ts-ignore
     return res.status(200).json({ rooms });
   } catch (error: any) {
-    console.log("createOrFetchRoom error", error);
     return res.status(500).json({ message: error.message });
   }
 }

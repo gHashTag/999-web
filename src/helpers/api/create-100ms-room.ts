@@ -1,13 +1,5 @@
-import { __DEV__ } from "@/pages/_app";
+import { __DEV__, SITE_URL } from "@/pages/_app";
 import { captureExceptionSentry } from "@/utils/sentry";
-
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
-}
-
-const SITE_URL = __DEV__
-  ? process.env.NEXT_PUBLIC_LOCAL_URL
-  : process.env.NEXT_PUBLIC_SITE_URL;
 
 const headers = {
   "Content-Type": "application/json",
@@ -16,20 +8,25 @@ const headers = {
 type CreateRoom = {
   id: string;
   name: string;
+  original_name: string;
   type: string;
-  username: string | undefined;
-  token: string | undefined;
+  username: string;
+  user_id: string;
+  token: string;
   chat_id: number;
-  lang: string | undefined;
+  language_code: string;
 };
+
 async function create100MsRoom({
   id,
   name,
+  original_name,
   type,
   username,
+  user_id,
   token,
   chat_id,
-  lang,
+  language_code,
 }: CreateRoom) {
   const url = `${SITE_URL}/api/create-room-from-tg`;
 
@@ -40,7 +37,7 @@ async function create100MsRoom({
     username,
     token,
     chat_id,
-    lang,
+    language_code,
   };
 
   const response = await fetch(url, {
