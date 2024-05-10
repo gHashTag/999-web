@@ -35,6 +35,7 @@ import Captcha, { useCaptcha } from "./captcha";
 
 import { useSupabase } from "@/hooks/useSupabase";
 import { useUser } from "@/hooks/useUser";
+import { checkUsername } from "@/utils/supabase";
 
 type FormState = "default" | "loading" | "error";
 
@@ -61,7 +62,6 @@ export default function Form({ sharePage }: Props) {
     isEnabled: isCaptchaEnabled,
   } = useCaptcha();
 
-  const { checkUsername } = useSupabase();
   const inputRef = useRef(null);
   const { username, user_id } = useUser();
 
