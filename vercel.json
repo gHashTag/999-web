@@ -2,6 +2,9 @@
   "functions": {
     "pages/api/create-tasks.ts": {
       "maxDuration": 299
+    },
+    "pages/api/create-user.ts": {
+      "maxDuration": 299
     }
   }
 }
