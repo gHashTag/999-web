@@ -105,8 +105,8 @@ type InviteT = {
   inviter: string;
   invitation_codes: string;
   telegram_id: number;
-  email: string;
-  photo_url: string;
+  email?: string;
+  photo_url?: string;
 };
 
 export async function createUser(
