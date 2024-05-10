@@ -11,6 +11,8 @@ const newToken100ms = process.env.NEXT_PUBLIC_100MS;
 type CreateOrFetchRoomProps = {
   id: string;
   username: string;
+  first_name: string;
+  last_name: string;
   language_code: string;
   user_id: string;
   chat_id: number;
@@ -21,6 +23,8 @@ type CreateOrFetchRoomProps = {
 export const createOrFetchRoom = async ({
   id,
   username,
+  first_name,
+  last_name,
   language_code,
   user_id,
   chat_id,
@@ -63,7 +67,7 @@ export const createOrFetchRoom = async ({
     ...newRoom,
     codes,
     type: "video-space",
-    name: username,
+    name: `${first_name} ${last_name}`,
     updated_at: new Date(),
     user_id,
     room_id,

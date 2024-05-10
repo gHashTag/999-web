@@ -54,12 +54,11 @@ export default async function handler(
   const {
     inviter,
   }: CreateUserT = await req.body;
-  console.log(inviter, "inviter");
+
   try {
     // check if inviter exists
     const { isInviterExist, invitation_codes, inviter_user_id } =
       await checkUsernameCodes(inviter);
-    console.log(isInviterExist, "isInviterExist");
 
     if (isInviterExist) {
       const newUser = {
@@ -85,6 +84,8 @@ export default async function handler(
       const rooms = await createOrFetchRoom({
         id: req.body.id,
         username: req.body.username,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
         language_code: req.body.language_code,
         user_id,
         chat_id: req.body.chat_id,
