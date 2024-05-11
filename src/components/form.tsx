@@ -35,6 +35,7 @@ import Captcha, { useCaptcha } from "./captcha";
 
 import { useUser } from "@/hooks/useUser";
 import { checkUsername } from "@/utils/supabase";
+import { isValidEmail } from "@/helpers/utils";
 
 type FormState = "default" | "loading" | "error";
 
@@ -75,19 +76,13 @@ export default function Form({ sharePage }: Props) {
 
   const handleRegister = useCallback(async () => {
     if (inviteCode) {
-      const isInviterExist = await checkUsername(inviteCode);
+      const isInviterExist = isValidEmail(inviteCode);
       if (isInviterExist) {
         visibleSignInVar(true);
       } else {
-        setErrorMsg("Invite code not correct");
+        setErrorMsg("Email not correct");
         setFormState("error");
         setTimeout(() => setFormState("default"), 2000);
-        toast({
-          variant: "destructive",
-          title: "Closed access",
-          description:
-            "This content is available to registered users only. Enter the invite code to access it.",
-        });
         return;
       }
     }
@@ -173,7 +168,7 @@ export default function Form({ sharePage }: Props) {
                 onChange={(e) => setInviteCode(e.target.value)}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
-                placeholder="Enter invite code"
+                placeholder="Enter email"
                 aria-label="Your invite code address"
                 required
               />

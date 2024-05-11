@@ -7,9 +7,10 @@ import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useUser } from "@/hooks/useUser";
-import { SITE_URL } from "@/pages/_app";
+
 import { Passport } from "@/types";
 import { captureExceptionSentry } from "@/utils/sentry";
+import { SITE_URL } from "@/utils/constants";
 
 type EvervaultCardProps = {
   text: string;

@@ -1,4 +1,4 @@
-import { __DEV__, SITE_URL } from "@/pages/_app";
+import { __DEV__, SITE_URL } from "@/utils/constants";
 import { captureExceptionSentry } from "@/utils/sentry";
 
 const headers = {

@@ -12,6 +12,7 @@ import {
   getSupabaseUserByUsername,
   setMyWorkspace,
   supabase,
+  updateUserInfoByUsername,
 } from "@/utils/supabase";
 
 import {
@@ -23,7 +24,7 @@ import {
 import { useReactiveVar } from "@apollo/client";
 import { captureExceptionSentry } from "@/utils/sentry";
 import { useUser } from "./useUser";
-import { createUser } from "@/helpers/api/createUser";
+import { botName } from "@/utils/constants";
 
 export function useSupabase() {
   const userSupabase = useReactiveVar(setUserSupabase);
@@ -32,7 +33,6 @@ export function useSupabase() {
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<RecordingAsset[]>([]);
   const [userId, setUserId] = useState<string>("");
-  const { language_code } = useUser();
 
   const updateUserLocalStorage = (
     user_id: string,
@@ -60,36 +60,41 @@ export function useSupabase() {
           username: "",
         };
       }
-
-      const { isInviterExist, invitation_codes } = await checkUsernameCodes(
-        inviter,
+      // проверить если ли юзер в базе данных
+      const { isInviterExist } = await checkUsernameCodes(
+        user.username,
       );
 
-      const { id, username, first_name, last_name, photo_url } = user;
+      const { username, first_name, last_name, photo_url } = user;
 
       if (isInviterExist) {
         const user = {
-          telegram_id: id,
-          is_bot: false,
-          language_code,
-          inviter,
-          invitation_codes,
+          username,
+          photo_url,
+          email: inviter,
         };
+        // если да то направитьего дальше сохранить аватарку
+        const updateUser = await updateUserInfoByUsername(user);
 
-        const newUser = await createUser(user);
-
-        setUserId(newUser.user_id);
+        setUserId(updateUser.user_id);
 
         updateUserLocalStorage(
-          newUser.user_id,
+          updateUser.user_id,
           username,
           first_name,
           last_name || "",
           photo_url || "",
         );
         return {
-          user_id: newUser.user_id,
+          user_id: updateUser.user_id,
           username,
+        };
+      } else {
+        // если нет то отправить в бот
+        window.location.href = `https://t.me/${botName}`;
+        return {
+          user_id: "",
+          username: "",
         };
       }
     } catch (error) {

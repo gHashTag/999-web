@@ -560,4 +560,26 @@ const createUserInDatabase = async (
   return user;
 };
 
+export const updateUserInfoByUsername = async (user: {
+  username: string;
+  email?: string;
+  photo_url?: string;
+}) => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .update(user)
+      .eq("username", user.username)
+      .select();
+
+    return data && data[0];
+  } catch (error) {
+    captureExceptionSentry(
+      "Error getting updateUserInfoByUsername",
+      "useSupabase",
+    );
+    return null;
+  }
+};
+
 export { supabase };

@@ -22,7 +22,7 @@ export const setUserInfo = makeVar<SupabaseUser | null>(null);
 
 export const setUserSupabase = makeVar<SupabaseUser | null>(null);
 
-const initCode = `${__DEV__ ? "ai_koshey_bot" : ""}`;
+const initCode = `${__DEV__ ? "dao999nft" : ""}`;
 
 export const setInviteCode = makeVar<string>(initCode);
 

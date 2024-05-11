@@ -6,7 +6,7 @@ import { visibleSignInVar } from "@/apollo/reactive-store";
 import { TLoginButton, TLoginButtonSize, TUser } from "react-telegram-auth";
 import { useSupabase } from "@/hooks/useSupabase";
 import { useRouter } from "next/router";
-import { __DEV__ } from "@/pages/_app";
+import { botName } from "@/utils/constants";
 
 const DemoButton = () => {
   const visible = useReactiveVar(visibleSignInVar);
@@ -44,7 +44,7 @@ const DemoButton = () => {
     <>
       {visible && (
         <TLoginButton
-          botName={`${__DEV__ ? "vasilev_dmitrii_bot" : "ai_koshey_bot"}`}
+          botName={botName}
           buttonSize={TLoginButtonSize.Large}
           lang="en"
           usePic={true}

@@ -31,24 +31,7 @@ import { setContext } from "@apollo/client/link/context";
 import { Spinner } from "@/components/ui/spinner";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { corsHeaders } from "@/helpers/corsHeaders";
-
-export var __DEV__ = process.env.NODE_ENV !== "production";
-
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
-}
-
-export const SITE_URL = __DEV__
-  ? process.env.NEXT_PUBLIC_LOCAL_URL
-  : process.env.NEXT_PUBLIC_SITE_URL;
-
-if (!process.env.NEXT_PUBLIC_SITE_URL) {
-  throw new Error("NEXT_PUBLIC_SITE_URL is not set");
-}
-
-if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
-  throw new Error("NEXT_PUBLIC_SENTRY_DSN is not set");
-}
+import { __DEV__, botName } from "@/utils/constants";
 
 if (__DEV__) {
   // Adds messages only in a dev environment
@@ -180,7 +163,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <TonConnectUIProvider
                   manifestUrl="https://dmrooqbmxdhdyblqzswu.supabase.co/storage/v1/object/public/docs/tonconnect-manifest.json"
                   actionsConfiguration={{
-                    twaReturnUrl: "https://t.me/ai_koshey_bot/start",
+                    twaReturnUrl: `https://t.me/${botName}/start`,
                   }}
                 >
                   <Analytics />

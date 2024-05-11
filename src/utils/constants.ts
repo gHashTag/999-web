@@ -1,27 +1,33 @@
-export const DEV = process.env.DEV === "true" ? true : false;
-
-if (!process.env.LOCAL_URL) {
+if (!process.env.NEXT_PUBLIC_SITE_URL) {
   throw new Error("LOCAL_URL is not set");
 }
 
-if (!process.env.PRODUCTION_URL) {
-  throw new Error("PRODUCTION_URL is not set");
+if (!process.env.NEXT_PUBLIC_SITE_URL) {
+  throw new Error("NEXT_PUBLIC_SITE_URL is not set");
 }
 
-if (!process.env.DEV) {
-  throw new Error("DEV is not set");
-}
+export var __DEV__ = process.env.NODE_ENV !== "production";
 
-if (!process.env.SUPABASE_URL) {
-  throw new Error("SUPABASE_URL is not set");
-}
-
-export const SITE_URL = DEV
-  ? process.env.LOCAL_URL
-  : process.env.PRODUCTION_URL;
+export const SITE_URL = __DEV__
+  ? process.env.NEXT_PUBLIC_LOCAL_URL
+  : process.env.NEXT_PUBLIC_SITE_URL;
 
 export const PRODUCTION_URL = process.env.PRODUCTION_URL;
 
 export const headers = {
   "Content-Type": "application/json",
 };
+
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
+}
+
+if (!process.env.NEXT_PUBLIC_SITE_URL) {
+  throw new Error("NEXT_PUBLIC_SITE_URL is not set");
+}
+
+if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  throw new Error("NEXT_PUBLIC_SENTRY_DSN is not set");
+}
+
+export const botName = __DEV__ ? "dao999nft_dev_bot" : "ai_koshey_bot";
