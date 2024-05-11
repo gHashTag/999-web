@@ -71,7 +71,7 @@ export default async function handler(
       type,
       workspace_id,
       username,
-      lang,
+      language_code,
       chat_id,
       token,
     } = await req.body;
@@ -135,7 +135,7 @@ export default async function handler(
         updated_at: new Date(),
         user_id,
         room_id: id,
-        lang,
+        language_code,
         token,
         chat_id,
         username,

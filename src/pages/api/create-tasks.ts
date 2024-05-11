@@ -24,7 +24,7 @@ async function sendTasksToTelegram(
   chat_id: number,
   tasks: Task[],
   summary_short: string,
-  lang: string,
+  language_code: string,
   token: string,
 ) {
   const newTasks = tasks.map((task) => {
@@ -41,8 +41,8 @@ async function sendTasksToTelegram(
 
   let translatedSummaryShort = summary_short;
 
-  if (lang !== "en") {
-    translatedSummaryShort = await translateText(summary_short, lang);
+  if (language_code !== "en") {
+    translatedSummaryShort = await translateText(summary_short, language_code);
   }
 
   const bot = new Bot(token);
@@ -52,7 +52,7 @@ async function sendTasksToTelegram(
   for (const task of newTasks) {
     const translatedTask = await translateText(
       `${task.title}\n${task.description}`,
-      lang,
+      language_code,
     );
     await bot.api.sendMessage(chat_id, `${translatedTask}\n${task.assignee}`);
   }
@@ -60,7 +60,7 @@ async function sendTasksToTelegram(
 
 interface Data {
   room_id: string;
-  lang: string;
+  language_code: string;
   chat_id: number;
   token: string;
   description: string;
@@ -223,7 +223,7 @@ export default async function handler(
             .select("*")
             .eq("room_id", data.room_id)) as { data: Data[]; error: any };
 
-          const { lang, chat_id, token, description } = roomData[0];
+          const { language_code, chat_id, token, description } = roomData[0];
 
           const workspace_id = description;
 
@@ -265,7 +265,7 @@ export default async function handler(
                 chat_id,
                 newTasks,
                 summary_short,
-                lang,
+                language_code,
                 token,
               ).catch(console.error);
             }

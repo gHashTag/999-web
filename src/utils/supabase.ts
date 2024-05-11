@@ -396,7 +396,7 @@ export async function getAssignedTasks(user_id: string): Promise<Task[]> {
 }
 
 export const checkUsernameCodes = async (
-  user_id: string,
+  username: string,
 ): Promise<{
   isInviterExist: boolean;
   invitation_codes: string;
@@ -404,25 +404,20 @@ export const checkUsernameCodes = async (
   error?: boolean;
 }> => {
   try {
-    // console.log(user_id, "user_id");
     const { data: userData, error: userError } = await supabase
       .from("users")
       .select("*")
-      .eq("user_id", user_id);
-
-    // console.log(userData, "userData");
-    if (userError) console.log(userError, "userError");
+      .eq("username", username);
 
     const { data: rooms, error: roomsError } = await supabase
       .from("rooms")
       .select("*")
-      .eq("user_id", user_id);
+      .eq("username", username);
 
-    // console.log(rooms, "rooms");
-    if (roomsError) console.log(roomsError, "roomsError");
-
+    if (roomsError) {
+      console.error(roomsError, "roomsError");
+    }
     const invitation_codes = rooms && rooms[0]?.codes;
-    // console.log(invitation_codes, "invitation_codes");
 
     if (userError) {
       return {
@@ -439,6 +434,7 @@ export const checkUsernameCodes = async (
       inviter_user_id: userData[0].user_id,
     };
   } catch (error) {
+    console.error(error, "error checkUsernameCodes");
     return {
       isInviterExist: false,
       invitation_codes: "",
@@ -553,6 +549,15 @@ export const getSupabaseUserByUsername = async (username: string) => {
     captureExceptionSentry("Error getting user info", "useSupabase");
     return null;
   }
+};
+
+const createUserInDatabase = async (
+  newUser: SupabaseUser,
+): Promise<{ user_id: string }> => {
+  await supabase.from("users").insert([newUser]);
+  const user = await getSupabaseUserByUsername(newUser.username || "");
+
+  return user;
 };
 
 export { supabase };

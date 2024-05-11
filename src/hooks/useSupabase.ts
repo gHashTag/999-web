@@ -8,6 +8,7 @@ import {
   TUser,
 } from "@/types";
 import {
+  checkUsernameCodes,
   getSupabaseUserByUsername,
   setMyWorkspace,
   supabase,
@@ -21,6 +22,8 @@ import {
 } from "@/apollo/reactive-store";
 import { useReactiveVar } from "@apollo/client";
 import { captureExceptionSentry } from "@/utils/sentry";
+import { useUser } from "./useUser";
+import { createUser } from "@/helpers/api/createUser";
 
 export function useSupabase() {
   const userSupabase = useReactiveVar(setUserSupabase);
@@ -29,15 +32,7 @@ export function useSupabase() {
   const [boardData, setBoardData] = useState<BoardData[]>([]);
   const [assets, setAssets] = useState<RecordingAsset[]>([]);
   const [userId, setUserId] = useState<string>("");
-
-  const createUserInDatabase = async (
-    newUser: SupabaseUser,
-  ): Promise<{ user_id: string }> => {
-    await supabase.from("users").insert([newUser]);
-    const user = await getSupabaseUserByUsername(newUser.username || "");
-    console.log(user, "user");
-    return user;
-  };
+  const { language_code } = useUser();
 
   const updateUserLocalStorage = (
     user_id: string,
@@ -66,36 +61,34 @@ export function useSupabase() {
         };
       }
 
-      const { username, first_name, last_name, photo_url } = user;
-      const userData = await getSupabaseUserByUsername(inviter);
+      const { isInviterExist, invitation_codes } = await checkUsernameCodes(
+        inviter,
+      );
 
-      if (userData) {
-        const newUser = {
-          username,
-          first_name,
-          last_name,
-          inviter: userData.user_id,
-          photo_url,
+      const { id, username, first_name, last_name, photo_url } = user;
+
+      if (isInviterExist) {
+        const user = {
+          telegram_id: id,
           is_bot: false,
+          language_code,
+          inviter,
+          invitation_codes,
         };
 
-        const user = await createUserInDatabase(newUser);
+        const newUser = await createUser(user);
 
-        await setMyWorkspace(user.user_id);
-
-        const user_id = user.user_id;
-
-        setUserId(user_id);
+        setUserId(newUser.user_id);
 
         updateUserLocalStorage(
-          user_id,
+          newUser.user_id,
           username,
           first_name,
           last_name || "",
           photo_url || "",
         );
         return {
-          user_id: userData.user_id,
+          user_id: newUser.user_id,
           username,
         };
       }

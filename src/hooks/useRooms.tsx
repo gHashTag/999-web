@@ -60,8 +60,14 @@ const useRooms = (): UseRoomsReturn => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const { username, user_id, workspace_id, room_id, recording_id, lang } =
-    useUser();
+  const {
+    username,
+    user_id,
+    workspace_id,
+    room_id,
+    recording_id,
+    language_code,
+  } = useUser();
   // console.log("username", username);
   // console.log("user_id", user_id);
   // console.log("workspace_id", workspace_id);
@@ -221,7 +227,7 @@ const useRooms = (): UseRoomsReturn => {
           type: openModalRoomId,
           token: formData.token,
           chat_id: formData.chat_id,
-          lang,
+          language_code,
         });
 
         if (response) {

@@ -13,7 +13,7 @@ const useUser = () => {
   const photo_url = localStorage.getItem("photo_url") || "";
   const firstName = localStorage.getItem("first_name");
   const lastName = localStorage.getItem("last_name");
-  const lang = navigator.language.substring(0, 2);
+  const language_code = navigator.language.substring(0, 2);
   const owner = localStorage.getItem("is_owner");
 
   const is_owner = owner === "false" ? false : true;
@@ -31,7 +31,7 @@ const useUser = () => {
     photo_url,
     firstName,
     lastName,
-    lang,
+    language_code,
     is_owner,
     workspace_type,
   };

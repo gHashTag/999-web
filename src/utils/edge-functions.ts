@@ -18,7 +18,7 @@ type CreateRoomProps = {
   type: string;
   token: string;
   chat_id: string;
-  lang: string;
+  language_code: string;
 };
 
 async function createRoom({
@@ -29,7 +29,7 @@ async function createRoom({
   type,
   token,
   chat_id,
-  lang,
+  language_code,
 }: CreateRoomProps) {
   const url = `${SITE_URL}/api/create-room`;
 
@@ -41,7 +41,7 @@ async function createRoom({
     type,
     token,
     chat_id,
-    lang,
+    language_code,
   };
   try {
     const response = await fetch(url, {

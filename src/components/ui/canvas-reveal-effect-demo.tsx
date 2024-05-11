@@ -5,15 +5,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
 import { useUser } from "@/hooks/useUser";
 
-export const getTitle = (title: string, lang: string) => {
+export const getTitle = (title: string, language_code: string) => {
   if (title === "Fire") {
-    return lang === "ru" ? "Огонь" : "Fire";
+    return language_code === "ru" ? "Огонь" : "Fire";
   }
   if (title === "Water") {
-    return lang === "ru" ? "Вода" : "Water";
+    return language_code === "ru" ? "Вода" : "Water";
   }
   if (title === "Copper pipes") {
-    return lang === "ru" ? "Медные трубы" : "Copper pipes";
+    return language_code === "ru" ? "Медные трубы" : "Copper pipes";
   } else return title;
 };
 
@@ -24,7 +24,7 @@ export function CanvasRevealEffectDemo({
   officeData: any;
   onClick: (type: string, workspace_id: string, workspace_name: string) => void;
 }) {
-  const { lang } = useUser();
+  const { language_code } = useUser();
 
   return (
     <>
@@ -37,7 +37,7 @@ export function CanvasRevealEffectDemo({
             key={node.id}
             workspace_id={node.workspace_id}
             type={node.type}
-            title={getTitle(node.title, lang)}
+            title={getTitle(node.title, language_code)}
             onClick={onClick}
             icon={<NineNineNineIcon />}
           >

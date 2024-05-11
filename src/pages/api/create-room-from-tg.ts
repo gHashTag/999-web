@@ -34,7 +34,7 @@ export default async function handler(
   });
 
   try {
-    const { id, name, type, username, user_id, lang, chat_id, token } =
+    const { id, name, type, username, user_id, language_code, chat_id, token } =
       await req.body;
 
     const { data: dataRooms, error: errorRooms } = await supabase
@@ -63,7 +63,7 @@ export default async function handler(
 
     const createOrFetchRoom = async () => {
       const roomData = {
-        name: `${name}:${uuidv4()}:${lang}`,
+        name: `${name}:${uuidv4()}:${language_code}`,
         description: name,
         template_id: type === "audio-space"
           ? "65e84b5148b3dd31b94ff005"
@@ -103,7 +103,7 @@ export default async function handler(
         updated_at: new Date(),
         user_id,
         room_id: id,
-        lang,
+        language_code,
         token,
         chat_id,
         username,

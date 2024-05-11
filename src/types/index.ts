@@ -260,7 +260,7 @@ export interface RoomNode {
   type_additional?: string | null;
   user_id?: string | null;
   room_id: string;
-  lang: string | null;
+  language_code: string | null;
   chat_id: string;
   token?: string | null;
   username: string;
@@ -315,3 +315,18 @@ export type ArrayInviteT = {
   text: string;
   type: string;
 };
+
+export interface CreateUserProps {
+  id?: number;
+  username?: string;
+  first_name?: string;
+  last_name?: string;
+  is_bot?: boolean;
+  language_code?: string;
+  chat_id?: number;
+  inviter: string;
+  invitation_codes: string;
+  telegram_id?: number;
+  email?: string;
+  photo_url?: string;
+}
