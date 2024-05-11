@@ -7,7 +7,7 @@ import NextCors from "nextjs-cors";
 import jwt from "jsonwebtoken";
 // @ts-ignore
 import { v4 as uuidv4 } from "uuid";
-import { __DEV__ } from "../_app";
+import { __DEV__ } from "@/utils/constants";
 import { transliterate } from "@/helpers/api/transliterate";
 import { createCodes } from "./create-room-from-tg";
 

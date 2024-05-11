@@ -5,7 +5,7 @@ import { TracingBeam } from "@/components/ui/tracing-beam";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/router";
 import { DataTable } from "@/components/table/data-table";
-import { __DEV__ } from "@/pages/_app";
+import { __DEV__ } from "@/utils/constants";
 import { Button } from "@/components/ui/moving-border";
 
 import { useTasks } from "@/hooks/useTasks";

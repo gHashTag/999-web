@@ -1,4 +1,4 @@
-import { __DEV__ } from "@/pages/_app";
+import { __DEV__ } from "@/utils/constants";
 import { captureExceptionSentry } from "@/utils/sentry";
 import type { NextApiRequest, NextApiResponse } from "next";
 

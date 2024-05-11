@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { ButtonAnimate } from "@/components/ui/button-animate";
 import { usePassport } from "@/hooks/usePassport";
 import { DataTable } from "@/components/table/data-table";
-import { __DEV__ } from "@/pages/_app";
+import { __DEV__ } from "@/utils/constants";
 import { Button } from "@/components/ui/moving-border";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";

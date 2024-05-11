@@ -1,4 +1,4 @@
-import { __DEV__ } from "@/pages/_app";
+import { __DEV__ } from "@/utils/constants";
 import { OptionType, SupabaseUser } from "@/types";
 import { makeVar } from "@apollo/client";
 

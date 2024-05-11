@@ -14,7 +14,7 @@ import { Passport, RoomEdge, Task, TaskNode } from "@/types";
 import CardRoom from "@/components/ui/card-room";
 import { Button } from "@/components/ui/moving-border";
 import { DataTable } from "@/components/table/data-table";
-import { __DEV__ } from "../../../_app";
+import { __DEV__ } from "@/utils/constants";
 
 import { setLoading, setRoomId } from "@/apollo/reactive-store";
 import { useUser } from "@/hooks/useUser";

@@ -1,4 +1,4 @@
-import { __DEV__ } from "@/pages/_app";
+import { __DEV__ } from "@/utils/constants";
 import * as Sentry from "@sentry/react";
 
 export const captureExceptionSentry = (error: any, target: string) => {
