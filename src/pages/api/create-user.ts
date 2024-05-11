@@ -54,7 +54,7 @@ export default async function handler(
   const {
     inviter,
   }: CreateUserT = await req.body;
-
+  console.log(req.body, "req.body");
   try {
     // check if inviter exists
     const { isInviterExist, invitation_codes, inviter_user_id } =
@@ -74,7 +74,7 @@ export default async function handler(
         photo_url: "",
       };
 
-      // console.log(newUser, "newUser");
+      console.log(newUser, "newUser");
 
       const { user_id } = await createUser(newUser);
       // create workspace

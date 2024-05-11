@@ -396,7 +396,7 @@ export async function getAssignedTasks(user_id: string): Promise<Task[]> {
 }
 
 export const checkUsernameCodes = async (
-  username: string,
+  user_id: string,
 ): Promise<{
   isInviterExist: boolean;
   invitation_codes: string;
@@ -407,12 +407,12 @@ export const checkUsernameCodes = async (
     const { data: userData, error: userError } = await supabase
       .from("users")
       .select("*")
-      .eq("username", username);
+      .eq("user_id", user_id);
 
     const { data: rooms, error: roomsError } = await supabase
       .from("rooms")
       .select("*")
-      .eq("username", username);
+      .eq("user_id", user_id);
 
     if (roomsError) {
       console.error(roomsError, "roomsError");
