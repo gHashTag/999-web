@@ -160,7 +160,7 @@ export default function Form({ sharePage }: Props) {
             >
               <input
                 ref={inputRef}
-                className={styles.input}
+                className={`${styles.input}`}
                 autoComplete="off"
                 type="text"
                 id="email-input-field"
@@ -169,7 +169,7 @@ export default function Form({ sharePage }: Props) {
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
                 placeholder="Enter email"
-                aria-label="Your invite code address"
+                aria-label="Your invite email address"
                 required
               />
             </label>

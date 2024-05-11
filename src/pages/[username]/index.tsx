@@ -81,6 +81,7 @@ export default function Wallet() {
 
   useEffect(() => {
     if (!username) {
+      console.log("no username");
       router.push("/");
     } else {
       localStorage.setItem("is_owner", "true");

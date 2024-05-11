@@ -46,6 +46,7 @@
   .input {
     width: calc(100% - var(--space-32x));
     padding-right: 0;
+    width: 500px;
   }
 }
 
@@ -57,6 +58,7 @@
   background-color: var(--gray);
   border-radius: var(--space-2x);
   border: 1px solid transparent;
+
   transition: border-color 0.2s ease, background-color 0.2s ease;
   display: block;
 }
@@ -83,7 +85,7 @@
 
 .form-row {
   position: relative;
-  max-width: 400px;
+  max-width: 900px;
   width: 100%;
 }
 

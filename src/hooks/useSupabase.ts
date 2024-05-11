@@ -8,10 +8,7 @@ import {
   TUser,
 } from "@/types";
 import {
-  checkUsernameCodes,
   checkUsernameCodesByUserName,
-  getSupabaseUserByUsername,
-  setMyWorkspace,
   supabase,
   updateUserInfoByUsername,
 } from "@/utils/supabase";
