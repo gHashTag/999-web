@@ -3,7 +3,7 @@ import { captureExceptionSentry } from "@/utils/sentry";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import {
-  checkUsernameCodes,
+  checkUsernameCodesByUserId,
   createUser,
   setMyPassport,
   setMyWorkspace,
@@ -54,11 +54,11 @@ export default async function handler(
   const {
     inviter,
   }: CreateUserT = await req.body;
-  console.log(req.body, "req.body");
+
   try {
     // check if inviter exists
     const { isInviterExist, invitation_codes, inviter_user_id } =
-      await checkUsernameCodes(inviter);
+      await checkUsernameCodesByUserId(inviter);
 
     if (isInviterExist) {
       const newUser = {
@@ -73,8 +73,6 @@ export default async function handler(
         email: "",
         photo_url: "",
       };
-
-      console.log(newUser, "newUser");
 
       const { user_id } = await createUser(newUser);
       // create workspace

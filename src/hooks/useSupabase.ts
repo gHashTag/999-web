@@ -9,6 +9,7 @@ import {
 } from "@/types";
 import {
   checkUsernameCodes,
+  checkUsernameCodesByUserName,
   getSupabaseUserByUsername,
   setMyWorkspace,
   supabase,
@@ -61,7 +62,7 @@ export function useSupabase() {
         };
       }
       // проверить если ли юзер в базе данных
-      const { isInviterExist } = await checkUsernameCodes(
+      const { isInviterExist } = await checkUsernameCodesByUserName(
         user.username,
       );
 

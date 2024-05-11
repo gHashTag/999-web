@@ -395,7 +395,7 @@ export async function getAssignedTasks(user_id: string): Promise<Task[]> {
   return nodeArray;
 }
 
-export const checkUsernameCodes = async (
+export const checkUsernameCodesByUserId = async (
   user_id: string,
 ): Promise<{
   isInviterExist: boolean;
@@ -413,6 +413,55 @@ export const checkUsernameCodes = async (
       .from("rooms")
       .select("*")
       .eq("user_id", user_id);
+
+    if (roomsError) {
+      console.error(roomsError, "roomsError");
+    }
+    const invitation_codes = rooms && rooms[0]?.codes;
+
+    if (userError) {
+      return {
+        isInviterExist: false,
+        invitation_codes: "",
+        error: true,
+        inviter_user_id: "",
+      };
+    }
+
+    return {
+      isInviterExist: userData.length > 0 ? true : false,
+      invitation_codes,
+      inviter_user_id: userData[0].user_id,
+    };
+  } catch (error) {
+    console.error(error, "error checkUsernameCodes");
+    return {
+      isInviterExist: false,
+      invitation_codes: "",
+      error: true,
+      inviter_user_id: "",
+    };
+  }
+};
+
+export const checkUsernameCodesByUserName = async (
+  username: string,
+): Promise<{
+  isInviterExist: boolean;
+  invitation_codes: string;
+  inviter_user_id: string;
+  error?: boolean;
+}> => {
+  try {
+    const { data: userData, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("username", username);
+
+    const { data: rooms, error: roomsError } = await supabase
+      .from("rooms")
+      .select("*")
+      .eq("username", username);
 
     if (roomsError) {
       console.error(roomsError, "roomsError");
