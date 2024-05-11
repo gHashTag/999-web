@@ -10,7 +10,7 @@ import {
 } from "@/utils/supabase";
 
 import { tokenAiKoshey } from "@/utils/telegram/bots";
-import { RoomNode } from "@/types";
+
 import NextCors from "nextjs-cors";
 import { createOrFetchRoom } from "@/utils/100ms/helpers";
 

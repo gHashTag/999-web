@@ -180,7 +180,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <TonConnectUIProvider
                   manifestUrl="https://dmrooqbmxdhdyblqzswu.supabase.co/storage/v1/object/public/docs/tonconnect-manifest.json"
                   actionsConfiguration={{
-                    twaReturnUrl: "https://t.me/dao999nft_dev_bot/start",
+                    twaReturnUrl: "https://t.me/ai_koshey_bot/start",
                   }}
                 >
                   <Analytics />
