@@ -67,7 +67,6 @@ function MeetModal({
 
   const handleFormSubmit = (onClose: () => void) => {
     const data = getValues();
-    console.log(data, "data");
 
     // Проверка на заполненность всех полей перед отправкой
     if (!data.name || !data.token || !data.chat_id) {
