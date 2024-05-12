@@ -11,6 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { getRooms, getSelectIzbushkaId, getUser } from "@/utils/supabase";
 import { captureExceptionSentry } from "@/utils/sentry";
+import { Button } from "@nextui-org/react";
 
 const HMSPrebuilt = dynamic(
   () =>
@@ -160,6 +161,7 @@ const ShowIzbushka = () => {
           options={{ userName: fullName }}
         />
       )}
+      <Button title="hello" />
     </div>
   );
 };
