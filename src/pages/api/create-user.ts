@@ -98,6 +98,7 @@ export default async function handler(
         username: req.body.username,
         first_name: req.body.first_name,
         last_name: req.body.last_name,
+        chat_id: req.body.chat_id,
         type: "room",
       };
 
