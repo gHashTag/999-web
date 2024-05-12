@@ -44,7 +44,7 @@ type Modal = {
   watchRoom: UseFormWatch<FormValues>;
   roomsItem?: RoomNode;
   getValues: () => FieldValues;
-  registerRoom: UseFormRegister<FormValues>;
+  registerRoom?: UseFormRegister<FormValues>;
 };
 
 function MeetModal({
