@@ -156,16 +156,16 @@ const ShowIzbushka = () => {
         backgroundColor: "var(--main-background)",
       }}
     >
-      {loading ||
-        !roomId ||
-        (!fullName && (
-          <HMSPrebuilt
-            //@ts-ignore
-            authToken={token}
-            roomCode={roomId}
-            options={{ userName: fullName }}
-          />
-        ))}
+      {loading || !roomId || !fullName ? (
+        <Spinner size="lg" />
+      ) : (
+        <HMSPrebuilt
+          //@ts-ignore
+          authToken={token}
+          roomCode={roomId}
+          options={{ userName: fullName }}
+        />
+      )}
     </div>
   );
 };
