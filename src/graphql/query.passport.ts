@@ -20,6 +20,8 @@ query GetPassports($user_id: UUID!, $room_id: String!, $recording_id: String, $w
         passport_id
         user_id
         username
+        first_name
+        last_name
         workspace_id
         room_id
         recording_id
@@ -53,6 +55,8 @@ query GetPassports($task_id: BigInt!) {
         passport_id
         user_id
         username
+        first_name
+        last_name
         workspace_id
         room_id
         recording_id
@@ -85,6 +89,8 @@ query GetPassports($user_id: UUID!, $room_id: String!, $recording_id: String, $w
         passport_id
         user_id
         username
+        first_name
+        last_name
         workspace_id
         room_id
         recording_id
@@ -110,6 +116,9 @@ export const PASSPORT_CREATE_MUTATION = gql`
       records {
         user_id
         workspace_id
+        username
+        first_name
+        last_name
         room_id
         recording_id
         photo_url
@@ -139,6 +148,7 @@ export const PASSPORT_UPDATE_MUTATION = gql`
     ) {
       records {
         user_id
+        username
         workspace_id
         room_id
         recording_id

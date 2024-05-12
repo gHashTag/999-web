@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { useMotionValue } from "framer-motion";
 import { Passport, PassportArray } from "@/types";
+import { Avatar } from "@nextui-org/react";
 
 type AnimatedTooltipRoomsProps = {
   assigneeItems: Passport[];
@@ -56,15 +57,31 @@ export const AnimatedTooltipRooms = ({
             key={item.node.photo_url}
             onClick={() => handleClick(item.node.passport_id || 0)}
           >
-            <Image
-              onMouseMove={handleMouseMove}
-              height={50}
-              width={50}
-              // @ts-ignore
-              src={item.node.photo_url}
-              alt="avatar"
-              className="object-cover !m-0 !p-0 object-top rounded-full border-2 group-hover:scale-105 group-hover:z-30 border-white relative transition duration-500"
-            />
+            {item.node.photo_url ? (
+              <Image
+                onMouseMove={handleMouseMove}
+                height={50}
+                width={50}
+                // @ts-ignore
+                src={item.node.photo_url}
+                alt="avatar"
+                className="object-cover !m-0 !p-0 object-top rounded-full border-2 group-hover:scale-105 group-hover:z-30 border-white relative transition duration-500"
+              />
+            ) : (
+              <Avatar
+                onMouseMove={handleMouseMove}
+                name={`${item?.node?.first_name?.charAt(
+                  0
+                )}${item?.node?.last_name?.charAt(0)}`}
+                className="text-large object-cover !m-0 !p-0 object-top rounded-full border-2 group-hover:scale-105 group-hover:z-30 border-white relative transition duration-500"
+                style={{
+                  height: 51,
+                  width: 51,
+                  backgroundColor: "#282524",
+                  border: "2px solid white",
+                }}
+              />
+            )}
           </div>
         ))}
     </div>
