@@ -28,18 +28,54 @@ import { useAssets } from "./useAssets";
 import {
   Control,
   FieldValues,
+  Resolver,
   SubmitHandler,
+  UseFormHandleSubmit,
+  UseFormRegister,
+  UseFormRegisterReturn,
+  UseFormSetValue,
   UseFormWatch,
   useForm,
 } from "react-hook-form";
 import { usePassport } from "./usePassport";
 import { captureExceptionSentry } from "@/utils/sentry";
 
+export type FormValues = {
+  id: string;
+  name: string;
+  token: string;
+  chat_id: string;
+};
+
+const resolver: Resolver<FormValues> = async (values) => {
+  console.log(values, "values");
+  return {
+    values: values.name || values.token || values.chat_id ? values : {},
+    errors:
+      !values.name || !values.token || !values.chat_id
+        ? {
+            name: {
+              type: "required",
+              message: "This is required.",
+            },
+            token: {
+              type: "required",
+              message: "This is required.",
+            },
+            chat_id: {
+              type: "required",
+              message: "This is required.",
+            },
+          }
+        : {},
+  };
+};
+
 const useRooms = (): UseRoomsReturn => {
   const { createPassport } = usePassport({});
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { control, handleSubmit, getValues, setValue, reset, watch } =
-    useForm();
+  const { register, control, handleSubmit, getValues, setValue, reset, watch } =
+    useForm<FormValues>({ resolver });
   const [inviteGuestCode, setInviteGuestCode] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [inviteHostCode, setInviteHostCode] = useState("");
@@ -266,7 +302,9 @@ const useRooms = (): UseRoomsReturn => {
         });
       } else {
         reset({
-          title: "",
+          name: "",
+          token: "",
+          chat_id: "",
         });
       }
     }
@@ -324,6 +362,7 @@ const useRooms = (): UseRoomsReturn => {
     inviteGuestCode,
     inviteHostCode,
     inviteMemberCode,
+    registerRoom: register,
     isOpenMeet: isOpen,
     onOpenMeet: onOpen,
     onOpenChangeRoom: onOpenChange,
@@ -346,7 +385,7 @@ const useRooms = (): UseRoomsReturn => {
 type UseRoomsReturn = {
   roomsData: RoomsData;
   roomsItem: RoomNode;
-  watchRoom: UseFormWatch<FieldValues>;
+  watchRoom: UseFormWatch<FormValues>;
   refetchRooms: () => void;
 
   handlerEditRoom: () => void;
@@ -359,13 +398,14 @@ type UseRoomsReturn = {
   inviteGuestCode: string;
   inviteHostCode: string;
   inviteMemberCode: string;
+  registerRoom: UseFormRegister<FormValues>;
   isOpenMeet: boolean;
   onOpenMeet: () => void;
   onOpenChangeRoom: () => void;
-  controlRoom: Control<FieldValues, any>;
-  handleSubmitRoom: FieldValues;
+  controlRoom: Control<FormValues, any>;
+  handleSubmitRoom: UseFormHandleSubmit<FormValues, undefined>;
   getValuesRoom: () => FieldValues;
-  setValueRoom: (name: string, value: any) => void;
+  setValueRoom: UseFormSetValue<FormValues>;
   reset: () => void;
   openModalRoomId: string;
   setOpenModalRoomId: (openModalRoomId: string) => void;

@@ -56,6 +56,7 @@ const RoomPage = () => {
     roomNameLoading,
     inviteToMeet,
     inviteGuestCode,
+    registerRoom,
     inviteHostCode,
     inviteMemberCode,
     isOpenMeet,
@@ -273,6 +274,7 @@ const RoomPage = () => {
             onOpen={onOpenMeet}
             onOpenChange={onOpenChangeRoom}
             control={controlRoom}
+            registerRoom={registerRoom}
             handleSubmit={handleSubmitRoom}
             getValues={getValuesRoom}
             setValue={setValueRoom}

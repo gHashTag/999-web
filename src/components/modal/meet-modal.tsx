@@ -5,13 +5,19 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/react";
-import { Controller, FieldValues, UseFormWatch } from "react-hook-form";
+import {
+  Controller,
+  FieldValues,
+  UseFormRegister,
+  UseFormWatch,
+} from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { RoomEdge, RoomNode } from "@/types";
+import { FormValues } from "@/hooks/useRooms";
 
 const RightAlignedFooter = styled(ModalFooter)`
   display: flex;
@@ -33,11 +39,12 @@ type Modal = {
   onDelete: () => void;
   control: any;
   handleSubmit: any;
-  getValues: any;
   setValue: any;
   isEditing: boolean;
-  watchRoom: UseFormWatch<FieldValues>;
+  watchRoom: UseFormWatch<FormValues>;
   roomsItem?: RoomNode;
+  getValues: () => FieldValues;
+  registerRoom: UseFormRegister<FormValues>;
 };
 
 function MeetModal({
@@ -53,7 +60,26 @@ function MeetModal({
   isEditing,
   watchRoom,
   roomsItem,
+  getValues,
+  registerRoom,
 }: Modal) {
+  const [error, setError] = useState("");
+
+  const handleFormSubmit = (onClose: () => void) => {
+    const data = getValues();
+    console.log(data, "data");
+
+    // Проверка на заполненность всех полей перед отправкой
+    if (!data.name || !data.token || !data.chat_id) {
+      setError("Please fill in all fields before submitting");
+      return;
+    } else {
+      setError("");
+      isEditing ? onUpdate() : onCreate();
+      onClose();
+    }
+  };
+
   useEffect(() => {
     const subscription = watchRoom((value: any, { name, type }: any) => {
       console.log("Watch update:", value, name);
@@ -81,7 +107,9 @@ function MeetModal({
             </ModalHeader>
             <ModalBody>
               <form onSubmit={handleSubmit(isEditing ? onUpdate : onCreate)}>
-                <Label htmlFor="text">Title</Label>
+                <Label htmlFor="text" style={{ paddingLeft: 5 }}>
+                  Title
+                </Label>
                 <div style={{ padding: 5 }} />
                 <Controller
                   name="name"
@@ -98,7 +126,9 @@ function MeetModal({
                   )}
                 />
                 <div style={{ padding: 10 }} />
-                <Label htmlFor="text">Telegram bot token</Label>
+                <Label htmlFor="text" style={{ paddingLeft: 5 }}>
+                  Telegram bot token
+                </Label>
                 <div style={{ padding: 5 }} />
                 <Controller
                   name="token"
@@ -115,7 +145,9 @@ function MeetModal({
                   )}
                 />
                 <div style={{ padding: 10 }} />
-                <Label htmlFor="text">Telegram chat id</Label>
+                <Label htmlFor="text" style={{ paddingLeft: 5 }}>
+                  Telegram chat id
+                </Label>
                 <div style={{ padding: 5 }} />
                 <Controller
                   name="chat_id"
@@ -132,6 +164,11 @@ function MeetModal({
                   )}
                 />
               </form>
+              {error && (
+                <p style={{ paddingLeft: 5 }} className="text-sm text-red-500">
+                  {error}
+                </p>
+              )}
             </ModalBody>
             <ModalFooter>
               {isEditing && (
@@ -143,8 +180,7 @@ function MeetModal({
               <Button
                 color="warning"
                 onClick={() => {
-                  isEditing ? onUpdate() : onCreate();
-                  onClose();
+                  handleFormSubmit(onClose);
                 }}
               >
                 {isEditing ? "Save" : "Create"}
