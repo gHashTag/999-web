@@ -149,7 +149,7 @@ const ShowIzbushka = () => {
   }, [hmsActions, isConnected]);
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div style={{ width: "100vw", height: "90vh" }}>
       {loading || !roomId || !fullName ? (
         <Spinner size="lg" />
       ) : (
@@ -160,7 +160,6 @@ const ShowIzbushka = () => {
           options={{ userName: fullName }}
         />
       )}
-      <div style={{ marginBottom: 100 }} />
     </div>
   );
 };
