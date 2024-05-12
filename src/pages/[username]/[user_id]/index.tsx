@@ -22,7 +22,7 @@ import TaskModal from "@/components/modal/TaskModal";
 import { Button } from "@/components/ui/moving-border";
 import { TextRevealCard } from "@/components/ui/text-reveal-card";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
-
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 export type updateUserDataType = {
   user_id: string;
   first_name: string;
@@ -33,7 +33,7 @@ export type updateUserDataType = {
 export default function Office() {
   const router = useRouter();
 
-  const { username, user_id } = useUser();
+  const { username, user_id, language_code } = useUser();
 
   const {
     workspacesData,
@@ -116,17 +116,25 @@ export default function Office() {
     setIsEditingWorkspace(false);
   };
 
+  const words =
+    language_code === "ru"
+      ? `🏰 Избушка повернулась к тебе передом, а к лесу задом. На лево пойдешь огонем согреешься, прямо пойдешь в водичке омолодишься, а на право пойдешь в медную трубу попадешь.\n🔥 Пламя горячее - это твои личные избушки, где твои желания сбываются.\n💧 Воды чистые к себе манят, где ты гость в избушках дорогой.\n🎺 Медные трубы - это чародейская избушка, где обучение к мудрости тебя ведет.
+  `
+      : `🏰 The hut turned its front to you, and its back to the forest. If you go to the left you will be warmed by the fire, you will go straight ahead in the water and you will rejuvenate, and to the right you will go into a copper pipe.\n🔥 The hot flames are your personal huts, where your wishes come true.\n💧 Clean waters beckon, where you are a guest in dear huts.\n🎺 Copper pipes are a sorcerer’s hut, where learning leads you to wisdom.
+  `;
+
   return (
     <Layout loading={tasksLoading || workspacesLoading}>
       <main className="flex flex-col items-center justify-between">
         {/* <TextRevealCard text="Workspaces" revealText="Workspaces" /> */}
         <BreadcrumbWithCustomSeparator username={username} />
-
         {tasksLoading && workspacesLoading && <Spinner size="lg" />}
-
         {/* <div style={{ position: "absolute", top: 75, right: 70 }}>
           <Button onClick={onCreateNewWorkspace}>Create workspace</Button>
         </div> */}
+        <div className="w-4/5 h-full flex justify-center items-center">
+          <TextGenerateEffect words={words} className="text-center" />
+        </div>
 
         {!tasksLoading && (
           <CanvasRevealEffectDemo
@@ -141,7 +149,6 @@ export default function Office() {
           <Button onClick={() => onCreateNewTask()}>Create task</Button>
         </div> */}
         {/* {tasksData && <DataTable data={tasksData} columns={columns} />} */}
-
         <>
           {isOpenModalWorkspace && (
             <WorkspaceModal
@@ -176,6 +183,7 @@ export default function Office() {
             />
           )}
         </>
+
         <div style={{ padding: "100px" }} />
       </main>
     </Layout>
