@@ -56,9 +56,9 @@ export async function setMyWorkspace(user_id: string) {
   const { data, error } = await supabase.from("workspaces").insert([
     {
       title: "Fire",
-      user_id: user_id,
+      user_id,
     },
-  ]).select();
+  ]).select("*");
 
   if (error) console.log(error, "setMyWorkspace error:::");
   const workspace_id = data && data[0].workspace_id;

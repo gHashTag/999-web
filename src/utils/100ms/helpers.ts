@@ -33,7 +33,7 @@ export const createOrFetchRoom = async ({
 }: CreateOrFetchRoomProps) => {
   const roomData = {
     name: `${username}:${uuidv4()}:${language_code}`,
-    description: username,
+    description: workspace_id,
     template_id: "65efdfab48b3dd31b94ff0dc",
     enabled: true,
   };
