@@ -161,7 +161,7 @@ const ShowIzbushka = () => {
         }}
       >
         {loading || !roomId || !fullName ? (
-          <Spinner size="lg" />
+          <div />
         ) : (
           <HMSPrebuilt
             //@ts-ignore
