@@ -37,7 +37,7 @@ export const createOrFetchRoom = async ({
     template_id: "65efdfab48b3dd31b94ff0dc",
     enabled: true,
   };
-  console.log(roomData, "roomData");
+
   const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
     method: "POST",
     body: JSON.stringify({ ...roomData }),
@@ -51,7 +51,7 @@ export const createOrFetchRoom = async ({
     throw new Error(`Failed to create room: ${roomResponse.statusText}`);
   }
   const newRoom = await roomResponse.json();
-  console.log(newRoom, "newRoom");
+
   const room_id = newRoom.id;
 
   const codesResponse = await createCodes(room_id, newToken100ms as string);
@@ -76,7 +76,6 @@ export const createOrFetchRoom = async ({
     username,
     workspace_id,
   };
-  console.log(rooms, "rooms");
 
   delete rooms.id;
 
