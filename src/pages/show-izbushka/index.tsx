@@ -160,6 +160,7 @@ const ShowIzbushka = () => {
           options={{ userName: fullName }}
         />
       )}
+      <div style={{ bottom: 100 }} />
     </div>
   );
 };
