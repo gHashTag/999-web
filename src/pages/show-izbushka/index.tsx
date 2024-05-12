@@ -151,21 +151,26 @@ const ShowIzbushka = () => {
   return (
     <div
       style={{
-        width: "100vw",
-        height: "90vh",
         backgroundColor: "var(--main-background)",
       }}
     >
-      {loading || !roomId || !fullName ? (
-        <Spinner size="lg" />
-      ) : (
-        <HMSPrebuilt
-          //@ts-ignore
-          authToken={token}
-          roomCode={roomId}
-          options={{ userName: fullName }}
-        />
-      )}
+      <div
+        style={{
+          width: "100vw",
+          height: "90vh",
+        }}
+      >
+        {loading || !roomId || !fullName ? (
+          <Spinner size="lg" />
+        ) : (
+          <HMSPrebuilt
+            //@ts-ignore
+            authToken={token}
+            roomCode={roomId}
+            options={{ userName: fullName }}
+          />
+        )}
+      </div>
     </div>
   );
 };
