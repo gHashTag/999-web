@@ -10,6 +10,7 @@ import {
 
 import { getRooms, getSelectIzbushkaId, getUser } from "@/utils/supabase";
 import { captureExceptionSentry } from "@/utils/sentry";
+import { Spinner } from "@/components/ui/spinner";
 
 const miniApp = new MiniApp({
   headerColor: "#00ae13",
@@ -159,6 +160,8 @@ const ShowIzbushka = () => {
   return (
     <div
       style={{
+        width: "100vw",
+        height: "100vh",
         backgroundColor: "var(--main-background)",
       }}
     >
@@ -169,7 +172,7 @@ const ShowIzbushka = () => {
         }}
       >
         {loading || !roomId || !fullName ? (
-          <div />
+          <Spinner size="lg" />
         ) : (
           <HMSPrebuilt
             //@ts-ignore
