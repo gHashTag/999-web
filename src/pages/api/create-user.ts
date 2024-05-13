@@ -71,7 +71,7 @@ export default async function handler(
         inviter: inviter_user_id,
         invitation_codes,
         telegram_id: req.body.id,
-        select_izbushka_id: req.body.select_izbushka_id,
+        select_izbushka: req.body.select_izbushka,
         email: "",
         photo_url: "",
       };
