@@ -32,6 +32,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { corsHeaders } from "@/helpers/corsHeaders";
 import { __DEV__, botName } from "@/utils/constants";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 if (__DEV__) {
   // Adds messages only in a dev environment
@@ -149,7 +150,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <main className="dark text-foreground bg-background">
-      <ErrorBoundary fallback={<p>Something went wrong</p>}>
+      <ErrorBoundary>
         <div>
           {/* <HuddleProvider client={huddleClient}> */}
           <ApolloProvider client={client}>
