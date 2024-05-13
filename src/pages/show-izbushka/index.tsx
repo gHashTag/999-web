@@ -63,19 +63,20 @@ const ShowIzbushka = () => {
           selectIzbushka = firstRoom && firstRoom[0].id;
         }
 
-        const { selectIzbushkaData, selectIzbushkaError } =
-          await getSelectIzbushkaId(selectIzbushka);
+        const { dataIzbushka, selectIzbushkaError } = await getSelectIzbushkaId(
+          selectIzbushka
+        );
 
         if (selectIzbushkaError) {
           console.log(selectIzbushkaError, "selectIzbushkaError");
         }
 
         let roomId;
-        if (selectIzbushkaData) {
-          const selectIzbushka = selectIzbushkaData[0].id;
+        if (dataIzbushka) {
+          const selectIzbushka = dataIzbushka[0].id;
 
           const {
-            selectIzbushkaData: inviterSelectIzbushkaData,
+            dataIzbushka: inviterSelectIzbushkaData,
             selectIzbushkaError: inviterSelectIzbushkaError,
           } = await getSelectIzbushkaId(selectIzbushka);
 
@@ -96,7 +97,7 @@ const ShowIzbushka = () => {
 
           const inviterSelectIzbushka = data && data[1]?.select_izbushka;
           const {
-            selectIzbushkaData: inviterSelectIzbushkaData,
+            dataIzbushka: inviterSelectIzbushkaData,
             selectIzbushkaError: inviterSelectIzbushkaError,
           } = await getSelectIzbushkaId(inviterSelectIzbushka);
           roomId =
