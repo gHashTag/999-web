@@ -78,41 +78,48 @@ export default async function handler(
 
       const { user_id } = await createUser(newUser);
       // create workspace
-      const workspace_id = await setMyWorkspace(user_id);
+      if (user_id) {
+        const workspace_id = await setMyWorkspace(user_id);
 
-      //Create or get a room
-      const rooms = await createOrFetchRoom({
-        id: req.body.id,
-        username: req.body.username,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        language_code: req.body.language_code,
-        user_id,
-        chat_id: req.body.chat_id,
-        workspace_id,
-        token: tokenAiKoshey,
-      });
+        //Create or get a room
+        const rooms = await createOrFetchRoom({
+          id: req.body.id,
+          username: req.body.username,
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          language_code: req.body.language_code,
+          user_id,
+          chat_id: req.body.chat_id,
+          workspace_id,
+          token: tokenAiKoshey,
+        });
 
-      const passport = {
-        user_id,
-        workspace_id,
-        room_id: rooms.room_id,
-        username: req.body.username,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        chat_id: req.body.chat_id,
-        type: "room",
-        is_owner: true,
-      };
+        const passport = {
+          user_id,
+          workspace_id,
+          room_id: rooms.room_id,
+          username: req.body.username,
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          chat_id: req.body.chat_id,
+          type: "room",
+          is_owner: true,
+        };
+        if (passport) {
+          const passport_id = await setMyPassport(passport);
 
-      const passport_id = await setMyPassport(passport);
-
-      return res.status(200).json({
-        passport_id,
-        workspace_id,
-        rooms_id: rooms.room_id,
-        message: `User created successfully`,
-      });
+          return res.status(200).json({
+            passport_id,
+            workspace_id,
+            rooms_id: rooms.room_id,
+            message: `User created successfully`,
+          });
+        } else {
+          return res.status(500).json({ message: "Passport not created" });
+        }
+      } else {
+        return res.status(500).json({ message: "Workspace not created" });
+      }
     } else {
       return res.status(500).json({ message: "User not found" });
     }
