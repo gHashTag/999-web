@@ -79,9 +79,10 @@ export async function setRoom(user_id: string) {
   return lastElement;
 }
 
-export async function setMyPassport(passport: any) {
+export async function setPassport(passport: any, is_owner: boolean) {
   const { data, error } = await supabase.from("user_passport").insert([
     passport,
+    { is_owner },
   ]).select();
 
   if (error) console.log(error, "setMyPassport error:::");
@@ -186,9 +187,18 @@ export async function createRoom(username: string) {
 }
 
 export const getSelectIzbushkaId = async (selectIzbushka: string) => {
-  const { data: selectIzbushkaData, error: selectIzbushkaError } =
-    await supabase.from("rooms").select("*").eq("id", selectIzbushka);
-  return { selectIzbushkaData, selectIzbushkaError };
+  const { data: dataIzbushka, error: selectIzbushkaError } = await supabase
+    .from(
+      "rooms",
+    ).select("*").eq("id", selectIzbushka);
+
+  const izbushka = dataIzbushka && dataIzbushka[0];
+
+  if (izbushka) {
+    return { dataIzbushka, izbushka, selectIzbushkaError: null };
+  } else {
+    return { dataIzbushka: [], izbushka: null, selectIzbushkaError };
+  }
 };
 
 export async function getBiggest(

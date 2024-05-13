@@ -9,7 +9,6 @@ if (!process.env.NEXT_PUBLIC_100MS) {
 const newToken100ms = process.env.NEXT_PUBLIC_100MS;
 
 type CreateOrFetchRoomProps = {
-  id: string;
   username: string;
   first_name: string;
   last_name: string;
@@ -21,7 +20,6 @@ type CreateOrFetchRoomProps = {
 };
 
 export const createOrFetchRoom = async ({
-  id,
   username,
   first_name,
   last_name,

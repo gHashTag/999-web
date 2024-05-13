@@ -5,8 +5,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
   checkUsernameCodesByUserId,
   createUser,
-  setMyPassport,
+  getSelectIzbushkaId,
   setMyWorkspace,
+  setPassport,
 } from "@/utils/supabase";
 
 import { tokenAiKoshey } from "@/utils/telegram/bots";
@@ -27,11 +28,12 @@ export type CreateUserT = {
   language_code: string;
   chat_id: number;
   inviter: string;
-  select_izbushka_id: string;
+  select_izbushka: string;
 };
 
 type ResponseData = {
-  passport_id?: string;
+  passport_id_owner?: string;
+  passport_id_user?: string;
   workspace_id?: string;
   rooms_id?: string;
   message?: string;
@@ -53,7 +55,15 @@ export default async function handler(
   });
 
   const {
+    id,
     inviter,
+    username,
+    first_name,
+    last_name,
+    is_bot,
+    language_code,
+    select_izbushka,
+    chat_id,
   }: CreateUserT = await req.body;
 
   try {
@@ -63,15 +73,15 @@ export default async function handler(
 
     if (isInviterExist) {
       const newUser = {
-        username: req.body.username,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        is_bot: req.body.is_bot,
-        language_code: req.body.language_code,
+        username,
+        first_name,
+        last_name,
+        is_bot,
+        language_code,
         inviter: inviter_user_id,
         invitation_codes,
-        telegram_id: req.body.id,
-        select_izbushka: req.body.select_izbushka,
+        telegram_id: id,
+        select_izbushka,
         email: "",
         photo_url: "",
       };
@@ -83,13 +93,12 @@ export default async function handler(
 
         //Create or get a room
         const rooms = await createOrFetchRoom({
-          id: req.body.id,
-          username: req.body.username,
-          first_name: req.body.first_name,
-          last_name: req.body.last_name,
-          language_code: req.body.language_code,
+          username,
+          first_name,
+          last_name,
+          language_code,
           user_id,
-          chat_id: req.body.chat_id,
+          chat_id,
           workspace_id,
           token: tokenAiKoshey,
         });
@@ -98,22 +107,42 @@ export default async function handler(
           user_id,
           workspace_id,
           room_id: rooms.room_id,
-          username: req.body.username,
-          first_name: req.body.first_name,
-          last_name: req.body.last_name,
-          chat_id: req.body.chat_id,
+          username,
+          first_name,
+          last_name,
+          chat_id,
           type: "room",
-          is_owner: true,
         };
         if (passport) {
-          const passport_id = await setMyPassport(passport);
+          try {
+            const passport_id_owner = await setPassport(passport, true);
+            const { izbushka } = await getSelectIzbushkaId(select_izbushka);
+            if (izbushka) {
+              const passport_user = {
+                user_id,
+                workspace_id: izbushka.workspace_id,
+                room_id: izbushka.room_id,
+                username,
+                first_name,
+                last_name,
+                chat_id: izbushka.chat_id,
+                type: "room",
+              };
+              const passport_id_user = await setPassport(passport_user, false);
 
-          return res.status(200).json({
-            passport_id,
-            workspace_id,
-            rooms_id: rooms.room_id,
-            message: `User created successfully`,
-          });
+              return res.status(200).json({
+                passport_id_owner,
+                passport_id_user,
+                workspace_id,
+                rooms_id: rooms.room_id,
+                message: `User created successfully`,
+              });
+            } else {
+              return res.status(500).json({ message: "Izbushka not found" });
+            }
+          } catch (error) {
+            captureExceptionSentry(error, "create-user");
+          }
         } else {
           return res.status(500).json({ message: "Passport not created" });
         }
