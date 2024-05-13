@@ -149,7 +149,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <main className="dark text-foreground bg-background">
-      <Sentry.ErrorBoundary fallback={<p>Something went wrong</p>}>
+      <ErrorBoundary fallback={<p>Something went wrong</p>}>
         <div>
           {/* <HuddleProvider client={huddleClient}> */}
           <ApolloProvider client={client}>
@@ -185,7 +185,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </ApolloProvider>
           {/* </HuddleProvider> */}
         </div>
-      </Sentry.ErrorBoundary>
+      </ErrorBoundary>
     </main>
   );
 }
