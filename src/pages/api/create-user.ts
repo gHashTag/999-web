@@ -100,6 +100,7 @@ export default async function handler(
         last_name: req.body.last_name,
         chat_id: req.body.chat_id,
         type: "room",
+        is_owner: true,
       };
 
       const passport_id = await setMyPassport(passport);

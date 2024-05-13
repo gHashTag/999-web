@@ -12,14 +12,14 @@ import { getRooms, getSelectIzbushkaId, getUser } from "@/utils/supabase";
 import { captureExceptionSentry } from "@/utils/sentry";
 import { Spinner } from "@/components/ui/spinner";
 
-const miniApp = new MiniApp({
-  headerColor: "#00ae13",
-  backgroundColor: "#00ae13",
-  version: "6.4",
-  botInline: false,
-  createRequestId: () => "1234567890",
-});
-console.log(miniApp, "miniApp");
+// const miniApp = new MiniApp({
+//   headerColor: "#00ae13",
+//   backgroundColor: "#00ae13",
+//   version: "6.4",
+//   botInline: false,
+//   createRequestId: () => "1234567890",
+// });
+// console.log(miniApp, "miniApp");
 
 const HMSPrebuilt = dynamic(
   () =>
