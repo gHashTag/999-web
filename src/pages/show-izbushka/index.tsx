@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 
-import { retrieveLaunchParams } from "@tma.js/sdk";
+import { retrieveLaunchParams, MiniApp, postEvent } from "@tma.js/sdk";
 import dynamic from "next/dynamic";
 import {
   selectIsConnectedToRoom,
   useHMSActions,
   useHMSStore,
 } from "@100mslive/react-sdk";
-import { Spinner } from "@/components/ui/spinner";
 
 import { getRooms, getSelectIzbushkaId, getUser } from "@/utils/supabase";
 import { captureExceptionSentry } from "@/utils/sentry";
+
+const miniApp = new MiniApp({
+  headerColor: "#00ae13",
+  backgroundColor: "#00ae13",
+  version: "6.4",
+  botInline: false,
+  createRequestId: () => "1234567890",
+});
+console.log(miniApp, "miniApp");
 
 const HMSPrebuilt = dynamic(
   () =>
