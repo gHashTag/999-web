@@ -149,41 +149,43 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <main className="dark text-foreground bg-background">
-      <div>
-        {/* <HuddleProvider client={huddleClient}> */}
-        <ApolloProvider client={client}>
-          <NextUIProvider>
-            <NextThemesProvider attribute="class" defaultTheme="dark">
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <TonConnectUIProvider
-                  manifestUrl="https://dmrooqbmxdhdyblqzswu.supabase.co/storage/v1/object/public/docs/tonconnect-manifest.json"
-                  actionsConfiguration={{
-                    twaReturnUrl: `https://t.me/${botName}/start`,
-                  }}
+      <Sentry.ErrorBoundary fallback={<p>Something went wrong</p>}>
+        <div>
+          {/* <HuddleProvider client={huddleClient}> */}
+          <ApolloProvider client={client}>
+            <NextUIProvider>
+              <NextThemesProvider attribute="class" defaultTheme="dark">
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="dark"
+                  enableSystem
+                  disableTransitionOnChange
                 >
-                  <Analytics />
-                  <SpeedInsights />
-                  {!__DEV__ && <BackgroundBeams />}
-                  <HMSRoomProvider>
-                    <Component {...pageProps} />
+                  <TonConnectUIProvider
+                    manifestUrl="https://dmrooqbmxdhdyblqzswu.supabase.co/storage/v1/object/public/docs/tonconnect-manifest.json"
+                    actionsConfiguration={{
+                      twaReturnUrl: `https://t.me/${botName}/start`,
+                    }}
+                  >
+                    <Analytics />
+                    <SpeedInsights />
+                    {!__DEV__ && <BackgroundBeams />}
+                    <HMSRoomProvider>
+                      <Component {...pageProps} />
 
-                    <ResizeHandler />
-                    <NProgress />
-                    <Toaster />
-                  </HMSRoomProvider>
-                  {/* <BackgroundBeamsTwo /> */}
-                </TonConnectUIProvider>
-              </ThemeProvider>
-            </NextThemesProvider>
-          </NextUIProvider>
-        </ApolloProvider>
-        {/* </HuddleProvider> */}
-      </div>
+                      <ResizeHandler />
+                      <NProgress />
+                      <Toaster />
+                    </HMSRoomProvider>
+                    {/* <BackgroundBeamsTwo /> */}
+                  </TonConnectUIProvider>
+                </ThemeProvider>
+              </NextThemesProvider>
+            </NextUIProvider>
+          </ApolloProvider>
+          {/* </HuddleProvider> */}
+        </div>
+      </Sentry.ErrorBoundary>
     </main>
   );
 }
