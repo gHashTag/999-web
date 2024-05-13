@@ -222,7 +222,7 @@ export async function getQuestion(ctx: QuestionContext) {
   console.log(ctx);
   // Проверяем, предоставлены ли lesson_number и subtopic
   if (ctx.lesson_number == null || ctx.subtopic == null) {
-    console.error("getQuestion требует lesson_number и subtopic");
+    console.error("getQuestion lesson_number and subtopic");
     return []; // Возвращаем пустой массив или выбрасываем ошибку
   }
 
@@ -346,11 +346,11 @@ export async function updateResult(
     .upsert({ user_id, [language]: value }, { onConflict: "user_id" });
 
   if (error) {
-    console.error("Ошибка при обновлении результата:", error);
+    console.error("Error updateResult:", error);
     throw error;
   }
 
-  console.log("Результат успешно обновлен или вставлен:", data);
+  console.log("Result successfully updated or inserted:", data);
 }
 
 export async function getUid(username: string) {
@@ -362,13 +362,13 @@ export async function getUid(username: string) {
     .single();
 
   if (error) {
-    console.error("Ошибка при получении user_id:", error.message);
+    console.error("Error getting user_id:", error.message);
     throw new Error(error.message);
   }
 
   if (!data) {
-    console.error("Пользователь не найден");
-    return null; // или выбросить ошибку, если пользователь должен существовать
+    console.error("User not found");
+    return null; // or throw an error if the user must exist
   }
 
   // Возвращаем user_id
@@ -387,7 +387,7 @@ export async function getAssignedTasks(user_id: string): Promise<Task[]> {
     );
 
   if (error) {
-    console.error("Ошибка при получении getAssignedTasks:", error.message);
+    console.error("Error getAssignedTasks:", error.message);
     throw new Error(error.message);
   }
 
@@ -595,7 +595,7 @@ export const getSupabaseUserByUsername = async (username: string) => {
 
     if (response.error) {
       console.error(
-        "Ошибка при получении информации о пользователе:",
+        "Error getting user info:",
         response.error,
       );
       return null;
@@ -603,7 +603,6 @@ export const getSupabaseUserByUsername = async (username: string) => {
 
     return response.data;
   } catch (error) {
-    // console.error("Ошибка при получении информации о пользователе:", error);
     captureExceptionSentry("Error getting user info", "useSupabase");
     return null;
   }
