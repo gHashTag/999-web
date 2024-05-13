@@ -79,13 +79,12 @@ export async function setRoom(user_id: string) {
   return lastElement;
 }
 
-export async function setPassport(passport: any, is_owner: boolean) {
-  const { data, error } = await supabase.from("user_passport").insert([
+export async function setPassport(passport: any) {
+  const { data, error } = await supabase.from("user_passport").insert(
     passport,
-    { is_owner },
-  ]).select();
+  ).select("*");
 
-  if (error) console.log(error, "setMyPassport error:::");
+  if (error) console.log("setPassport error:::", error);
   const passport_id = data && data[0].passport_id;
   return passport_id;
 }

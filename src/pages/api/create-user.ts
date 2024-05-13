@@ -32,6 +32,7 @@ export type CreateUserT = {
 };
 
 type ResponseData = {
+  user_id?: string;
   passport_id_owner?: string;
   passport_id_user?: string;
   workspace_id?: string;
@@ -87,6 +88,7 @@ export default async function handler(
       };
 
       const { user_id } = await createUser(newUser);
+      console.log(user_id, "user_id");
       // create workspace
       if (user_id) {
         const workspace_id = await setMyWorkspace(user_id);
@@ -112,10 +114,12 @@ export default async function handler(
           last_name,
           chat_id,
           type: "room",
+          is_owner: true,
         };
+        console.log(passport, "passport");
         if (passport) {
           try {
-            const passport_id_owner = await setPassport(passport, true);
+            const passport_id_owner = await setPassport(passport);
             const { izbushka } = await getSelectIzbushkaId(select_izbushka);
             if (izbushka) {
               const passport_user = {
@@ -127,10 +131,13 @@ export default async function handler(
                 last_name,
                 chat_id: izbushka.chat_id,
                 type: "room",
+                is_owner: false,
               };
-              const passport_id_user = await setPassport(passport_user, false);
+              console.log(passport_user, "passport_user");
+              const passport_id_user = await setPassport(passport_user);
 
               return res.status(200).json({
+                user_id,
                 passport_id_owner,
                 passport_id_user,
                 workspace_id,
