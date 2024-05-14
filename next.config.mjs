@@ -13,6 +13,7 @@ const nextConfig = {
   images: {
     domains: [
       "randomuser.me",
+      "images.domains",
       "images.unsplash.com",
       "lh3.googleusercontent.com",
       "t.me",

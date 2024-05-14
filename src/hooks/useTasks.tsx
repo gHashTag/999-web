@@ -537,13 +537,15 @@ const useTasks = (): UseTasksReturn => {
         id: "assignee",
         header: "Assignee",
         cell: ({ row }: any) => {
+          console.log(row, "row");
           const assigned_to = JSON.parse(
             row?.original?.node?.assigned_to || "[]"
           );
+          console.log("assigned_to", assigned_to);
           return (
             <div style={{ position: "relative" }}>
               <div style={{ display: "flex" }}>
-                {assigned_to &&
+                {/* {assigned_to &&
                   assigned_to.map((item: any, index: number) => (
                     <Avatar
                       key={index}
@@ -560,7 +562,7 @@ const useTasks = (): UseTasksReturn => {
                         }}
                       />
                     </Avatar>
-                  ))}
+                  ))} */}
               </div>
             </div>
           );
