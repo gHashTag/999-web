@@ -252,7 +252,7 @@ export interface RoomNode {
   description?: string | null;
   customer_id?: string | null;
   app_id?: string | null;
-  recording_info?: Record<string, any> | null;
+  recording_info?: string;
   template_id?: string | null;
   template?: string | null;
   region?: string | null;

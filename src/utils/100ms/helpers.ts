@@ -73,6 +73,7 @@ export const createOrFetchRoom = async ({
     chat_id,
     username,
     workspace_id,
+    language_code,
   };
 
   delete rooms.id;
