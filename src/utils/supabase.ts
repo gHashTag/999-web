@@ -379,12 +379,12 @@ export async function getAssignedTasks(user_id: string): Promise<Task[]> {
   const { data, error } = await supabase
     .from("tasks")
     .select("*")
-    .neq("user_id", user_id)
-    .neq("assigned_to", null)
-    .contains(
-      "assigned_to",
-      JSON.stringify([{ user_id }]),
-    );
+    .neq("user_id", user_id);
+  // .neq("assigned_to", null)
+  // .contains(
+  //   "assigned_to",
+  //   JSON.stringify([{ user_id }]),
+  // );
 
   if (error) {
     console.error("Error getAssignedTasks:", error.message);
@@ -396,7 +396,7 @@ export async function getAssignedTasks(user_id: string): Promise<Task[]> {
       "__typename": "tasks",
       node: {
         ...value,
-        assigned_to: JSON.stringify(value.assigned_to),
+        // assigned_to: JSON.stringify(value.assigned_to),
       },
     };
   });

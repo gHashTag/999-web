@@ -90,7 +90,6 @@ export const WORKSPACE_UPDATE_MUTATION = gql`
         description
         status
         due_date
-        assigned_to
         completed_at
         is_archived
         updated_at

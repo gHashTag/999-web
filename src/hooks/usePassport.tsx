@@ -24,7 +24,7 @@ type passportType = {
   recording_id?: string;
   task_id?: string;
   type?: string;
-  assigned_to?: AssignedTo[];
+  // assigned_to?: AssignedTo[];
 };
 
 const usePassport = ({
@@ -32,8 +32,8 @@ const usePassport = ({
   recording_id,
   task_id,
   type,
-  assigned_to,
-}: passportType): UsePassportReturn => {
+}: // assigned_to,
+passportType): UsePassportReturn => {
   const { username, user_id, is_owner, workspace_id, workspace_type } =
     useUser();
   // console.log(username, "username");
@@ -250,23 +250,23 @@ const usePassport = ({
           username: user.username,
           first_name: user.first_name,
           last_name: user.last_name,
-          chat_id: user.telegram_id,
+          chat_id: String(user.telegram_id),
           task_id,
           type,
         },
       };
       console.log(variables, "variables");
 
-      const assignedArray: PassportNode[] = [
-        {
-          user_id: user.user_id,
-          username: user.username,
-          photo_url: user.photo_url,
-        },
-      ];
+      // const assignedArray: PassportNode[] = [
+      //   {
+      //     user_id: user.user_id,
+      //     username: user.username,
+      //     photo_url: user.photo_url,
+      //   },
+      // ];
       // console.log(assignedArray, "assignedArray");
 
-      assigned_to && assignedArray.push(...assigned_to);
+      // assigned_to && assignedArray.push(...assigned_to);
 
       if (isUserExist) {
         await mutateCreatePassport({
@@ -277,7 +277,7 @@ const usePassport = ({
               description: "Passport created successfully",
             });
             // create assigned_to
-            task_id && assignedArray && updateTask(task_id, assignedArray);
+            // task_id && assignedArray && updateTask(task_id, assignedArray);
             passportRefetch();
             refetchTasks();
             reset({
@@ -373,8 +373,8 @@ const usePassport = ({
   };
 
   const onDeletePassportTask = (passport_id: number, user_id: string) => {
-    const newAssignee =
-      assigned_to && assigned_to.filter((item) => item.user_id !== user_id);
+    // const newAssignee =
+    //   assigned_to && assigned_to.filter((item) => item.user_id !== user_id);
 
     mutateDeletePassport({
       variables: {
@@ -385,7 +385,7 @@ const usePassport = ({
         passportRefetch();
         refetchTasks();
         // delete assigned_to
-        task_id && newAssignee && updateTask(task_id, newAssignee);
+        task_id && updateTask(task_id, newAssignee);
       },
     });
     closeModal();

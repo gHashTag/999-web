@@ -51,7 +51,7 @@ export interface PassportNode extends AssignedTo {
   workspace_id?: string;
   is_owner?: boolean;
   room_id?: string;
-  assigned_to?: Passport[];
+  // assigned_to?: Passport[];
   rooms?: RoomInfoT;
 }
 
@@ -74,7 +74,7 @@ export type TaskNode = {
   updated_at?: string;
   due_date?: string;
   priority?: string;
-  assigned_to?: string;
+  // assigned_to?: string;
   label?: string[];
   completed_at?: string;
   is_archived?: boolean;
@@ -289,7 +289,7 @@ export type TaskNodeType = {
   is_archived: boolean;
   status: string;
   label: string;
-  assigned_to: string;
+  // assigned_to: string;
 };
 
 export interface RowTaskType {

@@ -44,7 +44,7 @@ const TaskPage = () => {
                   watchTask={watchTask}
                   setValueTask={setValueTask}
                   onUpdateTask={onUpdateTask}
-                  assigned_to={node.assigned_to}
+                  // assigned_to={node.assigned_to}
                 />
               );
             })}

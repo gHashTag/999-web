@@ -309,7 +309,7 @@ const useTasks = (): UseTasksReturn => {
   );
 
   const updateTask = useCallback(
-    async (task_id: string, assigned_to: AssignedTo[]) => {
+    async (task_id: string) => {
       const formData = getValues();
       const variables = {
         id: task_id,
@@ -320,7 +320,7 @@ const useTasks = (): UseTasksReturn => {
         status: formData.status,
         is_public: formData.is_public,
         cost: formData.cost,
-        assigned_to: JSON.stringify(assigned_to),
+        // assigned_to: JSON.stringify(assigned_to),
       };
 
       await mutateUpdateTask({
@@ -538,10 +538,10 @@ const useTasks = (): UseTasksReturn => {
         header: "Assignee",
         cell: ({ row }: any) => {
           console.log(row, "row");
-          const assigned_to = JSON.parse(
-            row?.original?.node?.assigned_to || "[]"
-          );
-          console.log("assigned_to", assigned_to);
+          // const assigned_to = JSON.parse(
+          //   row?.original?.node?.assigned_to || "[]"
+          // );
+          // console.log("assigned_to", assigned_to);
           return (
             <div style={{ position: "relative" }}>
               <div style={{ display: "flex" }}>
@@ -624,7 +624,7 @@ type UseTasksReturn = {
   onOpenChangeModalTask: () => void;
   onCreateTask: () => void;
   onUpdateTask: (id: string) => void;
-  updateTask: (task_id: string, assigned_to: PassportNode[]) => void;
+  updateTask: (task_id: string) => void;
   onUpdateTaskStatus: (id: string) => void;
   onDeleteTask: (id: string) => void;
   openModalTaskId: string;

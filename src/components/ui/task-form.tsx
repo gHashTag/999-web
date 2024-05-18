@@ -43,8 +43,8 @@ export function TaskForm({
   setValueTask,
   onUpdateTask,
   user_id,
-  assigned_to,
-}: {
+}: // assigned_to,
+{
   id: string;
   title: string;
   description: string;
@@ -59,11 +59,11 @@ export function TaskForm({
   setValueTask: UseFormSetValue<FieldValues>;
   onUpdateTask: (id: string) => void;
   user_id: string;
-  assigned_to: string | undefined;
+  // assigned_to: string | undefined;
 }) {
   const router = useRouter();
   const task_id: string = router.query.task_id as string;
-  const assignedTo = JSON.parse(assigned_to || "[]");
+  // const assignedTo = JSON.parse(assigned_to || "[]");
   const watchedTitle = watchTask("title", title);
   const watchedDescription = watchTask("description", description);
   const watchedPriority = watchTask("priority", priority);
@@ -105,7 +105,7 @@ export function TaskForm({
     room_id,
     task_id,
     type: "task",
-    assigned_to: assignedTo,
+    // assigned_to: assignedTo,
   });
 
   const onSubmitDestination: SubmitHandler<FieldValues> = (

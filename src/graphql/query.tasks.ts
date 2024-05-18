@@ -20,7 +20,6 @@ export const GET_ALL_TASKS = gql`
           is_archived
           status
           label
-          assigned_to
         }
       }
     }
@@ -65,7 +64,6 @@ export const TASKS_COLLECTION_QUERY = gql`
           is_archived
           status
           label
-          assigned_to
         }
       }
     }
@@ -89,7 +87,6 @@ export const CREATE_TASK_MUTATION = gql`
         recording_id
         cost
         is_public
-        assigned_to
         completed_at
         is_archived
         status
@@ -135,7 +132,6 @@ export const MUTATION_TASK_STATUS_UPDATE = gql`
         is_public
         cost
         due_date
-        assigned_to
         completed_at
         is_archived
         updated_at
@@ -160,7 +156,7 @@ export const MUTATION_TASK_UPDATE = gql`
     $cost: BigInt!
     $updated_at: Datetime!
     $order: BigInt!
-    $assigned_to: String!
+    # $assigned_to: String!
   ) {
     updatetasksCollection(
       filter: { id: { eq: $id } }
@@ -174,7 +170,7 @@ export const MUTATION_TASK_UPDATE = gql`
         is_public: $is_public
         cost: $cost
         updated_at: $updated_at
-        assigned_to: $assigned_to
+        # assigned_to: $assigned_to
       }
     ) {
       records {
@@ -186,7 +182,6 @@ export const MUTATION_TASK_UPDATE = gql`
         due_date
         is_public
         cost
-        assigned_to
         completed_at
         is_archived
         updated_at
@@ -194,7 +189,6 @@ export const MUTATION_TASK_UPDATE = gql`
         label
         priority
         order
-        assigned_to
       }
     }
   }
@@ -239,7 +233,6 @@ export const GET_TASKS_BY_RECORDING_ID = gql`
           is_archived
           status
           label
-          assigned_to
         }
       }
     }
@@ -361,7 +354,6 @@ export const GET_TASKS_FOR_ROOM = gql`
           is_archived
           status
           label
-          assigned_to
         }
       }
     }
@@ -397,7 +389,6 @@ export const GET_ROOM_TASKS_WORKSPACE_ID_QUERY = gql`
           is_archived
           status
           label
-          assigned_to
         }
       }
     }
@@ -432,7 +423,6 @@ export const GET_PUBLIC_ROOM_TASKS_QUERY = gql`
           is_archived
           status
           label
-          assigned_to
         }
       }
     }
@@ -462,7 +452,6 @@ export const GET_TASKS_BY_USER_ID = gql`
           is_archived
           status
           label
-          assigned_to
         }
       }
     }
