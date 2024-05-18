@@ -250,11 +250,12 @@ const usePassport = ({
           username: user.username,
           first_name: user.first_name,
           last_name: user.last_name,
+          chat_id: user.telegram_id,
           task_id,
           type,
         },
       };
-      // console.log(variables, "variables");
+      console.log(variables, "variables");
 
       const assignedArray: PassportNode[] = [
         {
