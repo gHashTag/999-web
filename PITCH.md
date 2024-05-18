@@ -1,3 +1,202 @@
+### Название проекта: Ай Кощей 🤖
+
+## Видение проекта
+
+Ай Кощей 🤖 — это персональный нейронный ассистент, который трансформирует способ проведения встреч и управления задачами. Наше видение заключается в создании умного помощника, который не только записывает и анализирует встречи, но и активно помогает в управлении задачами, делегировании и планировании не выходя из телеграм. Это первый шаг в создании персонального цифрового аватара, который можно дообучить необходимыми знаниями. Для начинающих предусмотрено создание без кода с использованием интуитивного интерфейса и готовых шаблонов, а для разработчиков — возможность добавления пользовательских модулей и функций через API и SDK. В дальнейшем аватара можно монетизировать через подписку в Telegram. Мы — Тридевятое царство, банк цифровых аватаров и хранители бессмертия аватаров.
+
+## Основные функции:
+
+1. Запись встреч: Автоматическая запись всех обсуждений.
+2. Краткие итоги: Создание кратких итогов встреч.
+3. Список дел: Генерация списка задач на основе обсужденного.
+4. Делегирование: Автоматическое делегирование задач исполнителям в Telegram.
+5. Векторное хранилище: Хранение задач в векторном хранилище для дальнейшего взаимодействия.
+6. Планирование с ИИ: Возможность общения с задачами и планирования своих действий с помощью ИИ.
+7. Поиск исполнителей: Помощь в нахождении исполнителей для задач на основе записей встреч и резюме пользователей.
+8. Публичные задачи: Возможность делать задачи публичными и размещать их на внутренней бирже труда, где любой желающий может выполнить задачу за Ton.
+
+## Цели проекта:
+
+Упростить процесс ведения встреч и управления задачами.
+Обеспечить эффективное делегирование и выполнение задач не выходя из телеграм.
+Создать платформу для взаимодействия и сотрудничества пользователей на основе их задач и навыков.
+
+## Технологии:
+
+- TON: Интеграция с TON для обеспечения безопасности и прозрачности транзакций.
+- Telegram Mini-App: Основная поверхность взаимодействия через мини-приложение в Telegram.
+- ИИ и машинное обучение: Использование нейронных сетей для анализа и обработки данных.
+
+## Преимущества:
+
+- Автоматизация рутинных задач.
+- Повышение эффективности встреч и управления задачами.
+- Возможность сотрудничества и взаимодействия пользователей на основе их задач и навыков.
+
+## Заключение:
+
+Ай Кощей 🤖 — это инновационное решение для управления встречами и задачами, которое использует возможности ИИ и блокчейн-технологий TON для создания эффективной и прозрачной системы взаимодействия пользователей.
+
+## Как пользоваться сервисом
+
+Инструкция гостя в Избушке:
+
+1. Получить ссылку приглашения в Телеграм.
+2. Нажить на ссылку и перейти в бота @ai_koshey_bot
+3. Нажать кнопку Izbushka
+4. Присоедениться к встрече нажатием кнопки Join Now
+5. После завершения встречи в основном меню нажать красную кнопку "Leave room" и завершаем сессию.
+6. Через некоторое время от бота прийдет резюме, транскрибация встречи, список задач и делегирование задач исполнителям.
+7. После этого со всеми задачами вы можете начать вести диалог в этом же боте.
+
+Хозяин избушки
+
+1. Получить ссылку приглашения в Телеграм.
+2. Нажать на ссылку и перейти в телеграм бота @ai_koshey_bot.
+3. Нажать кнопку Izbushka и откроется мини-приложение в Телеграм.
+4. Присоединиться к встрече нажатием кнопки Join Now.
+5. Нажать в основном меню гамбургер, откроется меню Options.
+6. Для того чтобы Ай Кощей записал ваши задачи, необходимо записать видео встречи. Для этого в меню Options нажмите кнопку Start Recording.
+7. После завершения встречи нажмите кнопку Recording On и в появившемся меню нажмите кнопку Stop.
+8. В основном меню нажмите красную кнопку Leave room и завершите сессию.
+9. Через некоторое время от бота придет резюме, транскрибация всей встречи, список задач и делегирование задач исполнителям.
+10. После этого со всеми задачами вы можете начать вести диалог в этом же боте.
+
+---
+
+### Project name: Ai Koschey 🤖
+
+## Vision:
+
+Ai Koschey 🤖 is a personal neural assistant that transforms the way you conduct meetings and manage tasks. Our vision is to create a smart assistant that not only records and analyzes meetings, but also actively helps in task management, delegation and scheduling. This is the first step in creating a personal digital avatar, which can be further trained with the necessary knowledge. For beginners, code-free creation is provided using an intuitive interface and ready-made templates, and for developers, the ability to add custom modules and functions through the API and SDK. In the future, the avatar can be monetized through a subscription in Telegram. We are the Far Far Away Kingdom, a bank of digital avatars and guardians of the immortality of avatars.
+
+## Main functions:
+
+1. Meeting Recording: Automatic recording of all discussions.
+2. Brief summaries: Create brief summaries of meetings.
+3. To-Do List: Generate a list of tasks based on what has been discussed.
+4. Delegation: Automatic delegation of tasks to performers in Telegram.
+5. Vector storage: Storing tasks in vector storage for further interaction.
+6. AI Planning: Ability to communicate with tasks and plan your actions using AI.
+7. Search for performers: Help in finding performers for tasks based on meeting records and user resumes.
+8. Public tasks: The ability to make tasks public and post them on the internal labor exchange, where anyone can complete the task on Ton.
+
+## Project goals:
+
+Simplify the process of conducting meetings and managing tasks.
+Ensure effective delegation and execution of tasks.
+Create a platform for user interaction and collaboration based on their tasks and skills.
+
+## Technologies:
+
+- TON: Integration with TON to ensure security and transparency of transactions.
+- Telegram Mini-App: The main interaction surface through the mini-app in Telegram.
+- AI and machine learning: Using neural networks for data analysis and processing.
+
+## Advantages:
+
+- Automation of routine tasks.
+- Increased meeting efficiency and task management.
+- Possibility of collaboration and interaction between users based on their tasks and skills.
+
+## Conclusion:
+
+Ai Koschey 🤖 is an innovative solution for managing meetings and tasks that uses the capabilities of AI and TON blockchain technologies to create an effective and transparent user interaction system.
+
+---
+
+# DAO "Far Far Away" - a bank of digital AI avatars.
+
+### The idea of a digital AI avatar bank is to create a WEB3 platform on TON (The Open Network), where users can learn to create, store, exchange and monetize digital AI avatars (Ai Avatars).
+
+It represents an innovative approach to digital identity management, giving users complete control over their virtual personas and their use across different digital spaces.
+
+Thus, Far Away Kingdom, as a bank of digital AI avatars, offers a powerful tool for digital identity management that can revolutionize the way we interact in the digital world, providing users with new opportunities for creativity, communication and income.
+
+Here are the main aspects of this concept:
+
+### Creating and customizing avatars
+
+Users can use no-code tools to create avatars or program and customize their behavior and appearance using code. This allows everyone to create a unique character that reflects their personal preferences or professional needs.
+
+### Storage
+
+All digital avatars are stored in a secure cloud infrastructure, ensuring their availability and safety. Users have access to their avatars at any time and from any device.
+
+### Exchange and trade
+
+The platform may include internal market functionality where users can exchange or sell their avatars. This creates a vibrant community where digital identities can be commercialized.
+
+### Monetization
+
+Integration with blockchain technologies such as TON allows users to monetize their avatars through the creation and sale of tokenized versions of these characters. This opens up opportunities for making money by creating unique content.
+
+### Integration with other platforms
+
+Avatars can be used in a variety of applications and platforms, including social networks, games, educational programs and virtual workspaces. This allows for a wide range of uses for digital identities.
+
+### Rights and Licensing
+
+The platform provides clear rights management for digital AI avatars, allowing users to control how their avatars can be used by other individuals or companies through NFT ownership.
+
+## Metaverse Far Far Away Kingdom​
+
+The main goal of the Digital Identity Creation program is to train participants in methods and tools for creating and customizing digital avatars using both non-coding and encoding approaches.
+
+## The primary goal of the Digital Identity Creation program is to train participants in methods and tools for creating and customizing digital avatars using both non-coding and coding approaches.
+
+## Far Far Away Kingdom - 3.0
+
+The training program on the TON (The Open Network) platform includes three main topics
+
+- Vectorization 🤖 Ai Koschey
+- Automation 🤖 Ai Baba Yaga
+- Tokenization 🤖 Ai Vodyanoy
+
+### 1. Vectorization - Ai Koschey 🤖
+
+Every day we leave our digital footprint on the Internet, and if you collect all your traces in one place, it becomes obvious that each of us is like a comet, striving for its goals like stars, solving emerging problems along the way while flying past planets. This course focuses on data vectorization of your digital footprint and includes training in artificial intelligence and creating a personal digital avatar. In this course, participants can learn the basic principles of data vectorization (Vector Embeddings), search advanced generation (Retrieval Augmented Generation), methods of training neural networks (Neural Networks), creating and training digital characters (Digital Avatars), as well as the use of artificial intelligence in various areas of business and personal life.
+As a result of this course, you will receive a personal neural assistant, a telegram chat bot for your digital avatar that helps you at meetings, where he writes down everything that is said, briefly summarizes and creates a to-do list based on what was discussed and even delegates them to performers on the internal labor exchange with payment for tasks for TON (The Open Network).
+
+### 2. Automation - Ai Baba Yaga (BotMother)
+
+This course focuses on automation and programming in JavaScript, TypeScript, React and Tact. Participants will learn process automation methods, programming to create web applications, chat bots and Telegram Mini App for the Telegram platform.
+As a result, you will create your personal Telegram Mini App in Telegram, which will help you in your affairs in tandem with your personal digital avatar. The course includes three difficulty levels: Zero Code, Low Code, Hard Code, which allows participants to choose a level according to their skills and goals.
+
+### 3. Tokenization - Ai Vodyanoy
+
+This course is aimed at monetizing a digital avatar and creating your own token and familiarizing yourself with the process of launching a token on the TON (The Open Network) blockchain. Course participants will learn the basic principles of tokenization, the creation of smart contracts for a token, Emission and Token Management, as well as the process of listing a token on Exchange Platforms.
+As a result, you will have the opportunity to monetize your digital avatar on the TON (The Open Network) platform.
+
+## Each of these courses represents an important component of the 3.0 training program on the TON platform, which allows you to acquire the necessary knowledge and skills to successfully create applications, work with artificial intelligence and create tokens on the TON blockchain. Participation in such educational programs will help participants better understand the principles of blockchain technologies, develop their skills and prepare for successful work on the TON platform.
+
+**The training program, aimed at creating a digital identity without code and with fine-tuning code, has the following key objectives:**
+
+### Learn how to use no-code tools
+
+Participants will learn to use platforms and tools that allow you to create and customize digital identities without writing code. This includes working with graphical interfaces, templates and pre-installed functions that simplify the process of creating digital avatars.
+
+### Learn coding basics for fine-tuning
+
+The course will provide knowledge of basic programming and the use of scripts to fine-tune and expand the functionality of digital personalities. This includes working with APIs, integrating with various services and platforms, and customizing behavioral algorithms for avatars.
+
+### Practical application of acquired knowledge
+
+Participants will put their acquired knowledge into practice by creating their own unique digital identities. They will be able to experiment with both non-coding and coding approaches to find the optimal solution for their problems.
+
+### Development of projects for the real world
+
+The program aims to create digital identities that can be used in real business processes or as part of larger systems. This could include creating virtual assistants, personalized avatars for social media, or interactive characters for games and educational platforms.
+
+### Adapting to changes in technology
+
+The program will be regularly updated to incorporate the latest technologies and trends in digital identity creation to ensure participants always have access to the most up-to-date tools and techniques.
+Thus, the program will not only teach participants how to create and customize digital identities, but will also give them the tools for their further development and integration into various fields of activity.
+
+### Community​
+
+We strive to create an active and engaged community around the Far Far Away Kingdom. To increase the social capital of each user, we have developed a number of quests: subscribing on social networks, telling friends about us, creating creative content and much more. For completing these tasks, ambassadors will receive our internal token, $ZLATO, which they can use to purchase NFTs or sell on an exchange.
+
 # "Тридевятое Царство" - банк цифровых ИИ аватаров.
 
 ## Идея банка цифровых ИИ аватаров заключается в создании WEB3 платформы на TON(The Open Network), где пользователи могут обучиться создавать, хранить, обменивать и монетизировать цифровые ИИ аватары(Ai Avatars).

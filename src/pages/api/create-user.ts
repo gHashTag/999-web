@@ -117,41 +117,45 @@ export default async function handler(
           is_owner: true,
         };
         console.log(passport, "passport");
-        if (passport) {
-          try {
-            const passport_id_owner = await setPassport(passport);
-            const { izbushka } = await getSelectIzbushkaId(select_izbushka);
-            if (izbushka) {
-              const passport_user = {
-                user_id,
-                workspace_id: izbushka.workspace_id,
-                room_id: izbushka.room_id,
-                username,
-                first_name,
-                last_name,
-                chat_id: izbushka.chat_id,
-                type: "room",
-                is_owner: false,
-              };
-              console.log(passport_user, "passport_user");
-              const passport_id_user = await setPassport(passport_user);
 
-              return res.status(200).json({
-                user_id,
-                passport_id_owner,
-                passport_id_user,
-                workspace_id,
-                rooms_id: rooms.room_id,
-                message: `User created successfully`,
-              });
-            } else {
-              return res.status(500).json({ message: "Izbushka not found" });
-            }
-          } catch (error) {
-            captureExceptionSentry(error, "create-user");
-          }
-        } else {
+        if (!passport) {
           return res.status(500).json({ message: "Passport not created" });
+        }
+
+        try {
+          const passport_id_owner = await setPassport(passport);
+          const { izbushka } = await getSelectIzbushkaId(select_izbushka);
+          console.log(izbushka, "izbushka");
+          if (
+            !izbushka || !izbushka.workspace_id || !izbushka.room_id ||
+            !izbushka.chat_id
+          ) {
+            return res.status(500).json({ message: "Izbushka not found" });
+          }
+          const passport_user = {
+            user_id,
+            workspace_id: izbushka.workspace_id,
+            room_id: izbushka.room_id,
+            username,
+            first_name,
+            last_name,
+            chat_id: izbushka.chat_id,
+            type: "room",
+            is_owner: false,
+          };
+          console.log(passport_user, "passport_user");
+          const passport_id_user = await setPassport(passport_user);
+
+          return res.status(200).json({
+            user_id,
+            passport_id_owner,
+            passport_id_user,
+            workspace_id,
+            rooms_id: rooms.room_id,
+            message: `User created successfully`,
+          });
+        } catch (error) {
+          captureExceptionSentry(error, "create-user");
         }
       } else {
         return res.status(500).json({ message: "Workspace not created" });
