@@ -530,47 +530,47 @@ const useTasks = (): UseTasksReturn => {
           );
         },
       },
-      {
-        accessorFn: (row: any) => {
-          return row.node.cost;
-        },
-        id: "assignee",
-        header: "Assignee",
-        cell: ({ row }: any) => {
-          const photo_url = row?.original?.node?.user_passport?.photo_url;
-          const first_name = row?.original?.node?.user_passport?.first_name;
-          const last_name = row?.original?.node?.user_passport?.last_name;
-          const passport_id = row?.original?.node?.user_passport?.passport_id;
-          // const assigned_to = JSON.parse(
-          //   row?.original?.node?.assigned_to || "[]"
-          // );
-          // console.log("assigned_to", assigned_to);
-          return (
-            <div style={{ position: "relative" }}>
-              <div style={{ display: "flex" }}>
-                {/* {assigned_to &&
-                  assigned_to.map((item: any, index: number) => (
-                    <Avatar
-                      key={index}
-                      className="h-8 w-8"
-                      style={{ transform: "scaleX(-1)" }}
-                    >
-                      <AvatarImage
-                        src={item.photo_url || ""}
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          zIndex: index,
-                        }}
-                      />
-                    </Avatar>
-                  ))} */}
-              </div>
-            </div>
-          );
-        },
-      },
+      // {
+      //   accessorFn: (row: any) => {
+      //     return row.node.cost;
+      //   },
+      //   id: "assignee",
+      //   header: "Assignee",
+      //   cell: ({ row }: any) => {
+      //     const photo_url = row?.original?.node?.user_passport?.photo_url;
+      //     const first_name = row?.original?.node?.user_passport?.first_name;
+      //     const last_name = row?.original?.node?.user_passport?.last_name;
+      //     const passport_id = row?.original?.node?.user_passport?.passport_id;
+      //     // const assigned_to = JSON.parse(
+      //     //   row?.original?.node?.assigned_to || "[]"
+      //     // );
+      //     // console.log("assigned_to", assigned_to);
+      //     return (
+      //       <div style={{ position: "relative" }}>
+      //         <div style={{ display: "flex" }}>
+      //           {/* {assigned_to &&
+      //             assigned_to.map((item: any, index: number) => (
+      //               <Avatar
+      //                 key={index}
+      //                 className="h-8 w-8"
+      //                 style={{ transform: "scaleX(-1)" }}
+      //               >
+      //                 <AvatarImage
+      //                   src={item.photo_url || ""}
+      //                   style={{
+      //                     position: "absolute",
+      //                     top: 0,
+      //                     left: 0,
+      //                     zIndex: index,
+      //                   }}
+      //                 />
+      //               </Avatar>
+      //             ))} */}
+      //         </div>
+      //       </div>
+      //     );
+      //   },
+      // },
       {
         id: "actions",
         cell: ({ row }: any) => {
