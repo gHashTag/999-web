@@ -9,7 +9,7 @@ export const ROOM_INFO = gql`
 `;
 
 export const GET_ROOMS_COLLECTIONS_BY_ROOM_ID_QUERY = gql`
-  query RoomsCollection($room_id: Number!) {
+  query RoomsCollection($room_id: String!) {
     roomsCollection(filter: { room_id: { eq: $room_id } }) {
       edges {
         node {
@@ -94,7 +94,7 @@ export const GET_ROOMS_COLLECTIONS_BY_USER_ID_QUERY = gql`
 `;
 
 export const ROOMS_BY_ID_COLLECTION_QUERY = gql`
-  query RoomsCollection($room_id: Number!) {
+  query RoomsCollection($room_id: String!) {
     roomsCollection(filter: { room_id: { eq: $room_id } }) {
       edges {
         node {
@@ -118,9 +118,9 @@ export const ROOMS_BY_ID_COLLECTION_QUERY = gql`
 `;
 
 export const GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY = gql`
-  query RoomsCollection(
-    $workspace_id: String!
-    $room_id: Number!
+    query RoomsCollection(
+    $workspace_id: UUID!
+    $room_id: String!
     $user_id: UUID!
   ) {
     roomsCollection(
@@ -156,7 +156,7 @@ export const GET_ROOMS_COLLECTIONS_BY_WORKSPACE_ID_ROOM_ID_QUERY = gql`
 `;
 
 export const DELETE_ROOM_MUTATION = gql`
-  mutation DeleteFromroomsCollection($room_id: Number!) {
+  mutation DeleteFromroomsCollection($room_id: String!) {
     deleteFromroomsCollection(filter: { room_id: { eq: $room_id } }) {
       records {
         id
@@ -182,7 +182,7 @@ export const GET_ROOM_ASSET = gql`
 `;
 
 export const GET_ROOMS_ASSETS_COLLECTION = gql`
-  query RoomAssetsCollection($room_id: Number!) {
+  query RoomAssetsCollection($room_id: String!) {
     room_assetsCollection(filter: { room_id: { eq: $room_id } }) {
       edges {
         node {
@@ -199,7 +199,7 @@ export const GET_ROOMS_ASSETS_COLLECTION = gql`
 `;
 
 export const ROOM_NAME_COLLECTION_QUERY = gql`
-  query RoomsCollectionByName($room_id: Number!) {
+  query RoomsCollectionByName($room_id: String!) {
     roomsCollection(filter: { room_id: { eq: $room_id } }) {
       edges {
         node {

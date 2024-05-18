@@ -20,6 +20,13 @@ export const GET_ALL_TASKS = gql`
           is_archived
           status
           label
+          user_passport {
+            user_id,
+            first_name,
+            last_name,
+            photo_url,
+            passport_id
+          }
         }
       }
     }
@@ -29,7 +36,7 @@ export const GET_ALL_TASKS = gql`
 export const TASKS_COLLECTION_QUERY = gql`
   query GetTasks(
     $user_id: UUID!
-    $room_id: Number!
+    $room_id: String!
     $recording_id: String
     $workspace_id: UUID!
   ) {
@@ -64,6 +71,13 @@ export const TASKS_COLLECTION_QUERY = gql`
           is_archived
           status
           label
+          user_passport {
+            user_id,
+            first_name,
+            last_name,
+            photo_url,
+            passport_id
+          }
         }
       }
     }
@@ -92,6 +106,13 @@ export const CREATE_TASK_MUTATION = gql`
         status
         order
         label
+        user_passport {
+          user_id,
+          first_name,
+          last_name,
+          photo_url,
+          passport_id
+        }
       }
     }
   }
@@ -139,6 +160,13 @@ export const MUTATION_TASK_STATUS_UPDATE = gql`
         label
         priority
         order
+        user_passport {
+          user_id,
+          first_name,
+          last_name,
+          photo_url,
+          passport_id
+         }
       }
     }
   }
@@ -155,22 +183,18 @@ export const MUTATION_TASK_UPDATE = gql`
     $is_public: Boolean!
     $cost: BigInt!
     $updated_at: Datetime!
-    $order: BigInt!
-    # $assigned_to: String!
   ) {
     updatetasksCollection(
       filter: { id: { eq: $id } }
       set: {
         title: $title
         description: $description
-        order: $order
         label: $label
         status: $status
         priority: $priority
         is_public: $is_public
         cost: $cost
         updated_at: $updated_at
-        # assigned_to: $assigned_to
       }
     ) {
       records {
@@ -188,7 +212,13 @@ export const MUTATION_TASK_UPDATE = gql`
         created_at
         label
         priority
-        order
+        user_passport {
+          user_id,
+          first_name,
+          last_name,
+          photo_url,
+          passport_id
+        }
       }
     }
   }
@@ -233,6 +263,13 @@ export const GET_TASKS_BY_RECORDING_ID = gql`
           is_archived
           status
           label
+          user_passport {
+            user_id,
+            first_name,
+            last_name,
+            photo_url,
+            passport_id
+          }
         }
       }
     }
@@ -244,7 +281,7 @@ export const GET_TASK_BY_ID = gql`
     $id: UUID!
     $user_id: UUID!
     $workspace_id: UUID!
-    $room_id: Number!
+    $room_id: String!
     $recording_id: String!
   ) {
     tasksCollection(
@@ -280,7 +317,13 @@ export const GET_TASK_BY_ID = gql`
           is_archived
           status
           label
-          assigned_to
+          user_passport {
+            user_id,
+            first_name,
+            last_name,
+            photo_url,
+            passport_id
+          }
         }
       }
     }
@@ -324,7 +367,7 @@ export const GET_TASK_BY_ID = gql`
 // `;
 
 export const GET_TASKS_FOR_ROOM = gql`
-  query GetRoomTasks($user_id: UUID!, $room_id: Number!, $workspace_id: UUID!) {
+  query GetRoomTasks($user_id: UUID!, $room_id: String!, $workspace_id: UUID!) {
     tasksCollection(
       filter: {
         and: [
@@ -354,6 +397,13 @@ export const GET_TASKS_FOR_ROOM = gql`
           is_archived
           status
           label
+          user_passport {
+            user_id,
+            first_name,
+            last_name,
+            photo_url,
+            passport_id
+          }
         }
       }
     }
@@ -389,6 +439,13 @@ export const GET_ROOM_TASKS_WORKSPACE_ID_QUERY = gql`
           is_archived
           status
           label
+          user_passport {
+            user_id,
+            first_name,
+            last_name,
+            photo_url,
+            passport_id
+          }
         }
       }
     }
@@ -423,6 +480,13 @@ export const GET_PUBLIC_ROOM_TASKS_QUERY = gql`
           is_archived
           status
           label
+          user_passport {
+            user_id,
+            first_name,
+            last_name,
+            photo_url,
+            passport_id
+          }
         }
       }
     }
@@ -452,6 +516,13 @@ export const GET_TASKS_BY_USER_ID = gql`
           is_archived
           status
           label
+          user_passport {
+            user_id,
+            first_name,
+            last_name,
+            photo_url,
+            passport_id
+          }
         }
       }
     }
@@ -481,7 +552,13 @@ export const GET_TASKS_BY_NOT_EQ_USER_ID = gql`
           is_archived
           status
           label
-          assigned_to
+          user_passport {
+            user_id,
+            first_name,
+            last_name,
+            photo_url,
+            passport_id
+          }
         }
       }
     }

@@ -134,7 +134,7 @@ export const PASSPORT_UPDATE_MUTATION = gql`
     $user_id: UUID!
     $passport_id: BigIntFilter
     $workspace_id: UUID!
-    $room_id: Number!
+    $room_id: String!
     $recording_id: String!
   ) {
     updateuser_passportCollection(

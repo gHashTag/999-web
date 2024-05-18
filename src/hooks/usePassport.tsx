@@ -385,7 +385,7 @@ passportType): UsePassportReturn => {
         passportRefetch();
         refetchTasks();
         // delete assigned_to
-        task_id && updateTask(task_id, newAssignee);
+        // task_id && updateTask(task_id, newAssignee);
       },
     });
     closeModal();

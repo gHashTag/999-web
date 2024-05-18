@@ -207,11 +207,11 @@ export function TaskForm({
               </LabelInputContainer>
             )}
             <div style={{ padding: "10px" }} />
-            <AnimatedTooltipTasks
+            {/* <AnimatedTooltipTasks
               assigneeItems={passportData}
               onClick={onDeleteAssignee}
               handleClickPlus={handleClickPlus}
-            />
+            /> */}
             {isOpenModalPassport && (
               <InviteMemberModal
                 isOpen={isOpenModalPassport}
@@ -264,12 +264,12 @@ export function TaskForm({
 
             {isOwnerTask && (
               <>
-                <AnimatedTooltipTasks
+                {/* <AnimatedTooltipTasks
                   assigneeItems={passportData}
                   onClick={onDeleteAssignee}
                   handleClickPlus={handleClickPlus}
                   isVisiblePlus={isEditTask}
-                />
+                /> */}
                 <div style={{ padding: "10px" }} />
                 <ButtonAnimate onClick={() => setEditTask(true)}>
                   Edit
