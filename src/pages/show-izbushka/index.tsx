@@ -57,7 +57,7 @@ const ShowIzbushka = () => {
         const lastName = initData?.user?.lastName;
         const fullName = `${firstName} ${lastName}`;
         const photo_url = initData?.user?.photoUrl;
-        console.log(photo_url, "photo_url");
+
         if (username && photo_url) {
           await setUserPhotoUrl({
             username,
