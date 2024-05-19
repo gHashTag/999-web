@@ -47,8 +47,6 @@ const ShowIzbushka = () => {
   const [fullName, setFullName] = useState<string | undefined>(undefined);
 
   const [roomId, setRoomId] = useState<string | undefined>(undefined);
-  console.log(initData, "initData");
-  console.log(platform, "platform");
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -184,7 +182,7 @@ const ShowIzbushka = () => {
       <div
         style={{
           width: "100vw",
-          height: "90vh",
+          height: platform === "ios" ? "100vh" : "90vh",
         }}
       >
         {loading || !roomId || !fullName ? (
