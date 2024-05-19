@@ -47,6 +47,8 @@ const ShowIzbushka = () => {
   const [fullName, setFullName] = useState<string | undefined>(undefined);
 
   const [roomId, setRoomId] = useState<string | undefined>(undefined);
+  console.log(initData, "initData");
+  console.log(platform, "platform");
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -57,7 +59,7 @@ const ShowIzbushka = () => {
         const lastName = initData?.user?.lastName;
         const fullName = `${firstName} ${lastName}`;
         const photo_url = initData?.user?.photoUrl;
-
+        console.log(photo_url, "photo_url");
         if (username && photo_url) {
           await setUserPhotoUrl({
             username,
