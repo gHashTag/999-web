@@ -3,6 +3,7 @@ import { SupabaseUser, Task } from "@/types";
 
 import { createClient } from "@supabase/supabase-js";
 import { captureExceptionSentry } from "./sentry";
+import { SupabaseResponse } from "./types";
 
 interface QuestionContext {
   lesson_number?: number;
@@ -636,6 +637,30 @@ export const updateUserInfoByUsername = async (user: {
       "useSupabase",
     );
     return null;
+  }
+};
+
+export const setUserPhotoUrl = async ({
+  username,
+  photo_url,
+}: {
+  username: string;
+  photo_url: string;
+}): Promise<SupabaseUser[][] | Response> => {
+  try {
+    const { data, error }: SupabaseResponse<SupabaseUser[]> = await supabase
+      .from("users")
+      .update({ photo_url })
+      .eq("username", username)
+      .select("*");
+
+    if (error) {
+      throw new Error("Error setUserPhotoUrl: " + error);
+    }
+
+    return data || [];
+  } catch (error) {
+    throw new Error("Error setUserPhotoUrl: " + error);
   }
 };
 

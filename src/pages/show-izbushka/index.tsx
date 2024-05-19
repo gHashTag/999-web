@@ -8,7 +8,12 @@ import {
   useHMSStore,
 } from "@100mslive/react-sdk";
 
-import { getRooms, getSelectIzbushkaId, getUser } from "@/utils/supabase";
+import {
+  getRooms,
+  getSelectIzbushkaId,
+  getUser,
+  setUserPhotoUrl,
+} from "@/utils/supabase";
 import { captureExceptionSentry } from "@/utils/sentry";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -33,7 +38,7 @@ const HMSPrebuilt = dynamic(
 );
 
 const ShowIzbushka = () => {
-  const { initData } = retrieveLaunchParams();
+  const { initData, platform } = retrieveLaunchParams();
 
   const hmsActions = useHMSActions();
   const [token, setToken] = useState<string | undefined>(undefined);
@@ -51,6 +56,14 @@ const ShowIzbushka = () => {
         const firstName = initData?.user?.firstName;
         const lastName = initData?.user?.lastName;
         const fullName = `${firstName} ${lastName}`;
+        const photo_url = initData?.user?.photoUrl;
+
+        if (username && photo_url) {
+          await setUserPhotoUrl({
+            username,
+            photo_url,
+          });
+        }
 
         setFullName(fullName);
         const data = username && (await getUser(username));
