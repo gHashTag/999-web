@@ -326,6 +326,10 @@ const useTasks = (): UseTasksReturn => {
       await mutateUpdateTask({
         variables,
         onCompleted: () => {
+          toast({
+            title: "Task updated",
+            description: "Task updated successfully",
+          });
           refetchTasks();
         },
       });
@@ -335,6 +339,7 @@ const useTasks = (): UseTasksReturn => {
 
   const onDeleteTask = useCallback(
     (id: string) => {
+      console.log(id, "onDeleteTask id");
       deleteTask({
         variables: {
           filter: {
@@ -344,9 +349,14 @@ const useTasks = (): UseTasksReturn => {
           },
         },
         onCompleted: () => {
+          toast({
+            title: "Task deleted",
+            description: "Task deleted successfully",
+          });
           refetchTasks();
         },
       });
+      refetchTasks();
       closeModal();
     },
     [onClose]

@@ -104,7 +104,6 @@ export const CREATE_TASK_MUTATION = gql`
         completed_at
         is_archived
         status
-        order
         label
         user_passport {
           user_id,
