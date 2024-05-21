@@ -84,7 +84,7 @@ const RecordingPage = () => {
         {asset && (
           <div className="flex-col mt-10">
             <TracingBeam className="px-6">
-              <div className="max-w-2xl mx-auto antialiased pt-4 relative">
+              <div className="max-w-2xl mx-auto antialiased pt-4 px-4 relative">
                 <div className="mb-1">
                   <p className={twMerge("text-4xl mb-4")}>{asset?.title}</p>
                   <p className={twMerge("text-xl mb-4")}>
