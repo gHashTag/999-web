@@ -55,12 +55,12 @@ const useTasks = (): UseTasksReturn => {
   let queryVariables = {};
   let query = GET_TASKS_BY_USER_ID;
 
-  console.log(workspace_type, "workspace_type");
-  console.log(user_id, "user_id");
-  console.log(workspace_id, "workspace_id");
+  // console.log(workspace_type, "workspace_type");
+  // console.log(user_id, "user_id");
+  // console.log(workspace_id, "workspace_id");
 
   if (!recording_id && !room_id && !workspace_id) {
-    console.log("tasksQuery :::1");
+    // console.log("tasksQuery :::1");
     query = TASKS_COLLECTION_QUERY;
     queryVariables = {
       user_id,
@@ -72,7 +72,7 @@ const useTasks = (): UseTasksReturn => {
     workspace_id &&
     workspace_type === "Fire"
   ) {
-    console.log("tasksQuery :::2");
+    // console.log("tasksQuery :::2");
     query = TASKS_COLLECTION_QUERY;
     queryVariables = {
       workspace_id,
@@ -84,7 +84,7 @@ const useTasks = (): UseTasksReturn => {
     workspace_id &&
     workspace_type === "Water"
   ) {
-    console.log("tasksQuery Water");
+    // console.log("tasksQuery Water");
     query = GET_TASKS_BY_NOT_EQ_USER_ID;
     queryVariables = {
       user_id,
@@ -95,10 +95,10 @@ const useTasks = (): UseTasksReturn => {
     workspace_id &&
     workspace_type === "Copper pipes"
   ) {
-    console.log("tasksQuery Copper pipes");
+    // console.log("tasksQuery Copper pipes");
     query = GET_PUBLIC_ROOM_TASKS_QUERY;
   } else if (!recording_id && room_id && workspace_id) {
-    console.log("tasksQuery :::3");
+    // console.log("tasksQuery :::3");
     query = TASKS_COLLECTION_QUERY;
     queryVariables = {
       user_id,
@@ -106,13 +106,13 @@ const useTasks = (): UseTasksReturn => {
       workspace_id,
     };
   } else if (recording_id && !room_id && !workspace_id) {
-    console.log("tasksQuery :::4");
+    // console.log("tasksQuery :::4");
     query = GET_TASKS_BY_RECORDING_ID;
     queryVariables = {
       recording_id,
     };
   } else if (recording_id && room_id && workspace_id) {
-    console.log("tasksQuery :::5");
+    // console.log("tasksQuery :::5");
     query = GET_TASKS_BY_RECORDING_ID;
     queryVariables = {
       user_id,
@@ -339,7 +339,6 @@ const useTasks = (): UseTasksReturn => {
 
   const onDeleteTask = useCallback(
     (id: string) => {
-      console.log(id, "onDeleteTask id");
       deleteTask({
         variables: {
           filter: {
