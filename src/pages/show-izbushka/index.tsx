@@ -41,7 +41,7 @@ const ShowIzbushka = () => {
   const { initData, platform } = retrieveLaunchParams();
 
   const hmsActions = useHMSActions();
-  const [token, setToken] = useState<string | undefined>(undefined);
+  // const [token, setToken] = useState<string | undefined>(undefined);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
   const [loading, setLoading] = useState(false);
   const [fullName, setFullName] = useState<string | undefined>(undefined);
@@ -126,16 +126,16 @@ const ShowIzbushka = () => {
 
         setRoomId(roomId);
 
-        if (typeof roomId === "string") {
-          const authToken = await hmsActions.getAuthTokenByRoomCode({
-            roomCode: roomId,
-          });
+        // if (typeof roomId === "string") {
+        //   const authToken = await hmsActions.getAuthTokenByRoomCode({
+        //     roomCode: roomId,
+        //   });
 
-          setToken(authToken);
-          setLoading(false);
-        } else {
-          throw new Error("roomCode is not a string");
-        }
+        //   // setToken(authToken);
+        //   setLoading(false);
+        // } else {
+        //   throw new Error("roomCode is not a string");
+        // }
       } catch (error) {
         captureExceptionSentry("Error getting token", "ShowIzbushka");
       }
@@ -190,7 +190,7 @@ const ShowIzbushka = () => {
         ) : (
           <HMSPrebuilt
             //@ts-ignore
-            authToken={token}
+            // authToken={token}
             roomCode={roomId}
             options={{ userName: fullName }}
           />
