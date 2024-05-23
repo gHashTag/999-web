@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { useUser } from "@/hooks/useUser";
 import { captureExceptionSentry } from "@/utils/sentry";
+import { usePathname } from "next/navigation";
 
 const HMSPrebuilt = dynamic(
   () =>
@@ -27,13 +28,14 @@ type QueryType = {
   username: string;
   workspace_id: string;
   room_id: string;
+  user_id: string;
 };
 
 const Rooms = () => {
   const router = useRouter();
-  const { user_id, firstName, lastName } = useUser();
-  const { workspace_id, room_id, roomCode } = router.query as QueryType;
-
+  const { firstName, lastName } = useUser();
+  const { workspace_id, room_id, roomCode, user_id } =
+    router.query as QueryType;
   const [token, setToken] = useState<string | undefined>(undefined);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
   const [loading, setLoading] = useState(false);
@@ -88,7 +90,12 @@ const Rooms = () => {
     };
   }, [hmsActions, isConnected]);
 
-  const userName = `${firstName} ${lastName || ""}` || "";
+  const getUserName = () => {
+    if (firstName) {
+      return { userName: `${firstName} ${lastName || ""}` };
+    }
+    return {};
+  };
 
   return (
     <Layout loading={loading || passportLoading}>
@@ -96,9 +103,7 @@ const Rooms = () => {
         <HMSPrebuilt
           authToken={token}
           roomCode={roomCode}
-          options={{
-            userName,
-          }}
+          options={getUserName()}
         />
       )}
     </Layout>
