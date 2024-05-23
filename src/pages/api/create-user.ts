@@ -76,7 +76,7 @@ export default async function handler(
       const newUser = {
         username,
         first_name,
-        last_name,
+        last_name: last_name || "",
         is_bot,
         language_code,
         inviter: inviter_user_id,
