@@ -112,7 +112,7 @@ export default async function handler(
           username,
           first_name,
           last_name: last_name || "",
-          chat_id,
+          chat_id: id,
           type: "room",
           is_owner: true,
         };
