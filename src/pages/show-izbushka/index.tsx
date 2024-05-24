@@ -50,6 +50,7 @@ const ShowIzbushka = () => {
   const [roomId, setRoomId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    hmsActions.setLocalVideoEnabled(false);
     const initRoom = async () => {
       try {
         const username = initData?.user?.username;
@@ -127,7 +128,7 @@ const ShowIzbushka = () => {
 
         setRoomId(roomId);
 
-        hmsActions.setLocalVideoEnabled(false);
+       
       } catch (error) {
         captureExceptionSentry("Error getting token", "ShowIzbushka");
       }
