@@ -44,13 +44,14 @@ const ShowIzbushka = () => {
   const hmsActions = useHMSActions();
 
   const isConnected = useHMSStore(selectIsConnectedToRoom);
-  const [loading, setLoading] = useState(false);
+ 
   const [fullName, setFullName] = useState<string | undefined>(undefined);
 
   const [roomId, setRoomId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    // hmsActions.setLocalVideoEnabled(false);
+    hmsActions.setLocalAudioEnabled(true);
+    hmsActions.setLocalVideoEnabled(false);
     const initRoom = async () => {
       try {
         const username = initData?.user?.username;
@@ -165,7 +166,7 @@ const ShowIzbushka = () => {
   }, [hmsActions, isConnected]);
 
   return (
-    // <HMSRoomProvider>
+    <HMSRoomProvider>
     <div
       style={{
         width: "100vw",
@@ -179,7 +180,7 @@ const ShowIzbushka = () => {
           height: platform === "ios" ? "100vh" : "90vh",
         }}
       >
-        {loading || !roomId || !fullName ? (
+        {!roomId || !fullName ? (
           <Spinner size="lg" />
         ) : (
           <HMSPrebuilt
@@ -191,7 +192,7 @@ const ShowIzbushka = () => {
         )}
       </div>
       </div>
-      // </HMSRoomProvider>
+      </HMSRoomProvider>
   );
 };
 
