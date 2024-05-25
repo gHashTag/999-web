@@ -50,8 +50,8 @@ const ShowIzbushka = () => {
   const [roomId, setRoomId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    hmsActions.setLocalAudioEnabled(true);
-    hmsActions.setLocalVideoEnabled(false);
+    // hmsActions.setLocalAudioEnabled(true);
+    // hmsActions.setLocalVideoEnabled(false);
     const initRoom = async () => {
       try {
         const username = initData?.user?.username;
@@ -166,7 +166,7 @@ const ShowIzbushka = () => {
   }, [hmsActions, isConnected]);
 
   return (
-    <HMSRoomProvider>
+    // <HMSRoomProvider>
     <div
       style={{
         width: "100vw",
@@ -192,7 +192,7 @@ const ShowIzbushka = () => {
         )}
       </div>
       </div>
-      </HMSRoomProvider>
+      // </HMSRoomProvider>
   );
 };
 
