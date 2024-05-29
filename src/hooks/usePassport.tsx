@@ -245,17 +245,18 @@ passportType): UsePassportReturn => {
           user_id: user.user_id,
           workspace_id: formData.workspace_id,
           room_id: formData.room_id,
-          recording_id: formData.recording_id,
+          recording_id: formData.recording_id || "",
           photo_url: user.photo_url,
           username: user.username,
           first_name: user.first_name,
           last_name: user.last_name,
           chat_id: String(user.telegram_id),
           task_id,
+          is_owner: false,
           type,
         },
       };
-      console.log(variables, "variables");
+      console.log(variables, "variables:::");
 
       // const assignedArray: PassportNode[] = [
       //   {
@@ -310,24 +311,25 @@ passportType): UsePassportReturn => {
     console.log("createPassport");
     try {
       const { isUserExist, user } = await checkUsernameAndReturnUser(username);
-
+      const variables = {
+        objects: {
+          user_id: user.user_id,
+          workspace_id,
+          room_id,
+          recording_id: recording_id || "",
+          photo_url: user.photo_url,
+          username: user.username,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          chat_id: String(user.telegram_id),
+          is_owner,
+          type: "room",
+        },
+      };
+      console.log(variables, "variables");
       if (isUserExist) {
         await mutateCreatePassport({
-          variables: {
-            objects: {
-              user_id: user.user_id,
-              workspace_id,
-              room_id,
-              recording_id,
-              photo_url: user.photo_url,
-              username: user.username,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              chat_id: user.telegram_id,
-              is_owner,
-              type: "room",
-            },
-          },
+          variables,
           onCompleted: () => {
             passportRefetch();
           },
@@ -339,15 +341,14 @@ passportType): UsePassportReturn => {
         });
       }
     } catch (error) {
+      console.error("Error creating passport", JSON.stringify(error));
       captureExceptionSentry("Error creating passport", "usePassport");
       toast({
         title: "Error creating passport",
         variant: "destructive",
         description: (
           <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              {JSON.stringify(mutateCreatePassportError, null, 2)}
-            </code>
+            <code className="text-white">{JSON.stringify(error)}</code>
           </pre>
         ),
       });

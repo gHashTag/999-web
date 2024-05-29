@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Layout from "@/components/layout";
 import {
+  HMSRoomProvider,
   selectIsConnectedToRoom,
   useHMSActions,
   useHMSStore,
@@ -45,17 +46,26 @@ const Rooms = () => {
     user_id,
     room_id,
   });
+  const getUserName = () => {
+    if (firstName) {
+      return `${firstName} ${lastName || ""}`;
+    }
+    return "";
+  };
 
   useEffect(() => {
     if (passportData && passportData.length === 0) {
       router.push("/");
     } else {
       localStorage.setItem("room_id", room_id);
+
       // localStorage.setItem("workspace_id", workspace_id);
       setIsPassport(true);
       const fetchToken = async () => {
         try {
           if (typeof roomCode === "string") {
+            const audio = await hmsActions.setLocalAudioEnabled(true);
+            console.log(audio, "audio");
             const authToken = await hmsActions.getAuthTokenByRoomCode({
               roomCode,
             });
@@ -90,20 +100,12 @@ const Rooms = () => {
     };
   }, [hmsActions, isConnected]);
 
-  const getUserName = () => {
-    if (firstName) {
-      return { userName: `${firstName} ${lastName || ""}` };
-    }
-    return {};
-  };
-
   return (
     <Layout loading={loading || passportLoading}>
-      {token && isPassport && (
+      {isPassport && (
         <HMSPrebuilt
-          authToken={token}
           roomCode={roomCode}
-          options={getUserName()}
+          options={{ userName: getUserName() }}
         />
       )}
     </Layout>
