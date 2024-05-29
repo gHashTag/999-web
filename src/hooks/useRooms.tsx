@@ -239,7 +239,7 @@ const useRooms = (): UseRoomsReturn => {
       type: "member",
     },
     {
-      text: "Invite Link",
+      text: "Invite Guest",
       type: "guest",
     },
   ];

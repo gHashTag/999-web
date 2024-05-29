@@ -12,7 +12,9 @@ import { __DEV__ } from "@/utils/constants";
 import { Button } from "@/components/ui/moving-border";
 import { useUser } from "@/hooks/useUser";
 import { useTasks } from "@/hooks/useTasks";
+import { usePath } from "@/hooks/usePath";
 import { useRooms } from "@/hooks/useRooms";
+import { usePathname } from "next/navigation";
 
 import InviteMemberModal from "@/components/modal/InviteMemberModal";
 
@@ -32,8 +34,10 @@ if (!managementToken) {
 
 const RoomPage = () => {
   const router = useRouter();
-  const { username, workspace_id, workspace_type, room_id, room_name } =
-    useUser();
+  const { workspace_type = "Fire", room_name } = useUser();
+
+  const path = usePathname();
+  const { username, workspace_id, room_id } = usePath(path);
 
   useEffect(() => {
     if (!username) {
@@ -138,7 +142,7 @@ const RoomPage = () => {
             username={username}
             workspace_id={workspace_id}
             room_id={room_id}
-            room_name={room_name}
+            room_name={room_name || username}
           />
           <div style={{ padding: 15 }} />
           <AnimatedTooltipRooms

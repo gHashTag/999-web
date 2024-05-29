@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { useUser } from "@/hooks/useUser";
 import { captureExceptionSentry } from "@/utils/sentry";
-import { usePathname } from "next/navigation";
 
 const HMSPrebuilt = dynamic(
   () =>
