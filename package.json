@@ -115,5 +115,9 @@
     "react-table": "link:@type/@tanstack/react-table",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.4.3"
-  }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.0.6"
 }

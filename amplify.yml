@@ -4,7 +4,7 @@ frontend:
     # IMPORTANT - Please verify your build commands
     preBuild:
       commands:
-        - npm install -g pnpm # This line installs pnpm globally
+        - corepack enable
         - pnpm install # Install project dependencies
     build:
       commands:
