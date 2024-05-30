@@ -16,7 +16,6 @@
     "@100mslive/react-sdk": "^0.10.4",
     "@100mslive/roomkit-react": "^0.3.4",
     "@apollo/client": "^3.9.9",
-    "@aws-amplify/ui-react": "^6.1.7",
     "@faker-js/faker": "^8.4.1",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/client-preset": "^4.2.5",
@@ -56,7 +55,6 @@
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
     "apollo3-cache-persist": "^0.15.0",
-    "aws-amplify": "^6.2.0",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.0",
@@ -95,8 +93,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@aws-amplify/backend": "^1.0.0",
-    "@aws-amplify/backend-cli": "^1.0.1",
     "@types/node": "^20",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18",
