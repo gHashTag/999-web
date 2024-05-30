@@ -30,4 +30,8 @@ if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
   throw new Error("NEXT_PUBLIC_SENTRY_DSN is not set");
 }
 
-export const botName = __DEV__ ? "dao999nft_dev_bot" : "ai_koshey_bot";
+if (process.env.DEV) {
+  throw new Error("DEV is not set");
+}
+
+export const botName = process.env.DEV ? "dao999nft_dev_bot" : "ai_koshey_bot";
