@@ -6,7 +6,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { HMSRoomProvider } from "@100mslive/react-sdk";
 
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import NProgress from "@components/nprogress";
+
 import ResizeHandler from "@components/resize-handler";
 import BackgroundBeams from "@components/ui/background-beams";
 import { Toaster } from "@/components/ui/toaster";
@@ -175,7 +175,6 @@ export default function App({ Component, pageProps }: AppProps) {
                       <Component {...pageProps} />
 
                       <ResizeHandler />
-                      <NProgress />
                       <Toaster />
                     </HMSRoomProvider>
                     {/* <BackgroundBeamsTwo /> */}

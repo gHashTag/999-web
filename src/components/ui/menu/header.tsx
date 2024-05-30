@@ -1,7 +1,7 @@
 "use-client";
 
 import React, { useState, useEffect } from "react";
-import { IProvider } from "@web3auth/base";
+
 import {
   Navbar,
   NavbarBrand,
@@ -14,7 +14,7 @@ import IconLogo from "./icon-logo";
 import { usePathname } from "next/navigation";
 import DropdownMenuApp from "./dropdown";
 import useDeviceDetect from "@/hooks/useDeviceDetect";
-import { ADAPTER_EVENTS } from "@web3auth/base";
+
 import { useUser } from "@/hooks/useUser";
 
 // import { getPublicCompressed } from '@toruslabs/eccrypto'
