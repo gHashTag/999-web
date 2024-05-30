@@ -30,7 +30,7 @@ if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
   throw new Error("NEXT_PUBLIC_SENTRY_DSN is not set");
 }
 
-if (process.env.DEV) {
+if (!process.env.DEV) {
   throw new Error("DEV is not set");
 }
 
