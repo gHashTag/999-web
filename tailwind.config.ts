@@ -81,7 +81,7 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      //@ts-expect-error
+      //@ts-ignore
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -92,7 +92,7 @@ const config = {
           to: { height: "0" },
         },
       },
-      //@ts-expect-error
+      //@ts-ignore
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
@@ -149,7 +149,7 @@ const config = {
 function addVariablesForColors({ addBase, theme }: any) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
   );
 
   addBase({
