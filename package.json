@@ -8,7 +8,8 @@
     "start": "next start -p 80",
     "lint": "next lint",
     "ngrok": "ngrok http 80",
-    "generate": "NEXT_PUBLIC_SUPABASE_URL=https://dmrooqbmxdhdyblqzswu.supabase.co graphql-codegen --config ./src/apollo/codegen.ts"
+    "generate": "NEXT_PUBLIC_SUPABASE_URL=https://dmrooqbmxdhdyblqzswu.supabase.co graphql-codegen --config ./src/apollo/codegen.ts",
+    "depcheck": "npx depcheck"
   },
   "dependencies": {
     "@100mslive/react-sdk": "^0.10.4",
