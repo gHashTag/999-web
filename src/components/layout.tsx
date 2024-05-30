@@ -17,7 +17,7 @@
 import Link from "next/link";
 import cn from "classnames";
 import { useRouter } from "next/router";
-import { SkipNavContent } from "@reach/skip-nav";
+// import { SkipNavContent } from "@reach/skip-nav";
 // import { NAVIGATION } from "@lib/constants";
 import styles from "./layout.module.css";
 import Logo from "./icons/icon-logo";
@@ -208,7 +208,7 @@ export default function Layout({
         {/* <ViewSource /> */}
         <div className={styles.page}>
           <main className={styles.main} style={layoutStyles}>
-            <SkipNavContent />
+            {/* <SkipNavContent /> */}
             {loading ? (
               <Spinner size="lg" />
             ) : (

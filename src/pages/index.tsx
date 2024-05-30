@@ -15,7 +15,7 @@ import "@radix-ui/themes/styles.css";
  * limitations under the License.
  */
 
-import { SkipNavContent } from "@reach/skip-nav";
+// import { SkipNavContent } from "@reach/skip-nav";
 
 import Page from "@components/page";
 import ConfContent from "@components/index";
@@ -28,7 +28,7 @@ export default function Conf() {
 
   return (
     <Page meta={meta} fullViewport>
-      <SkipNavContent />
+      {/* <SkipNavContent /> */}
       <ConfContent />
     </Page>
   );

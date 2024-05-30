@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 import { NextUIProvider } from "@nextui-org/react";
 import { HMSRoomProvider } from "@100mslive/react-sdk";
-// import { HuddleClient, HuddleProvider } from "@huddle01/react";
+
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import NProgress from "@components/nprogress";
 import ResizeHandler from "@components/resize-handler";
