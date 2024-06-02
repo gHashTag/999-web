@@ -1,5 +1,5 @@
-if (!process.env.NEXT_PUBLIC_SITE_URL) {
-  throw new Error("LOCAL_URL is not set");
+if (!process.env.NEXT_PUBLIC_LOCAL_URL) {
+  throw new Error("NEXT_PUBLIC_LOCAL_URL is not set");
 }
 
 if (!process.env.NEXT_PUBLIC_SITE_URL) {
@@ -30,8 +30,10 @@ if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
   throw new Error("NEXT_PUBLIC_SENTRY_DSN is not set");
 }
 
-if (!process.env.DEV) {
-  throw new Error("DEV is not set");
+if (!process.env.NEXT_PUBLIC_DEV) {
+  throw new Error("NEXT_PUBLIC_DEV is not set");
 }
 
-export const botName = process.env.DEV ? "dao999nft_dev_bot" : "ai_koshey_bot";
+export const botName = process.env.NEXT_PUBLIC_DEV
+  ? "dao999nft_dev_bot"
+  : "ai_koshey_bot";
