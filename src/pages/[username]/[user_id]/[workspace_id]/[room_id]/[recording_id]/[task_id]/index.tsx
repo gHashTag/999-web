@@ -4,6 +4,8 @@ import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 import { useTasks } from "@/hooks/useTasks";
 import { TaskForm } from "@/components/ui/task-form";
+import { usePathname } from "next/navigation";
+import { usePath } from "@/hooks/usePath";
 
 const TaskPage = () => {
   const {
@@ -15,7 +17,9 @@ const TaskPage = () => {
     setValueTask,
   } = useTasks();
   const router = useRouter();
-  const { task_id } = router.query as { task_id: string };
+
+  const path = usePathname();
+  const { task_id } = usePath(path);
 
   useEffect(() => {
     localStorage.setItem("is_owner", "false");

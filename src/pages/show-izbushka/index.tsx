@@ -187,7 +187,7 @@ const ShowIzbushka = () => {
             //@ts-ignore
             // authToken={token}
             roomCode={roomId}
-            options={{ userName: fullName }}
+            options={{ userName: fullName || "" }}
           />
         )}
       </div>

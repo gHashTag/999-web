@@ -3,21 +3,26 @@ import React, { useEffect } from "react";
 import Layout from "@/components/layout";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { twMerge } from "tailwind-merge";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/utils/constants";
-import { Button } from "@/components/ui/moving-border";
+// import { Button } from "@/components/ui/moving-border";
 
 import { useTasks } from "@/hooks/useTasks";
 import { useUser } from "@/hooks/useUser";
 import TaskModal from "@/components/modal/TaskModal";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 import { useAssets } from "@/hooks/useAssets";
+import { usePath } from "@/hooks/usePath";
+import { usePathname } from "next/navigation";
 
 const RecordingPage = () => {
-  const router = useRouter();
-  const { username, workspace_id, room_id, room_name } = useUser();
-  const { recording_id } = router.query;
+  // const router = useRouter();
+  // const { recording_id } = router.query;
+  const { room_name } = useUser();
+
+  const path = usePathname();
+  const { username, workspace_id, room_id, recording_id } = usePath(path);
 
   const { assetData, assetLoading, assetError } = useAssets();
 
