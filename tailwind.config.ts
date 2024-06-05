@@ -2,6 +2,8 @@ import type { Config } from "tailwindcss";
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
+
+
 const { nextui } = require("@nextui-org/react");
 
 const BLACK = "#0f0f0c";
