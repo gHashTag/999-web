@@ -7,6 +7,7 @@ if (!process.env.NEXT_PUBLIC_100MS) {
 }
 
 const newToken100ms = process.env.NEXT_PUBLIC_100MS;
+console.log(newToken100ms, "newToken100ms");
 
 type CreateOrFetchRoomProps = {
   username: string;

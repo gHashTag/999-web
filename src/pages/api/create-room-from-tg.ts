@@ -73,6 +73,7 @@ export default async function handler(
 
       const newToken = process.env.NEXT_PUBLIC_100MS;
 
+      console.log(newToken, "newToken");
       const roomResponse = await fetch("https://api.100ms.live/v2/rooms", {
         method: "POST",
         body: JSON.stringify({ ...roomData }),
