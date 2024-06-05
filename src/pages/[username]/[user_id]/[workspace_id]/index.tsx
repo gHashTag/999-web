@@ -1,18 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-// @ts-ignore
-import { useForm } from "react-hook-form";
 import Layout from "@/components/layout";
 import MeetModal from "@/components/modal/meet-modal";
-
-import { useToast } from "@/components/ui/use-toast";
 
 import { SelectRoom } from "@/components/ui/select-room";
 
 import { useReactiveVar } from "@apollo/client";
 import { Passport, RoomEdge, Task, TaskNode } from "@/types";
 import CardRoom from "@/components/ui/card-room";
-import { Button } from "@/components/ui/moving-border";
 import { DataTable } from "@/components/table/data-table";
 import { __DEV__ } from "@/utils/constants";
 
@@ -24,7 +19,8 @@ import { useRooms } from "@/hooks/useRooms";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/breadcrumb-with-custom-separator";
 import { usePassport } from "@/hooks/usePassport";
 import { getAssignedTasks } from "@/utils/supabase";
-import { captureExceptionSentry } from "@/utils/sentry";
+import { usePathname } from "next/navigation";
+import { usePath } from "@/hooks/usePath";
 
 type PassportType = {
   user_id?: string;
@@ -37,8 +33,12 @@ type PassportType = {
 const MeetsPage = () => {
   const router = useRouter();
   const loading = useReactiveVar(setLoading);
-  const room_id = useReactiveVar(setRoomId);
-  const { username, user_id, workspace_id, workspace_type } = useUser();
+  // const room_id = useReactiveVar(setRoomId);
+  const { user_id, workspace_type } = useUser();
+  // const { username, user_id, workspace_id, workspace_type } = useUser();
+
+  const path = usePathname();
+  const { username, workspace_id } = usePath(path);
 
   const passportObj: PassportType =
     workspace_type === "Water"
@@ -146,7 +146,8 @@ const MeetsPage = () => {
 
   const goToRoomId = (room: RoomEdge) => {
     // localStorage.setItem("is_owner", "false");
-    router.push(`/${username}/${user_id}/${workspace_id}/${room.node.name}`);
+    router.push(`/${username}/${user_id}/${workspace_id}/${room.node.room_id}`);
+    // router.push(`/${username}/${user_id}/${workspace_id}/${room.node.name}`);
     localStorage.setItem("room_id", room.node.room_id);
     setRoomId(room.node.room_id);
     room.node.name && localStorage.setItem("room_name", room.node.name);
