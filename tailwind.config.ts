@@ -1,10 +1,24 @@
 import type { Config } from "tailwindcss";
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
-
-
 const { nextui } = require("@nextui-org/react");
+
+interface ColorValue {
+  [key: string]: string | ColorValue;
+}
+
+const flattenColorPalette = (colors: ColorValue): ColorValue =>
+  Object.assign(
+    {},
+    ...Object.entries(colors !== null && colors !== void 0 ? colors : {})
+      .flatMap(([color, values]: [string, any]) =>
+        typeof values === "object"
+          ? Object.entries(flattenColorPalette(values as ColorValue)).map((
+            [number, hex]: [string, any],
+          ) => ({
+            [color + (number === "DEFAULT" ? "" : `-${number}`)]: hex,
+          }))
+          : [{ [`${color}`]: values }]
+      ),
+  );
 
 const BLACK = "#0f0f0c";
 const YELLOW = "#f6ff00";
