@@ -29,7 +29,7 @@ export default function LearnMore() {
         styles.contact
       )}
     >
-      Learn more on{" "}
+      Learn more on{" "}. v2
       <Link
         href={REPO}
         className={styles["contact-email"]}
