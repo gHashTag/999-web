@@ -34,6 +34,10 @@ if (!process.env.NEXT_PUBLIC_DEV) {
   throw new Error("NEXT_PUBLIC_DEV is not set");
 }
 
+console.log(process.env.NEXT_PUBLIC_DEV, "process.env.NEXT_PUBLIC_DEV");
+
 export const botName = process.env.NEXT_PUBLIC_DEV
   ? "dao999nft_dev_bot"
   : "ai_koshey_bot";
+
+console.log(botName, "botName");
