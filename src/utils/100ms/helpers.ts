@@ -3,10 +3,11 @@ import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../supabase";
 
 if (!process.env.NEXT_PUBLIC_100MS) {
-  throw new Error("NEXT_PUBLIC_100MS is not set");
+  throw new Error("NEXT_PUBLIC_100MS is not set!");
 }
 
 const newToken100ms = process.env.NEXT_PUBLIC_100MS;
+console.log(newToken100ms, "newToken100ms");
 
 type CreateOrFetchRoomProps = {
   username: string;
