@@ -88,7 +88,7 @@ export default async function handler(
       };
 
       const { user_id } = await createUser(newUser);
-      console.log(user_id, "user_id");
+
       // create workspace
       if (user_id) {
         const workspace_id = await setMyWorkspace(user_id);

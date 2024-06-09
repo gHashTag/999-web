@@ -56,3 +56,7 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+temp/video.mp4
+
+temp/2919b14eb048437c9d89ee643947b22a.mp4
