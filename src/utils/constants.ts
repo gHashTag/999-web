@@ -37,7 +37,7 @@ if (!process.env.NEXT_PUBLIC_DEV) {
 console.log(process.env.NEXT_PUBLIC_DEV, "process.env.NEXT_PUBLIC_DEV");
 
 export const botName = process.env.NEXT_PUBLIC_DEV
-  ? "dao999nft_dev_bot"
+  ? "ai_koshey_bot"
   : "ai_koshey_bot";
 
 console.log(botName, "botName");
