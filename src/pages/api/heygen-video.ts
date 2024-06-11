@@ -63,7 +63,7 @@ async function uploadAndSendVideo(
   res: NextApiResponse<ResponseData>,
 ) {
   try {
-    // Загрузка видеофайла
+    // // Загрузка видеофайла
     const file = await fetch(videoUrl);
     console.log(file, "file");
     // Загрузка видеофайла
@@ -71,7 +71,6 @@ async function uploadAndSendVideo(
       file,
       fileName: `${name}.mp4`,
       fileMime: "video/mp4",
-      
     });
     // console.log(videoFile, "videoFile");
 
@@ -83,16 +82,16 @@ async function uploadAndSendVideo(
         caption: name,
       },
     );
+    // // @ts-ignore
+    // if (!video?.media?.fileId) throw new Error("Video not sent");
+    // // @ts-ignore
+    // const fileId = video.media.fileId;
+    // console.log("File ID:", fileId);
 
-    if (!video?.media?.fileId) throw new Error("Video not sent");
-
-    const fileId = video.media.fileId;
-    console.log("File ID:", fileId);
-
-    await botAiKoshey.api.sendVideo(chatId, fileId, {
-      width: 1920,
-      height: 1080,
-    });
+    // await botAiKoshey.api.sendVideo(chatId, fileId, {
+    //   width: 1920,
+    //   height: 1080,
+    // });
     return res.status(200).json({ message: "Video sent successfully" });
   } catch (error) {
     console.error("Error uploading and sending video:", error);
@@ -148,21 +147,27 @@ export default async function handler(
     // console.log(video, "video");
 
     tg.run({
-      phone: () => tg.input("Phone > "),
-      code: () => tg.input("Code > "),
-      password: () => tg.input("Password > "),
+      botToken: tokenAiKoshey,
     }, async (self) => {
       console.log(`Logged in as ${self.displayName}`);
     });
 
-    await uploadAndSendVideo(filePath, videoUrl, chat_id, video_id, res);
+    // tg.run({
+    //   phone: () => tg.input("Phone > "),
+    //   code: () => tg.input("Code > "),
+    //   password: () => tg.input("Password > "),
+    // }, async (self) => {
+    //   console.log(`Logged in as ${self.displayName}`);
+    // });
+
+    // await uploadAndSendVideo(filePath, videoUrl, chat_id, video_id, res);
 
     // Загружаем видео и получаем file_id
     // const fileId = await uploadFileAndGetFileId(tempFilePath);
     // console.log(fileId, "fileId");
 
     // await setVideoUrl(video_id, videoUrl)
-    // await botAiKoshey.api.sendVideo(chat_id, videoUrl);
+    await tg.sendText(chat_id, "test");
   } catch (error: any) {
     captureExceptionSentry(error, "heygen-video");
     return res.status(500).json({ message: JSON.stringify(error) });
