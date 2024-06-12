@@ -12,8 +12,6 @@ export const SITE_URL = __DEV__
   ? process.env.NEXT_PUBLIC_LOCAL_URL
   : process.env.NEXT_PUBLIC_SITE_URL;
 
-export const PRODUCTION_URL = process.env.PRODUCTION_URL;
-
 export const headers = {
   "Content-Type": "application/json",
 };
@@ -37,7 +35,7 @@ if (!process.env.NEXT_PUBLIC_DEV) {
 console.log(process.env.NEXT_PUBLIC_DEV, "process.env.NEXT_PUBLIC_DEV");
 
 export const botName = process.env.NEXT_PUBLIC_DEV
-  ? "ai_koshey_bot"
+  ? "dao999nft_dev_bot"
   : "ai_koshey_bot";
 
 console.log(botName, "botName");

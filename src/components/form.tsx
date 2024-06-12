@@ -30,12 +30,13 @@ import {
   setInviteCode,
   setUserId,
   visibleSignInVar,
+  setInviterUserInfo,
 } from "@/apollo/reactive-store";
 
 import Captcha, { useCaptcha } from "./captcha";
 
 import { useUser } from "@/hooks/useUser";
-import { checkUsername } from "@/utils/supabase";
+import { checkUsernameAndReturnUser } from "@/utils/supabase";
 import { isValidEmail } from "@/helpers/utils";
 
 type FormState = "default" | "loading" | "error" | "success";
@@ -49,6 +50,7 @@ export default function Form({ sharePage }: Props) {
 
   const visible = useReactiveVar(visibleSignInVar);
   const workspace_id = useReactiveVar(setUserId);
+  const userInfo = useReactiveVar(setInviterUserInfo);
 
   const inviteCode = useReactiveVar(setInviteCode);
 
@@ -89,6 +91,10 @@ export default function Form({ sharePage }: Props) {
         toast({
           description: "Successfully authorized",
         });
+        setInviterUserInfo({
+          ...userInfo,
+          email: inviteCode,
+        });
       } else {
         setErrorMsg("Email not correct");
         setFormState("error");
@@ -101,13 +107,20 @@ export default function Form({ sharePage }: Props) {
   const checkInviteWord = useCallback(async () => {
     if (inviteCode) {
       setFormState("loading");
-      const isInviterExist = await checkUsername(inviteCode);
+      const { isUserExist: isInviterExist, user } =
+        await checkUsernameAndReturnUser(inviteCode);
+      const { select_izbushka, user_id } = user;
       if (isInviterExist) {
         setIsEmailStep(true);
         setTimeout(() => {
           setFormState("default");
           setInviteCode("");
           setFocused(true);
+          setInviterUserInfo({
+            select_izbushka: select_izbushka || "",
+            inviter: user_id,
+            is_bot: false,
+          });
         }, 1000);
       } else {
         setErrorMsg("Invite code not correct");

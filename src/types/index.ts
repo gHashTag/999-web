@@ -115,7 +115,7 @@ export type TUser = Readonly<{
   username?: string;
 }>;
 
-export type SupabaseUser = TUser & {
+export type TSupabaseUser = {
   inviter?: string | null;
   is_bot?: boolean | null;
   language_code?: string | null;
@@ -127,7 +127,10 @@ export type SupabaseUser = TUser & {
   admin_email?: string | null;
   role?: string | null;
   display_name?: string | null;
+  select_izbushka?: string | null;
 };
+
+export type SupabaseUser = TUser & TSupabaseUser;
 
 // Дополнительно, вы можете определить тип для таблицы users
 export type UsersTable = SupabaseUser[];

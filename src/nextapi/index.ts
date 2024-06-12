@@ -1,10 +1,8 @@
-import { CreateUserProps } from "@/types";
-import { PRODUCTION_URL } from "@/utils/constants";
+import { SITE_URL } from "@/utils/constants";
 
-export async function createUser(data: CreateUserProps) {
+export async function createUser(data: any) {
   try {
-    const url = `${PRODUCTION_URL}/api/create-user`;
-
+    const url = `${SITE_URL}/api/create-user`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -14,7 +12,6 @@ export async function createUser(data: CreateUserProps) {
     });
 
     const result = await response.json();
-
     return result;
   } catch (error) {
     console.error(error, "error");

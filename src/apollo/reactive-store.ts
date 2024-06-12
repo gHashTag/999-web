@@ -1,5 +1,5 @@
 import { __DEV__ } from "@/utils/constants";
-import { OptionType, SupabaseUser } from "@/types";
+import { OptionType, SupabaseUser, TSupabaseUser } from "@/types";
 import { makeVar } from "@apollo/client";
 
 export const setUserEmail = makeVar<string>("");
@@ -45,3 +45,10 @@ export const setIdTask = makeVar<string>("");
 export const setEditTask = makeVar<boolean>(false);
 
 export const setRoomId = makeVar<string>("");
+
+export const setInviterUserInfo = makeVar<TSupabaseUser>({
+  inviter: "",
+  select_izbushka: null,
+  is_bot: false,
+  email: "",
+});

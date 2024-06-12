@@ -1,18 +1,20 @@
 import { useEffect, useRef } from "react";
 import useClickOutside from "@lib/hooks/use-click-outside";
 import { useReactiveVar } from "@apollo/client";
-import { visibleSignInVar } from "@/apollo/reactive-store";
+import { visibleSignInVar, setInviterUserInfo } from "@/apollo/reactive-store";
 
 import { TLoginButton, TLoginButtonSize, TUser } from "react-telegram-auth";
-import { useSupabase } from "@/hooks/useSupabase";
+import { createUser } from "@/nextapi/index";
+// import { useSupabase } from "@/hooks/useSupabase";
 import { useRouter } from "next/router";
 import { botName } from "@/utils/constants";
 
 const DemoButton = () => {
   const visible = useReactiveVar(visibleSignInVar);
+  const userInfo = useReactiveVar(setInviterUserInfo);
 
   const router = useRouter();
-  const { createSupabaseUser } = useSupabase();
+  // const { createSupabaseUser } = useSupabase();
 
   useEffect(() => {
     setTimeout(() => {
@@ -32,7 +34,14 @@ const DemoButton = () => {
   useClickOutside(ctaRef, clickedOutside);
 
   const handleTelegramResponse = async (user: TUser) => {
-    await createSupabaseUser(user);
+    const userDataForBaseRecord = {
+      ...user,
+      ...userInfo,
+      telegram_id: user.id,
+    };
+    const newUserDataFromBase = await createUser(userDataForBaseRecord);
+    localStorage.setItem("username", userDataForBaseRecord.username || "");
+    localStorage.setItem("user_id", newUserDataFromBase.user_id || "");
     localStorage.setItem("recording_id", "");
     localStorage.setItem("room_id", "");
     localStorage.setItem("workspace_id", "");
