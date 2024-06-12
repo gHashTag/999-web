@@ -82,16 +82,16 @@ async function uploadAndSendVideo(
         caption: name,
       },
     );
-    // @ts-ignore
-    if (!video?.media?.fileId) throw new Error("Video not sent");
-    // @ts-ignore
-    const fileId = video.media.fileId;
-    console.log("File ID:", fileId);
+    // // @ts-ignore
+    // if (!video?.media?.fileId) throw new Error("Video not sent");
+    // // @ts-ignore
+    // const fileId = video.media.fileId;
+    // console.log("File ID:", fileId);
 
-    await botAiKoshey.api.sendVideo(chatId, fileId, {
-      width: 1920,
-      height: 1080,
-    });
+    // await botAiKoshey.api.sendVideo(chatId, fileId, {
+    //   width: 1920,
+    //   height: 1080,
+    // });
     return res.status(200).json({ message: "Video sent successfully" });
   } catch (error) {
     console.error("Error uploading and sending video:", error);
