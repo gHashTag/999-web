@@ -19,25 +19,27 @@ import cn from "classnames";
 import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import LoadingDots from "./loading-dots";
+// import LoadingDots from "./loading-dots";
 import styleUtils from "./utils.module.css";
 import styles from "./form.module.css";
+import { Spinner } from "@/components/ui/spinner";
 
 import { useReactiveVar } from "@apollo/client";
 import {
-  openWeb3ModalVar,
+  // openWeb3ModalVar,
   setInviteCode,
   setUserId,
   visibleSignInVar,
+  setInviterUserInfo,
 } from "@/apollo/reactive-store";
 
 import Captcha, { useCaptcha } from "./captcha";
 
 import { useUser } from "@/hooks/useUser";
-import { checkUsername } from "@/utils/supabase";
+import { checkUsernameAndReturnUser } from "@/utils/supabase";
 import { isValidEmail } from "@/helpers/utils";
 
-type FormState = "default" | "loading" | "error";
+type FormState = "default" | "loading" | "error" | "success";
 
 type Props = {
   sharePage?: boolean;
@@ -48,12 +50,17 @@ export default function Form({ sharePage }: Props) {
 
   const visible = useReactiveVar(visibleSignInVar);
   const workspace_id = useReactiveVar(setUserId);
+  const userInfo = useReactiveVar(setInviterUserInfo);
+
   const inviteCode = useReactiveVar(setInviteCode);
 
   const [errorMsg, setErrorMsg] = useState("");
   const [errorTryAgain, setErrorTryAgain] = useState(false);
   const [focused, setFocused] = useState(false);
   const [formState, setFormState] = useState<FormState>("default");
+
+  const [isEmailStep, setIsEmailStep] = useState(false);
+
   const router = useRouter();
   const {
     ref: captchaRef,
@@ -63,22 +70,28 @@ export default function Form({ sharePage }: Props) {
   } = useCaptcha();
 
   const inputRef = useRef(null);
-  const { username, user_id } = useUser();
+  const inputRefWord = useRef(null);
+  const { username, user_id, language_code } = useUser();
 
   useEffect(() => {
     if (workspace_id) {
       router.push(`/${username}/${user_id}`);
     }
-    if (inputRef.current) {
+    if (inputRef.current || inputRefWord.current) {
       (inputRef.current as any)?.focus();
     }
   }, [router, workspace_id]);
 
-  const handleRegister = useCallback(async () => {
+  const checkEmail = useCallback(async () => {
     if (inviteCode) {
       const isInviterExist = isValidEmail(inviteCode);
       if (isInviterExist) {
         visibleSignInVar(true);
+        setFormState("success");
+        setInviterUserInfo({
+          ...userInfo,
+          email: inviteCode,
+        });
       } else {
         setErrorMsg("Email not correct");
         setFormState("error");
@@ -86,7 +99,40 @@ export default function Form({ sharePage }: Props) {
         return;
       }
     }
-  }, [inviteCode, checkUsername, toast]);
+  }, [inviteCode, toast]);
+
+  const checkInviteWord = useCallback(async () => {
+    if (inviteCode) {
+      setFormState("loading");
+      const { isUserExist: isInviterExist, user } =
+        await checkUsernameAndReturnUser(inviteCode);
+
+      if (isInviterExist) {
+        const { select_izbushka, user_id } = user;
+        setIsEmailStep(true);
+        setTimeout(() => {
+          setFormState("default");
+          setInviteCode("");
+          setFocused(true);
+          setInviterUserInfo({
+            select_izbushka: select_izbushka || "",
+            inviter: user_id,
+            is_bot: false,
+          });
+        }, 1000);
+      } else {
+        setErrorMsg(
+          `${
+            language_code === "ru"
+              ? "Код некорректный"
+              : "Invite code not correct"
+          }`
+        );
+        setFormState("error");
+        return;
+      }
+    }
+  }, [inviteCode]);
 
   const onSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -98,13 +144,19 @@ export default function Form({ sharePage }: Props) {
         if (isCaptchaEnabled) {
           return executeCaptcha();
         }
-
-        return handleRegister();
+        return isEmailStep ? checkEmail() : checkInviteWord();
       } else {
         setFormState("default");
       }
     },
-    [executeCaptcha, formState, isCaptchaEnabled, handleRegister]
+    [
+      formState,
+      isCaptchaEnabled,
+      isEmailStep,
+      checkEmail,
+      checkInviteWord,
+      executeCaptcha,
+    ]
   );
 
   const onTryAgainClick = useCallback(
@@ -118,76 +170,161 @@ export default function Form({ sharePage }: Props) {
     [resetCaptcha]
   );
 
-  return formState === "error" ? (
-    <div
-      className={cn(styles.form, {
-        [styles["share-page"]]: sharePage,
-      })}
-    >
-      <div className={styles["form-row"]}>
-        <div className={cn(styles["input-label"], styles.error)}>
-          <div className={cn(styles.input, styles["input-text"])}>
-            {errorMsg}
-          </div>
-          <Button
-            type="button"
-            className={cn(styles.submit, styles.register, styles.error)}
-            onClick={onTryAgainClick}
+  const EmailStep = () => {
+    return (
+      <>
+        {!visible ? (
+          <form
+            className={cn(styles.form, {
+              [styles["share-page"]]: sharePage,
+              [styleUtils.appear]: !errorTryAgain,
+              [styleUtils["appear-fifth"]]: !errorTryAgain && !sharePage,
+              [styleUtils["appear-third"]]: !errorTryAgain && sharePage,
+            })}
+            onSubmit={onSubmit}
           >
-            Try Again
-          </Button>
-        </div>
-      </div>
-    </div>
-  ) : (
-    <>
-      {!visible ? (
-        <form
-          className={cn(styles.form, {
-            [styles["share-page"]]: sharePage,
-            [styleUtils.appear]: !errorTryAgain,
-            [styleUtils["appear-fifth"]]: !errorTryAgain && !sharePage,
-            [styleUtils["appear-third"]]: !errorTryAgain && sharePage,
-          })}
-          onSubmit={onSubmit}
-        >
-          <div className={styles["form-row"]}>
-            <label
-              htmlFor="email-input-field"
-              className={cn(styles["input-label"], {
-                [styles.focused]: focused,
-              })}
-            >
-              <input
-                ref={inputRef}
-                className={`${styles.input}`}
-                autoComplete="off"
-                type="text"
-                id="email-input-field"
-                value={inviteCode}
-                onChange={(e) => setInviteCode(e.target.value)}
-                onFocus={() => setFocused(true)}
-                onBlur={() => setFocused(false)}
-                placeholder="Enter email"
-                aria-label="Your invite email address"
-                required
-              />
-            </label>
+            <div className={styles["form-row"]}>
+              <label
+                htmlFor="email-input-field"
+                className={cn(styles["input-label"], {
+                  [styles.focused]: focused,
+                })}
+              >
+                <input
+                  ref={inputRef}
+                  className={`${styles.input}`}
+                  autoComplete="off"
+                  type="text"
+                  id="email-input-field"
+                  value={inviteCode}
+                  onChange={(e) => setInviteCode(e.target.value)}
+                  onFocus={() => setFocused(true)}
+                  onBlur={() => setFocused(false)}
+                  placeholder={
+                    language_code === "ru" ? "Введите email" : "Enter email"
+                  }
+                  aria-label="Your invite email address"
+                  required
+                />
+              </label>
+              <Button
+                type="submit"
+                className={cn(
+                  styles.submit,
+                  styles.register,
+                  styles[formState]
+                )}
+                disabled={formState === "loading"}
+              >
+                <p className={styles["register-text"]}>
+                  {language_code === "ru" ? "Вход" : "Sign in"}
+                </p>
+              </Button>
+            </div>
+            <Captcha ref={captchaRef} onVerify={checkEmail} />
+          </form>
+        ) : null}
+      </>
+    );
+  };
+
+  const WordStep = () => {
+    return (
+      <>
+        {!visible ? (
+          <form
+            className={cn(styles.form, {
+              [styles["share-page"]]: sharePage,
+              [styleUtils.appear]: !errorTryAgain,
+              [styleUtils["appear-fifth"]]: !errorTryAgain && !sharePage,
+              [styleUtils["appear-third"]]: !errorTryAgain && sharePage,
+            })}
+            onSubmit={onSubmit}
+          >
+            <div className={styles["form-row"]}>
+              <label
+                htmlFor="email-input-field"
+                className={cn(styles["input-label"], {
+                  [styles.focused]: focused,
+                })}
+              >
+                <input
+                  ref={inputRefWord}
+                  className={`${styles.input}`}
+                  autoComplete="off"
+                  type="text"
+                  id="invite-word-input-field"
+                  value={inviteCode}
+                  onChange={(e) => setInviteCode(e.target.value)}
+                  onFocus={() => setFocused(true)}
+                  onBlur={() => setFocused(false)}
+                  placeholder={
+                    language_code === "ru"
+                      ? "Введите код приглашения"
+                      : "Enter invite code"
+                  }
+                  aria-label="Your invite code"
+                  required
+                />
+              </label>
+              <Button
+                type="submit"
+                className={cn(
+                  styles.submit,
+                  styles.register,
+                  styles[formState]
+                )}
+                disabled={formState === "loading"}
+              >
+                <p className={styles["register-text"]}>
+                  {language_code === "ru" ? "Проверка" : "Check"}
+                </p>
+              </Button>
+            </div>
+            <Captcha ref={captchaRef} onVerify={checkInviteWord} />
+          </form>
+        ) : null}
+      </>
+    );
+  };
+
+  const ErrorState = () => {
+    return (
+      <div
+        className={cn(styles.form, {
+          [styles["share-page"]]: sharePage,
+        })}
+      >
+        <div className={styles["form-row"]}>
+          <div className={cn(styles["input-label"], styles.error)}>
+            <div className={cn(styles.input, styles["input-text"])}>
+              {errorMsg}
+            </div>
             <Button
-              type="submit"
-              className={cn(styles.submit, styles.register, styles[formState])}
-              disabled={formState === "loading"}
+              type="button"
+              className={cn(styles.submit, styles.register, styles.error)}
+              onClick={onTryAgainClick}
             >
-              {formState === "loading" ? (
-                <LoadingDots size={4} />
-              ) : (
-                <p className={styles["register-text"]}>Register</p>
-              )}
+              {language_code === "ru" ? "Еще раз" : "Try Again"}
             </Button>
           </div>
-          <Captcha ref={captchaRef} onVerify={handleRegister} />
-        </form>
-      ) : null}
-    </>
-  );
+        </div>
+      </div>
+    );
+  };
+
+  const renderPage = () => {
+    if (formState === "success") {
+      return;
+    }
+    if (formState === "loading") {
+      return <Spinner size="sm" />;
+    }
+    if (formState === "error") {
+      return ErrorState();
+    } else {
+      return isEmailStep ? EmailStep() : WordStep();
+    }
+  };
+  return renderPage();
 }
