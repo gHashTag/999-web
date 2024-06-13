@@ -93,7 +93,11 @@ export default function Form({ sharePage }: Props) {
           email: inviteCode,
         });
       } else {
-        setErrorMsg("Email not correct");
+        setErrorMsg(
+          `${
+            language_code === "ru" ? "Email некорректный" : "Email not correct"
+          }`
+        );
         setFormState("error");
         setTimeout(() => setFormState("default"), 2000);
         return;
