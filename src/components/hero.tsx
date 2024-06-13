@@ -18,8 +18,10 @@ import cn from "classnames";
 import styleUtils from "./utils.module.css";
 import styles from "./hero.module.css";
 import { BRAND_NAME, SITE_DESCRIPTION } from "@lib/constants";
+import { useUser } from "@/hooks/useUser";
 
 export default function Hero() {
+  const { language_code } = useUser();
   return (
     <div className={styles.wrapper}>
       {/* <h2
@@ -61,7 +63,9 @@ export default function Hero() {
           styles.info
         )}
       >
-        Where Immortality is Banked
+        {language_code === "ru"
+          ? "Банк ИИ Аватаров"
+          : "Where Immortality is Banked"}
       </div>
     </div>
   );

@@ -87,13 +87,17 @@ export default async function handler(
         photo_url: "",
       };
 
+      console.log(newUser, "newUser");
+
       const { user_id, isUserExist } = await createUser(newUser);
+      console.log(user_id, "user_id");
+      console.log(isUserExist, "isUserExist");
 
       // create workspace
       if (user_id) {
         if (!isUserExist) {
           const workspace_id = await setMyWorkspace(user_id);
-
+          console.log(workspace_id, "workspace_id");
           //Create or get a room
           const rooms = await createOrFetchRoom({
             username,
@@ -105,6 +109,7 @@ export default async function handler(
             workspace_id,
             token: tokenAiKoshey,
           });
+          console.log(rooms, "rooms");
 
           const passport = {
             user_id,

@@ -116,6 +116,7 @@ export async function createUser(
   const {
     telegram_id,
   } = usersData;
+  console.log(telegram_id, "telegram_id");
 
   // We check whether a user with the same telegram_id already exists
   const { data: existingUser, error } = await supabase
@@ -123,6 +124,7 @@ export async function createUser(
     .select("*")
     .eq("telegram_id", telegram_id)
     .maybeSingle();
+  console.log(existingUser, "existingUser");
 
   if (error) {
     console.error("Error checking user existence:", error);
@@ -149,6 +151,8 @@ export async function createUser(
     .insert([usersData])
     .select();
 
+  console.log(data, "data create");
+
   if (insertError) {
     console.error("Error creating user:", insertError);
     return {
@@ -172,7 +176,7 @@ export async function createUser(
   return {
     userData: data,
     user_id: data[0].user_id,
-    isUserExist: data.length > 0,
+    isUserExist: false,
     error: insertError,
   };
 }
