@@ -13,8 +13,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { setHeaderName, setLoggedIn } from "@/apollo/reactive-store";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+// import { Analytics } from "@vercel/analytics/react";
+// import { SpeedInsights } from "@vercel/speed-insights/next";
 import {
   ApolloClient,
   ApolloProvider,
@@ -168,8 +168,8 @@ export default function App({ Component, pageProps }: AppProps) {
                       twaReturnUrl: `https://t.me/${botName}/start`,
                     }}
                   >
-                    <Analytics />
-                    <SpeedInsights />
+                    {/* <Analytics />
+                    <SpeedInsights /> */}
                     {!__DEV__ && <BackgroundBeams />}
                     <HMSRoomProvider>
                       <Component {...pageProps} />

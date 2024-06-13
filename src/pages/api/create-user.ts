@@ -111,6 +111,9 @@ export default async function handler(
             token: tokenAiKoshey,
           });
           console.log(rooms, "rooms");
+          if (!rooms) {
+            return res.status(500).json({ message: "Room not created" });
+          }
 
           const passport = {
             user_id,
@@ -131,6 +134,7 @@ export default async function handler(
 
           try {
             const passport_id_owner = await setPassport(passport);
+            console.log(passport_id_owner, "passport_id_owner");
             const { izbushka } = await getSelectIzbushkaId(select_izbushka);
             console.log(izbushka, "izbushka");
             if (
