@@ -30,6 +30,7 @@ export type CreateUserT = {
   inviter: string;
   select_izbushka: string;
   telegram_id: number;
+  photo_url: string;
 };
 
 type ResponseData = {
@@ -66,6 +67,7 @@ export default async function handler(
     language_code,
     select_izbushka,
     telegram_id,
+    photo_url,
   }: CreateUserT = await req.body;
 
   try {
@@ -85,7 +87,7 @@ export default async function handler(
         telegram_id: id,
         select_izbushka,
         email: "",
-        photo_url: "",
+        photo_url: photo_url || "",
       };
 
       console.log(newUser, "newUser");
