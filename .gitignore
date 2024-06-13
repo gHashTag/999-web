@@ -60,3 +60,9 @@ amplifytools.xcconfig
 temp/video.mp4
 
 temp/2919b14eb048437c9d89ee643947b22a.mp4
+
+client.session
+
+client.session-shm
+
+client.session-wal

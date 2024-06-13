@@ -12,8 +12,6 @@ export const SITE_URL = __DEV__
   ? process.env.NEXT_PUBLIC_LOCAL_URL
   : process.env.NEXT_PUBLIC_SITE_URL;
 
-export const PRODUCTION_URL = process.env.PRODUCTION_URL;
-
 export const headers = {
   "Content-Type": "application/json",
 };
