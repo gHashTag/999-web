@@ -57,7 +57,7 @@ const CardRoom = ({
                 paddingBottom: 30,
               }}
             >
-              chat id: {room?.chat_id}
+              telegram id: {String(room?.chat_id)}
               {/* {room_id && <div>room_id: {room_id}</div>} */}
               {/* {username && <div>username: {username}</div>}
               <div>is_owner: {JSON.stringify(is_owner)}</div> */}

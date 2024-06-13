@@ -29,6 +29,7 @@ export type CreateUserT = {
   chat_id: number;
   inviter: string;
   select_izbushka: string;
+  telegram_id: number;
 };
 
 type ResponseData = {
@@ -64,7 +65,7 @@ export default async function handler(
     is_bot,
     language_code,
     select_izbushka,
-    chat_id,
+    telegram_id,
   }: CreateUserT = await req.body;
 
   try {
@@ -105,7 +106,7 @@ export default async function handler(
             last_name: last_name || "",
             language_code,
             user_id,
-            chat_id,
+            chat_id: telegram_id,
             workspace_id,
             token: tokenAiKoshey,
           });
