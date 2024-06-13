@@ -57,7 +57,7 @@ const useTasks = (): UseTasksReturn => {
 
   // console.log(workspace_type, "workspace_type");
   // console.log(user_id, "user_id");
-  // console.log(workspace_id, "workspace_id");
+  console.log(workspace_id, "workspace_id");
 
   if (!recording_id && !room_id && !workspace_id) {
     // console.log("tasksQuery :::1");
@@ -120,9 +120,10 @@ const useTasks = (): UseTasksReturn => {
       workspace_id,
       recording_id,
     };
+  } else if (workspace_id) {
+    console.log("workspace_id", workspace_id);
   } else {
     console.log("Workspace ID is undefined");
-    // Дополнительная логика для случая, когда workspace_id равен undefined
   }
 
   const {
