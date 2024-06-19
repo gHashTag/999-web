@@ -75,47 +75,50 @@ export default async function handler(
   }: CreateVideoT = await req.body;
 
   try {
-    const videoUrl = event_data.url;
+    if (event_type === "avatar_video.success") {
+      const videoUrl = event_data.url;
 
-    const video_id = event_data.video_id;
+      const video_id = event_data.video_id;
 
-    const videoData = await getVideoWithChatId(video_id);
+      const videoData = await getVideoWithChatId(video_id);
 
-    if (!videoData) throw new Error("Video not found");
-    const { chat_id } = videoData;
+      if (!videoData) throw new Error("Video not found");
+      const { chat_id } = videoData;
 
-    const response = await fetch(videoUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch video: ${response.statusText}`);
+      const response = await fetch(videoUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch video: ${response.statusText}`);
+      }
+
+      const videoBuffer = new Uint8Array(await response.arrayBuffer());
+      const tempDir = path.join(process.cwd(), "temp");
+      const inputFilePath = path.join(tempDir, `${video_id}.mp4`);
+      const outputFilePath = path.join(tempDir, `${video_id}_circular.mp4`);
+
+      if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir);
+      }
+
+      fs.writeFileSync(inputFilePath, videoBuffer);
+      console.log("Video saved to", inputFilePath);
+
+      const croppedVideoPath = await cropSquareAroundHead(
+        inputFilePath,
+        outputFilePath,
+      );
+
+      const fileBuffer = fs.readFileSync(croppedVideoPath);
+      const inputFile = new InputFile(
+        fileBuffer,
+        path.basename(croppedVideoPath),
+      );
+
+      await botAiKoshey.api.sendVideoNote(chat_id, inputFile);
+      return res.status(200).json({ message: "ok" });
+    } else {
+      return res.status(200).json({ message: "ok" });
     }
-
-    const videoBuffer = new Uint8Array(await response.arrayBuffer());
-    const tempDir = path.join(process.cwd(), "temp");
-    const inputFilePath = path.join(tempDir, `${video_id}.mp4`);
-    const outputFilePath = path.join(tempDir, `${video_id}_circular.mp4`);
-
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir);
-    }
-
-    fs.writeFileSync(inputFilePath, videoBuffer);
-    console.log("Video saved to", inputFilePath);
-
-    const croppedVideoPath = await cropSquareAroundHead(
-      inputFilePath,
-      outputFilePath,
-    );
-
-    const fileBuffer = fs.readFileSync(croppedVideoPath);
-    const inputFile = new InputFile(
-      fileBuffer,
-      path.basename(croppedVideoPath),
-    );
-
-    await botAiKoshey.api.sendVideoNote(chat_id, inputFile);
-    return res.status(200).json({ message: "ok" });
   } catch (error: any) {
-    captureExceptionSentry(error, "heygen-video");
     return res.status(500).json({ message: JSON.stringify(error) });
   }
 }
