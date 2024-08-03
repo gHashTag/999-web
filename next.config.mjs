@@ -4,21 +4,22 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)?",
-        headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }],
+        source: '/(.*)?',
+        headers: [{ key: 'X-Frame-Options', value: 'SAMEORIGIN' }],
       },
-    ];
+    ]
   },
   reactStrictMode: false,
+  output: 'standalone',
   images: {
     domains: [
-      "randomuser.me",
-      "images.domains",
-      "images.unsplash.com",
-      "lh3.googleusercontent.com",
-      "t.me",
-      "dmrooqbmxdhdyblqzswu.supabase.co",
-      "app.delabwallet.com",
+      'randomuser.me',
+      'images.domains',
+      'images.unsplash.com',
+      'lh3.googleusercontent.com',
+      't.me',
+      'dmrooqbmxdhdyblqzswu.supabase.co',
+      'app.delabwallet.com',
     ],
   },
   // typescript: {
@@ -28,6 +29,6 @@ const nextConfig = {
   //   // !! WARN !!
   //   ignoreBuildErrors: true,
   // },
-};
+}
 
-export default nextConfig;
+export default nextConfig
