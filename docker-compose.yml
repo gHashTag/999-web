@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: javascriptcamp/999-web3
+    image: 999-web3
     ports:
       - '3000:3000'
     environment:

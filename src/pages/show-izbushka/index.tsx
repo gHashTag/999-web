@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+// @ts-ignore
 import { retrieveLaunchParams, MiniApp, postEvent } from "@tma.js/sdk";
 import dynamic from "next/dynamic";
 import {

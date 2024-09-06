@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+// @ts-ignore
 import { retrieveLaunchParams } from "@tma.js/sdk";
 
 const BabaYaga = () => {
