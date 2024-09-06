@@ -18,7 +18,7 @@ export const SITE_URL = "https://dao999nft.com/";
 export const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN || new URL(SITE_URL).origin;
 export const TWITTER_USER_NAME = "dao999nft";
-export const BRAND_NAME = "DAO 999 NFT";
+export const BRAND_NAME = "NEUROCALLS";
 export const SITE_NAME_MULTILINE = ["dao999nft"];
 export const SITE_NAME = "dao999nft";
 export const META_DESCRIPTION =

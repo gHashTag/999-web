@@ -45,9 +45,9 @@ The Leela Ai project has become a creation in the gaming industry, combining AI 
 
 [App Store](https://apps.apple.com/ru/app/%D0%B8%D0%B3%D1%80%D0%B0-%D0%BB%D0%B8%D0%BB%D0%B0/id1296604457)  |  [Google Play](https://play.google.com/store/apps/details?id=com.leelagame&hl=ru)  | [Instagram](http://instagram.com/leela.chakra/)  | [www](https://leelachakra.com)
 
-**07/2022 – 05/2023 DAO 999 NFT**: Founder, Web3 Developer 🌐 
+**07/2022 – 05/2023 NEUROCALLS**: Founder, Web3 Developer 🌐 
 
-Digital NFT registry office, which is managed by the decentralized autonomous organization DAO 999 NFT. The idea of this project arose from the desire to create a new way of registering civil status acts using blockchain and NFT technologies.
+Digital NFT registry office, which is managed by the decentralized autonomous organization NEUROCALLS. The idea of this project arose from the desire to create a new way of registering civil status acts using blockchain and NFT technologies.
 
 Successfully organized and develops the crypto community in Thailand, attracting new members, actively promoting the values of decentralization.
 Development of project tokenomics.
@@ -234,9 +234,9 @@ Product Strategy and Management, Business Strategy/Analysis, Digital Marketing, 
 
 [App Store](https://apps.apple.com/ru/app/%D0%B8%D0%B3%D1%80%D0%B0-%D0%BB%D0%B8%D0%BB%D0%B0/id1296604457)  |  [Google Play](https://play.google.com/store/apps/details?id=com.leelagame&hl=ru)  | [Instagram](http://instagram.com/leela.chakra/)  | [www](https://leelachakra.com)
 
-**07/2022 – 05/2023 DAO 999 NFT**: Основатель, Web3 Разработчик 🌐 
+**07/2022 – 05/2023 NEUROCALLS**: Основатель, Web3 Разработчик 🌐 
 
-Цифровой NFT ЗАГС, которым управляет децентрализованная автономная организация DAO 999 NFT. Идея этого проекта возникла из желания создать новый способ регистрации актов гражданского состояния с использованием технологий блокчейна и NFT.
+Цифровой NFT ЗАГС, которым управляет децентрализованная автономная организация NEUROCALLS. Идея этого проекта возникла из желания создать новый способ регистрации актов гражданского состояния с использованием технологий блокчейна и NFT.
 
 **06/2003 – 10/2015 Техно-Николь (Москва)**: VIP менеджер по работе с ключевыми клиентами
 
