@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 // import { SkipNavContent } from "@reach/skip-nav";
 // import { NAVIGATION } from "@lib/constants";
 import styles from "./layout.module.css";
-import Logo from "./icons/icon-logo";
+import IconLogo from "./icon-logo";
 import MobileMenu from "./mobile-menu";
 
 import React, { useEffect } from "react";
@@ -133,8 +133,10 @@ export default function Layout({
   const shortName = `${(firstName && firstName[0]) || ""}${
     (lastName && lastName[0]) || ""
   }`;
-
+  
+  console.log(user_id, "user_id");
   const mainButtonRoute = activeRoute !== "/" ? `/${username}/${user_id}` : "/";
+  console.log(mainButtonRoute, "mainButtonRoute");
 
   return (
     <>
@@ -144,7 +146,7 @@ export default function Layout({
             <div className={styles["header-logos"]}>
               {isAuthorized && <MobileMenu key={router.asPath} />}
               <Link href={mainButtonRoute} className={styles.logo}>
-                <Logo />
+                <IconLogo />
               </Link>
             </div>
             <div>

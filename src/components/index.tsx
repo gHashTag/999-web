@@ -47,7 +47,9 @@ export default function Conf() {
         <Globe />
       ) : (
         <>
-          <Hero /> <Form /> <LearnMore />
+          <Hero /> 
+          <Form /> 
+          {/* <LearnMore /> */}
         </>
       )}
     </Layout>

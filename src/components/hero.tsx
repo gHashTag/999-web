@@ -34,7 +34,7 @@ export default function Hero() {
       >
         {SITE_DESCRIPTION}
       </h2> */}
-      <h1
+      {/* <h1
         className={cn(
           styleUtils.appear,
           styleUtils["appear-third"],
@@ -42,11 +42,12 @@ export default function Hero() {
         )}
       >
         Bank of Digital
-      </h1>
+      </h1> */}
       <h1 className={cn(styleUtils.appear, styleUtils["brand"], styles.hero)}>
         {BRAND_NAME}
       </h1>
-      <h1
+      <div style={{ height: 120 }}></div>
+      {/* <h1
         className={cn(
           styleUtils.appear,
           styleUtils["appear-third"],
@@ -54,9 +55,9 @@ export default function Hero() {
         )}
       >
         Avatars
-      </h1>
+      </h1> */}
       <div style={{ height: 20 }}></div>
-      <div
+      {/* <div
         className={cn(
           styleUtils.appear,
           styleUtils["appear-fourth"],
@@ -66,7 +67,7 @@ export default function Hero() {
         {language_code === "ru"
           ? "Банк ИИ Аватаров"
           : "Where Immortality is Banked"}
-      </div>
+      </div> */}
     </div>
   );
 }

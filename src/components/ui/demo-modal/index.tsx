@@ -72,7 +72,7 @@ const DemoModal = () => {
             backgroundColor="var(--brand)"
             foregroundColor="black"
           />
-          dao999nft
+          NeuroCalls
         </div>
       </div>
     </div>

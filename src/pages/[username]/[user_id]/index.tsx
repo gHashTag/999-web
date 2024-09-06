@@ -118,10 +118,8 @@ export default function Office() {
 
   const words =
     language_code === "ru"
-      ? `🏰 Избушка повернулась к тебе передом, а к лесу задом. Налево пойдешь - огнем согреешься, прямо пойдешь - в водичке омолодишься, а направо пойдешь - в медную трубу попадешь.\n🔥 Пламя горячее - это твои личные избушки, где твои желания сбываются.\n💧 Воды чистые к себе манят, где ты гость в избушках дорогой.\n🎺 Медные трубы - это чародейская избушка, где обучение к мудрости тебя ведет.
-  `
-      : `🏰 The hut turned its front to you, and its back to the forest. If you go to the left you will be warmed by the fire, you will go straight ahead in the water and you will rejuvenate, and to the right you will go into a copper pipe.\n🔥 The hot flames are your personal huts, where your wishes come true.\n💧 Clean waters beckon, where you are a guest in dear huts.\n🎺 Copper pipes are a sorcerer’s hut, where learning leads you to wisdom.
-  `;
+      ? `🚀 Мои комнаты - это личные комнаты, где твои слова пишутся и задачи создаются.\n🏢 В гостях - это комнаты, в которые вас пригласил другой пользователь. 💼 Обучение - это комнаты, где обучение к мудрости тебя ведет.`
+      : `🚀 My rooms - are personal rooms where your words are written and tasks are created. 🏢 In the guest - are rooms, in which you were invited by another user. 💼 Learning - are rooms, where learning leads you to wisdom.`;
 
   return (
     <Layout loading={tasksLoading || workspacesLoading}>
