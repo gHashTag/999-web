@@ -20,6 +20,7 @@ const nextConfig = {
       't.me',
       'dmrooqbmxdhdyblqzswu.supabase.co',
       'app.delabwallet.com',
+      'pbs.twimg.com',
     ],
   },
   // typescript: {

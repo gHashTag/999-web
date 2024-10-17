@@ -49,7 +49,6 @@ export default function Conf() {
         <>
           <Hero /> 
           <Form /> 
-          {/* <LearnMore /> */}
         </>
       )}
     </Layout>
