@@ -214,17 +214,98 @@ b. Provide promotional support to drive user engagement.
 c. Manage offline/online activities that contribute to the collaboration’s success.
 
 4. Revenue Share Agreement
-Both parties agree to a net revenue-sharing model for net revenue (revenue minus costs and taxes) generated as a result of the collaboration.
-Net Revenue from [e.g., in-app purchases, advertisements, or event entry fees] will be shared as follows:
-Amuzi Esports (Party A): [Percentage]% of the total net revenue.
-[LeelaChakra Ai] (Party B): [Percentage]% of the total net revenue.
-Net revenue is calculated after deducting platform fees, production costs, marketing expenses and taxes.
+
+4.1 Revenue Sharing Model:
+Both parties agree to a net revenue-sharing model for all income generated as a result of the collaboration.
+
+4.2 Revenue Distribution:
+Net Revenue will be shared as follows:
+- Amuzi Esports (Party A): [Percentage]% of the total net revenue
+- Leela Chakra AI (Party B): [Percentage]% of the total net revenue
+
+4.3 Definition of Net Revenue:
+Net Revenue shall be calculated as follows:
+
+Gross Revenue
+- Less: Direct Platform Fees (app store commissions, payment gateway fees)
+- Less: Direct Marketing Expenses (specifically approved by both parties)
+- Less: Direct Production Costs (with itemized documentation)
+- Less: Applicable Taxes
+= Net Revenue
+
+4.4 Financial Transparency:
+- Both parties shall maintain detailed records of all revenue and expenses
+- Monthly financial reports shall be provided by the 10th of each following month
+- All expenses must be documented with receipts and approved by both parties
+- Each party has the right to audit financial records with 14 days notice
+- Both parties shall have access to real-time revenue data through a shared dashboard
+
+4.5 Payment Terms:
+- Revenue share payments shall be made monthly
+- Payments shall be processed within 15 days of the end of each month
+- All payments shall be made via bank transfer to designated accounts
+- Detailed payment statements shall accompany each payment
+
+4.6 Expense Approval:
+- Any expense exceeding $1,000 requires prior written approval from both parties
+- A quarterly budget for marketing and production costs shall be agreed upon in advance
+- Emergency expenses must be communicated within 24 hours
 
 5. Intellectual Property
-Ownership: Each party retains ownership of their respective intellectual property.
-Licensing: [Leela Chakra Ai] grants Amuzi Esports a non-exclusive, royalty-free license to use their content, branding, and promotional material for the purpose of this collaboration.
-Confidentiality: Both parties agree to keep confidential any proprietary information shared during the course of this collaboration.
-Non-Solicitation: Both parties agree that they will not attempt to solicit any employees, associates, consultants, partners, or business partners of the other Party during the subsistence of the Collaboration Agreement. 
+
+5.1 Ownership of Pre-Existing IP:
+- Each party shall retain exclusive ownership of any pre-existing intellectual property rights owned by that party prior to the collaboration.
+- Any modifications or improvements to a party's pre-existing IP shall remain the property of that party.
+
+5.2 Ownership of New IP:
+- Any new intellectual property created solely by Leela Chakra AI during the collaboration shall remain the exclusive property of Leela Chakra AI.
+- Any new intellectual property created solely by Amuzi Esports shall remain the exclusive property of Amuzi Esports.
+- Intellectual property jointly created during the collaboration shall be jointly owned by both parties, with each party having equal rights to use and license such IP.
+
+5.3 Licensing:
+- Each party grants to the other party a non-exclusive, worldwide, royalty-free license to use their respective intellectual property solely for the purposes of this collaboration during the term of this agreement.
+- Any commercial exploitation of jointly developed IP outside the scope of this collaboration shall require mutual written agreement of both parties.
+
+5.4 Source Code and Technical Solutions:
+- All source code and technical solutions developed by Leela Chakra AI shall remain its exclusive intellectual property.
+- Amuzi Esports shall receive a license to use such code and solutions within the scope of the collaboration but shall not have rights to modify, sell, or transfer them to third parties without explicit written permission from Leela Chakra AI.
+
+5.5 Development Rights and Code Ownership:
+- All code, algorithms, and technical solutions created by Leela Chakra AI remain its exclusive intellectual property
+- This includes but is not limited to:
+  - Source code
+  - Algorithms
+  - Development methodologies
+  - Technical documentation
+  - Development tools and utilities
+  - APIs and interfaces
+  - Database schemas and structures
+  - Machine learning models and training data
+  
+5.6 License Terms:
+- Amuzi Esports receives a non-exclusive, non-transferable license to use the developed solutions
+- The license is limited to the specific use cases defined in this agreement
+- Amuzi Esports may not:
+  - Sell or sublicense the technology to third parties
+  - Modify the source code without written permission
+  - Use the technology for purposes outside this agreement
+  - Reverse engineer or decompile the solutions
+
+5.7 Future Development:
+- Leela Chakra AI retains the right to:
+  - Use the developed technology in other projects
+  - Continue development of similar solutions
+  - Create derivative works based on the technology
+  - License similar solutions to other parties
+  - Patent any innovations created during development
+
+5.8 Knowledge and Expertise:
+- All knowledge, expertise and experience gained during development remains with Leela Chakra AI
+- This includes:
+  - Technical know-how
+  - Problem-solving approaches
+  - Development patterns and practices
+  - Industry insights and learnings
 
 6. Marketing and Promotion
 Joint Marketing Campaigns: Both parties agree to jointly market the collaboration via their respective social media platforms, websites, and any other channels available and known to them.
@@ -232,15 +313,40 @@ Branding and Logos: Each party grants the other the right to use their logos and
 
 7. Term and Termination
 7.1 Term:
-This Agreement will commence on [26.11.2024] and continue for [one year] unless terminated earlier in accordance with this Agreement.
+This Agreement will commence on [26.11.2024] and continue for [one year], with automatic renewal for subsequent one-year periods unless either party provides written notice of non-renewal at least 60 days prior to the end of the current term.
 7.2 Termination:
-This Agreement may be terminated by either party by providing 30 days written notice to the other party.
-Upon termination:
-All shared resources must be returned or destroyed, as the case maybe.
-All revenue sharing obligations must be settled within 30 days of termination.
+- Either party may terminate this Agreement with 30 days written notice
+- Immediate termination is permitted in case of material breach by either party
+- In case of termination due to Amuzi Esports' breach, Leela Chakra AI retains all licenses to its IP and shall receive compensation for work completed
+- All ongoing projects shall be completed and paid for regardless of termination
+
+7.3 Post-Termination:
+- All shared resources must be returned or destroyed within 30 days
+- Revenue sharing obligations must be settled within 30 days
+- Confidentiality obligations survive termination for 3 years
+- IP rights and licenses granted under section 5.4 shall continue for any completed projects
+- Leela Chakra AI retains the right to use and modify any code it developed
 
 8. Dispute Resolution
-In the event of a dispute arising from this Agreement, the parties agree to first attempt to resolve the issue amicably through discussions within 30 days of the dispute arising. If the dispute cannot be resolved within 30 days, the parties will proceed with mediation or arbitration in accordance with the laws of [jurisdiction].
+
+8.1 Amicable Resolution:
+- Parties shall first attempt to resolve disputes through good faith negotiations
+- Senior management of both parties shall meet within 15 days of dispute arising
+
+8.2 Mediation:
+- If dispute remains unresolved after 30 days of negotiations
+- Parties shall engage a mutually agreed mediator
+- Mediation costs shared equally
+
+8.3 Arbitration:
+- If mediation fails, dispute shall be settled by arbitration
+- Arbitration shall be conducted in a neutral location
+- Language of arbitration shall be English
+- Each party shall bear its own legal costs
+- Arbitration decision shall be final and binding
+
+8.4 Interim Relief:
+- Nothing prevents either party from seeking interim injunctive relief from courts
 
 9. Governing Law
 This Agreement shall be governed by and construed in accordance with the laws of [Jurisdiction/Country].
@@ -267,4 +373,39 @@ Signature: _______________
 Date: ___________________
 
 End of Collaboration Agreement
+
+11. Confidentiality
+
+11.1 Definition of Confidential Information:
+- Technical information including source code, algorithms, designs
+- Business information including strategies, financial data, customer lists
+- Marketing plans and user data
+- Any information marked as confidential
+
+11.2 Protection of Confidential Information:
+- Each party shall protect confidential information with the same degree of care as its own confidential information
+- No disclosure to third parties without written consent
+- Access limited to employees who need to know
+- Return or destruction of confidential information upon request
+
+11.3 Exceptions:
+- Information that becomes publicly available through no fault of receiving party
+- Information independently developed without use of confidential information
+- Information required to be disclosed by law (with prior notice to other party)
+
+12. Force Majeure
+
+12.1 Neither party shall be liable for any failure or delay in performance due to:
+- Natural disasters
+- War or military operations
+- National or regional emergency
+- Pandemic or epidemic
+- Government actions
+- Internet service provider failures
+- Other causes beyond reasonable control
+
+12.2 The affected party shall:
+- Notify the other party within 48 hours
+- Make reasonable efforts to minimize impact
+- Resume performance as soon as possible
 
