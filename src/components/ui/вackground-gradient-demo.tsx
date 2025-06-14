@@ -16,13 +16,16 @@ export function BackgroundGradientDemo() {
           className="object-contain"
         />
         <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200">
-        Пакет "Инфлюенсер"
+          Пакет &quot;Инфлюенсер&quot;
         </p>
 
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            - Настройка ИИ под твой стиль<br/>
-            - 10 уникальных аватаров в высоком качестве<br/>
-            - Доступ к телеграм-боту для создания 1000 вариаций<br/>
+          - Настройка ИИ под твой стиль
+          <br />
+          - 10 уникальных аватаров в высоком качестве
+          <br />
+          - Доступ к телеграм-боту для создания 1000 вариаций
+          <br />
         </p>
         <button className="rounded-full pl-4 pr-1 py-1 text-white flex items-center space-x-1 bg-black mt-4 text-xs font-bold dark:bg-zinc-800">
           <span>Купить </span>
